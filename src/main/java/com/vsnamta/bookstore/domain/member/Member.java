@@ -13,6 +13,13 @@ import javax.persistence.Id;
 
 import com.vsnamta.bookstore.domain.common.model.Address;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Member {
     @Id
@@ -33,4 +40,41 @@ public class Member {
     private MemberRole role;
 
     private LocalDateTime createdDate;
+
+    @Builder
+    public Member(String email, String name, String phoneNumber, Address address, int point, MemberRole role,
+            LocalDateTime createdDate) {
+        this.email = email;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.point = point;
+        this.role = role;
+        this.createdDate = createdDate;
+    }
+
+    public static Member createMember(String email, String name) {
+        return Member.builder()
+            .email(email)
+            .name(name)
+            .phoneNumber("")
+            .address(new Address("", "", ""))
+            .point(0)
+            .role(MemberRole.USER)
+            .createdDate(LocalDateTime.now())
+            .build();
+    }
+
+    public void update(String phoneNumber, Address address) {
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
+    public void plusPoint(int point) {
+        this.point += point;
+    }
+
+    public void minusPoint(int point) {
+        this.point -= point;
+    }
 }

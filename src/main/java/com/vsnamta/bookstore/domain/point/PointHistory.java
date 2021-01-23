@@ -15,6 +15,13 @@ import javax.persistence.ManyToOne;
 
 import com.vsnamta.bookstore.domain.member.Member;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class PointHistory {
     @Id
@@ -33,4 +40,23 @@ public class PointHistory {
     private PointStatus status;
 
     private LocalDateTime createdDate;
+
+    @Builder
+    public PointHistory(Member member, int amounts, String contents, PointStatus status, LocalDateTime createdDate) {
+        this.member = member;
+        this.amounts = amounts;
+        this.contents = contents;
+        this.status = status;
+        this.createdDate = createdDate;
+    }
+
+    public static PointHistory createPointHistory(Member member, int amounts, String contents, PointStatus status) {
+        return PointHistory.builder()
+            .member(member)
+            .amounts(amounts)
+            .contents(contents)
+            .status(status)
+            .createdDate(LocalDateTime.now())
+            .build();
+    }
 }

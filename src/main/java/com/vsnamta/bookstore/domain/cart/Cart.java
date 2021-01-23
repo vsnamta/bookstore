@@ -9,9 +9,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.product.Product;
+import com.vsnamta.bookstore.domain.member.Member;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Cart {
     @Id
@@ -28,4 +35,23 @@ public class Cart {
     private Product product;
 
     private int quantity;
+
+    @Builder
+    public Cart(Member member, Product product, int quantity) {
+        this.member = member;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
+    public static Cart createCart(Member member, Product product, int quantity) {
+        return Cart.builder()
+            .member(member)
+            .product(product)
+            .quantity(quantity)
+            .build();
+    }
+
+    public void updateQuantity(int quantity) {
+        this.quantity = quantity;
+	}
 }

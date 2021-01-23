@@ -8,6 +8,13 @@ import javax.persistence.Embedded;
 
 import com.vsnamta.bookstore.domain.common.model.Address;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class DeliveryInfo {
     @Embedded
@@ -23,4 +30,11 @@ public class DeliveryInfo {
 
     @Column(name = "DELIVERY_MESSAGE")
     private String message;
+
+    @Builder
+    public DeliveryInfo(Receiver receiver, Address address, String message) {
+        this.receiver = receiver;
+        this.address = address;
+        this.message = message;
+    }
 }

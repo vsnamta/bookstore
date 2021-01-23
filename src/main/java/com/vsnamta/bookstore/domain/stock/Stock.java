@@ -15,6 +15,13 @@ import javax.persistence.ManyToOne;
 
 import com.vsnamta.bookstore.domain.product.Product;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Stock {
     @Id
@@ -33,4 +40,23 @@ public class Stock {
     private StockStatus status;
 
     private LocalDateTime createdDate;
+
+    @Builder
+    public Stock(Product product, int quantity, String contents, StockStatus status, LocalDateTime createdDate) {
+        this.product = product;
+        this.quantity = quantity;
+        this.contents = contents;
+        this.status = status;
+        this.createdDate = createdDate;
+    }
+
+    public static Stock createStock(Product product, int quantity, String contents, StockStatus status) {
+        return Stock.builder()
+            .product(product)
+            .quantity(quantity)
+            .contents(contents)
+            .status(status)
+            .createdDate(LocalDateTime.now())
+            .build();
+    }
 }

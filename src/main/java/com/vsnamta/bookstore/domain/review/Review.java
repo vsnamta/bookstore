@@ -14,6 +14,13 @@ import javax.persistence.ManyToOne;
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.product.Product;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Review {
     @Id
@@ -33,4 +40,48 @@ public class Review {
     private String contents;
     private boolean removed;
     private LocalDateTime createdDate;
+
+    @Builder
+    public Review(Member member, Product product, int rating, String contents, boolean removed,
+            LocalDateTime createdDate) {
+        this.member = member;
+        this.product = product;
+        this.rating = rating;
+        this.contents = contents;
+        this.removed = removed;
+        this.createdDate = createdDate;
+    }
+    
+    public static Review createReview(Member member, Product product, int rating, String contents) {
+        Review review = Review.builder()
+            .member(member)
+            .product(product)
+            .rating(rating)
+            .contents(contents)
+            .removed(false)
+            .createdDate(LocalDateTime.now())
+            .build(); 
+
+        product.plusRatingBySaveReview(rating);    
+
+        return review;
+    }
+
+    public void update(int rating, String contents) {
+        int increasedRating = calculateIncreasedRating(rating, this.rating);
+
+        this.rating = rating;
+        this.contents = contents;
+
+        product.plusRatingByUpdateReview(increasedRating);
+    }
+    
+    private int calculateIncreasedRating(int updatingRating, int currentRating) {
+        return updatingRating - currentRating;
+    }
+
+    public void remove() {        
+        this.removed = true;
+        product.minusRatingByRemoveReview(rating);
+    }
 }

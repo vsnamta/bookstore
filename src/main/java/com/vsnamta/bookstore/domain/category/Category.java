@@ -13,6 +13,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Category {
     @Id
@@ -28,4 +35,51 @@ public class Category {
 
     @OneToMany(mappedBy = "parent")
     private List<Category> children = new ArrayList<>();
+
+    @Builder
+    public Category(String name, Category parent) {
+        this.name = name;
+        this.parent = parent;
+
+        if(parent != null) {
+            parent.children.add(this);
+        }
+    }
+
+    public static Category createCategory(String name, Category parent) {
+        return Category.builder()
+            .name(name)
+            .parent(parent)
+            .build(); 
+    }
+
+    public void update(String name, Category parent) {
+        this.name = name;
+
+        if(this.parent != null) {
+            this.parent.children.remove(this);
+        }
+
+        this.parent = parent;
+
+        if(parent != null) {
+            parent.children.add(this);
+        }
+
+    }
+
+    public void removeChild(Category category) {
+        if(children.contains(category)) {
+            children.remove(category);
+            category.parent = null;
+        }
+    }
+
+    public boolean hasParent() {
+        return parent != null;
+    }
+
+    public boolean hasChildren() {
+        return children.size() > 0;
+    }
 }
