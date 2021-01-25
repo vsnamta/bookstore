@@ -1,6 +1,7 @@
 .gradle
 bin
 build
+src/main/generated
 
 ### STS ###
 .apt_generated
