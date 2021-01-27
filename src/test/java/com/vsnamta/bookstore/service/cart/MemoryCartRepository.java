@@ -29,4 +29,9 @@ public class MemoryCartRepository extends BaseMemoryRepository<Cart> implements 
             .filter(cart -> cart != null)
             .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Cart> findAll(Long memberId) {
+        return null;
+    }
 }

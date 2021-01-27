@@ -1,6 +1,8 @@
 package com.vsnamta.bookstore.infra.repository;
 
 import static com.vsnamta.bookstore.domain.cart.QCart.cart;
+import static com.vsnamta.bookstore.domain.product.QProduct.product;
+import static com.vsnamta.bookstore.domain.discount.QDiscountPolicy.discountPolicy;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,5 +64,22 @@ public class JpaCartRepository implements CartRepository {
                 .fetch();
 
         return result;
+    }
+
+    @Override
+    public List<Cart> findAll(Long memberId) {
+        JPAQueryFactory query = new JPAQueryFactory(entityManager);
+
+        List<Cart> results = 
+            query.select(cart)
+                .from(cart)
+                .join(cart.product, product).fetchJoin()
+                .join(product.discountPolicy, discountPolicy).fetchJoin()
+                .where(cart.member.id.eq(memberId))
+                .orderBy(cart.id.desc())
+                .setHint("org.hibernate.readOnly", true)
+                .fetch();
+
+        return results;
     }
 }
