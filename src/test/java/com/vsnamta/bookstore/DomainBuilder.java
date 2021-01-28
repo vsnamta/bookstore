@@ -8,6 +8,10 @@ import com.vsnamta.bookstore.domain.category.Category;
 import com.vsnamta.bookstore.domain.category.Category.CategoryBuilder;
 import com.vsnamta.bookstore.domain.common.model.Address;
 import com.vsnamta.bookstore.domain.common.model.Address.AddressBuilder;
+import com.vsnamta.bookstore.domain.common.model.PageRequest;
+import com.vsnamta.bookstore.domain.common.model.PageRequest.PageRequestBuilder;
+import com.vsnamta.bookstore.domain.common.model.SearchRequest;
+import com.vsnamta.bookstore.domain.common.model.SearchRequest.SearchRequestBuilder;
 import com.vsnamta.bookstore.domain.discount.DiscountPolicy;
 import com.vsnamta.bookstore.domain.discount.DiscountPolicy.DiscountPolicyBuilder;
 import com.vsnamta.bookstore.domain.member.Member;
@@ -147,5 +151,17 @@ public class DomainBuilder {
 
     public static ReviewBuilder aReview() {
         return Review.builder();
+    }
+    
+    public static PageRequestBuilder aPageRequest() {
+        return PageRequest.builder()
+            .page(1)
+            .size(10);
+    }
+
+    public static SearchRequestBuilder aSearchRequest() {
+        return SearchRequest.builder()
+            .column(null)
+            .keyword(null);
     }
 }
