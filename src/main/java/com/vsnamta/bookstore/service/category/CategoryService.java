@@ -1,5 +1,8 @@
 package com.vsnamta.bookstore.service.category;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.vsnamta.bookstore.domain.category.Category;
 import com.vsnamta.bookstore.domain.category.CategoryRepository;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
@@ -74,5 +77,13 @@ public class CategoryService {
         }
 
         categoryRepository.remove(category);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryResult> findAll() {
+        return categoryRepository.findAll()
+            .stream()
+            .map(CategoryResult::new)
+            .collect(Collectors.toList());
     }
 }

@@ -1,12 +1,19 @@
 package com.vsnamta.bookstore.service.product;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.vsnamta.bookstore.domain.category.Category;
 import com.vsnamta.bookstore.domain.category.CategoryRepository;
+import com.vsnamta.bookstore.domain.common.model.PageRequest;
+import com.vsnamta.bookstore.domain.common.model.SearchRequest;
 import com.vsnamta.bookstore.domain.discount.DiscountPolicy;
 import com.vsnamta.bookstore.domain.discount.DiscountPolicyRepository;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
+import com.vsnamta.bookstore.service.common.exception.DataNotFoundException;
 import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
+import com.vsnamta.bookstore.service.common.model.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,5 +64,30 @@ public class ProductService {
         product.update(discountPolicy, category, productSaveOrUpdatePayload.toCommand());
 
         return id;
+    }
+
+    @Transactional(readOnly = true)
+    public ProductDetailResult findOne(Long id) {
+        Product product = productRepository.findOne(id)
+            .orElseThrow(() -> new DataNotFoundException("요청하신 데이터를 찾을 수 없습니다."));
+
+        return new ProductDetailResult(product);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResult> findAll(ProductFindPayload productFindPayload) {
+        Long categoryId = productFindPayload.getCategoryId();
+        SearchRequest searchRequest = productFindPayload.getSearchCriteria().toRequest();
+        PageRequest pageRequest = productFindPayload.getPageCriteria().toRequest();
+
+        List<ProductResult> productResults = 
+            productRepository.findAll(categoryId, searchRequest, pageRequest)
+                .stream()
+                .map(ProductResult::new)
+                .collect(Collectors.toList());
+
+        long totalCount = productRepository.findTotalCount(categoryId, searchRequest);
+    
+        return new Page<ProductResult>(productResults, totalCount);
     }
 }

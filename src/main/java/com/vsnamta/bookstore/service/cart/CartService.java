@@ -1,6 +1,7 @@
 package com.vsnamta.bookstore.service.cart;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.vsnamta.bookstore.domain.cart.Cart;
 import com.vsnamta.bookstore.domain.cart.CartRepository;
@@ -73,5 +74,13 @@ public class CartService {
         for(Cart cart : carts) {
             cartRepository.remove(cart);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<CartResult> findAll(Long memberId) {
+        return cartRepository.findAll(memberId)
+            .stream()
+            .map(CartResult::new)
+            .collect(Collectors.toList());
     }
 }

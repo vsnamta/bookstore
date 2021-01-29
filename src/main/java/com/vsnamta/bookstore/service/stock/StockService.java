@@ -1,10 +1,15 @@
 package com.vsnamta.bookstore.service.stock;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.vsnamta.bookstore.domain.common.model.PageRequest;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.domain.stock.Stock;
 import com.vsnamta.bookstore.domain.stock.StockRepository;
 import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
+import com.vsnamta.bookstore.service.common.model.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,5 +41,21 @@ public class StockService {
         Stock stock = Stock.createStock(product, stockSavePayload.getQuantity(), stockSavePayload.getContents(), stockSavePayload.getStatus());
 
         return stockRepository.save(stock).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<StockResult> findAll(StockFindPayload stockFindPayload) {
+        Long productId = stockFindPayload.getProductId();
+        PageRequest pageRequest = stockFindPayload.getPageCriteria().toRequest();
+        
+        List<StockResult> stockResults = 
+            stockRepository.findAll(productId, pageRequest)
+                .stream()
+                .map(StockResult::new)
+                .collect(Collectors.toList());
+
+        long totalCount = stockRepository.findTotalCount(productId);
+    
+        return new Page<StockResult>(stockResults, totalCount);
     }
 }

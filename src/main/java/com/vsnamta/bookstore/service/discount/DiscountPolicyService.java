@@ -1,5 +1,8 @@
 package com.vsnamta.bookstore.service.discount;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.vsnamta.bookstore.domain.discount.DiscountPolicy;
 import com.vsnamta.bookstore.domain.discount.DiscountPolicyRepository;
 import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
@@ -44,5 +47,13 @@ public class DiscountPolicyService {
         );
 
         return id;
+    }
+
+    @Transactional(readOnly = true)
+    public List<DiscountPolicyResult> findAll() {
+        return discountPolicyRepository.findAll()
+            .stream()
+            .map(DiscountPolicyResult::new)
+            .collect(Collectors.toList());
     }
 }

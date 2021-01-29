@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import com.vsnamta.bookstore.domain.cart.Cart;
 import com.vsnamta.bookstore.domain.cart.CartRepository;
+import com.vsnamta.bookstore.domain.common.model.PageRequest;
+import com.vsnamta.bookstore.domain.common.model.SearchRequest;
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
 import com.vsnamta.bookstore.domain.order.Order;
@@ -14,7 +16,10 @@ import com.vsnamta.bookstore.domain.order.OrderRepository;
 import com.vsnamta.bookstore.domain.order.OrderStatusSettingService;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
+import com.vsnamta.bookstore.service.common.exception.DataNotFoundException;
 import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
+import com.vsnamta.bookstore.service.common.model.FindPayload;
+import com.vsnamta.bookstore.service.common.model.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,5 +118,29 @@ public class OrderService {
         }
 
         return id;
+    }
+
+    @Transactional(readOnly = true)
+    public OrderDetailResult findOne(Long id) {
+        Order order = orderRepository.findOne(id)
+            .orElseThrow(() -> new DataNotFoundException("요청하신 데이터를 찾을 수 없습니다."));
+
+		return new OrderDetailResult(order);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OrderResult> findAll(FindPayload findPayload) {
+        SearchRequest searchRequest = findPayload.getSearchCriteria().toRequest();
+        PageRequest pageRequest = findPayload.getPageCriteria().toRequest();
+        
+        List<OrderResult> orderResults = 
+            orderRepository.findAll(searchRequest, pageRequest)
+                .stream()
+                .map(OrderResult::new)
+                .collect(Collectors.toList());
+
+        long totalCount = orderRepository.findTotalCount(searchRequest);
+    
+        return new Page<OrderResult>(orderResults, totalCount);
     }
 }
