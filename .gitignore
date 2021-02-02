@@ -2,6 +2,7 @@
 bin
 build
 src/main/generated
+application-oauth.properties
 
 ### STS ###
 .apt_generated
