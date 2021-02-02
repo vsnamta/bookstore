@@ -35,9 +35,11 @@ dependencies {
     compile('org.mariadb.jdbc:mariadb-java-client')
     compile('com.querydsl:querydsl-jpa')
     compileOnly('com.querydsl:querydsl-apt')
+    compile('org.springframework.boot:spring-boot-starter-oauth2-client')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('com.h2database:h2')
+    testCompile("org.springframework.security:spring-security-test")
 }
 
 def querydslSrcDir = 'src/main/generated'
