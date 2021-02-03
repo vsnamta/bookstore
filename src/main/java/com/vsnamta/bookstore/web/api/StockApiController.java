@@ -7,6 +7,7 @@ import com.vsnamta.bookstore.service.stock.StockSavePayload;
 import com.vsnamta.bookstore.service.stock.StockService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,11 +26,13 @@ public class StockApiController {
         this.stockService = stockService;
     } 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/stocks")
     public Long save(@RequestBody StockSavePayload stockSavePayload) {
         return stockService.save(stockSavePayload);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/api/stocks")
     public Page<StockResult> findAll(StockFindPayload stockFindPayload) {
         return stockService.findAll(stockFindPayload);

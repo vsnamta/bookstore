@@ -10,6 +10,8 @@ import com.vsnamta.bookstore.domain.member.MemberRepository;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
+import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
+import com.vsnamta.bookstore.service.member.LoginMember;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,9 +60,13 @@ public class CartService {
     }
 
     @Transactional
-    public Long update(Long id, CartUpdatePayload cartUpdatePayload) {
+    public Long update(LoginMember loginMember, Long id, CartUpdatePayload cartUpdatePayload) {
         Cart cart = cartRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
+
+        if(!loginMember.checkMyCart(cart)) {
+            throw new NotEnoughPermissionException("요청 권한이 없습니다.");
+        }
 
         cart.updateQuantity(cartUpdatePayload.getQuantity());
 
@@ -68,10 +74,13 @@ public class CartService {
     }
 
     @Transactional
-    public void remove(List<Long> ids) {
+    public void remove(LoginMember loginMember, List<Long> ids) {
         List<Cart> carts = cartRepository.findByIds(ids);
 
         for(Cart cart : carts) {
+            if(!loginMember.checkMyCart(cart)) {
+                throw new NotEnoughPermissionException("요청 권한이 없습니다.");
+            }
             cartRepository.remove(cart);
         }
     }

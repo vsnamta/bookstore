@@ -9,6 +9,7 @@ import com.vsnamta.bookstore.domain.common.file.FileStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +31,13 @@ public class FileApiController {
         this.fileStorage = fileStorage;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/files")
     public String save(MultipartFile file) {
         return fileStorage.save(file);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/api/files/{name}")
     public void remove(@PathVariable String name) {
         fileStorage.remove(name);

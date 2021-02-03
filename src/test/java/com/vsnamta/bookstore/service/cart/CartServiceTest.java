@@ -4,6 +4,7 @@ import static com.vsnamta.bookstore.DomainBuilder.aCart;
 import static com.vsnamta.bookstore.DomainBuilder.aMember;
 import static com.vsnamta.bookstore.DomainBuilder.aProduct;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -14,6 +15,8 @@ import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
+import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
+import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.member.MemoryMemberRepository;
 import com.vsnamta.bookstore.service.product.MemoryProductRepository;
 
@@ -91,13 +94,33 @@ public class CartServiceTest {
         cartUpdatePayload.setQuantity(1);
 
         // when
-        cartService.update(cart.getId(), cartUpdatePayload);
+        cartService.update(new LoginMember(member), cart.getId(), cartUpdatePayload);
 
         // then
         cart = cartRepository.findById(cart.getId()).get();
 
         assertEquals("Clean Code", cart.getProduct().getName());
         assertEquals(1, cart.getQuantity());
+    }
+
+    @Test(expected = NotEnoughPermissionException.class)
+    public void 장바구니_수량_변경은_본인만_가능() {
+        // given
+        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Product product = productRepository.save(aProduct().name("Clean Code").build());
+        
+        Cart cart = cartRepository.save(aCart().member(member).product(product).quantity(2).build());
+
+        CartUpdatePayload cartUpdatePayload = new CartUpdatePayload();
+        cartUpdatePayload.setQuantity(1);
+
+        Member otherMember = memberRepository.save(aMember().name("임꺽정").build());
+
+        // when
+        cartService.update(new LoginMember(otherMember), cart.getId(), cartUpdatePayload);
+
+        // then
+        fail();
     }
 
     @Test
@@ -113,6 +136,7 @@ public class CartServiceTest {
 
         // when
         cartService.remove(
+            new LoginMember(member), 
             Arrays.asList(cart1.getId(), cart2.getId())
         );
 
@@ -122,5 +146,21 @@ public class CartServiceTest {
 
         assertEquals(false, cartOpt1.isPresent());
         assertEquals(false, cartOpt2.isPresent());
+    }
+
+    @Test(expected = NotEnoughPermissionException.class)
+    public void 장바구니_삭제는_본인만_가능() {
+        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Product product = productRepository.save(aProduct().name("Clean Code").build());
+
+        Cart cart = cartRepository.save(aCart().member(member).product(product).quantity(1).build());
+
+        Member otherMember = memberRepository.save(aMember().name("임꺽정").build());
+
+        // when
+        cartService.remove(new LoginMember(otherMember), Arrays.asList(cart.getId()));
+
+        // then
+        fail();
     }
 }

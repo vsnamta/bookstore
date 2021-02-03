@@ -7,6 +7,7 @@ import com.vsnamta.bookstore.service.category.CategorySaveOrUpdatePayload;
 import com.vsnamta.bookstore.service.category.CategoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,16 +29,19 @@ public class CategoryApiController {
         this.categoryService = categoryService;
     } 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/categories")
     public Long save(@RequestBody CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
         return categoryService.save(categorySaveOrUpdatePayload);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/api/categories/{id}")
     public Long update(@PathVariable Long id, @RequestBody CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
         return categoryService.update(id, categorySaveOrUpdatePayload);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/api/categories/{id}")
     public void remove(@PathVariable Long id) {
         categoryService.remove(id);

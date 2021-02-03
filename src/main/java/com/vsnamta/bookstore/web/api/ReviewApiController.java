@@ -1,13 +1,17 @@
 package com.vsnamta.bookstore.web.api;
 
+import javax.servlet.http.HttpSession;
+
 import com.vsnamta.bookstore.service.common.model.FindPayload;
 import com.vsnamta.bookstore.service.common.model.Page;
+import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.review.ReviewResult;
 import com.vsnamta.bookstore.service.review.ReviewSavePayload;
 import com.vsnamta.bookstore.service.review.ReviewService;
 import com.vsnamta.bookstore.service.review.ReviewUpdatePayload;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,19 +33,30 @@ public class ReviewApiController {
         this.reviewService = reviewService;
     } 
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/reviews")
-    public Long save(@RequestBody ReviewSavePayload reviewSavePayload) {
+    public Long save(@RequestBody ReviewSavePayload reviewSavePayload, HttpSession httpSession) {
+        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
+
+        reviewSavePayload.setMemberId(loginMember.getId());
+
         return reviewService.save(reviewSavePayload);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/reviews/{id}")
-    public Long update(@PathVariable Long id, @RequestBody ReviewUpdatePayload reviewUpdatePayload) {
-        return reviewService.update(id, reviewUpdatePayload);
+    public Long update(@PathVariable Long id, @RequestBody ReviewUpdatePayload reviewUpdatePayload, HttpSession httpSession) {
+        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
+
+        return reviewService.update(loginMember, id, reviewUpdatePayload);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/api/reviews/{id}")
-    public void remove(@PathVariable Long id) {
-        reviewService.remove(id);
+    public void remove(@PathVariable Long id, HttpSession httpSession) {
+        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
+        
+        reviewService.remove(loginMember, id);
     }
 
     @GetMapping("/api/reviews")

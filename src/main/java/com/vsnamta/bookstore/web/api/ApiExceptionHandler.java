@@ -2,6 +2,7 @@ package com.vsnamta.bookstore.web.api;
 
 import com.vsnamta.bookstore.service.common.exception.DataNotFoundException;
 import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
+import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.common.model.ErrorResult;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,13 @@ public class ApiExceptionHandler {
     public ResponseEntity<ErrorResult> handleInvalidArgumentException(InvalidArgumentException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResult(exception.getMessage()));
+    }
+
+    @ExceptionHandler(NotEnoughPermissionException.class)
+    public ResponseEntity<ErrorResult> handleNotEnoughPermissionException(NotEnoughPermissionException exception) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResult(exception.getMessage()));
     }
 

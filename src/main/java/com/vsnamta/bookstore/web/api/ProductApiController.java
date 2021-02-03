@@ -8,6 +8,7 @@ import com.vsnamta.bookstore.service.product.ProductSaveOrUpdatePayload;
 import com.vsnamta.bookstore.service.product.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,11 +29,13 @@ public class ProductApiController {
         this.productService = productService;
     } 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/products")
     public Long save(@RequestBody ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
         return productService.save(productSaveOrUpdatePayload);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/api/products/{id}")
     public Long update(@PathVariable Long id, @RequestBody ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
         return productService.update(id, productSaveOrUpdatePayload);

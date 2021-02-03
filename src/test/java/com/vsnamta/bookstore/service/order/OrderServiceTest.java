@@ -7,6 +7,7 @@ import static com.vsnamta.bookstore.DomainBuilder.aMember;
 import static com.vsnamta.bookstore.DomainBuilder.aProduct;
 import static com.vsnamta.bookstore.DomainBuilder.aStockInfo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -27,6 +28,7 @@ import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.domain.stock.StockRepository;
 import com.vsnamta.bookstore.service.cart.MemoryCartRepository;
+import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.discount.MemoryDiscountPolicyRepository;
 import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.member.MemoryMemberRepository;
@@ -182,6 +184,46 @@ public class OrderServiceTest {
         assertEquals(1000, member.getPoint());
     }
 
+    @Test(expected = NotEnoughPermissionException.class)
+    public void 주문취소는_본인만_가능() {
+        // given   
+        Member member = memberRepository.save(aMember().name("홍길동").point(1000).build());
+
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+
+        Product product = productRepository.save(
+            aProduct()
+                .discountPolicy(discountPolicy)
+                .name("Clean Code")
+                .stockInfo(aStockInfo().stockQuantity(10).build())
+                .build()
+        );
+
+        Order order = orderRepository.save(
+            Order.createOrder(
+                member,
+                Arrays.asList(
+                    OrderLine.createOrderLine(product, 1)
+                ), 
+                1000, 
+                aDeliveryInfo().build()
+            )
+        );
+
+        orderStatusSettingService.ordered(order);
+
+        OrderUpdatePayload orderUpdatePayload = new OrderUpdatePayload();
+        orderUpdatePayload.setStatus(OrderStatus.CANCELED);
+
+        Member otherMember = memberRepository.save(aMember().name("임꺽정").build());
+
+        // when
+        orderService.update(new LoginMember(otherMember), order.getId(), orderUpdatePayload);
+
+        // then
+        fail();
+    }
+
     @Test
     public void 구매확정시_회원의_적립금_증가() {
         // given   
@@ -212,7 +254,7 @@ public class OrderServiceTest {
         orderUpdatePayload.setStatus(OrderStatus.COMPLETED);
 
         // when
-        orderService.update(order.getId(), orderUpdatePayload);
+        orderService.update(new LoginMember(member), order.getId(), orderUpdatePayload);
 
         // then
         order = orderRepository.findById(order.getId()).get();

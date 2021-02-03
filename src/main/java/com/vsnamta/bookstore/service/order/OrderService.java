@@ -18,8 +18,10 @@ import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.service.common.exception.DataNotFoundException;
 import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
+import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.common.model.FindPayload;
 import com.vsnamta.bookstore.service.common.model.Page;
+import com.vsnamta.bookstore.service.member.LoginMember;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -104,9 +106,13 @@ public class OrderService {
     }
 
     @Transactional
-    public Long update(Long id, OrderUpdatePayload orderUpdatePayload) {
+    public Long update(LoginMember loginMember, Long id, OrderUpdatePayload orderUpdatePayload) {
         Order order = orderRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
+
+        if(loginMember.hasUserRole() && !loginMember.checkMyOrder(order)) {
+            throw new NotEnoughPermissionException("요청 권한이 없습니다.");
+        }
 
         switch (orderUpdatePayload.getStatus()) {
             case CANCELED:
@@ -121,9 +127,13 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderDetailResult findOne(Long id) {
+    public OrderDetailResult findOne(LoginMember loginMember, Long id) {
         Order order = orderRepository.findOne(id)
             .orElseThrow(() -> new DataNotFoundException("요청하신 데이터를 찾을 수 없습니다."));
+
+        if(loginMember.hasUserRole() && !loginMember.checkMyOrder(order)) {
+            throw new NotEnoughPermissionException("요청 권한이 없습니다.");
+        }
 
 		return new OrderDetailResult(order);
     }
