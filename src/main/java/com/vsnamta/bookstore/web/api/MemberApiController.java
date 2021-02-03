@@ -1,6 +1,7 @@
 package com.vsnamta.bookstore.web.api;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.common.model.FindPayload;
@@ -34,7 +35,7 @@ public class MemberApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/members/{id}")
-    public Long update(@PathVariable Long id, @RequestBody MemberUpdatePayload memberUpdatePayload, HttpSession httpSession) {
+    public Long update(@PathVariable Long id, @Valid @RequestBody MemberUpdatePayload memberUpdatePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         if(loginMember.hasUserRole() && !id.equals(loginMember.getId())) {
@@ -63,7 +64,7 @@ public class MemberApiController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/api/members")
-    public Page<MemberResult> findAll(FindPayload findPayload) {
+    public Page<MemberResult> findAll(@Valid FindPayload findPayload) {
         return memberService.findAll(findPayload);
     }
 }

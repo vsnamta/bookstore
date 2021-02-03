@@ -1,10 +1,13 @@
 package com.vsnamta.bookstore.web.page;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.vsnamta.bookstore.service.common.model.ErrorResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
@@ -44,6 +47,7 @@ public class CustomErrorController extends BasicErrorController {
             errorAttributes.remove("status");
             errorAttributes.remove("error");
             errorAttributes.remove("path");
+            errorAttributes.put("fieldErrorResults", new ArrayList<ErrorResult.FieldErrorResult>());
 
             return errorAttributes;
         }

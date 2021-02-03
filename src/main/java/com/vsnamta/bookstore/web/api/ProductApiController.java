@@ -1,5 +1,7 @@
 package com.vsnamta.bookstore.web.api;
 
+import javax.validation.Valid;
+
 import com.vsnamta.bookstore.service.common.model.Page;
 import com.vsnamta.bookstore.service.product.ProductDetailResult;
 import com.vsnamta.bookstore.service.product.ProductFindPayload;
@@ -31,13 +33,13 @@ public class ProductApiController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/products")
-    public Long save(@RequestBody ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
+    public Long save(@Valid @RequestBody ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
         return productService.save(productSaveOrUpdatePayload);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/api/products/{id}")
-    public Long update(@PathVariable Long id, @RequestBody ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
+    public Long update(@PathVariable Long id, @Valid @RequestBody ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
         return productService.update(id, productSaveOrUpdatePayload);
     }
 
@@ -47,7 +49,7 @@ public class ProductApiController {
     }
 
     @GetMapping("/api/products")
-    public Page<ProductResult> findAll(ProductFindPayload productFindPayload) {
+    public Page<ProductResult> findAll(@Valid ProductFindPayload productFindPayload) {
         return productService.findAll(productFindPayload);
     }
 }

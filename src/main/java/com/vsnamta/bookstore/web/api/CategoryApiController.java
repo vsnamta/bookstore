@@ -2,6 +2,8 @@ package com.vsnamta.bookstore.web.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.vsnamta.bookstore.service.category.CategoryResult;
 import com.vsnamta.bookstore.service.category.CategorySaveOrUpdatePayload;
 import com.vsnamta.bookstore.service.category.CategoryService;
@@ -31,13 +33,13 @@ public class CategoryApiController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/categories")
-    public Long save(@RequestBody CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
+    public Long save(@Valid @RequestBody CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
         return categoryService.save(categorySaveOrUpdatePayload);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/api/categories/{id}")
-    public Long update(@PathVariable Long id, @RequestBody CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
+    public Long update(@PathVariable Long id, @Valid @RequestBody CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
         return categoryService.update(id, categorySaveOrUpdatePayload);
     }
 

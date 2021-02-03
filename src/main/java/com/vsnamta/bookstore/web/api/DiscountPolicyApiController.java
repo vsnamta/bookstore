@@ -2,6 +2,8 @@ package com.vsnamta.bookstore.web.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.vsnamta.bookstore.service.discount.DiscountPolicyResult;
 import com.vsnamta.bookstore.service.discount.DiscountPolicySaveOrUpdatePayload;
 import com.vsnamta.bookstore.service.discount.DiscountPolicyService;
@@ -30,13 +32,13 @@ public class DiscountPolicyApiController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/discountPolicies")
-    public Long save(@RequestBody DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
+    public Long save(@Valid @RequestBody DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
         return discountPolicyService.save(discountPolicySaveOrUpdatePayload);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/api/discountPolicies/{id}")
-    public Long update(@PathVariable Long id, @RequestBody DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
+    public Long update(@PathVariable Long id, @Valid @RequestBody DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
         return discountPolicyService.update(id, discountPolicySaveOrUpdatePayload);
     }
 

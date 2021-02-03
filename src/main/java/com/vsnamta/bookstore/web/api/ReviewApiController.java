@@ -1,6 +1,7 @@
 package com.vsnamta.bookstore.web.api;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import com.vsnamta.bookstore.service.common.model.FindPayload;
 import com.vsnamta.bookstore.service.common.model.Page;
@@ -35,7 +36,7 @@ public class ReviewApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/reviews")
-    public Long save(@RequestBody ReviewSavePayload reviewSavePayload, HttpSession httpSession) {
+    public Long save(@Valid @RequestBody ReviewSavePayload reviewSavePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         reviewSavePayload.setMemberId(loginMember.getId());
@@ -45,7 +46,7 @@ public class ReviewApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/reviews/{id}")
-    public Long update(@PathVariable Long id, @RequestBody ReviewUpdatePayload reviewUpdatePayload, HttpSession httpSession) {
+    public Long update(@PathVariable Long id, @Valid @RequestBody ReviewUpdatePayload reviewUpdatePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         return reviewService.update(loginMember, id, reviewUpdatePayload);
@@ -60,7 +61,7 @@ public class ReviewApiController {
     }
 
     @GetMapping("/api/reviews")
-    public Page<ReviewResult> findAll(FindPayload findPayload) {
+    public Page<ReviewResult> findAll(@Valid FindPayload findPayload) {
         return reviewService.findAll(findPayload);
     }
 }

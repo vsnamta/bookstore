@@ -1,6 +1,7 @@
 package com.vsnamta.bookstore.web.api;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.common.model.Page;
@@ -29,7 +30,7 @@ public class PointHistoryApiController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/api/pointHistories")
-    public Page<PointHistoryResult> findAll(PointHistoryFindPayload pointHistoryFindPayload, HttpSession httpSession) {
+    public Page<PointHistoryResult> findAll(@Valid PointHistoryFindPayload pointHistoryFindPayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
         
         if(loginMember.hasUserRole() && !pointHistoryFindPayload.getMemberId().equals(loginMember.getId())) {

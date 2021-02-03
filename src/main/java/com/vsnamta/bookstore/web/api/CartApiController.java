@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import com.vsnamta.bookstore.service.cart.CartFindPayload;
 import com.vsnamta.bookstore.service.cart.CartResult;
@@ -38,7 +39,7 @@ public class CartApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/carts")
-    public Long save(@RequestBody CartSavePayload cartSavePayload, HttpSession httpSession) {
+    public Long save(@Valid @RequestBody CartSavePayload cartSavePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         cartSavePayload.setMemberId(loginMember.getId());
@@ -48,7 +49,7 @@ public class CartApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/carts/{id}")
-    public Long update(@PathVariable Long id, @RequestBody CartUpdatePayload cartUpdatePayload, HttpSession httpSession) {
+    public Long update(@PathVariable Long id, @Valid @RequestBody CartUpdatePayload cartUpdatePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         return cartService.update(loginMember, id, cartUpdatePayload);
@@ -64,7 +65,7 @@ public class CartApiController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/api/carts")
-    public List<CartResult> findAll(CartFindPayload cartFindPayload, HttpSession httpSession) {
+    public List<CartResult> findAll(@Valid CartFindPayload cartFindPayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         if(loginMember.hasUserRole() && !cartFindPayload.getMemberId().equals(loginMember.getId())) {

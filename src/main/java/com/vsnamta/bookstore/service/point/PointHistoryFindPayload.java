@@ -1,5 +1,8 @@
 package com.vsnamta.bookstore.service.point;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import com.vsnamta.bookstore.service.common.model.PageCriteria;
 
 import lombok.Getter;
@@ -8,6 +11,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PointHistoryFindPayload {
+    @NotNull(message = "회원번호를 선택해주세요.")
     private Long memberId;
+
+    @Valid
     private PageCriteria pageCriteria = new PageCriteria();
 }

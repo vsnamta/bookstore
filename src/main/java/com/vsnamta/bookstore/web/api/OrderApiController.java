@@ -1,6 +1,7 @@
 package com.vsnamta.bookstore.web.api;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.common.model.FindPayload;
@@ -37,7 +38,7 @@ public class OrderApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/orders")
-    public Long save(@RequestBody OrderSavePayload orderSavePayload, HttpSession httpSession) {
+    public Long save(@Valid @RequestBody OrderSavePayload orderSavePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         orderSavePayload.setMemberId(loginMember.getId());
@@ -47,7 +48,7 @@ public class OrderApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/orders/{id}")
-    public Long update(@PathVariable Long id, @RequestBody OrderUpdatePayload orderUpdatePayload, HttpSession httpSession) {
+    public Long update(@PathVariable Long id, @Valid @RequestBody OrderUpdatePayload orderUpdatePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         return orderService.update(loginMember, id, orderUpdatePayload);
@@ -63,7 +64,7 @@ public class OrderApiController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/api/orders")
-    public Page<OrderResult> findAll(FindPayload findPayload, HttpSession httpSession) {
+    public Page<OrderResult> findAll(@Valid FindPayload findPayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         if(loginMember.hasUserRole() && !validateUserSearchCriteria(loginMember, findPayload.getSearchCriteria())) {

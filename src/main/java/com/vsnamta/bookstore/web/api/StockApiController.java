@@ -1,5 +1,7 @@
 package com.vsnamta.bookstore.web.api;
 
+import javax.validation.Valid;
+
 import com.vsnamta.bookstore.service.common.model.Page;
 import com.vsnamta.bookstore.service.stock.StockFindPayload;
 import com.vsnamta.bookstore.service.stock.StockResult;
@@ -28,13 +30,13 @@ public class StockApiController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/stocks")
-    public Long save(@RequestBody StockSavePayload stockSavePayload) {
+    public Long save(@Valid @RequestBody StockSavePayload stockSavePayload) {
         return stockService.save(stockSavePayload);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/api/stocks")
-    public Page<StockResult> findAll(StockFindPayload stockFindPayload) {
+    public Page<StockResult> findAll(@Valid StockFindPayload stockFindPayload) {
         return stockService.findAll(stockFindPayload);
     }
 }
