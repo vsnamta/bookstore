@@ -33,7 +33,7 @@ function useOrderManagement(initialSearchCriteria: SearchCriteria): [
     const updateOrder = useCallback((id: number, payload: OrderUpdatePayload) => {
         return orderService.update(id, payload)
             .then(id => {
-                let statusName: string = (orderState.result as OrderDetailResult).statusName;
+                let statusName: string = "";
         
                 switch (payload.status) {
                     case "COMPLETED":
