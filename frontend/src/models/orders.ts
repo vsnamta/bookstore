@@ -31,7 +31,7 @@ export interface OrderResult {
 export interface OrderDetailResult {
     id: number;
     memberName: string;
-    orderLines: OrderLineResult[];
+    orderLineResults: OrderLineResult[];
     totalAmounts: number;
     usedPoint: number;
     depositPoint: number;
@@ -43,7 +43,7 @@ export interface OrderDetailResult {
     deliveryMessage: string;
     statusName: string;
     statusUpdatedDate: string;
-    orderStatusHistories: OrderStatusHistoryResult[];
+    statusHistoryResults: OrderStatusHistoryResult[];
 }  
 
 interface OrderLineResult {
