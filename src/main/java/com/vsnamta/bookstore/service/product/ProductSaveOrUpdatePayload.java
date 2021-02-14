@@ -38,7 +38,7 @@ public class ProductSaveOrUpdatePayload {
     @NotBlank(message = "ISBN을 입력해주세요.")
     private String isbn;
 
-    @Min(value = 1, message = "가격을 입력해주세요.")
+    @Min(value = 0, message = "가격을 0원 이상 입력해주세요.")
     private int regularPrice;
 
     @NotBlank(message = "이미지를 선택해주세요.")

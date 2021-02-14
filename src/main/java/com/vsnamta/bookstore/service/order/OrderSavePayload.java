@@ -23,7 +23,7 @@ public class OrderSavePayload {
     @Valid
     private List<OrderProduct> orderProducts;
 
-    @Min(value = 0, message = "사용할 포인트를 0원 이상 입력해주세요.")
+    @Min(value = 0, message = "사용할 포인트를 0 이상 입력해주세요.")
     private int usedPoint;
 
     @NotBlank(message = "수신인의 이름을 입력해주세요.")
