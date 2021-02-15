@@ -39,6 +39,7 @@ dependencies {
     compile('com.querydsl:querydsl-jpa')
     compileOnly('com.querydsl:querydsl-apt')
     compile('org.springframework.boot:spring-boot-starter-oauth2-client')
+    compile('org.flywaydb:flyway-core')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('com.h2database:h2')
