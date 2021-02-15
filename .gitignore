@@ -5,6 +5,7 @@ src/main/generated
 application-oauth.properties
 dist
 node_modules
+nodejs
 
 ### STS ###
 .apt_generated
