@@ -39,7 +39,7 @@ public class CartApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/carts")
-    public Long save(@Valid @RequestBody CartSavePayload cartSavePayload, HttpSession httpSession) {
+    public CartResult save(@Valid @RequestBody CartSavePayload cartSavePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         cartSavePayload.setMemberId(loginMember.getId());
@@ -49,7 +49,7 @@ public class CartApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/carts/{id}")
-    public Long update(@PathVariable Long id, @Valid @RequestBody CartUpdatePayload cartUpdatePayload, HttpSession httpSession) {
+    public CartResult update(@PathVariable Long id, @Valid @RequestBody CartUpdatePayload cartUpdatePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         return cartService.update(loginMember, id, cartUpdatePayload);

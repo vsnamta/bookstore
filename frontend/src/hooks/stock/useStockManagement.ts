@@ -21,7 +21,7 @@ function useStockManagement(initialProductId: number): [
 
     const saveStock = useCallback((payload: StockSavePayload) => {
         return stockService.save(payload)
-            .then(id => {
+            .then(updatedStock => {
                 updateProductId(initialProductId);
             }); 
     }, [updateProductId]);

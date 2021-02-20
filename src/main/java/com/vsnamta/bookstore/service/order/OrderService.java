@@ -51,15 +51,16 @@ public class OrderService {
     }
 
     @Transactional
-    public Long save(OrderSavePayload orderSavePayload) {
+    public OrderDetailResult save(OrderSavePayload orderSavePayload) {
         Member member = memberRepository.findById(orderSavePayload.getMemberId()).get();
         List<OrderLine> orderLines = createOrderLines(orderSavePayload.getOrderProducts());
 
         Order order = Order.createOrder(member, orderLines, orderSavePayload.getUsedPoint(), orderSavePayload.createDeliveryInfo());      
-        
         orderStatusSettingService.ordered(order);
+        
+        orderRepository.save(order);
 
-        return orderRepository.save(order).getId();
+        return new OrderDetailResult(order);
     }
 
     private List<OrderLine> createOrderLines(List<OrderSavePayload.OrderProduct> orderProducts) {
@@ -106,7 +107,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Long update(LoginMember loginMember, Long id, OrderUpdatePayload orderUpdatePayload) {
+    public OrderDetailResult update(LoginMember loginMember, Long id, OrderUpdatePayload orderUpdatePayload) {
         Order order = orderRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
@@ -123,7 +124,7 @@ public class OrderService {
                 break;
         }
 
-        return id;
+        return new OrderDetailResult(order);
     }
 
     @Transactional(readOnly = true)

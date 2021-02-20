@@ -30,7 +30,7 @@ public class StockApiController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/stocks")
-    public Long save(@Valid @RequestBody StockSavePayload stockSavePayload) {
+    public StockResult save(@Valid @RequestBody StockSavePayload stockSavePayload) {
         return stockService.save(stockSavePayload);
     }
 

@@ -91,7 +91,7 @@ public class OrderServiceTest {
         orderSavePayload.setUsedPoint(0);
 
         // when
-        Long orderId = orderService.save(orderSavePayload);
+        Long orderId = orderService.save(orderSavePayload).getId();
 
         // then
         Order order = orderRepository.findById(orderId).get();
@@ -128,7 +128,7 @@ public class OrderServiceTest {
         orderSavePayload.setUsedPoint(1000);
 
         // when
-        Long orderId = orderService.save(orderSavePayload);
+        Long orderId = orderService.save(orderSavePayload).getId();
 
         // then
         Order order = orderRepository.findById(orderId).get();

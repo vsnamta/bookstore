@@ -38,7 +38,7 @@ public class StockServiceTest {
         stockSavePayload.setStatus(StockStatus.PURCHASE);
 
         // when
-        Long stockId = stockService.save(stockSavePayload);
+        Long stockId = stockService.save(stockSavePayload).getId();
 
         // then
         Stock stock = stockRepository.findById(stockId).get();

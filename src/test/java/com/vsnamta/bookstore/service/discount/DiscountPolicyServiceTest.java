@@ -29,7 +29,7 @@ public class DiscountPolicyServiceTest {
         discountPolicySaveOrUpdatePayload.setDepositPercent(5);
 
         // when
-        Long discountPolicyId = discountPolicyService.save(discountPolicySaveOrUpdatePayload);
+        Long discountPolicyId = discountPolicyService.save(discountPolicySaveOrUpdatePayload).getId();
 
         // then
         DiscountPolicy discountPolicy = discountPolicyRepository.findById(discountPolicyId).get();

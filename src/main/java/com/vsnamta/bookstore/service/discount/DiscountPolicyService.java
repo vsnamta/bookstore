@@ -25,18 +25,20 @@ public class DiscountPolicyService {
     }
 
     @Transactional
-    public Long save(DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
+    public DiscountPolicyResult save(DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
         DiscountPolicy discountPolicy = DiscountPolicy.createDiscountPolicy(
             discountPolicySaveOrUpdatePayload.getName(),
             discountPolicySaveOrUpdatePayload.getDiscountPercent(),
             discountPolicySaveOrUpdatePayload.getDepositPercent()
         );
 
-        return discountPolicyRepository.save(discountPolicy).getId();
+        discountPolicyRepository.save(discountPolicy);
+
+        return new DiscountPolicyResult(discountPolicy);
     }
 
     @Transactional
-    public Long update(Long id, DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
+    public DiscountPolicyResult update(Long id, DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
         DiscountPolicy discountPolicy = discountPolicyRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
@@ -46,7 +48,7 @@ public class DiscountPolicyService {
             discountPolicySaveOrUpdatePayload.getDepositPercent()
         );
 
-        return id;
+        return new DiscountPolicyResult(discountPolicy);
     }
 
     @Transactional(readOnly = true)

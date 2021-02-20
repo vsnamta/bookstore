@@ -6,18 +6,18 @@ import apiClient from '../utils/apiClient';
 import errorParser from '../utils/errorParser';
 
 const reviewService = {
-    save(payload: ReviewSavePayload): Promise<number> {
+    save(payload: ReviewSavePayload): Promise<ReviewResult> {
         return new Promise((resolve, reject) => {
-            apiClient.post<number>('/api/reviews', payload).then(({ data }) => {
+            apiClient.post<ReviewResult>('/api/reviews', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
                 reject(errorParser.parse(error));
             });
         });
     },
-    update(id: number, payload: ReviewUpdatePayload): Promise<number> {
+    update(id: number, payload: ReviewUpdatePayload): Promise<ReviewResult> {
         return new Promise((resolve, reject) => {
-            apiClient.put<number>(`/api/reviews/${id}`, payload).then(({ data }) => {
+            apiClient.put<ReviewResult>(`/api/reviews/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
                 reject(errorParser.parse(error));

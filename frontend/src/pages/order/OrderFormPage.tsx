@@ -30,8 +30,8 @@ function OrderFormPage() {
 
     const onSaveOrder = useCallback((payload: OrderSavePayload) => { 
         orderService.save(payload)
-            .then(id => {
-                history.push(`/order/${id}`);
+            .then(savedOrder => {
+                history.push(`/order/${savedOrder.id}`);
             });
     }, []);
     

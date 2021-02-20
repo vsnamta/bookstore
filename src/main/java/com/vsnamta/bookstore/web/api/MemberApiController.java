@@ -35,7 +35,7 @@ public class MemberApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/members/{id}")
-    public Long update(@PathVariable Long id, @Valid @RequestBody MemberUpdatePayload memberUpdatePayload, HttpSession httpSession) {
+    public MemberDetailResult update(@PathVariable Long id, @Valid @RequestBody MemberUpdatePayload memberUpdatePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         if(loginMember.hasUserRole() && !id.equals(loginMember.getId())) {

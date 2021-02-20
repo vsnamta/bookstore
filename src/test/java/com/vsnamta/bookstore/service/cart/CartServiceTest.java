@@ -50,7 +50,7 @@ public class CartServiceTest {
         cartSavePayload.setQuantity(1);
 
         // when
-        Long cartId = cartService.save(cartSavePayload);
+        Long cartId = cartService.save(cartSavePayload).getId();
 
         // then
         Cart cart = cartRepository.findById(cartId).get();
@@ -73,7 +73,7 @@ public class CartServiceTest {
         cartSavePayload.setQuantity(1);
 
         // when
-        Long cartId = cartService.save(cartSavePayload);
+        Long cartId = cartService.save(cartSavePayload).getId();
 
         // then
         Cart cart = cartRepository.findById(cartId).get();

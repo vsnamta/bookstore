@@ -20,14 +20,8 @@ function MyDataPage() {
 
     const onUpdateMember = useCallback((id: number, payload: MemberUpdatePayload) => {
         memberService.update(id, payload)
-            .then(id => {
-                setMember(member => ({
-                    ...member as MemberDetailResult,
-                    phoneNumber: payload.phoneNumber,
-                    zipCode: payload.zipCode,
-                    address1: payload.address1,
-                    address2: payload.address2
-                }));
+            .then(updatedMember => {
+                setMember(updatedMember);
             });   
     }, []);
     

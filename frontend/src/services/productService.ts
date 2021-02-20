@@ -6,18 +6,18 @@ import apiClient from '../utils/apiClient';
 import errorParser from '../utils/errorParser';
 
 const productService = {
-    save(payload: ProductSaveOrUpdatePayload): Promise<number> {
+    save(payload: ProductSaveOrUpdatePayload): Promise<ProductDetailResult> {
         return new Promise((resolve, reject) => {
-            apiClient.post<number>('/api/products', payload).then(({ data }) => {
+            apiClient.post<ProductDetailResult>('/api/products', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
                 reject(errorParser.parse(error));
             });
         });
     },
-    update(id: number, payload: ProductSaveOrUpdatePayload): Promise<number> {
+    update(id: number, payload: ProductSaveOrUpdatePayload): Promise<ProductDetailResult> {
         return new Promise((resolve, reject) => {
-            apiClient.put<number>(`/api/products/${id}`, payload).then(({ data }) => {
+            apiClient.put<ProductDetailResult>(`/api/products/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
                 reject(errorParser.parse(error));

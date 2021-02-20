@@ -33,13 +33,13 @@ public class CategoryApiController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/categories")
-    public Long save(@Valid @RequestBody CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
+    public CategoryResult save(@Valid @RequestBody CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
         return categoryService.save(categorySaveOrUpdatePayload);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/api/categories/{id}")
-    public Long update(@PathVariable Long id, @Valid @RequestBody CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
+    public CategoryResult update(@PathVariable Long id, @Valid @RequestBody CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
         return categoryService.update(id, categorySaveOrUpdatePayload);
     }
 

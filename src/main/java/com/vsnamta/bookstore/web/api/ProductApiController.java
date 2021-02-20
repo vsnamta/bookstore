@@ -33,13 +33,13 @@ public class ProductApiController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/products")
-    public Long save(@Valid @RequestBody ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
+    public ProductDetailResult save(@Valid @RequestBody ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
         return productService.save(productSaveOrUpdatePayload);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/api/products/{id}")
-    public Long update(@PathVariable Long id, @Valid @RequestBody ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
+    public ProductDetailResult update(@PathVariable Long id, @Valid @RequestBody ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
         return productService.update(id, productSaveOrUpdatePayload);
     }
 

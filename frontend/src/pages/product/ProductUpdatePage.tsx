@@ -7,13 +7,16 @@ import ProductUpdateForm from '../../components/product/ProductUpdateForm';
 import useCategoryList from '../../hooks/category/useCategoryList';
 import useDiscountPolicyList from '../../hooks/discountPolicy/useDiscountPolicyList';
 import useProduct from '../../hooks/product/useProduct';
-import { ProductSaveOrUpdatePayload } from '../../models/products';
+import { Page } from '../../models/common';
+import { ProductResult, ProductSaveOrUpdatePayload } from '../../models/products';
 import productService from '../../services/productService';
 import { RootState } from '../../store';
-import { initProductState } from '../../store/product';
+import { setProductResult } from '../../store/product';
+import { setProductPage } from '../../store/productPage';
 
 function ProductUpdatePage() {
     const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const productPage= useSelector((state: RootState) => state.productPage.result);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
@@ -29,15 +32,25 @@ function ProductUpdatePage() {
 
     const onUpdateProduct = useCallback((id: number, payload: ProductSaveOrUpdatePayload) => {
         productService.update(id, payload)
-            .then(id => {
-                dispatch(initProductState());
+            .then(updatedProduct => {
+                dispatch(setProductResult(updatedProduct));
+
+                dispatch(setProductPage({
+                    ...productPage as Page<ProductResult>,
+                    list: (productPage as Page<ProductResult>).list
+                        .map(product => 
+                            product.id === updatedProduct.id
+                                ? updatedProduct
+                                : product
+                        )
+                }));
                 
                 history.push(`/admin/product/${id}`);
             })
             .catch(error => {
                 alert("오류가 발생했습니다.");
             });
-    }, []);
+    }, [productPage]);
 
     const onUpdateCancel = useCallback(() => {
         history.goBack();

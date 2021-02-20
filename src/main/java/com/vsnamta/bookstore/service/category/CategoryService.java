@@ -28,7 +28,7 @@ public class CategoryService {
     }
  
     @Transactional
-    public Long save(CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
+    public CategoryResult save(CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
         Category parent = null;
 
         if(categorySaveOrUpdatePayload.getParentId() != null) {
@@ -37,13 +37,13 @@ public class CategoryService {
         }
 
         Category category = Category.createCategory(categorySaveOrUpdatePayload.getName(), parent);
+        categoryRepository.save(category);
 
-        return categoryRepository.save(category).getId();
-
+        return new CategoryResult(category);
     }
 
     @Transactional
-    public Long update(Long id, CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
+    public CategoryResult update(Long id, CategorySaveOrUpdatePayload categorySaveOrUpdatePayload) {
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
@@ -56,7 +56,7 @@ public class CategoryService {
 
         category.update(categorySaveOrUpdatePayload.getName(), parent);
 
-        return id;
+        return new CategoryResult(category);
     }
 
     @Transactional

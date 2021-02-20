@@ -36,7 +36,7 @@ public class CartService {
     }
 
     @Transactional
-    public Long save(CartSavePayload cartSavePayload) {
+    public CartResult save(CartSavePayload cartSavePayload) {
         Cart cart = cartRepository.findByMemberIdAndProductId(cartSavePayload.getMemberId(), cartSavePayload.getProductId())
             .map(existingCart -> {
                 existingCart.updateQuantity(existingCart.getQuantity() + cartSavePayload.getQuantity());
@@ -47,7 +47,7 @@ public class CartService {
                 cartRepository.save(createCart(cartSavePayload))
             );
         
-        return cart.getId();   
+        return new CartResult(cart);   
     }
 
     private Cart createCart(CartSavePayload cartSavePayload) {
@@ -60,7 +60,7 @@ public class CartService {
     }
 
     @Transactional
-    public Long update(LoginMember loginMember, Long id, CartUpdatePayload cartUpdatePayload) {
+    public CartResult update(LoginMember loginMember, Long id, CartUpdatePayload cartUpdatePayload) {
         Cart cart = cartRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
@@ -70,7 +70,7 @@ public class CartService {
 
         cart.updateQuantity(cartUpdatePayload.getQuantity());
 
-        return id;
+        return new CartResult(cart);
     }
 
     @Transactional

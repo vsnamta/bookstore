@@ -47,7 +47,7 @@ public class ReviewServiceTest {
         reviewSavePayload.setContents("좋아요.");
 
         // when
-        Long reviewId = reviewService.save(reviewSavePayload);
+        Long reviewId = reviewService.save(reviewSavePayload).getId();
 
         // then
         Review review = reviewRepository.findById(reviewId).get();

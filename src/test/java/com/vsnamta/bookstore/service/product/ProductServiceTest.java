@@ -47,7 +47,7 @@ public class ProductServiceTest {
         productSaveOrUpdatePayload.setAuthor("로버트 C. 마틴");
 
         // when
-        Long productId = productService.save(productSaveOrUpdatePayload);
+        Long productId = productService.save(productSaveOrUpdatePayload).getId();
 
         // then
         Product product = productRepository.findById(productId).get();

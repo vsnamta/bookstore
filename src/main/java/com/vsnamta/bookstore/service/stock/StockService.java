@@ -32,15 +32,16 @@ public class StockService {
     }   
 
     @Transactional
-    public Long save(StockSavePayload stockSavePayload) {
+    public StockResult save(StockSavePayload stockSavePayload) {
         Product product = productRepository.findById(stockSavePayload.getProductId())
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
         product.plusStockQuantityByPurchase(stockSavePayload.getQuantity());    
 
         Stock stock = Stock.createStock(product, stockSavePayload.getQuantity(), stockSavePayload.getContents(), stockSavePayload.getStatus());
+        stockRepository.save(stock);
 
-        return stockRepository.save(stock).getId();
+        return new StockResult(stock);
     }
 
     @Transactional(readOnly = true)

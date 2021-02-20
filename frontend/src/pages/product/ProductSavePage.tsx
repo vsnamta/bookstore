@@ -9,7 +9,7 @@ import useDiscountPolicyList from '../../hooks/discountPolicy/useDiscountPolicyL
 import { ProductSaveOrUpdatePayload } from '../../models/products';
 import productService from '../../services/productService';
 import { RootState } from '../../store';
-import { initProductState } from "../../store/product";
+import { setProductError, setProductPayload, setProductResult } from "../../store/product";
 import { initProductPageState } from '../../store/productPage';
 
 function ProductSavePage() {
@@ -27,11 +27,14 @@ function ProductSavePage() {
 
     const onSaveProduct = useCallback((payload: ProductSaveOrUpdatePayload) => {
         productService.save(payload)
-            .then(id => {  
-                dispatch(initProductPageState());
-                dispatch(initProductState());
+            .then(savedProduct => {  
+                dispatch(setProductPayload(savedProduct.id));
+                dispatch(setProductError(undefined));
+                dispatch(setProductResult(savedProduct));
                 
-                history.push(`admin/product/${id}`);
+                dispatch(initProductPageState());
+                
+                history.push(`admin/product/${savedProduct.id}`);
             })
             .catch(error => {
                 alert("오류가 발생했습니다.");

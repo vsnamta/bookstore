@@ -28,31 +28,19 @@ function useDiscountPolicyManagement() : [
 
     const saveDiscountPolicy = useCallback((payload: DiscountPolicySaveOrUpdatePayload) => {
         return discountPolicyService.save(payload)
-           .then(id => {
+           .then(savedDiscountPolicy => {
                setDiscountPolicyList(discountPoliyList =>
-                    (discountPoliyList as DiscountPolicyResult[]).concat({
-                        id: id,
-                        name: payload.name,
-                        discountPercent: payload.discountPercent,
-                        depositPercent: payload.depositPercent
-                    })
+                    (discountPoliyList as DiscountPolicyResult[]).concat(savedDiscountPolicy)
                );
             });  
     }, []);
 
     const updateDiscountPolicy = useCallback((id: number, payload: DiscountPolicySaveOrUpdatePayload) => {
         return discountPolicyService.update(id, payload)
-            .then(id => {
+            .then(updatedDiscountPolicy => {
                 setDiscountPolicyList(discountPoliyList =>
                     (discountPoliyList as DiscountPolicyResult[]).map(discountPolicy => 
-                        discountPolicy.id === id
-                            ? { 
-                                ...discountPolicy, 
-                                name: payload.name, 
-                                discountPercent: payload.discountPercent, 
-                                depositPercent: payload.depositPercent 
-                            } 
-                            : discountPolicy
+                        discountPolicy.id === updatedDiscountPolicy.id ? updatedDiscountPolicy : discountPolicy
                     )
                 );
             });

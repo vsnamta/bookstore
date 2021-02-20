@@ -38,7 +38,7 @@ public class CategoryServiceTest {
         categorySaveOrUpdatePayload.setParentId(superCategory.getId());
 
         // when
-        Long categoryId = categoryService.save(categorySaveOrUpdatePayload);
+        Long categoryId = categoryService.save(categorySaveOrUpdatePayload).getId();
 
         // then
         Category subCategory = categoryRepository.findById(categoryId).get();

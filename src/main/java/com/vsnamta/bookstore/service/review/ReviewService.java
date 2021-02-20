@@ -40,7 +40,7 @@ public class ReviewService {
     }   
 
     @Transactional
-    public Long save(ReviewSavePayload reviewSavePayload) {
+    public ReviewResult save(ReviewSavePayload reviewSavePayload) {
         Member member = memberRepository.findById(reviewSavePayload.getMemberId()).get();
 
         Product product = productRepository.findById(reviewSavePayload.getProductId())
@@ -48,11 +48,13 @@ public class ReviewService {
 
         Review review = Review.createReview(member, product, reviewSavePayload.getRating(), reviewSavePayload.getContents());
         
-        return reviewRepository.save(review).getId();
+        reviewRepository.save(review);
+
+        return new ReviewResult(review);
     }
 
     @Transactional
-    public Long update(LoginMember loginMember, Long id, ReviewUpdatePayload reviewUpdatePayload) {
+    public ReviewResult update(LoginMember loginMember, Long id, ReviewUpdatePayload reviewUpdatePayload) {
         Review review = reviewRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
@@ -62,7 +64,7 @@ public class ReviewService {
 
         review.update(reviewUpdatePayload.getRating(), reviewUpdatePayload.getContents());
 
-        return id;
+        return new ReviewResult(review);
     }
 
     @Transactional

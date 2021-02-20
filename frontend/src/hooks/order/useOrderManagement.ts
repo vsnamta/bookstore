@@ -32,24 +32,13 @@ function useOrderManagement(initialSearchCriteria: SearchCriteria): [
 
     const updateOrder = useCallback((id: number, payload: OrderUpdatePayload) => {
         return orderService.update(id, payload)
-            .then(id => {
-                let statusName: string = "";
-        
-                switch (payload.status) {
-                    case "COMPLETED":
-                        statusName = "구매 확정"
-                        break;
-                    case "CANCELED":
-                        statusName = "주문 취소"
-                        break;
-                }
-        
+            .then(updatedOrder => {        
                 setOrderPage(orderPage => ({
                     ...orderPage as Page<OrderResult>,
                     list: (orderPage as Page<OrderResult>).list
                         .map(order => 
-                            order.id === id
-                                ? { ...order, statusName: statusName } 
+                            order.id === updatedOrder.id
+                                ? { ...order, statusName: updatedOrder.statusName } 
                                 : order
                         )
                 }));

@@ -6,9 +6,9 @@ import apiClient from '../utils/apiClient';
 import errorParser from '../utils/errorParser';
 
 const memberService = {
-    update(id: number, payload: MemberUpdatePayload): Promise<number> {
+    update(id: number, payload: MemberUpdatePayload): Promise<MemberDetailResult> {
         return new Promise((resolve, reject) => {
-            apiClient.put<number>(`/api/members/${id}`, payload).then(({ data }) => {
+            apiClient.put<MemberDetailResult>(`/api/members/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
                 reject(errorParser.parse(error));

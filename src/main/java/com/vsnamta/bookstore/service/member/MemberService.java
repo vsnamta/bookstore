@@ -30,13 +30,13 @@ public class MemberService {
     }
 
     @Transactional
-    public Long update(Long id, MemberUpdatePayload memberUpdatePayload) {
+    public MemberDetailResult update(Long id, MemberUpdatePayload memberUpdatePayload) {
         Member member = memberRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
         member.update(memberUpdatePayload.getPhoneNumber(), memberUpdatePayload.createAddress());
 
-        return id;
+        return new MemberDetailResult(member);
     }
 
     @Transactional(readOnly = true)

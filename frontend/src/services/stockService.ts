@@ -6,9 +6,9 @@ import apiClient from '../utils/apiClient';
 import errorParser from '../utils/errorParser';
 
 const stockService = {
-    save(payload: StockSavePayload): Promise<number> {
+    save(payload: StockSavePayload): Promise<StockResult> {
         return new Promise((resolve, reject) => {
-            apiClient.post<number>('/api/stocks', payload).then(({ data }) => {
+            apiClient.post<StockResult>('/api/stocks', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
                 reject(errorParser.parse(error));

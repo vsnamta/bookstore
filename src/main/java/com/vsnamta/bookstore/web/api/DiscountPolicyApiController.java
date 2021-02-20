@@ -32,13 +32,13 @@ public class DiscountPolicyApiController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/discountPolicies")
-    public Long save(@Valid @RequestBody DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
+    public DiscountPolicyResult save(@Valid @RequestBody DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
         return discountPolicyService.save(discountPolicySaveOrUpdatePayload);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/api/discountPolicies/{id}")
-    public Long update(@PathVariable Long id, @Valid @RequestBody DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
+    public DiscountPolicyResult update(@PathVariable Long id, @Valid @RequestBody DiscountPolicySaveOrUpdatePayload discountPolicySaveOrUpdatePayload) {
         return discountPolicyService.update(id, discountPolicySaveOrUpdatePayload);
     }
 

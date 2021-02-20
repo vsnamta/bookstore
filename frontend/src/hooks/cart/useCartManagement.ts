@@ -20,12 +20,10 @@ function useCartManagement(memberId: number): [
 
     const updateCart = useCallback((id: number, payload: CartUpdatePayload) => {
         return cartService.update(id, payload)
-            .then(id => {
+            .then(updatedCart => {
                 setCartList(cartList =>
                     (cartList as CartResult[]).map(cart => 
-                        cart.id === id
-                            ? { ...cart, quantity: payload.quantity } 
-                            : cart
+                        cart.id === updatedCart.id ? updatedCart : cart
                     )
                 );
             });

@@ -9,8 +9,7 @@ export interface CategoryListState {
 
 function useCategoryList(): [
     CategoryListState, 
-    React.Dispatch<React.SetStateAction<CategoryResult[] | undefined>>,
-    () => void
+    React.Dispatch<React.SetStateAction<CategoryResult[] | undefined>>
 ] {    
     const [categoryList, setCategoryList] = useState<CategoryResult[]>();
     const [error, setError] = useState<Error>();
@@ -35,7 +34,7 @@ function useCategoryList(): [
     return [{
         result: categoryList,
         error: error
-    }, setCategoryList, selectCategoryList];
+    }, setCategoryList];
 }
 
 export default useCategoryList;

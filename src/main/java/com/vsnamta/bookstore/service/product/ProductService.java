@@ -38,7 +38,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Long save(ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
+    public ProductDetailResult save(ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
         Category category = categoryRepository.findById(productSaveOrUpdatePayload.getCategoryId())
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));        
 
@@ -46,12 +46,13 @@ public class ProductService {
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
         Product product = Product.createProduct(discountPolicy, category, productSaveOrUpdatePayload.toCommand());
+        productRepository.save(product);   
 
-        return productRepository.save(product).getId();       
+        return new ProductDetailResult(product);  
     }
 
     @Transactional
-    public Long update(Long id, ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
+    public ProductDetailResult update(Long id, ProductSaveOrUpdatePayload productSaveOrUpdatePayload) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
@@ -63,7 +64,7 @@ public class ProductService {
 
         product.update(discountPolicy, category, productSaveOrUpdatePayload.toCommand());
 
-        return id;
+        return new ProductDetailResult(product);
     }
 
     @Transactional(readOnly = true)

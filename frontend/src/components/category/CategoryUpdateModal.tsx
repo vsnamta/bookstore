@@ -16,9 +16,7 @@ function CategoryUpdateModal({ isOpen, onRequestClose, category, onUpdateCategor
 
     const onSubmit = useCallback((payload: CategorySaveOrUpdatePayload) => {
         onUpdateCategory(category.id, payload);
-    }, []);
-
-    console.log(category);
+    }, [category.id]);
 
     return (
         <ReactModal

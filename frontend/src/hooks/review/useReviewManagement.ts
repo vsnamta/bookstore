@@ -38,21 +38,19 @@ function useReviewManagement(initialSearchCriteria: SearchCriteria): [
 
     const saveReview = useCallback((payload: ReviewSavePayload) => {
         return reviewService.save(payload)
-            .then(id => {
+            .then(savedReview => {
                 updateSearchCriteria(initialSearchCriteria);
             });   
     }, [updateSearchCriteria]);
 
     const updateReview = useCallback((id: number, payload: ReviewUpdatePayload) => {
         return reviewService.update(id, payload)
-            .then(id => {              
+            .then(updatedReview => {              
                 setReviewPage(reviewPage => ({
                     ...reviewPage as Page<ReviewResult>,
                     list: (reviewPageState.result as Page<ReviewResult>).list
                         .map(review => 
-                            review.id === id
-                                ? { ...review, rating: payload.rating, contents: payload.contents } 
-                                : review
+                            review.id === updatedReview.id ? updatedReview : review
                         )
                 }));
             });
@@ -60,7 +58,7 @@ function useReviewManagement(initialSearchCriteria: SearchCriteria): [
 
     const removeReview = useCallback((id: number) => {
         return reviewService.remove(id)
-            .then(id => {
+            .then(() => {
                 updatePageCriteria((reviewPageState.payload as FindPayload).pageCriteria);
             });
     }, [updatePageCriteria]);

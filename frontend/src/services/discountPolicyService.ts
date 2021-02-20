@@ -5,18 +5,18 @@ import apiClient from '../utils/apiClient';
 import errorParser from '../utils/errorParser';
 
 const discountPolicyService = {
-    save(payload: DiscountPolicySaveOrUpdatePayload): Promise<number> {
+    save(payload: DiscountPolicySaveOrUpdatePayload): Promise<DiscountPolicyResult> {
         return new Promise((resolve, reject) => {
-            apiClient.post('/api/discountPolicies', payload).then(({ data }: AxiosResponse) => {
+            apiClient.post<DiscountPolicyResult>('/api/discountPolicies', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
                 reject(errorParser.parse(error));
             });
         });
     },
-    update(id: number, payload: DiscountPolicySaveOrUpdatePayload): Promise<number> {
+    update(id: number, payload: DiscountPolicySaveOrUpdatePayload): Promise<DiscountPolicyResult> {
         return new Promise((resolve, reject) => {
-            apiClient.put(`/api/discountPolicies/${id}`, payload).then(({ data }: AxiosResponse) => {
+            apiClient.put<DiscountPolicyResult>(`/api/discountPolicies/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
                 reject(errorParser.parse(error));
@@ -25,7 +25,7 @@ const discountPolicyService = {
     },
     findAll(): Promise<DiscountPolicyResult[]> {
         return new Promise((resolve, reject) => {
-            apiClient.get('/api/discountPolicies').then(({ data }: AxiosResponse) => {
+            apiClient.get<DiscountPolicyResult[]>('/api/discountPolicies').then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
                 reject(errorParser.parse(error));

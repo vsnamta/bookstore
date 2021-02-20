@@ -38,7 +38,7 @@ public class OrderApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/orders")
-    public Long save(@Valid @RequestBody OrderSavePayload orderSavePayload, HttpSession httpSession) {
+    public OrderDetailResult save(@Valid @RequestBody OrderSavePayload orderSavePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         orderSavePayload.setMemberId(loginMember.getId());
@@ -48,7 +48,7 @@ public class OrderApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/orders/{id}")
-    public Long update(@PathVariable Long id, @Valid @RequestBody OrderUpdatePayload orderUpdatePayload, HttpSession httpSession) {
+    public OrderDetailResult update(@PathVariable Long id, @Valid @RequestBody OrderUpdatePayload orderUpdatePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         return orderService.update(loginMember, id, orderUpdatePayload);

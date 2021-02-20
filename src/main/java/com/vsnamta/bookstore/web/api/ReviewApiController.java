@@ -36,7 +36,7 @@ public class ReviewApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/reviews")
-    public Long save(@Valid @RequestBody ReviewSavePayload reviewSavePayload, HttpSession httpSession) {
+    public ReviewResult save(@Valid @RequestBody ReviewSavePayload reviewSavePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         reviewSavePayload.setMemberId(loginMember.getId());
@@ -46,7 +46,7 @@ public class ReviewApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/reviews/{id}")
-    public Long update(@PathVariable Long id, @Valid @RequestBody ReviewUpdatePayload reviewUpdatePayload, HttpSession httpSession) {
+    public ReviewResult update(@PathVariable Long id, @Valid @RequestBody ReviewUpdatePayload reviewUpdatePayload, HttpSession httpSession) {
         LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
 
         return reviewService.update(loginMember, id, reviewUpdatePayload);

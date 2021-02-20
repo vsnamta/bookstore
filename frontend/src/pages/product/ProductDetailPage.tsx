@@ -42,7 +42,7 @@ function ProductDetailPage() {
         }
 
         cartService.save(payload)
-            .then(id => {
+            .then(savedCart => {
                 alert("장바구니에 저장되었습니다.");
                 history.push("/cart");
             })
@@ -67,7 +67,7 @@ function ProductDetailPage() {
         }
 
         openSaveModal();
-    }, []);
+    }, [loginMember]);
 
     const onSaveReview = useCallback((payload: ReviewSavePayload) => {
         saveReview(payload)
