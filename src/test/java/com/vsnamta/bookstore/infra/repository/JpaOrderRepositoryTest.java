@@ -6,6 +6,7 @@ import static com.vsnamta.bookstore.DomainBuilder.aMember;
 import static com.vsnamta.bookstore.DomainBuilder.aPageRequest;
 import static com.vsnamta.bookstore.DomainBuilder.aProduct;
 import static com.vsnamta.bookstore.DomainBuilder.aSearchRequest;
+import static com.vsnamta.bookstore.DomainBuilder.anOrderStatusInfo;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
@@ -18,6 +19,7 @@ import com.vsnamta.bookstore.domain.member.MemberRepository;
 import com.vsnamta.bookstore.domain.order.Order;
 import com.vsnamta.bookstore.domain.order.OrderLine;
 import com.vsnamta.bookstore.domain.order.OrderRepository;
+import com.vsnamta.bookstore.domain.order.OrderStatus;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 
@@ -49,7 +51,7 @@ public class JpaOrderRepositoryTest {
 
     @Test
     public void 주문번호로_주문_조회() {
-         // given
+        // given
         Member member = memberRepository.save(aMember().name("홍길동").build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
@@ -57,21 +59,21 @@ public class JpaOrderRepositoryTest {
         Product product1 = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
         Product product2 = productRepository.save(aProduct().discountPolicy(discountPolicy).name("리팩토링").build());
 
-        Long id = orderRepository.save(
-            Order.createOrder(
-                member, 
-                Arrays.asList(
-                    OrderLine.createOrderLine(product1, 1),
-                    OrderLine.createOrderLine(product2, 1)
-                ), 
-                0, 
-                aDeliveryInfo().build()
-            )
-        )
-        .getId();
+        Order order = Order.createOrder(
+            member, 
+            Arrays.asList(
+                OrderLine.createOrderLine(product1, 1),
+                OrderLine.createOrderLine(product2, 1)
+            ), 
+            0, 
+            aDeliveryInfo().build()
+        );
+        order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
+
+        Long id = orderRepository.save(order).getId();
 
         // when
-        Order order = orderRepository.findOne(id).get();
+        order = orderRepository.findOne(id).get();
         
         // then
         assertEquals("홍길동", order.getMember().getName()); 
@@ -87,16 +89,17 @@ public class JpaOrderRepositoryTest {
 
         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
-        orderRepository.save(
-            Order.createOrder(
-                member, 
-                Arrays.asList(
-                    OrderLine.createOrderLine(product, 1)
-                ), 
-                0, 
-                aDeliveryInfo().build()
-            )
+        Order order = Order.createOrder(
+            member, 
+            Arrays.asList(
+                OrderLine.createOrderLine(product, 1)
+            ), 
+            0, 
+            aDeliveryInfo().build()
         );
+        order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
+
+        orderRepository.save(order);
 
         // when
         List<Order> orders = orderRepository.findAll(

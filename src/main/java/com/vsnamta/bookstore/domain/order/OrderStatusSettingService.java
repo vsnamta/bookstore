@@ -1,5 +1,7 @@
 package com.vsnamta.bookstore.domain.order;
 
+import java.time.LocalDateTime;
+
 import com.vsnamta.bookstore.domain.point.PointHistory;
 import com.vsnamta.bookstore.domain.point.PointHistoryRepository;
 import com.vsnamta.bookstore.domain.point.PointStatus;
@@ -26,7 +28,7 @@ public class OrderStatusSettingService {
     }
 
     public void ordered(Order order) {
-        order.updateStatus(OrderStatus.ORDERED);
+        order.updateStatusInfo(new OrderStatusInfo(OrderStatus.ORDERED, LocalDateTime.now()));
 
         for(OrderLine orderLine : order.getOrderLines()) {
             orderLine.getProduct().minusStockQuantityBySales(orderLine.getQuantity());
@@ -46,7 +48,7 @@ public class OrderStatusSettingService {
     }
 
     public void canceld(Order order) {
-        order.updateStatus(OrderStatus.CANCELED);
+        order.updateStatusInfo(new OrderStatusInfo(OrderStatus.CANCELED, LocalDateTime.now()));
 
         for(OrderLine orderLine : order.getOrderLines()) {
             orderLine.getProduct().plusStockQuantityBySalesCancel(orderLine.getQuantity());      
@@ -66,7 +68,7 @@ public class OrderStatusSettingService {
     };
 
     public void completed(Order order) {
-        order.updateStatus(OrderStatus.COMPLETED);
+        order.updateStatusInfo(new OrderStatusInfo(OrderStatus.COMPLETED, LocalDateTime.now()));
 
         order.getMember().plusPoint(order.getPaymentInfo().getDepositPoint());
         

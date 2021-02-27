@@ -1,6 +1,7 @@
 package com.vsnamta.bookstore;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.vsnamta.bookstore.domain.cart.Cart;
 import com.vsnamta.bookstore.domain.cart.Cart.CartBuilder;
@@ -142,7 +143,8 @@ public class DomainBuilder {
     }
 
     public static OrderStatusInfoBuilder anOrderStatusInfo() {
-        return OrderStatusInfo.builder();
+        return OrderStatusInfo.builder()
+            .updatedDate(LocalDateTime.now());
     }
 
     public static PointHistoryBuilder aPointHistory() {

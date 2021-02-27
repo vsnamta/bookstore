@@ -5,6 +5,7 @@ import static com.vsnamta.bookstore.DomainBuilder.aDiscountPolicy;
 import static com.vsnamta.bookstore.DomainBuilder.aMember;
 import static com.vsnamta.bookstore.DomainBuilder.aProduct;
 import static com.vsnamta.bookstore.DomainBuilder.aStockInfo;
+import static com.vsnamta.bookstore.DomainBuilder.anOrderStatusInfo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -137,18 +138,17 @@ public class OrderApiControllerTest {
                 .build()
         );
 
-        Order order = orderRepository.save(
-            Order.createOrder(
-                member,
-                Arrays.asList(
-                    OrderLine.createOrderLine(product, 1)
-                ), 
-                0, 
-                aDeliveryInfo().build()
-            )
+        Order order = Order.createOrder(
+            member,
+            Arrays.asList(
+                OrderLine.createOrderLine(product, 1)
+            ), 
+            0, 
+            aDeliveryInfo().build()
         );
-
         orderStatusSettingService.ordered(order);
+
+        Long id = orderRepository.save(order).getId();
 
         OrderUpdatePayload orderUpdatePayload = new OrderUpdatePayload();
         orderUpdatePayload.setStatus(OrderStatus.CANCELED);
@@ -156,7 +156,7 @@ public class OrderApiControllerTest {
         // when
         ResultActions resultActions =
             mockMvc.perform(
-                put("/api/orders/" + order.getId())
+                put("/api/orders/" + id)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(orderUpdatePayload))
                 .sessionAttr("loginMember", new LoginMember(member)));
@@ -189,8 +189,7 @@ public class OrderApiControllerTest {
                 aDeliveryInfo().build()
             )
         );
-
-        order.updateStatus(OrderStatus.ORDERED);
+        order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
 
         // when
         ResultActions resultActions =
@@ -224,8 +223,7 @@ public class OrderApiControllerTest {
                 aDeliveryInfo().build()
             )
         );
-        
-        order.updateStatus(OrderStatus.ORDERED);
+        order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
 
         // when
         ResultActions resultActions =

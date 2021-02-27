@@ -1,6 +1,5 @@
 package com.vsnamta.bookstore.domain.order;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,8 +93,8 @@ public class Order {
             .build();
     }
 
-    public void updateStatus(OrderStatus orderStatus) {
-        this.statusInfo = new OrderStatusInfo(orderStatus, LocalDateTime.now());
-        statusHistories.add(OrderStatusHistory.createOrderStatusHistory(orderStatus));
+    public void updateStatusInfo(OrderStatusInfo statusInfo) {
+        this.statusInfo = statusInfo;
+        statusHistories.add(OrderStatusHistory.createOrderStatusHistory(statusInfo.getStatus()));
     }
 }
