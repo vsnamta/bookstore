@@ -6,6 +6,7 @@ import static com.vsnamta.bookstore.domain.order.QOrder.order;
 import static com.vsnamta.bookstore.domain.order.QOrderLine.orderLine;
 import static com.vsnamta.bookstore.domain.product.QProduct.product;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import com.vsnamta.bookstore.domain.common.model.PageRequest;
 import com.vsnamta.bookstore.domain.common.model.SearchRequest;
 import com.vsnamta.bookstore.domain.order.Order;
 import com.vsnamta.bookstore.domain.order.OrderRepository;
+import com.vsnamta.bookstore.domain.order.OrderStatus;
 
 import org.springframework.stereotype.Repository;
 
@@ -38,6 +40,37 @@ public class JpaOrderRepository implements OrderRepository {
         Order result = entityManager.find(Order.class, id);
         
         return Optional.ofNullable(result);
+    }
+
+    @Override
+    public List<Order> findAllWillBeCompleted(PageRequest pageRequest) {
+        JPAQueryFactory query = new JPAQueryFactory(entityManager);
+
+        List<Order> results = 
+            query.select(order)
+                .distinct()
+                .from(order)
+                .join(order.member, member).fetchJoin()
+                .where(order.statusInfo.status.eq(OrderStatus.ORDERED)
+                    .and(order.statusInfo.updatedDate.before(LocalDateTime.now().minusDays(7))))
+                .offset(pageRequest.getOffset()).limit(pageRequest.getSize())
+                .fetch();
+
+        return results;
+    }
+
+    @Override
+    public long findTotalCountWillBeCompleted() {
+        JPAQueryFactory query = new JPAQueryFactory(entityManager);
+
+        long totalCount = 
+            query.select(order.id.count())
+                .from(order)
+                .where(order.statusInfo.status.eq(OrderStatus.ORDERED)
+                    .and(order.statusInfo.updatedDate.before(LocalDateTime.now().minusDays(7))))
+                .fetchOne();
+
+        return totalCount;
     }
 
     @Override
@@ -98,9 +131,9 @@ public class JpaOrderRepository implements OrderRepository {
         String keyword = searchRequest.getKeyword();
 
         if (column != null && keyword != null) {
-            switch (column) {
+            switch (column) { 
                 case "memberId":
-                    return order.member.id.eq(Long.valueOf(keyword));   
+                    return order.member.id.eq(Long.valueOf(keyword)); 
                 case "id":
                     return order.id.eq(Long.valueOf(keyword));
                 case "memberEmail":

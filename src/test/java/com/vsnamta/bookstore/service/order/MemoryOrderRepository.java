@@ -11,6 +11,16 @@ import com.vsnamta.bookstore.service.common.BaseMemoryRepository;
 
 public class MemoryOrderRepository extends BaseMemoryRepository<Order> implements OrderRepository {
     @Override
+    public List<Order> findAllWillBeCompleted(PageRequest pageRequest) {
+        return null;
+    }
+
+    @Override
+    public long findTotalCountWillBeCompleted() {
+        return 0;
+    }
+    
+    @Override
     public Optional<Order> findOne(Long id) {
         return null;
     }

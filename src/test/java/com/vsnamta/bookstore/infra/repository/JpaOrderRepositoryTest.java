@@ -9,6 +9,7 @@ import static com.vsnamta.bookstore.DomainBuilder.aSearchRequest;
 import static com.vsnamta.bookstore.DomainBuilder.anOrderStatusInfo;
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,6 +49,40 @@ public class JpaOrderRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Test
+    public void 일주일이_지나도록_주문완료_상태인_주문_조회() {
+        // given
+        Member member = memberRepository.save(aMember().name("홍길동").build());
+
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+
+        Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
+
+        Order order = Order.createOrder(
+            member, 
+            Arrays.asList(
+                OrderLine.createOrderLine(product, 1)
+            ), 
+            0, 
+            aDeliveryInfo().build()
+        );
+        
+        order.updateStatusInfo(
+            anOrderStatusInfo()
+                .status(OrderStatus.ORDERED)
+                .updatedDate(LocalDateTime.now().minusDays(8))
+                .build()
+        );
+
+        orderRepository.save(order);
+
+        // when
+        List<Order> orders = orderRepository.findAllWillBeCompleted(aPageRequest().build());
+
+        // then
+        assertEquals(1, orders.size());
+    }
 
     @Test
     public void 주문번호로_주문_조회() {
