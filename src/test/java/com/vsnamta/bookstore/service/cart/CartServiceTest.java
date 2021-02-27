@@ -1,6 +1,7 @@
 package com.vsnamta.bookstore.service.cart;
 
 import static com.vsnamta.bookstore.DomainBuilder.aCart;
+import static com.vsnamta.bookstore.DomainBuilder.aDiscountPolicy;
 import static com.vsnamta.bookstore.DomainBuilder.aMember;
 import static com.vsnamta.bookstore.DomainBuilder.aProduct;
 import static org.junit.Assert.assertEquals;
@@ -11,11 +12,14 @@ import java.util.Optional;
 
 import com.vsnamta.bookstore.domain.cart.Cart;
 import com.vsnamta.bookstore.domain.cart.CartRepository;
+import com.vsnamta.bookstore.domain.discount.DiscountPolicy;
+import com.vsnamta.bookstore.domain.discount.DiscountPolicyRepository;
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
+import com.vsnamta.bookstore.service.discount.MemoryDiscountPolicyRepository;
 import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.member.MemoryMemberRepository;
 import com.vsnamta.bookstore.service.product.MemoryProductRepository;
@@ -26,6 +30,7 @@ import org.junit.Test;
 public class CartServiceTest {
     private CartRepository cartRepository;
     private MemberRepository memberRepository;
+    private DiscountPolicyRepository discountPolicyRepository;
     private ProductRepository productRepository;
     private CartService cartService;
 
@@ -33,6 +38,7 @@ public class CartServiceTest {
     public void setUp() {
         cartRepository = new MemoryCartRepository();
         memberRepository = new MemoryMemberRepository();
+        discountPolicyRepository = new MemoryDiscountPolicyRepository();
         productRepository = new MemoryProductRepository();
         
         cartService = new CartService(cartRepository, memberRepository, productRepository);
@@ -42,7 +48,8 @@ public class CartServiceTest {
     public void 장바구니_저장() {
         // given   
         Member member = memberRepository.save(aMember().name("홍길동").build());
-        Product product = productRepository.save(aProduct().name("Clean Code").build());
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+        Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
         CartSavePayload cartSavePayload = new CartSavePayload();
         cartSavePayload.setMemberId(member.getId());
@@ -63,7 +70,8 @@ public class CartServiceTest {
     public void 장바구니_저장시_이미_존재하는_상품은_수량이_증가() {
         // given
         Member member = memberRepository.save(aMember().name("홍길동").build());
-        Product product = productRepository.save(aProduct().name("Clean Code").build());
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+        Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
         cartRepository.save(aCart().member(member).product(product).quantity(1).build());
 
@@ -86,7 +94,8 @@ public class CartServiceTest {
     public void 장바구니_수량_변경() {
         // given
         Member member = memberRepository.save(aMember().name("홍길동").build());
-        Product product = productRepository.save(aProduct().name("Clean Code").build());
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+        Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
         
         Cart cart = cartRepository.save(aCart().member(member).product(product).quantity(2).build());
 
@@ -107,7 +116,8 @@ public class CartServiceTest {
     public void 장바구니_수량_변경은_본인만_가능() {
         // given
         Member member = memberRepository.save(aMember().name("홍길동").build());
-        Product product = productRepository.save(aProduct().name("Clean Code").build());
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+        Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
         
         Cart cart = cartRepository.save(aCart().member(member).product(product).quantity(2).build());
 

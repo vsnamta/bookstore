@@ -74,7 +74,8 @@ public class CartApiControllerTest {
     public void 장바구니_저장() throws Exception {
         // given
         Member member = memberRepository.save(aMember().name("홍길동").build());
-        Product product = productRepository.save(aProduct().name("Clean Code").build());
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+        Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
         CartSavePayload cartSavePayload = new CartSavePayload();
         cartSavePayload.setProductId(product.getId());
@@ -99,7 +100,8 @@ public class CartApiControllerTest {
     public void 장바구니_수량_변경() throws Exception {
         // given
         Member member = memberRepository.save(aMember().name("홍길동").build());
-        Product product = productRepository.save(aProduct().name("Clean Code").build());
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+        Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
         Cart cart = cartRepository.save(aCart().member(member).product(product).quantity(2).build());
 
