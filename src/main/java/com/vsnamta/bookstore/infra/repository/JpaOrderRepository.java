@@ -132,8 +132,6 @@ public class JpaOrderRepository implements OrderRepository {
 
         if (column != null && keyword != null) {
             switch (column) { 
-                case "memberId":
-                    return order.member.id.eq(Long.valueOf(keyword)); 
                 case "id":
                     return order.id.eq(Long.valueOf(keyword));
                 case "memberEmail":
