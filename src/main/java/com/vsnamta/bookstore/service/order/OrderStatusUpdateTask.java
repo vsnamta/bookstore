@@ -3,7 +3,6 @@ package com.vsnamta.bookstore.service.order;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import com.vsnamta.bookstore.domain.common.model.PageRequest;
 import com.vsnamta.bookstore.domain.order.Order;
@@ -21,14 +20,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Component
 public class OrderStatusUpdateTask {
-    @PersistenceContext
     private EntityManager entityManager;
-    
-    @Autowired
     private OrderRepository orderRepository;
-    
-    @Autowired
     private OrderStatusSettingService orderStatusSettingService;
+
+    @Autowired
+    public OrderStatusUpdateTask(EntityManager entityManager, OrderRepository orderRepository,
+            OrderStatusSettingService orderStatusSettingService) {
+        this.entityManager = entityManager;
+        this.orderRepository = orderRepository;
+        this.orderStatusSettingService = orderStatusSettingService;
+    }
 
     @Transactional
     @Scheduled(cron = "0 0 3 * * *")

@@ -6,9 +6,12 @@ import static com.vsnamta.bookstore.DomainBuilder.aMember;
 import static com.vsnamta.bookstore.DomainBuilder.aProduct;
 import static com.vsnamta.bookstore.DomainBuilder.anOrderStatusInfo;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+
+import javax.persistence.EntityManager;
 
 import com.vsnamta.bookstore.domain.discount.DiscountPolicy;
 import com.vsnamta.bookstore.domain.discount.DiscountPolicyRepository;
@@ -18,45 +21,53 @@ import com.vsnamta.bookstore.domain.order.Order;
 import com.vsnamta.bookstore.domain.order.OrderLine;
 import com.vsnamta.bookstore.domain.order.OrderRepository;
 import com.vsnamta.bookstore.domain.order.OrderStatus;
+import com.vsnamta.bookstore.domain.order.OrderStatusSettingService;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
+import com.vsnamta.bookstore.service.discount.MemoryDiscountPolicyRepository;
+import com.vsnamta.bookstore.service.member.MemoryMemberRepository;
+import com.vsnamta.bookstore.service.point.MemoryPointHistoryRepository;
+import com.vsnamta.bookstore.service.product.MemoryProductRepository;
+import com.vsnamta.bookstore.service.stock.MemoryStockRepository;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("test")
-@SpringBootTest
-@Transactional
 public class OrderStatusUpdateTaskTest {
-    @Autowired
     private OrderRepository orderRepository;
-
-    @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private ProductRepository productRepository; 
-
-    @Autowired
     private DiscountPolicyRepository discountPolicyRepository; 
-
-    @Autowired
+    private ProductRepository productRepository; 
     private OrderStatusUpdateTask orderStatusUpdateTask;
+
+    @Before
+    public void setUp() {
+        orderRepository = new MemoryOrderRepository();
+        memberRepository = new MemoryMemberRepository();
+        discountPolicyRepository = new MemoryDiscountPolicyRepository();
+        productRepository = new MemoryProductRepository();
+    
+        orderStatusUpdateTask = new OrderStatusUpdateTask(
+            mock(EntityManager.class), 
+            orderRepository, 
+            new OrderStatusSettingService(
+                new MemoryStockRepository(), new MemoryPointHistoryRepository()
+            )
+        );
+    }
 
     @Test
     public void 일주일이_지나도록_주문완료_상태인_주문은_구매확정_상태로_변경() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().name("홍길동").point(0).build());
 
-        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(
+            aDiscountPolicy().name("기본").discountPercent(10).depositPercent(5).build()
+        );
 
-        Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
+        Product product = productRepository.save(
+            aProduct().discountPolicy(discountPolicy).name("Clean Code").regularPrice(33000).build()
+        );
 
         Order order = Order.createOrder(
             member, 
@@ -80,8 +91,10 @@ public class OrderStatusUpdateTaskTest {
         orderStatusUpdateTask.excute();
 
         // then
-        order = orderRepository.findOne(id).get();
+        order = orderRepository.findById(id).get();
+        member = memberRepository.findById(member.getId()).get();
 
         assertEquals(OrderStatus.COMPLETED, order.getStatusInfo().getStatus());
+        assertEquals(1650, member.getPoint());
     }
 }
