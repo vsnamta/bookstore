@@ -6,9 +6,11 @@ import OrderForm from '../../components/order/OrderForm';
 import useDetail from '../../hooks/common/useDetail';
 import { MemberDetailResult } from '../../models/members';
 import { OrderingProduct, OrderSavePayload } from '../../models/orders';
-import memberService from '../../services/memberService';
-import orderService from '../../services/orderService';
+import memberApi from '../../apis/memberApi';
+import orderApi from '../../apis/orderApi';
 import { RootState } from '../../store';
+import { ApiError } from '../../error/ApiError';
+import ErrorDetail from '../../components/general/ErrorDetail';
 
 function OrderFormPage() {
     const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
@@ -26,17 +28,21 @@ function OrderFormPage() {
         return <Redirect to={{ pathname: "/" }}/>
     }
 
-    const [memberState] = useDetail<MemberDetailResult>(loginMember.id, memberService.findOne);
+    const [memberState] = useDetail<MemberDetailResult>(loginMember.id, memberApi.findOne);
 
     const onSaveOrder = useCallback((payload: OrderSavePayload) => { 
-        orderService.save(payload)
+        orderApi.save(payload)
             .then(savedOrder => {
                 history.push(`/order/${savedOrder.id}`);
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, []);
     
     return (
         <Layout>
+            {memberState.error && <ErrorDetail message={"오류 발생"} />}
             {memberState.result &&
             <OrderForm 
                 member={memberState.result}

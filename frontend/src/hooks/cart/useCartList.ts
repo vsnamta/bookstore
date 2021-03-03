@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { CartResult } from "../../models/carts";
-import cartService from '../../services/cartService';
+import cartApi from '../../apis/cartApi';
+import { ApiError } from "../../error/ApiError";
 
 export interface CartListState {
     payload: number;
     result?: CartResult[];
-    error?: Error;
+    error?: ApiError;
 }
 
 function useCartList(initailMemberId: number): [
@@ -14,15 +15,15 @@ function useCartList(initailMemberId: number): [
 ] {
     const [memberId, setMemberId] = useState<number>(initailMemberId);
     const [cartList, setCartList] = useState<CartResult[]>();
-    const [error, setError] = useState<Error>();
+    const [error, setError] = useState<ApiError>();
 
     const selectCartList = useCallback((memberId: number) => {
         setMemberId(memberId);
         setError(undefined);
 
-        cartService.findAll({ memberId })
+        cartApi.findAll({ memberId })
             .then(cartList => setCartList(cartList))
-            .catch(error => {
+            .catch((error: ApiError) => {
                 setError(error);
                 setCartList(undefined);
             });

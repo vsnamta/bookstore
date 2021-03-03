@@ -1,16 +1,16 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { ErrorResult } from '../models/common';
 import { DiscountPolicyResult, DiscountPolicySaveOrUpdatePayload } from '../models/discountPolicies';
-import apiClient from '../utils/apiClient';
-import errorParser from '../utils/errorParser';
+import apiClient from './apiClient';
+import apiErrorParser from '../utills/apiErrorParser';
 
-const discountPolicyService = {
+const discountPolicyApi = {
     save(payload: DiscountPolicySaveOrUpdatePayload): Promise<DiscountPolicyResult> {
         return new Promise((resolve, reject) => {
             apiClient.post<DiscountPolicyResult>('/api/discountPolicies', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -19,7 +19,7 @@ const discountPolicyService = {
             apiClient.put<DiscountPolicyResult>(`/api/discountPolicies/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -28,10 +28,10 @@ const discountPolicyService = {
             apiClient.get<DiscountPolicyResult[]>('/api/discountPolicies').then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     }
 };
 
-export default discountPolicyService;
+export default discountPolicyApi;

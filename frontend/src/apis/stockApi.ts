@@ -2,16 +2,16 @@ import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, Page } from '../models/common';
 import { StockFindPayload, StockResult, StockSavePayload } from '../models/stocks';
-import apiClient from '../utils/apiClient';
-import errorParser from '../utils/errorParser';
+import apiClient from './apiClient';
+import apiErrorParser from '../utills/apiErrorParser';
 
-const stockService = {
+const stockApi = {
     save(payload: StockSavePayload): Promise<StockResult> {
         return new Promise((resolve, reject) => {
             apiClient.post<StockResult>('/api/stocks', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -22,10 +22,10 @@ const stockService = {
             apiClient.get<Page<StockResult>>(`/api/stocks?${queryString}`).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     }
 };
 
-export default stockService;
+export default stockApi;

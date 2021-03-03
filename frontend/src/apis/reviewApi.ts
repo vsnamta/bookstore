@@ -2,16 +2,16 @@ import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, FindPayload, Page } from '../models/common';
 import { ReviewResult, ReviewSavePayload, ReviewUpdatePayload } from '../models/reviews';
-import apiClient from '../utils/apiClient';
-import errorParser from '../utils/errorParser';
+import apiClient from './apiClient';
+import apiErrorParser from '../utills/apiErrorParser';
 
-const reviewService = {
+const reviewApi = {
     save(payload: ReviewSavePayload): Promise<ReviewResult> {
         return new Promise((resolve, reject) => {
             apiClient.post<ReviewResult>('/api/reviews', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -20,7 +20,7 @@ const reviewService = {
             apiClient.put<ReviewResult>(`/api/reviews/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -29,7 +29,7 @@ const reviewService = {
             apiClient.delete<undefined>(`/api/reviews/${id}`).then(() => {
                 resolve(undefined);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -40,10 +40,10 @@ const reviewService = {
             apiClient.get<Page<ReviewResult>>(`/api/reviews?${queryString}`).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     }
 };
 
-export default reviewService;
+export default reviewApi;

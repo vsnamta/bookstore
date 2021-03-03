@@ -2,16 +2,16 @@ import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, FindPayload, Page } from '../models/common';
 import { LoginMember, MemberDetailResult, MemberResult, MemberUpdatePayload } from '../models/members';
-import apiClient from '../utils/apiClient';
-import errorParser from '../utils/errorParser';
+import apiClient from './apiClient';
+import apiErrorParser from '../utills/apiErrorParser';
 
-const memberService = {
+const memberApi = {
     update(id: number, payload: MemberUpdatePayload): Promise<MemberDetailResult> {
         return new Promise((resolve, reject) => {
             apiClient.put<MemberDetailResult>(`/api/members/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -20,7 +20,7 @@ const memberService = {
             apiClient.get<LoginMember | string>('/api/members/me').then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -29,7 +29,7 @@ const memberService = {
             apiClient.get<MemberDetailResult>(`/api/members/${id}`).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -40,10 +40,10 @@ const memberService = {
             apiClient.get<Page<MemberResult>>(`/api/members?${queryString}`).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     }
 };
 
-export default memberService;
+export default memberApi;

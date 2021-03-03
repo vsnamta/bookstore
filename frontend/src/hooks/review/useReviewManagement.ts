@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
 import { FindPayload, Page, PageCriteria, SearchCriteria } from "../../models/common";
 import { ReviewResult, ReviewSavePayload, ReviewUpdatePayload } from "../../models/reviews";
-import reviewService from '../../services/reviewService';
+import reviewApi from '../../apis/reviewApi';
 import usePage, { PageState } from "../common/usePage";
+import { ApiError } from "../../error/ApiError";
 
 interface ReviewManagementState {
     reviewPageState: PageState<ReviewResult>;
@@ -27,7 +28,7 @@ function useReviewManagement(initialSearchCriteria: SearchCriteria): [
         setReviewPage, 
         updateSearchCriteria, 
         updatePageCriteria
-    ] = usePage<ReviewResult>(initialSearchCriteria, reviewService.findAll);
+    ] = usePage<ReviewResult>(initialSearchCriteria, reviewApi.findAll);
 
     const [review, setReview] = useState<ReviewResult>();
 
@@ -37,14 +38,17 @@ function useReviewManagement(initialSearchCriteria: SearchCriteria): [
     }, [reviewPageState.result]); 
 
     const saveReview = useCallback((payload: ReviewSavePayload) => {
-        return reviewService.save(payload)
+        return reviewApi.save(payload)
             .then(savedReview => {
                 updateSearchCriteria(initialSearchCriteria);
-            });   
+            })
+            .catch((error: ApiError) => {
+                
+            }); 
     }, [updateSearchCriteria]);
 
     const updateReview = useCallback((id: number, payload: ReviewUpdatePayload) => {
-        return reviewService.update(id, payload)
+        return reviewApi.update(id, payload)
             .then(updatedReview => {              
                 setReviewPage(reviewPage => ({
                     ...reviewPage as Page<ReviewResult>,
@@ -53,13 +57,19 @@ function useReviewManagement(initialSearchCriteria: SearchCriteria): [
                             review.id === updatedReview.id ? updatedReview : review
                         )
                 }));
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, []);
 
     const removeReview = useCallback((id: number) => {
-        return reviewService.remove(id)
+        return reviewApi.remove(id)
             .then(() => {
                 updatePageCriteria((reviewPageState.payload as FindPayload).pageCriteria);
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, [updatePageCriteria]);
 

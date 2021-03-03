@@ -1,9 +1,10 @@
 import { useCallback } from "react";
 import { Page, PageCriteria, SearchCriteria } from "../../models/common";
 import { OrderDetailResult, OrderResult, OrderUpdatePayload } from "../../models/orders";
-import orderService from "../../services/orderService";
+import orderApi from "../../apis/orderApi";
 import useDetail, { DetailState } from "../common/useDetail";
 import usePage, { PageState } from "../common/usePage";
+import { ApiError } from "../../error/ApiError";
 
 interface OrderManagementState {
     orderPageState: PageState<OrderResult>;
@@ -26,12 +27,12 @@ function useOrderManagement(initialSearchCriteria: SearchCriteria): [
         setOrderPage, 
         updateSearchCriteria, 
         updatePageCriteria
-    ] = usePage<OrderResult>(initialSearchCriteria, orderService.findAll);
+    ] = usePage<OrderResult>(initialSearchCriteria, orderApi.findAll);
 
-    const [orderState, setOrder, selectOrder] = useDetail<OrderDetailResult>(undefined, orderService.findOne);
+    const [orderState, setOrder, selectOrder] = useDetail<OrderDetailResult>(undefined, orderApi.findOne);
 
     const updateOrder = useCallback((id: number, payload: OrderUpdatePayload) => {
-        return orderService.update(id, payload)
+        return orderApi.update(id, payload)
             .then(updatedOrder => {        
                 setOrderPage(orderPage => ({
                     ...orderPage as Page<OrderResult>,
@@ -42,6 +43,9 @@ function useOrderManagement(initialSearchCriteria: SearchCriteria): [
                                 : order
                         )
                 }));
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, []);
 

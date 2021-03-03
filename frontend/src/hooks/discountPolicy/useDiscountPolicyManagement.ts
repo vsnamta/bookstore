@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
 import { DiscountPolicyResult, DiscountPolicySaveOrUpdatePayload } from "../../models/discountPolicies";
-import discountPolicyService from '../../services/discountPolicyService';
+import discountPolicyApi from '../../apis/discountPolicyApi';
 import useDiscountPolicyList, { DiscountPolicyListState } from "./useDiscountPolicyList";
+import { ApiError } from "../../error/ApiError";
 
 interface DiscountPolicyManagementState {
     discountPolicyListState: DiscountPolicyListState;
@@ -27,22 +28,28 @@ function useDiscountPolicyManagement() : [
     }, [discountPolicyListState.result]); 
 
     const saveDiscountPolicy = useCallback((payload: DiscountPolicySaveOrUpdatePayload) => {
-        return discountPolicyService.save(payload)
+        return discountPolicyApi.save(payload)
            .then(savedDiscountPolicy => {
                setDiscountPolicyList(discountPoliyList =>
                     (discountPoliyList as DiscountPolicyResult[]).concat(savedDiscountPolicy)
                );
+            })
+            .catch((error: ApiError) => {
+                
             });  
     }, []);
 
     const updateDiscountPolicy = useCallback((id: number, payload: DiscountPolicySaveOrUpdatePayload) => {
-        return discountPolicyService.update(id, payload)
+        return discountPolicyApi.update(id, payload)
             .then(updatedDiscountPolicy => {
                 setDiscountPolicyList(discountPoliyList =>
                     (discountPoliyList as DiscountPolicyResult[]).map(discountPolicy => 
                         discountPolicy.id === updatedDiscountPolicy.id ? updatedDiscountPolicy : discountPolicy
                     )
                 );
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, []);
 

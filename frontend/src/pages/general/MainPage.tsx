@@ -1,5 +1,6 @@
 import React from 'react';
 import Banner from '../../components/general/Banner';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import BestProductList from '../../components/product/BestProductList';
 import useProductPage from '../../hooks/product/useProductPage';
@@ -19,6 +20,8 @@ function MainPage() {
     return (
         <Layout>
             <Banner />
+            {productPageState.error && <ErrorDetail message={"오류 발생"} />}
+
             {productPageState.result &&
             <main className="inner-page-sec-padding-bottom">
 			    <div className="container">

@@ -1,11 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
+import { ApiError } from "../../error/ApiError";
 import { FindPayload, Page, PageCriteria, SearchCriteria } from "../../models/common";
 
 export interface PageState<T> {
     payload?: FindPayload;
     result?: Page<T>;
-    error?: Error;
+    error?: ApiError;
 }
+
+// export interface UsePageMethods<T> {
+//     setPage: React.Dispatch<React.SetStateAction<Page<T>>>;
+//     updateSearchCriteria: (searchCriteria: SearchCriteria) => void;
+//     updatePageCriteria: (pageCriteria: PageCriteria) => void;
+// }
 
 function usePage<T>(
     initialSearchCriteria: SearchCriteria,
@@ -21,7 +28,7 @@ function usePage<T>(
         pageCriteria: {page: 1, size: 10}
     });
     const [page, setPage] = useState<Page<T>>();
-    const [error, setError] = useState<Error>();
+    const [error, setError] = useState<ApiError>();
 
     const selectPage = useCallback((findPayload: FindPayload) => {
         setPayload(findPayload);
@@ -29,7 +36,7 @@ function usePage<T>(
 
         findFunc(findPayload)
             .then(page => setPage(page))
-            .catch(error => {
+            .catch((error: ApiError) => {
                 setPage(undefined);
                 setError(error);
             });
@@ -60,6 +67,12 @@ function usePage<T>(
 
         selectPage(nextFindPayload);
     }, [payload]);
+
+    // const usePageMethods: UsePageMethods<T> = {
+    //     setPage,
+    //     updateSearchCriteria,
+    //     updatePageCriteria
+    // };
 
     return [{
         payload : payload,

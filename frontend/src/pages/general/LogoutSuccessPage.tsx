@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import memberService from '../../services/memberService';
+import memberApi from '../../apis/memberApi';
+import { ApiError } from '../../error/ApiError';
 import { setMyData } from '../../store/loginMember';
 
 function LogoutSuccessPage() {
@@ -9,7 +10,7 @@ function LogoutSuccessPage() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        memberService.findMyData()
+        memberApi.findMyData()
             .then(loginMember => {
                 if(loginMember === "") {
                     localStorage.removeItem("loginMember");
@@ -17,6 +18,9 @@ function LogoutSuccessPage() {
                 }
                 
                 history.push("/");
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, []);
 

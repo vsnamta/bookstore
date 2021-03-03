@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { Page, PageCriteria } from "../../models/common";
 import { PointHistoryFindPayload, PointHistoryResult } from "../../models/pointHistories";
-import pointHistoryService from '../../services/pointHistoryService';
+import pointHistoryApi from '../../apis/pointHistoryApi';
+import { ApiError } from "../../error/ApiError";
 
 interface PointHistoryListState {
     payload?: PointHistoryFindPayload;
     result?: Page<PointHistoryResult>;
-    error?: Error;
+    error?: ApiError;
 }
 
 function usePointHistoryPage(initialMemberId: number): [
@@ -19,15 +20,15 @@ function usePointHistoryPage(initialMemberId: number): [
         pageCriteria: { page: 1, size: 10 }
     });
     const [pointHistoryPage, setPointHistoryPage] = useState<Page<PointHistoryResult>>();
-    const [error, setError] = useState<Error>();
+    const [error, setError] = useState<ApiError>();
 
     const selectPointHistoryPage = useCallback((pointHistoryFindPayload: PointHistoryFindPayload) => {
         setPointHistoryFindPayload(pointHistoryFindPayload);
         setError(undefined);
 
-        pointHistoryService.findAll(pointHistoryFindPayload)
+        pointHistoryApi.findAll(pointHistoryFindPayload)
             .then(page => setPointHistoryPage(page))
-            .catch(error => {
+            .catch((error: ApiError) => {
                 setPointHistoryPage(undefined);
                 setError(error);
             });

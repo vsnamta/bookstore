@@ -8,8 +8,9 @@ import MemberManagementBar from '../../components/member/MemberManagementBar';
 import usePage from '../../hooks/common/usePage';
 import { FindPayload } from '../../models/common';
 import { MemberResult } from '../../models/members';
-import memberService from '../../services/memberService';
+import memberApi from '../../apis/memberApi';
 import { RootState } from '../../store';
+import ErrorDetail from '../../components/general/ErrorDetail';
 
 function MemberManagementPage() {
     const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
@@ -23,7 +24,7 @@ function MemberManagementPage() {
         setMemberPage, 
         updateSearchCriteria, 
         updatePageCriteria
-    ] = usePage<MemberResult>({ column: "", keyword: "" }, memberService.findAll);
+    ] = usePage<MemberResult>({ column: "", keyword: "" }, memberApi.findAll);
     
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         updatePageCriteria({
@@ -34,6 +35,8 @@ function MemberManagementPage() {
     
     return (
         <AdminLayout>
+
+            {memberPageState.error && <ErrorDetail message={"오류 발생"} />}
             
             {memberPageState.result &&
             <main className="inner-page-sec-padding-bottom">

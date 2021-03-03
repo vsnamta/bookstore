@@ -2,6 +2,7 @@ import qs from 'qs';
 import React, { useCallback } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useLocation } from 'react-router-dom';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import ProductList from '../../components/product/ProductList';
 import ProductListFilterBar from '../../components/product/ProductListFilterBar';
@@ -47,6 +48,7 @@ function ProductListPage() {
 
     return (
         <Layout>
+            {productPageState.error && <ErrorDetail message={"오류 발생"} />}
             {productPageState.result &&
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">         

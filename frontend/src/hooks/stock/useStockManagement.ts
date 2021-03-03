@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import { PageCriteria } from "../../models/common";
 import { StockSavePayload } from "../../models/stocks";
-import stockService from '../../services/stockService';
+import stockApi from '../../apis/stockApi';
 import useStockPage, { StockPageState } from "./useStockPage";
+import { ApiError } from '../../error/ApiError';
 
 interface StockManagementState {
     stockPageState: StockPageState;
@@ -20,10 +21,13 @@ function useStockManagement(initialProductId: number): [
     const [stockPageState, updateProductId, updatePageCriteria] = useStockPage(initialProductId);
 
     const saveStock = useCallback((payload: StockSavePayload) => {
-        return stockService.save(payload)
+        return stockApi.save(payload)
             .then(updatedStock => {
                 updateProductId(initialProductId);
-            }); 
+            })
+            .catch((error: ApiError) => {
+                
+            });
     }, [updateProductId]);
 
     return [{

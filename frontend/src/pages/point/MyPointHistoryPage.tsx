@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import PointHistoryList from '../../components/pointHistory/PointHistoryList';
@@ -29,6 +30,7 @@ function MyPointHistoryPage() {
         <Layout>
             <MyPageLayout>
                 <h3>포인트내역</h3>
+                {pointHistoryPageState.error && <ErrorDetail message={"오류 발생"} />}
                 {pointHistoryPageState.result &&
                 <>
                     <PointHistoryList pointhistoryList={pointHistoryPageState.result.list} />

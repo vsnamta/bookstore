@@ -4,15 +4,17 @@ import Layout from '../../components/layout/Layout';
 import OrderDetail from '../../components/order/OrderDetail';
 import useDetail from '../../hooks/common/useDetail';
 import { OrderDetailResult } from '../../models/orders';
-import orderService from '../../services/orderService';
+import orderApi from '../../apis/orderApi';
+import ErrorDetail from '../../components/general/ErrorDetail';
 
 function OrderDetailPage() {
     const { id } = useParams<{id: string}>();
-    const [orderState] = useDetail<OrderDetailResult>(Number.parseInt(id), orderService.findOne);
+    const [orderState] = useDetail<OrderDetailResult>(Number.parseInt(id), orderApi.findOne);
     
     return (
         <Layout>
-            { orderState.result && <OrderDetail order={orderState.result} /> }
+            {orderState.error && <ErrorDetail message={"오류 발생"} />}
+            {orderState.result && <OrderDetail order={orderState.result} />}
         </Layout>
     )
 };

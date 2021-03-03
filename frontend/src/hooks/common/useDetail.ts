@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
+import { ApiError } from "../../error/ApiError";
 
 export interface DetailState<T> {
     payload?: number;
     result?: T;
-    error?: Error;
+    error?: ApiError;
 }
 
 function useDetail<T>(
@@ -16,7 +17,7 @@ function useDetail<T>(
 ] {
     const [id, setId] = useState<number | undefined>(initialId);
     const [detail, setDetail] = useState<T>();
-    const [error, setError] = useState<Error | undefined>(undefined);
+    const [error, setError] = useState<ApiError>();
 
     const selectDetail = useCallback((id: number) => {
         setId(id);
@@ -24,7 +25,7 @@ function useDetail<T>(
 
         findFunc(id)
             .then(detail => setDetail(detail))
-            .catch(error => {
+            .catch((error: ApiError) => {
                 setDetail(undefined);
                 setError(error);
             });

@@ -14,8 +14,10 @@ import { CartSavePayload } from '../../models/carts';
 import { FindPayload } from '../../models/common';
 import { OrderingProduct } from '../../models/orders';
 import { ReviewSavePayload } from '../../models/reviews';
-import cartService from '../../services/cartService';
+import cartApi from '../../apis/cartApi';
 import { RootState } from '../../store';
+import { ApiError } from '../../error/ApiError';
+import ErrorDetail from '../../components/general/ErrorDetail';
 
 function ProductDetailPage() {
     const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
@@ -41,12 +43,14 @@ function ProductDetailPage() {
             return;
         }
 
-        cartService.save(payload)
+        cartApi.save(payload)
             .then(savedCart => {
                 alert("장바구니에 저장되었습니다.");
                 history.push("/cart");
             })
-            .catch(error => alert("장바구니 저장에 실패하였습니다."));
+            .catch((error: ApiError) => {
+                
+            });
     }, [loginMember]);
 
     const onPurchase = useCallback((orderingProductList: OrderingProduct[]) => {
@@ -85,6 +89,7 @@ function ProductDetailPage() {
         <Layout>
             <main className=" inner-page-sec-padding-bottom">
                 <div className="container">
+                    {productState.error && <ErrorDetail message={"오류 발생"} />}
                     {productState.result &&
                     <ProductDetail 
                         product={productState.result} 

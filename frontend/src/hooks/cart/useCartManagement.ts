@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { CartResult, CartUpdatePayload } from "../../models/carts";
-import cartService from '../../services/cartService';
+import cartApi from '../../apis/cartApi';
 import useCartList, { CartListState } from "./useCartList";
+import { ApiError } from '../../error/ApiError';
 
 interface CartManagementState {
     cartListState: CartListState;
@@ -19,22 +20,28 @@ function useCartManagement(memberId: number): [
     const [cartListState, setCartList] = useCartList(memberId);
 
     const updateCart = useCallback((id: number, payload: CartUpdatePayload) => {
-        return cartService.update(id, payload)
+        return cartApi.update(id, payload)
             .then(updatedCart => {
                 setCartList(cartList =>
                     (cartList as CartResult[]).map(cart => 
                         cart.id === updatedCart.id ? updatedCart : cart
                     )
                 );
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, []);
 
     const removeCart = useCallback((ids: number[]) => {
-        return cartService.remove(ids)
+        return cartApi.remove(ids)
             .then(() => {               
                 setCartList(cartList =>
                     (cartList as CartResult[]).filter(cart => !ids.includes(cart.id))
                 );
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, []);
     

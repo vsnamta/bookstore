@@ -2,10 +2,10 @@ import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, Page } from '../models/common';
 import { PointHistoryFindPayload, PointHistoryResult } from '../models/pointHistories';
-import apiClient from '../utils/apiClient';
-import errorParser from '../utils/errorParser';
+import apiClient from './apiClient';
+import apiErrorParser from '../utills/apiErrorParser';
 
-const pointHistoryService = {
+const pointHistoryApi = {
     findAll(payload: PointHistoryFindPayload): Promise<Page<PointHistoryResult>> {
         const queryString = qs.stringify(payload, { allowDots: true });
     
@@ -13,10 +13,10 @@ const pointHistoryService = {
             apiClient.get<Page<PointHistoryResult>>(`/api/pointHistories?${queryString}`).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     }
 };
 
-export default pointHistoryService;
+export default pointHistoryApi;

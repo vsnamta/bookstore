@@ -2,16 +2,16 @@ import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, FindPayload, Page } from '../models/common';
 import { OrderDetailResult, OrderResult, OrderSavePayload, OrderUpdatePayload } from '../models/orders';
-import apiClient from '../utils/apiClient';
-import errorParser from '../utils/errorParser';
+import apiClient from './apiClient';
+import apiErrorParser from '../utills/apiErrorParser';
 
-const orderService = {
+const orderApi = {
     save(payload: OrderSavePayload): Promise<OrderDetailResult> {
         return new Promise((resolve, reject) => {
             apiClient.post<OrderDetailResult>('/api/orders', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -20,7 +20,7 @@ const orderService = {
             apiClient.put<OrderDetailResult>(`/api/orders/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -29,7 +29,7 @@ const orderService = {
             apiClient.get<OrderDetailResult>(`/api/orders/${id}`).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -40,10 +40,10 @@ const orderService = {
             apiClient.get<Page<OrderResult>>(`/api/orders?${queryString}`).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     }
 };
 
-export default orderService;
+export default orderApi;

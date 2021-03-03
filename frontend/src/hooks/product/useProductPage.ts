@@ -2,9 +2,10 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PageCriteria, SearchCriteria } from "../../models/common";
 import { ProductFindPayload } from "../../models/products";
-import productService from '../../services/productService';
+import productApi from '../../apis/productApi';
 import { RootState } from "../../store";
 import { ProductPageState, setProductPage, setProductPageError, setProductPagePayload } from "../../store/productPage";
+import { ApiError } from "../../error/ApiError";
 
 function useProductPage(
     categoryId?: number, 
@@ -24,9 +25,9 @@ function useProductPage(
             dispatch(setProductPagePayload(payload));
             dispatch(setProductPageError(undefined));
 
-            productService.findAll(payload)
+            productApi.findAll(payload)
                 .then(page => dispatch(setProductPage(page)))
-                .catch(error => {
+                .catch((error: ApiError) => {
                     dispatch(setProductPageError(error));
                     dispatch(setProductPage(undefined));
                 });

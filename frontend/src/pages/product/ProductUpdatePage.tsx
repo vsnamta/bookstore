@@ -9,10 +9,11 @@ import useDiscountPolicyList from '../../hooks/discountPolicy/useDiscountPolicyL
 import useProduct from '../../hooks/product/useProduct';
 import { Page } from '../../models/common';
 import { ProductResult, ProductSaveOrUpdatePayload } from '../../models/products';
-import productService from '../../services/productService';
+import productApi from '../../apis/productApi';
 import { RootState } from '../../store';
 import { setProductResult } from '../../store/product';
 import { setProductPage } from '../../store/productPage';
+import { ApiError } from '../../error/ApiError';
 
 function ProductUpdatePage() {
     const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
@@ -31,7 +32,7 @@ function ProductUpdatePage() {
     const [categoryListState] = useCategoryList();
 
     const onUpdateProduct = useCallback((id: number, payload: ProductSaveOrUpdatePayload) => {
-        productService.update(id, payload)
+        productApi.update(id, payload)
             .then(updatedProduct => {
                 dispatch(setProductResult(updatedProduct));
 
@@ -47,7 +48,7 @@ function ProductUpdatePage() {
                 
                 history.push(`/admin/product/${id}`);
             })
-            .catch(error => {
+            .catch((error: ApiError) => {
                 alert("오류가 발생했습니다.");
             });
     }, [productPage]);

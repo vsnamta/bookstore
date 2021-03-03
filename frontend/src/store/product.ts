@@ -1,4 +1,5 @@
 import { ActionType, createAction, createReducer } from 'typesafe-actions';
+import { ApiError } from '../error/ApiError';
 import { ProductDetailResult } from '../models/products';
 
 const SET_PRODUCT_PAYLOAD = 'product/SET_PRODUCT_PAYLOAD';
@@ -7,7 +8,7 @@ const SET_PRODUCT_ERROR = 'product/SET_PRODUCT_ERROR';
 
 export const setProductPayload = createAction(SET_PRODUCT_PAYLOAD)<number>();
 export const setProductResult = createAction(SET_PRODUCT_RESULT)<ProductDetailResult | undefined>();
-export const setProductError = createAction(SET_PRODUCT_ERROR)<Error | undefined>();
+export const setProductError = createAction(SET_PRODUCT_ERROR)<ApiError | undefined>();
 
 export const actions = { setProductPayload, setProductResult, setProductError };
 
@@ -16,7 +17,7 @@ type ProductAction = ActionType<typeof actions>;
 export interface ProductState {
     payload?: number;
     result?: ProductDetailResult;
-    error?: Error;
+    error?: ApiError;
 }
 
 const initialState: ProductState = {

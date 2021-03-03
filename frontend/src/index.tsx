@@ -8,10 +8,11 @@ import { createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import App from './App';
 import { LoginMember } from './models/members';
-import categoryService from './services/categoryService';
+import categoryApi from './apis/categoryApi';
 import rootReducer from './store';
 import { setMyData } from './store/loginMember';
 import { setMenuCategoryList } from './store/menuCategoryList';
+import { ApiError } from './error/ApiError';
 
 const store = createStore(rootReducer, composeWithDevTools());
 
@@ -22,8 +23,9 @@ function initalizeStore() {
         store.dispatch(setMyData(JSON.parse(loginMember) as LoginMember));
     }
 
-    categoryService.findAll()
-        .then(categoryList => store.dispatch(setMenuCategoryList(categoryList)));
+    categoryApi.findAll()
+        .then(categoryList => store.dispatch(setMenuCategoryList(categoryList)))
+        .catch((error: ApiError) => {});
 }
 
 initalizeStore();    

@@ -3,6 +3,7 @@ import ReactModal from 'react-modal';
 import ReactPaginate from 'react-paginate';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import AdminLayout from '../../components/layout/AdminLayout';
 import OrderDetail from '../../components/order/OrderDetail';
 import OrderList from '../../components/order/OrderList';
@@ -39,6 +40,7 @@ function OrderManagementPage() {
 
     return (
         <AdminLayout>
+            {orderPageState.error && <ErrorDetail message={"오류 발생"} />}
             {orderPageState.result &&
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">

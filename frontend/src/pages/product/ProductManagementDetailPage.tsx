@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import AdminLayout from '../../components/layout/AdminLayout';
 import AdminProductDetail from '../../components/product/AdminProductDetail';
 import StockList from '../../components/stock/StockList';
@@ -58,6 +59,7 @@ function ProductManagementDetailPage() {
         <AdminLayout>
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
+                    {productState.error && <ErrorDetail message={"오류 발생"} />}
                     {productState.result &&
                     <AdminProductDetail 
                         product={productState.result}

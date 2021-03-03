@@ -1,16 +1,16 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { CategoryResult, CategorySaveOrUpdatePayload } from '../models/categories';
 import { ErrorResult } from '../models/common';
-import apiClient from '../utils/apiClient';
-import errorParser from '../utils/errorParser';
+import apiClient from './apiClient';
+import apiErrorParser from '../utills/apiErrorParser';
 
-const categoryService = {
+const categoryApi = {
     save(payload: CategorySaveOrUpdatePayload): Promise<CategoryResult> {
         return new Promise((resolve, reject) => {
             apiClient.post<CategoryResult>('/api/categories', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -19,7 +19,7 @@ const categoryService = {
             apiClient.put<CategoryResult>(`/api/categories/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -28,7 +28,7 @@ const categoryService = {
             apiClient.delete<undefined>(`/api/categories/${id}`).then(() => {
                 resolve(undefined);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -37,10 +37,10 @@ const categoryService = {
             apiClient.get<CategoryResult[]>('/api/categories').then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     }
 };
 
-export default categoryService;
+export default categoryApi;

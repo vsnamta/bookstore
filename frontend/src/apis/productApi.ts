@@ -2,16 +2,16 @@ import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, Page } from '../models/common';
 import { ProductDetailResult, ProductFindPayload, ProductResult, ProductSaveOrUpdatePayload } from '../models/products';
-import apiClient from '../utils/apiClient';
-import errorParser from '../utils/errorParser';
+import apiClient from './apiClient';
+import apiErrorParser from '../utills/apiErrorParser';
 
-const productService = {
+const productApi = {
     save(payload: ProductSaveOrUpdatePayload): Promise<ProductDetailResult> {
         return new Promise((resolve, reject) => {
             apiClient.post<ProductDetailResult>('/api/products', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -20,7 +20,7 @@ const productService = {
             apiClient.put<ProductDetailResult>(`/api/products/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -29,7 +29,7 @@ const productService = {
             apiClient.get<ProductDetailResult>(`/api/products/${id}`).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -40,10 +40,10 @@ const productService = {
             apiClient.get<Page<ProductResult>>(`/api/products?${queryString}`).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     }
 };
 
-export default productService;
+export default productApi;

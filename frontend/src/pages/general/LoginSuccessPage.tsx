@@ -2,15 +2,16 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { LoginMember } from '../../models/members';
-import memberService from '../../services/memberService';
+import memberApi from '../../apis/memberApi';
 import { setMyData } from '../../store/loginMember';
+import { ApiError } from '../../error/ApiError';
 
 function LoginSuccessPage() {
     const history = useHistory();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        memberService.findMyData()
+        memberApi.findMyData()
             .then(loginMember => {
                 if(loginMember !== "") {
                     localStorage.setItem("loginMember", JSON.stringify(loginMember as LoginMember));
@@ -18,6 +19,9 @@ function LoginSuccessPage() {
                 }
 
                 history.push("/");
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, []);
 

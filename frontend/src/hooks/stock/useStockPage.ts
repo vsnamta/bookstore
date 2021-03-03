@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { Page, PageCriteria } from "../../models/common";
 import { StockFindPayload, StockResult } from "../../models/stocks";
-import stockService from "../../services/stockService";
+import stockApi from "../../apis/stockApi";
+import { ApiError } from "../../error/ApiError";
 
 export interface StockPageState {
     payload?: StockFindPayload;
     result?: Page<StockResult>;
-    error?: Error;
+    error?: ApiError;
 }
 
 function useStockPage(initialProductId: number) : [
@@ -19,15 +20,15 @@ function useStockPage(initialProductId: number) : [
         pageCriteria: {page: 1, size: 10}
     });
     const [stockPage, setStockPage] = useState<Page<StockResult>>();
-    const [error, setError] = useState<Error>();
+    const [error, setError] = useState<ApiError>();
 
     const selectStockPage = useCallback((stockFindPayload: StockFindPayload) => {
         setStockFindPayload(stockFindPayload);
         setError(undefined);
 
-        stockService.findAll(stockFindPayload)
+        stockApi.findAll(stockFindPayload)
             .then(page => setStockPage(page))
-            .catch((error) => {
+            .catch((error: ApiError) => {
                 setStockPage(undefined);
                 setError(error);
             });

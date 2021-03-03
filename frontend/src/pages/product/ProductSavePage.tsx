@@ -7,10 +7,11 @@ import ProductSaveForm from '../../components/product/ProductSaveForm';
 import useCategoryList from '../../hooks/category/useCategoryList';
 import useDiscountPolicyList from '../../hooks/discountPolicy/useDiscountPolicyList';
 import { ProductSaveOrUpdatePayload } from '../../models/products';
-import productService from '../../services/productService';
+import productApi from '../../apis/productApi';
 import { RootState } from '../../store';
 import { setProductError, setProductPayload, setProductResult } from "../../store/product";
 import { initProductPageState } from '../../store/productPage';
+import { ApiError } from '../../error/ApiError';
 
 function ProductSavePage() {
     const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
@@ -26,7 +27,7 @@ function ProductSavePage() {
     const [categoryListState] = useCategoryList();
 
     const onSaveProduct = useCallback((payload: ProductSaveOrUpdatePayload) => {
-        productService.save(payload)
+        productApi.save(payload)
             .then(savedProduct => {  
                 dispatch(setProductPayload(savedProduct.id));
                 dispatch(setProductError(undefined));
@@ -36,7 +37,7 @@ function ProductSavePage() {
                 
                 history.push(`admin/product/${savedProduct.id}`);
             })
-            .catch(error => {
+            .catch((error: ApiError) => {
                 alert("오류가 발생했습니다.");
             });
     }, []);

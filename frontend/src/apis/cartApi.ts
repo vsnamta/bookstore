@@ -2,16 +2,16 @@ import { AxiosError } from 'axios';
 import qs from 'qs';
 import { CartFindPayload, CartResult, CartSavePayload, CartUpdatePayload } from '../models/carts';
 import { ErrorResult } from '../models/common';
-import apiClient from '../utils/apiClient';
-import errorParser from '../utils/errorParser';
+import apiClient from './apiClient';
+import apiErrorParser from '../utills/apiErrorParser';
 
-const cartService = {
+const cartApi = {
     save(payload: CartSavePayload): Promise<CartResult> {
         return new Promise((resolve, reject) => {
             apiClient.post<CartResult>('/api/carts', payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -20,7 +20,7 @@ const cartService = {
             apiClient.put<CartResult>(`/api/carts/${id}`, payload).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -31,7 +31,7 @@ const cartService = {
             apiClient.delete<undefined>(`/api/carts?${queryString}`).then(() => {
                 resolve(undefined);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     },
@@ -42,10 +42,10 @@ const cartService = {
             apiClient.get<CartResult[]>(`/api/carts?${queryString}`).then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
-                reject(errorParser.parse(error));
+                reject(apiErrorParser.parse(error));
             });
         });
     }
 };
 
-export default cartService;
+export default cartApi;

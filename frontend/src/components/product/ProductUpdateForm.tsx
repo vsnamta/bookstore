@@ -5,7 +5,7 @@ import { CategoryResult } from '../../models/categories';
 import { ErrorResult } from '../../models/common';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
 import { ProductDetailResult, ProductSaveOrUpdatePayload } from '../../models/products';
-import apiClient from '../../utils/apiClient';
+import apiClient from '../../apis/apiClient';
 
 interface ProductUpdateFormProps {
 	product: ProductDetailResult;

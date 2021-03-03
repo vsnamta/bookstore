@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import productService from '../../services/productService';
+import productApi from '../../apis/productApi';
+import { ApiError } from "../../error/ApiError";
 import { RootState } from "../../store";
 import { ProductState, setProductError, setProductPayload, setProductResult } from "../../store/product";
 
@@ -16,9 +17,9 @@ function useProduct(id: number): [
             dispatch(setProductPayload(payload));
             dispatch(setProductError(undefined));
 
-            productService.findOne(payload)
+            productApi.findOne(payload)
                 .then(result => dispatch(setProductResult(result)))
-                .catch(error => {
+                .catch((error: ApiError) => {
                     dispatch(setProductError(error));
                     dispatch(setProductResult(undefined));
                 });

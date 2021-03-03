@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { CategoryResult } from "../../models/categories";
-import categoryService from '../../services/categoryService';
+import categoryApi from '../../apis/categoryApi';
+import { ApiError } from "../../error/ApiError";
 
 export interface CategoryListState {
     result?: CategoryResult[];
-    error?: Error;
+    error?: ApiError;
 }
 
 function useCategoryList(): [
@@ -12,16 +13,16 @@ function useCategoryList(): [
     React.Dispatch<React.SetStateAction<CategoryResult[] | undefined>>
 ] {    
     const [categoryList, setCategoryList] = useState<CategoryResult[]>();
-    const [error, setError] = useState<Error>();
+    const [error, setError] = useState<ApiError>();
 
     const selectCategoryList = useCallback(() => {
         setError(undefined);
 
-        categoryService.findAll()
+        categoryApi.findAll()
             .then(categoryList => {
                 setCategoryList(categoryList);
             })
-            .catch(error => {
+            .catch((error: ApiError) => {
                 setError(error);
                 setCategoryList(undefined);
             });

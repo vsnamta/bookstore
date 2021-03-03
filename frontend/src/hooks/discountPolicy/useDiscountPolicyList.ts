@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { DiscountPolicyResult } from "../../models/discountPolicies";
-import discountPolicyService from '../../services/discountPolicyService';
+import discountPolicyApi from '../../apis/discountPolicyApi';
+import { ApiError } from "../../error/ApiError";
 
 export interface DiscountPolicyListState {
     result?: DiscountPolicyResult[];
-    error?: Error;
+    error?: ApiError;
 }
 
 function useDiscountPolicyList() : [
@@ -12,14 +13,14 @@ function useDiscountPolicyList() : [
     React.Dispatch<React.SetStateAction<DiscountPolicyResult[] | undefined>>,
 ] {
     const [discountPolicyList, setDiscountPolicyList] = useState<DiscountPolicyResult[]>();
-    const [error, setError] = useState<Error>();
+    const [error, setError] = useState<ApiError>();
 
     const selectDiscountPolicyList = useCallback(() => {
         setError(undefined);
 
-        discountPolicyService.findAll()
+        discountPolicyApi.findAll()
             .then(discountPolicyList => setDiscountPolicyList(discountPolicyList))
-            .catch(error => {
+            .catch((error: ApiError) => {
                 setError(error);
                 setDiscountPolicyList(undefined);
             });

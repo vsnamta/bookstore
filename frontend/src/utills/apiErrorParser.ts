@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
 import { ErrorResult } from "../models/common";
-import { ApiError } from "../types/ApiError";
+import { ApiError } from "../error/ApiError";
 
-const errorParser = {
-    parse(axiosError: AxiosError<ErrorResult>) {
+const apiErrorParser = {
+    parse(axiosError: AxiosError<ErrorResult>): ApiError {
         if(axiosError.response) {
             const status = axiosError.response.status;
             const errorResult = axiosError.response.data;
@@ -17,4 +17,4 @@ const errorParser = {
     }
 }
 
-export default errorParser;
+export default apiErrorParser;

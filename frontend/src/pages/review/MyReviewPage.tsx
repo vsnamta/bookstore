@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import MyReviewList from '../../components/reivew/MyReviewList';
@@ -55,6 +56,7 @@ function MyReviewPage() {
         <Layout>
             <MyPageLayout>
                 <h3>리뷰내역</h3>
+                {reviewPageState.error && <ErrorDetail message={"오류 발생"} />}
                 {reviewPageState.result && 
                 <>
                     <MyReviewList 

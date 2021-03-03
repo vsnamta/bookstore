@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
 import { CategoryResult, CategorySaveOrUpdatePayload } from "../../models/categories";
-import categoryService from '../../services/categoryService';
+import categoryApi from '../../apis/categoryApi';
 import useCategoryList, { CategoryListState } from "./useCategoryList";
+import { ApiError } from "../../error/ApiError";
 
 interface CategoryManagementState {
     categoryListState: CategoryListState;
@@ -31,7 +32,7 @@ function useCategoryManagement(): [
     }, [categoryListState.result]);
 
     const saveCategory = useCallback((payload: CategorySaveOrUpdatePayload) => {
-        return categoryService.save(payload)
+        return categoryApi.save(payload)
            .then(savedCategory => {
                 if(!savedCategory.parentId) {
                     setCategoryList(categoryList =>
@@ -49,11 +50,14 @@ function useCategoryManagement(): [
                         )
                     );
                 }
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, []);
 
     const updateCategory = useCallback((id: number, payload: CategorySaveOrUpdatePayload) => {
-        return categoryService.update(id, payload)
+        return categoryApi.update(id, payload)
             .then(updatedCategory => {
                 if(!updatedCategory.parentId) {
                     setCategoryList(categoryList =>
@@ -79,6 +83,9 @@ function useCategoryManagement(): [
                         )
                     );
                 }
+            })
+            .catch((error: ApiError) => {
+                
             });
     }, []);
 
@@ -87,7 +94,7 @@ function useCategoryManagement(): [
             .flatMap(category => [category, ...category.children])
             .find(category => category.id === id) as CategoryResult;
 
-        return categoryService.remove(id)
+        return categoryApi.remove(id)
             .then(() => {
                 if(!removedCategory.parentId) {
                     setCategoryList(categoryList =>
@@ -105,7 +112,10 @@ function useCategoryManagement(): [
                         )
                     );
                 }
-            });    
+            })
+            .catch((error: ApiError) => {
+                
+            });   
     }, [categoryListState.result]);
 
     return [{
