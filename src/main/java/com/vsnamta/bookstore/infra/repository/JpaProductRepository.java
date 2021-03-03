@@ -45,19 +45,6 @@ public class JpaProductRepository implements ProductRepository {
     }
 
     @Override
-    public long findTotalCount(Long categoryId) {
-        JPAQueryFactory query = new JPAQueryFactory(entityManager);
-
-        long totalCount = 
-            query.select(product.id.count())
-                .from(product)
-                .where(product.category.id.eq(categoryId))
-                .fetchOne();
-
-        return totalCount;
-    }
-
-    @Override
     public List<Product> findByIds(List<Long> ids) {
         JPAQueryFactory query = new JPAQueryFactory(entityManager);
 
@@ -68,6 +55,19 @@ public class JpaProductRepository implements ProductRepository {
                 .fetch();
 
         return result;
+    }
+
+    @Override
+    public long findTotalCount(Long categoryId) {
+        JPAQueryFactory query = new JPAQueryFactory(entityManager);
+
+        long totalCount = 
+            query.select(product.id.count())
+                .from(product)
+                .where(product.category.id.eq(categoryId))
+                .fetchOne();
+
+        return totalCount;
     }
 
     @Override

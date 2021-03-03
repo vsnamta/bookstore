@@ -11,9 +11,9 @@ public interface ProductRepository {
 
     Optional<Product> findById(Long id);
 
-    long findTotalCount(Long categoryId);
-
     List<Product> findByIds(List<Long> ids);
+
+    long findTotalCount(Long categoryId);
 
     Optional<Product> findOne(Long id);
 
