@@ -23,10 +23,8 @@ import com.vsnamta.bookstore.domain.order.OrderLine;
 import com.vsnamta.bookstore.domain.order.OrderRepository;
 import com.vsnamta.bookstore.domain.order.OrderStatus;
 import com.vsnamta.bookstore.domain.order.OrderStatusSettingService;
-import com.vsnamta.bookstore.domain.point.PointHistoryRepository;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
-import com.vsnamta.bookstore.domain.stock.StockRepository;
 import com.vsnamta.bookstore.service.cart.MemoryCartRepository;
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.discount.MemoryDiscountPolicyRepository;
@@ -42,29 +40,27 @@ import org.junit.Test;
 public class OrderServiceTest {
     private OrderRepository orderRepository;
     private MemberRepository memberRepository;
+    private DiscountPolicyRepository discountPolicyRepository;
     private ProductRepository productRepository;
     private CartRepository cartRepository;
-    private StockRepository stockRepository;
-    private PointHistoryRepository pointHistoryRepository;
     private OrderStatusSettingService orderStatusSettingService;
     private OrderService orderService;
-    private DiscountPolicyRepository discountPolicyRepository;
 
     @Before
     public void setUp() {
         orderRepository = new MemoryOrderRepository();
         memberRepository = new MemoryMemberRepository();
+        discountPolicyRepository = new MemoryDiscountPolicyRepository();
         productRepository = new MemoryProductRepository();
-        cartRepository = new MemoryCartRepository();
-        stockRepository = new MemoryStockRepository();
-        pointHistoryRepository = new MemoryPointHistoryRepository();        
-        orderStatusSettingService = new OrderStatusSettingService(stockRepository, pointHistoryRepository);
-
-        orderService = new OrderService(
-            orderRepository, memberRepository, productRepository, cartRepository,orderStatusSettingService
+        cartRepository = new MemoryCartRepository();    
+        
+        orderStatusSettingService = new OrderStatusSettingService(
+            new MemoryStockRepository(), new MemoryPointHistoryRepository()
         );
 
-        discountPolicyRepository = new MemoryDiscountPolicyRepository();
+        orderService = new OrderService(
+            orderRepository, memberRepository, productRepository, cartRepository, orderStatusSettingService
+        );
     }
 
     @Test
@@ -155,27 +151,26 @@ public class OrderServiceTest {
                 .build()
         );
 
-        Order order = orderRepository.save(
-            Order.createOrder(
-                member,
-                Arrays.asList(
-                    OrderLine.createOrderLine(product, 1)
-                ), 
-                0, 
-                aDeliveryInfo().build()
-            )
+        Order order = Order.createOrder(
+            member,
+            Arrays.asList(
+                OrderLine.createOrderLine(product, 1)
+            ), 
+            0, 
+            aDeliveryInfo().build()
         );
-
         orderStatusSettingService.ordered(order);
 
+        Long id = orderRepository.save(order).getId();
+        
         OrderUpdatePayload orderUpdatePayload = new OrderUpdatePayload();
         orderUpdatePayload.setStatus(OrderStatus.CANCELED);
 
         // when
-        orderService.update(new LoginMember(member), order.getId(), orderUpdatePayload);
+        orderService.update(new LoginMember(member), id, orderUpdatePayload);
 
         // then
-        order = orderRepository.findById(order.getId()).get();
+        order = orderRepository.findById(id).get();
         product = productRepository.findById(product.getId()).get();
         member = memberRepository.findById(member.getId()).get();
 
@@ -199,18 +194,17 @@ public class OrderServiceTest {
                 .build()
         );
 
-        Order order = orderRepository.save(
-            Order.createOrder(
-                member,
-                Arrays.asList(
-                    OrderLine.createOrderLine(product, 1)
-                ), 
-                1000, 
-                aDeliveryInfo().build()
-            )
+        Order order = Order.createOrder(
+            member,
+            Arrays.asList(
+                OrderLine.createOrderLine(product, 1)
+            ), 
+            1000, 
+            aDeliveryInfo().build()
         );
-
         orderStatusSettingService.ordered(order);
+
+        Long id = orderRepository.save(order).getId();
 
         OrderUpdatePayload orderUpdatePayload = new OrderUpdatePayload();
         orderUpdatePayload.setStatus(OrderStatus.CANCELED);
@@ -218,7 +212,7 @@ public class OrderServiceTest {
         Member otherMember = memberRepository.save(aMember().name("임꺽정").build());
 
         // when
-        orderService.update(new LoginMember(otherMember), order.getId(), orderUpdatePayload);
+        orderService.update(new LoginMember(otherMember), id, orderUpdatePayload);
 
         // then
         fail();
@@ -237,27 +231,26 @@ public class OrderServiceTest {
             aProduct().discountPolicy(discountPolicy).name("Clean Code").regularPrice(33000).build()
         );
 
-        Order order = orderRepository.save(
-            Order.createOrder(
-                member,
-                Arrays.asList(
-                    OrderLine.createOrderLine(product, 1)
-                ), 
-                0, 
-                aDeliveryInfo().build()
-            )
+        Order order = Order.createOrder(
+            member, 
+            Arrays.asList(
+                OrderLine.createOrderLine(product, 1)
+            ), 
+            0, 
+            aDeliveryInfo().build()
         );
-
         orderStatusSettingService.ordered(order);
+
+        Long id = orderRepository.save(order).getId();
 
         OrderUpdatePayload orderUpdatePayload = new OrderUpdatePayload();
         orderUpdatePayload.setStatus(OrderStatus.COMPLETED);
 
         // when
-        orderService.update(new LoginMember(member), order.getId(), orderUpdatePayload);
+        orderService.update(new LoginMember(member), id, orderUpdatePayload);
 
         // then
-        order = orderRepository.findById(order.getId()).get();
+        order = orderRepository.findById(id).get();
         member = memberRepository.findById(member.getId()).get();
 
         assertEquals(OrderStatus.COMPLETED, order.getStatusInfo().getStatus());
