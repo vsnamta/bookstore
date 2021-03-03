@@ -1,6 +1,7 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useState } from 'react';
+import useSearchForm from '../../hooks/common/useSearchForm';
 import { SearchCriteria } from '../../models/common';
 
 interface MemberManagementBarProps {
@@ -8,40 +9,9 @@ interface MemberManagementBarProps {
 }
 
 function MemberManagementBar({ onUpdateSearchCriteria }: MemberManagementBarProps) {
-    const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>({column:"email", keyword: ""});    
+    const [searchCriteria, useSearchFormMethods] = useSearchForm("email", onUpdateSearchCriteria);
 
-    const onChangeSearchColumn = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
-        const column: string = event.target.value;
-
-        setSearchCriteria(searchCriteria => ({
-            ...searchCriteria,
-            column: column
-        }));
-    }, []);
-
-    const onChangeSearchKeyword = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        const keyword: string = event.currentTarget.value;
-
-        setSearchCriteria(searchCriteria => ({
-            ...searchCriteria,
-            keyword: keyword
-        }));
-    }, []);
-
-    const onClickSearchBtn = useCallback(() => {
-        if(!searchCriteria.keyword) {
-            alert("검색어를 입력해주세요.");
-            return;
-        }
-
-        onUpdateSearchCriteria(searchCriteria);
-    }, [searchCriteria]);
-
-    const onKeyPress = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(event.key === 'Enter') {
-            onClickSearchBtn();
-        } 
-    }, [onClickSearchBtn]);
+    const { onChangeSearchColumn, onChangeSearchKeyword, onClickSearchBtn, onKeyPress } = useSearchFormMethods;
 
     return (
         <div className="header-bottom pb--10">

@@ -4,6 +4,7 @@ import qs from 'qs';
 import React, { useCallback, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Logo from '../../assets/image/logo.png';
+import useSearchForm from "../../hooks/common/useSearchForm";
 import { CategoryResult } from '../../models/categories';
 import { SearchCriteria } from '../../models/common';
 import { LoginMember } from '../../models/members';
@@ -16,32 +17,15 @@ interface HeaderProps {
 function Header({loginMember, categoryList}: HeaderProps) {
     const history = useHistory();
 
-    const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>({column:"name", keyword: ""});    
-    
-    const onChangeSearchKeyword = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        const keyword: string = event.currentTarget.value;
-
-        setSearchCriteria(searchCriteria => ({
-            ...searchCriteria,
-            keyword: keyword
-        }));
-    }, []);
-
-    const onClickSearchBtn = useCallback(() => {
-        if(!searchCriteria.keyword) {
-            alert("검색어를 입력해주세요.");
-            return;
+    const [searchCriteria, useSearchFormMethods] = useSearchForm(
+        "name", 
+        (searchCriteria: SearchCriteria) => {
+            const queryString = qs.stringify({searchCriteria}, { allowDots: true });
+            history.push(`/product/list?${queryString}`);
         }
+    );
 
-        const queryString = qs.stringify({searchCriteria}, { allowDots: true });
-        history.push(`/product/list?${queryString}`);
-    }, [searchCriteria]);
-
-    const onKeyPress = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(event.key === 'Enter') {
-            onClickSearchBtn();
-        } 
-    }, [onClickSearchBtn]);
+    const { onChangeSearchColumn, onChangeSearchKeyword, onClickSearchBtn, onKeyPress } = useSearchFormMethods;
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false); 
 
