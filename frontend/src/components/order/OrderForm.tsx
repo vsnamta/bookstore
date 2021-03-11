@@ -9,16 +9,6 @@ const calcTotalPrice = (orderingProductList: OrderingProduct[]) : number => {
         .reduce((accumulator, currentValue) => accumulator + currentValue);
 }
 
-interface Inputs {
-    usedPoint: number;
-    receiverName: string;
-    receiverPhoneNumber: string;
-    deliveryZipCode: string;
-    deliveryAddress1: string;
-    deliveryAddress2: string;
-    deliveryMessage: string;
-};
-
 interface OrderFormProps {
     member: MemberDetailResult;
     orderingProductList: OrderingProduct[];
@@ -26,7 +16,7 @@ interface OrderFormProps {
 }
 
 function OrderForm({ member, orderingProductList, onSaveOrder }: OrderFormProps) {
-    const { register, handleSubmit, errors } = useForm<Inputs>();
+    const { register, handleSubmit, errors } = useForm<OrderSavePayload>();
 
     const totalPrice = useMemo(() => calcTotalPrice(orderingProductList), [orderingProductList]);
 
@@ -67,15 +57,11 @@ function OrderForm({ member, orderingProductList, onSaveOrder }: OrderFormProps)
         return isPointEditing !== true;
     }, [isPointEditing]);
 
-    const onSubmit = useCallback((inputs: Inputs) => {
-        const orderSavePayload: OrderSavePayload = {
-            orderProducts: orderingProductList.map((orderingProduct) => ({
-                cartId: orderingProduct.cartId, 
-                productId: orderingProduct.productId, 
-                quantity: orderingProduct.quantity})
-            ),
-            ...inputs
-        };
+    const onSubmit = useCallback((orderSavePayload: OrderSavePayload) => {
+        orderSavePayload.orderProducts = orderingProductList.map(orderingProduct => ({
+            cartId: orderingProduct.cartId, 
+            productId: orderingProduct.productId, 
+            quantity: orderingProduct.quantity}));
 
         onSaveOrder(orderSavePayload);
     }, [orderingProductList]);
