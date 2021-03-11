@@ -1,11 +1,8 @@
-import { AxiosError } from 'axios';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CategoryResult } from '../../models/categories';
-import { ErrorResult } from '../../models/common';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
 import { ProductSaveOrUpdatePayload } from '../../models/products';
-import apiClient from '../../apis/apiClient';
 
 interface ProductSaveFormProps {
     discountPolicyList: DiscountPolicyResult[]; 
@@ -53,20 +50,6 @@ function ProductSaveForm({ discountPolicyList, categoryList, onSaveProduct, onSa
 
 	const onSubmit = useCallback((payload: ProductSaveOrUpdatePayload) => {
 		onSaveProduct(payload, imageFileInfo.imageFile as File);
-
-		// const formData = new FormData();
-		// formData.append("file", imageFileInfo.imageFile as File);
-
-		// apiClient.post<string>('/api/files', formData, {
-		// 	headers: {
-		// 		"Content-Type": "multipart/form-data"
-		// 	}
-		// }).then(({ data }) => {
-		// 	payload.imageFileName = data;
-		// 	onSaveProduct(payload);
-		// }).catch((error: AxiosError<ErrorResult>) => {
-		// 	alert(error.response?.data.message);
-		// });
 	}, [imageFileInfo]);
 
     return (

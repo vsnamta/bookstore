@@ -26,15 +26,6 @@ const fileApi = {
                 reject(apiErrorParser.parse(error));
             });
         });
-    },
-    find(fileName: string): Promise<File> {
-        return new Promise((resolve, reject) => {
-            apiClient.get<File>(`/api/files/${fileName}`).then(({ data }) => {
-                resolve(data);
-            }).catch((error: AxiosError<ErrorResult>) => {
-                reject(apiErrorParser.parse(error));
-            });
-        });
     }
 };
 

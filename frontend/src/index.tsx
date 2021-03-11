@@ -10,10 +10,8 @@ import createSagaMiddleware from 'redux-saga';
 import App from './App';
 import { LoginMember } from './models/members';
 import rootReducer, { rootSaga } from './store';
+import { findCategoryList } from './store/category/action';
 import { setMyData } from './store/member/action';
-import { findCategoryList, findCategoryListAsync } from './store/category/action';
-import categoryApi from './apis/categoryApi';
-import { ApiError } from './error/ApiError';
 
 const sagaMiddleware = createSagaMiddleware();
 

@@ -1,11 +1,8 @@
-import { AxiosError } from 'axios';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CategoryResult } from '../../models/categories';
-import { ErrorResult } from '../../models/common';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
 import { ProductDetailResult, ProductSaveOrUpdatePayload } from '../../models/products';
-import apiClient from '../../apis/apiClient';
 
 interface ProductUpdateFormProps {
 	product: ProductDetailResult;
@@ -52,28 +49,6 @@ function ProductUpdateForm({ discountPolicyList, categoryList, product, onUpdate
 	
 	const onSubmit = useCallback((payload: ProductSaveOrUpdatePayload) => {
 		onUpdateProduct(product.id, payload, imageFileInfo.imageFile);
-		
-		// if(!imageFileInfo.imageFile) {
-		// 	onUpdateProduct(product.id, payload);
-		// 	return;
-		// }
-
-		// const formData = new FormData();
-		// formData.append("file", imageFileInfo.imageFile);
-
-		// apiClient.post<string>('/api/files', formData, {
-		// 	headers: {
-		// 		"Content-Type": "multipart/form-data"
-		// 	}
-		// }).then(({ data }) => {
-		// 	payload.imageFileName = data;
-			
-		// 	return apiClient.delete<undefined>(`/api/files/${product.imageFileName}`);
-		// }).then(() => {
-		// 	onUpdateProduct(product.id, payload);
-		// }).catch((error: AxiosError<ErrorResult>) => {
-		// 	alert("처리 실패하였습니다.");
-		// });
 	}, [imageFileInfo, product]);
 
     return (
