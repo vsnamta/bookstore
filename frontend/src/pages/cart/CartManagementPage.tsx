@@ -7,7 +7,7 @@ import Layout from '../../components/layout/Layout';
 import { CartUpdatePayload } from '../../models/carts';
 import { OrderingProduct } from '../../models/orders';
 import { RootState } from '../../store';
-import { findCartList, removeCart, updateCart } from '../../store/cart/action';
+import { checkAllCart, checkCart, findCartList, removeCart, updateCart } from '../../store/cart/action';
 
 function CartManagementPage() {
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
@@ -25,10 +25,6 @@ function CartManagementPage() {
 
     const cartListState = useSelector((state: RootState) => state.carts.cartListAsync);
 
-    const onPurchase = useCallback((orderingProductList: OrderingProduct[]) => {
-        history.push("/order/form", { orderingProductList });
-    }, []);
-
     const onUpdateCart = useCallback((id: number, payload: CartUpdatePayload) => {
         dispatch(updateCart({
             id: id,
@@ -38,15 +34,29 @@ function CartManagementPage() {
         }));
     }, []);
 
-    const onRemoveCart = useCallback((ids: number[], onSuccess: () => void) => {
+    const onRemoveCart = useCallback((ids: number[]) => {
         dispatch(removeCart({
             ids: ids,
             onSuccess: () => {
                 alert("삭제되었습니다.");
-                onSuccess();
             },
             onFailure: error => {}
         }));
+    }, []);
+
+    const onCheckAllCart = useCallback((checked: boolean) => {
+        dispatch(checkAllCart(checked));
+    }, []);
+
+    const onCheckCart = useCallback((id: number, checked: boolean) => {
+        dispatch(checkCart({
+            id: id,
+            checked: checked
+        }));
+    }, []);
+
+    const onPurchase = useCallback((orderingProductList: OrderingProduct[]) => {
+        history.push("/order/form", { orderingProductList });
     }, []);
     
     return (
@@ -58,6 +68,8 @@ function CartManagementPage() {
                 cartList={cartListState.result} 
                 onUpdateCart={onUpdateCart} 
                 onRemoveCart={onRemoveCart}
+                onCheckAllCart={onCheckAllCart}
+                onCheckCart={onCheckCart}
                 onPurchase={onPurchase}
             />}
         </Layout>

@@ -1,55 +1,50 @@
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { CartResult, CartUpdatePayload } from '../../models/carts';
 import { OrderingProduct } from '../../models/orders';
 
-const selectCartsAndcalcTotalPrice = (
-    cartList: CartResult[], selectedMap: Map<number, boolean>
-) : [
-    CartResult[], number
-] => {
-    const selectedCartList = cartList.filter(cart => selectedMap.get(cart.id));
-
+const calcTotalPriceAndAllChecked = (cartList: CartResult[]) : [ number, boolean ] => {
+    const checkedCartList = cartList.filter(cart => cart.checked === true);
+    
     const totalPrice = 
-        selectedCartList.length === 0 
+        checkedCartList.length === 0 
             ? 0
-            : selectedCartList
+            : checkedCartList
                 .map(cart => (cart.regularPrice * (1 -(cart.discountPercent / 100))) * cart.quantity)
                 .reduce((accumulator, currentValue) => accumulator + currentValue);
+    
+    const allChecked = cartList.every(cart => cart.checked === true);
 
-    return [selectedCartList, totalPrice];
+    return [totalPrice, allChecked];
 }
 
 interface CartManagementProps {
     cartList: CartResult[];
     onUpdateCart: (id: number, payload: CartUpdatePayload) => void;
-    onRemoveCart: (ids: number[], onSuccess: () => void) => void;
+    onRemoveCart: (ids: number[]) => void;
+    onCheckAllCart: (checked: boolean) => void;
+    onCheckCart: (id: number, checked: boolean) => void;
     onPurchase: (orderingProductList: OrderingProduct[]) => void;
 }
 
-function CartManagement({cartList, onUpdateCart, onRemoveCart, onPurchase}: CartManagementProps) {
-    const [allSelected, setAllSelected] = useState<boolean>(true);
-    const [selectedMap, setSelectedMap] = useState<Map<number, boolean>>(
-        new Map<number, boolean>(cartList.map(cart => ([cart.id, true])))
-    );
-
-    const [selectedCartList, totalPrice] = useMemo(
-        () => selectCartsAndcalcTotalPrice(cartList, selectedMap), 
-        [cartList, selectedMap]
+function CartManagement({cartList, onUpdateCart, onRemoveCart, onCheckAllCart, onCheckCart, onPurchase}: CartManagementProps) {    
+    const [totalPrice, allChecked] = useMemo(
+        () => calcTotalPriceAndAllChecked(cartList), 
+        [cartList]
     );
 
     const onPlusQuantity = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const cart = cartList
             .find(cart => cart.id === parseInt(event.currentTarget.value)) as CartResult;
 
-        if(cart.quantity > cart.stockQuantity) {
-            alert(`현재 재고는 ${cart.stockQuantity} 개 입니다`);
+        if(cart.quantity >= cart.stockQuantity) {
+            alert(`최대 구매수량은 ${cart.stockQuantity} 개 입니다`);
             return;
         }
 
-        onUpdateCart(cart.id, {quantity: cart.quantity + 1});
+        onUpdateCart(cart.id, { quantity: cart.quantity + 1 });
     }, [cartList]);
 
     const onMinusQuantity = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -65,57 +60,43 @@ function CartManagement({cartList, onUpdateCart, onRemoveCart, onPurchase}: Cart
     }, [cartList]);
 
     const onChangeAllCheck = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setAllSelected(event.currentTarget.checked);
-        setSelectedMap(
-            new Map<number, boolean>(cartList.map(cart => ([cart.id, event.currentTarget.checked])))
-        );
-    }, [cartList]);
+        onCheckAllCart(event.currentTarget.checked);
+    }, []);
 
     const onChangeCheck = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        const newSelectedMap = new Map<number, boolean>(selectedMap.entries());
-        newSelectedMap.set(parseInt(event.currentTarget.value), event.currentTarget.checked);
-
-        setSelectedMap(newSelectedMap);
-        setAllSelected(
-            Array.from(newSelectedMap.values()).every(value => value === true)
-        );
-    }, [selectedMap]);
+        onCheckCart(parseInt(event.currentTarget.value), event.currentTarget.checked);
+    }, []);
 
     const onRemove = useCallback(() => {
-        if(selectedCartList.length === 0) {
+        const checkedIds = cartList
+            .filter(cart => cart.checked === true)
+            .map(cart => cart.id);
+
+        if(checkedIds.length === 0) {
             alert("상품을 선택해주세요.");
             return;
         }
-
-        onRemoveCart(
-            selectedCartList.map(cart => cart.id),
-            () => {
-                const newSelectedMap = new Map<number, boolean>(selectedMap.entries());
-                selectedCartList.forEach(cart => newSelectedMap.delete(cart.id));
-    
-                setSelectedMap(newSelectedMap);
-                setAllSelected(false);
-            }
-        );
-
-        // onRemoveCart(selectedCartList.map(cart => cart.id))
-        //     .then(() => {
-        //         const newSelectedMap = new Map<number, boolean>(selectedMap.entries());
-        //         selectedCartList.forEach(cart => newSelectedMap.delete(cart.id));
-
-        //         setSelectedMap(newSelectedMap);
-        //         setAllSelected(false);
-        //     });
-    }, [selectedCartList]);
+        
+        onRemoveCart(checkedIds);
+    }, [cartList]);
 
     const onSaveOrder = useCallback(() => {
-        if(selectedCartList.length === 0) {
+        const checkedCartList = cartList.filter(cart => cart.checked === true);
+
+        if(checkedCartList.length === 0) {
             alert("상품을 선택해주세요.");
+            return;
+        }
+        
+        const stockShortageCartList = checkedCartList.filter(cart => cart.quantity > cart.stockQuantity);
+
+        if(stockShortageCartList.length >= 1) {
+            alert("재고가 부족한 상품이 있습니다.");
             return;
         }
 
         onPurchase(
-            selectedCartList.map(cart => ({
+            checkedCartList.map(cart => ({
                 cartId: cart.id,
                 productId: cart.productId,
                 productName: cart.productName,
@@ -126,14 +107,14 @@ function CartManagement({cartList, onUpdateCart, onRemoveCart, onPurchase}: Cart
                 quantity: cart.quantity
             })) 
         );
-    }, [selectedCartList]);
+    }, [cartList]);
 
     return (
         <main className="cart-page-main-block inner-page-sec-padding-bottom">
             <div className="cart_area cart-area-padding  ">
                 <div className="container">
                     <div className="page-section-title">
-                        <h1>Shopping Cart</h1>
+                        <h1>장바구니</h1>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -144,7 +125,7 @@ function CartManagement({cartList, onUpdateCart, onRemoveCart, onPurchase}: Cart
                                         {/* <!-- Head Row --> */}
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" checked={allSelected} onChange={onChangeAllCheck}/></th>
+                                                <th><input type="checkbox" checked={allChecked} onChange={onChangeAllCheck}/></th>
                                                 <th className="pro-thumbnail">이미지</th>
                                                 <th className="pro-title">상품</th>
                                                 <th className="pro-price">가격</th>
@@ -156,7 +137,7 @@ function CartManagement({cartList, onUpdateCart, onRemoveCart, onPurchase}: Cart
                                             {/* <!-- Product Row --> */}
                                             {cartList.map(cart => (
                                                 <tr key={cart.id}>
-                                                    <td><input type="checkbox" value={cart.id} checked={selectedMap.get(cart.id)} onChange={onChangeCheck}/></td>
+                                                    <td><input type="checkbox" value={cart.id} checked={cart.checked} onChange={onChangeCheck}/></td>
                                                     <td className="pro-thumbnail">
                                                         <Link to={`/product/${cart.productId}`}>
                                                             <img src={`/api/files/${cart.imageFileName}`} alt="" />

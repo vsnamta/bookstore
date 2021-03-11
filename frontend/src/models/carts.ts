@@ -21,4 +21,5 @@ export interface CartResult {
     discountPercent: number;
     depositPercent: number;
     quantity: number;
+    checked: boolean;
 }
