@@ -1,54 +1,65 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import AdminLayout from '../../components/layout/AdminLayout';
 import MemberList from '../../components/member/MemberList';
 import MemberManagementBar from '../../components/member/MemberManagementBar';
-import usePage from '../../hooks/common/usePage';
-import { FindPayload } from '../../models/common';
-import { MemberResult } from '../../models/members';
-import memberApi from '../../apis/memberApi';
+import { FindPayload, SearchCriteria } from '../../models/common';
 import { RootState } from '../../store';
-import ErrorDetail from '../../components/general/ErrorDetail';
+import { findMemberPage } from '../../store/member/action';
 
 function MemberManagementPage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
     } 
 
-    const [
-        memberPageState, 
-        setMemberPage, 
-        updateSearchCriteria, 
-        updatePageCriteria
-    ] = usePage<MemberResult>({ column: "", keyword: "" }, memberApi.findAll);
-    
+    const dispatch = useDispatch();
+    const membersState = useSelector((state: RootState) => state.members);
+
+    useEffect(() => {
+        dispatch(findMemberPage({
+            searchCriteria: { column: "", keyword: "" },
+            pageCriteria: { page: 1, size: 10 }
+        }));
+    }, []);
+
+    const onUpdateSearchCriteria = useCallback((searchCriteria: SearchCriteria) => {
+        dispatch(findMemberPage({
+            ...membersState.memberPageAsync.payload as FindPayload,
+            searchCriteria: searchCriteria,
+        }));
+    }, [membersState.memberPageAsync.payload]);
+
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        updatePageCriteria({
-            ...(memberPageState.payload as FindPayload).pageCriteria,
-            page: selectedItem.selected + 1
-        });
-    }, [updatePageCriteria, memberPageState.payload]);
-    
+        dispatch(findMemberPage({
+            ...membersState.memberPageAsync.payload as FindPayload,
+            pageCriteria: {
+                ...(membersState.memberPageAsync.payload as FindPayload).pageCriteria, 
+                page:selectedItem.selected + 1
+            }
+        }));
+    }, [membersState.memberPageAsync.payload]);
+
     return (
         <AdminLayout>
 
-            {memberPageState.error && <ErrorDetail message={"오류 발생"} />}
+            {membersState.memberPageAsync.error && <ErrorDetail message={"오류 발생"} />}
             
-            {memberPageState.result &&
+            {membersState.memberPageAsync.result &&
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
                     <div className="section-title section-title--bordered">
                         <h2>회원관리</h2>
                     </div>
-                    <MemberManagementBar onUpdateSearchCriteria={updateSearchCriteria}/>
+                    <MemberManagementBar onUpdateSearchCriteria={onUpdateSearchCriteria}/>
                     <div className="row">
                         <div className="col-12">
                             <MemberList 
-                                memberList={memberPageState.result.list}
+                                memberList={membersState.memberPageAsync.result.list}
                             />
                         </div>                       
                     </div>
@@ -56,7 +67,7 @@ function MemberManagementPage() {
                         <div className="col-md-12">
                             <div className="pagination-block">
                                 <ReactPaginate 
-                                    pageCount={Math.ceil(memberPageState.result.totalCount / 10)}
+                                    pageCount={Math.ceil(membersState.memberPageAsync.result.totalCount / 10)}
                                     pageRangeDisplayed={10}
                                     marginPagesDisplayed={0}
                                     onPageChange={onPageChange}

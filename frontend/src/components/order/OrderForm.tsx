@@ -68,7 +68,7 @@ function OrderForm({ member, orderingProductList, onSaveOrder }: OrderFormProps)
     }, [isPointEditing]);
 
     const onSubmit = useCallback((inputs: Inputs) => {
-        const orderSavePaylaod: OrderSavePayload = {
+        const orderSavePayload: OrderSavePayload = {
             orderProducts: orderingProductList.map((orderingProduct) => ({
                 cartId: orderingProduct.cartId, 
                 productId: orderingProduct.productId, 
@@ -77,7 +77,7 @@ function OrderForm({ member, orderingProductList, onSaveOrder }: OrderFormProps)
             ...inputs
         };
 
-        onSaveOrder(orderSavePaylaod);
+        onSaveOrder(orderSavePayload);
     }, [orderingProductList]);
 
     return (

@@ -1,56 +1,79 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import MyReviewList from '../../components/reivew/MyReviewList';
 import ReviewUpdateModal from '../../components/reivew/ReviewUpdateModal';
-import useModal from '../../hooks/common/useModal';
-import useReviewManagement from '../../hooks/review/useReviewManagement';
+import useModal from '../../hooks/useModal';
 import { FindPayload } from '../../models/common';
 import { LoginMember } from '../../models/members';
 import { ReviewUpdatePayload } from '../../models/reviews';
 import { RootState } from '../../store';
+import { findReview, findReviewPage, removeReview, updateReview } from '../../store/review/action';
 
 function MyReviewPage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!loginMember) {
         return <Redirect to={{ pathname: "/login" }}/>
     }
 
-    const [reviewManagementState, useReviewManagementMethods] = useReviewManagement({
-        column: "memberId", 
-        keyword: (loginMember as LoginMember).id + ""
-    });
-    const {reviewPageState, review} = reviewManagementState;
-    const {
-        updatePageCriteria,
-        selectReview,
-        updateReview,
-        removeReview
-    } = useReviewManagementMethods;
+    const { reviewPageState, review } = useSelector((state: RootState) => ({ 
+        reviewPageState: state.reviews.reviewPageAsync,
+        review: state.reviews.review
+    }));
+    
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(findReviewPage({
+            searchCriteria: { 
+                column: "memberId", 
+                keyword: (loginMember as LoginMember).id + "" 
+            },
+            pageCriteria: { page: 1, size: 10 }
+        }));
+    }, []);
     
     const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
 
     const onSelectReview = useCallback((id: number) => {
-        selectReview(id);
+        dispatch(findReview(id));
         openUpdateModal();
-    }, [selectReview]);
+    }, []);
 
     const onUpdateReview = useCallback((id: number, payload: ReviewUpdatePayload) => {
-        updateReview(id, payload)
-            .then(() => closeUpdateModal());
+        dispatch(updateReview({
+            id: id,
+            payload: payload,
+            onSuccess: review => {
+                alert("변경되었습니다.");
+                closeUpdateModal();
+            },
+            onFailure: error => {}
+        }));
+    }, []);
+
+    const onRemoveReview = useCallback((id: number) => {
+        dispatch(removeReview({
+            id: id,
+            onSuccess: () => alert("삭제되었습니다."),
+            onFailure: error => {}
+        }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        updatePageCriteria({
-            ...(reviewPageState.payload as FindPayload).pageCriteria,
-            page: selectedItem.selected + 1
-        });
-    }, [updatePageCriteria, reviewPageState.payload]);
+        dispatch(findReviewPage({
+            ...reviewPageState.payload as FindPayload,
+            pageCriteria: {
+                ...(reviewPageState.payload as FindPayload).pageCriteria, 
+                page:selectedItem.selected + 1
+            }
+        }));
+    }, [reviewPageState.payload]);
     
     return (
         <Layout>
@@ -62,7 +85,7 @@ function MyReviewPage() {
                     <MyReviewList 
                         reviewList={reviewPageState.result.list} 
                         onSelectReview={onSelectReview}
-                        onRemoveReview={removeReview} 
+                        onRemoveReview={onRemoveReview} 
                     />
                     <div className="row pt--30">
                         <div className="col-md-12">

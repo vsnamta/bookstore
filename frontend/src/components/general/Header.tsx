@@ -4,7 +4,7 @@ import qs from 'qs';
 import React, { useCallback, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Logo from '../../assets/image/logo.png';
-import useSearchForm from "../../hooks/common/useSearchForm";
+import useSearchForm from "../../hooks/useSearchForm";
 import { CategoryResult } from '../../models/categories';
 import { SearchCriteria } from '../../models/common';
 import { LoginMember } from '../../models/members';

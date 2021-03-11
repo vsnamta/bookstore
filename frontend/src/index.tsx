@@ -4,28 +4,34 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import createSagaMiddleware from 'redux-saga';
 import App from './App';
 import { LoginMember } from './models/members';
+import rootReducer, { rootSaga } from './store';
+import { setMyData } from './store/member/action';
+import { findCategoryList, findCategoryListAsync } from './store/category/action';
 import categoryApi from './apis/categoryApi';
-import rootReducer from './store';
-import { setMyData } from './store/loginMember';
-import { setMenuCategoryList } from './store/menuCategoryList';
 import { ApiError } from './error/ApiError';
 
-const store = createStore(rootReducer, composeWithDevTools());
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(
+    rootReducer, 
+    composeWithDevTools(applyMiddleware(sagaMiddleware))
+);
+
+sagaMiddleware.run(rootSaga);
 
 function initalizeStore() {
-    const loginMember = localStorage.getItem("loginMember"); 
+    const loginMember = localStorage.getItem("loginMember");
 
     if (loginMember !== null) {
         store.dispatch(setMyData(JSON.parse(loginMember) as LoginMember));
     }
 
-    categoryApi.findAll()
-        .then(categoryList => store.dispatch(setMenuCategoryList(categoryList)))
-        .catch((error: ApiError) => {});
+    store.dispatch(findCategoryList());
 }
 
 initalizeStore();    
@@ -40,3 +46,5 @@ ReactDOM.render(
     </React.StrictMode>,
 	document.getElementById('root')
 );
+
+export default store;

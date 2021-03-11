@@ -10,7 +10,7 @@ import apiClient from '../../apis/apiClient';
 interface ProductSaveFormProps {
     discountPolicyList: DiscountPolicyResult[]; 
     categoryList: CategoryResult[];
-    onSaveProduct: (payload: ProductSaveOrUpdatePayload) => void;
+    onSaveProduct: (payload: ProductSaveOrUpdatePayload, file: File) => void;
 	onSaveCancel: () => void;
 }
 
@@ -52,19 +52,21 @@ function ProductSaveForm({ discountPolicyList, categoryList, onSaveProduct, onSa
 	}, [imageFileInfo]);
 
 	const onSubmit = useCallback((payload: ProductSaveOrUpdatePayload) => {
-		const formData = new FormData();
-		formData.append("file", imageFileInfo.imageFile as File);
+		onSaveProduct(payload, imageFileInfo.imageFile as File);
 
-		apiClient.post<string>('/api/files', formData, {
-			headers: {
-				"Content-Type": "multipart/form-data"
-			}
-		}).then(({ data }) => {
-			payload.imageFileName = data;
-			onSaveProduct(payload);
-		}).catch((error: AxiosError<ErrorResult>) => {
-			alert(error.response?.data.message);
-		});
+		// const formData = new FormData();
+		// formData.append("file", imageFileInfo.imageFile as File);
+
+		// apiClient.post<string>('/api/files', formData, {
+		// 	headers: {
+		// 		"Content-Type": "multipart/form-data"
+		// 	}
+		// }).then(({ data }) => {
+		// 	payload.imageFileName = data;
+		// 	onSaveProduct(payload);
+		// }).catch((error: AxiosError<ErrorResult>) => {
+		// 	alert(error.response?.data.message);
+		// });
 	}, [imageFileInfo]);
 
     return (

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import memberApi from '../../apis/memberApi';
 import { ApiError } from '../../error/ApiError';
-import { setMyData } from '../../store/loginMember';
+import { setMyData } from '../../store/member/action';
 
 function LogoutSuccessPage() {
     const history = useHistory();

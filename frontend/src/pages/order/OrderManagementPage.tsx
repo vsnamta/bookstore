@@ -1,42 +1,72 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ReactModal from 'react-modal';
 import ReactPaginate from 'react-paginate';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import AdminLayout from '../../components/layout/AdminLayout';
 import OrderDetail from '../../components/order/OrderDetail';
 import OrderList from '../../components/order/OrderList';
 import OrderManagementBar from '../../components/order/OrderManagementBar';
-import useModal from '../../hooks/common/useModal';
-import useOrderManagement from '../../hooks/order/useOrderManagement';
-import { FindPayload } from '../../models/common';
+import useModal from '../../hooks/useModal';
+import { FindPayload, SearchCriteria } from '../../models/common';
+import { OrderUpdatePayload } from '../../models/orders';
 import { RootState } from '../../store';
+import { findOrder, findOrderPage, updateOrder } from '../../store/order/action';
 
 function OrderManagementPage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
     } 
-    
-    const [orderManagementState, useOrderManagementMethods] = useOrderManagement({ column: "", keyword: "" });
-    const {orderPageState, orderState} = orderManagementState;
-    const {updateSearchCriteria, updatePageCriteria, selectOrder, updateOrder} = useOrderManagementMethods;
-    
+
+    const { orderPageState, orderState } = useSelector((state: RootState) => ({
+        orderPageState: state.orders.orderPageAsync,
+        orderState: state.orders.orderAsync
+    }));
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(findOrderPage({
+            searchCriteria: { column: "", keyword: "" },
+            pageCriteria: { page: 1, size: 10 }
+        }));
+    }, []);
+
     const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
 
     const onSelectOrder = useCallback((id: number) => {
-        selectOrder(id);
+        dispatch(findOrder(id));
         openUpdateModal();
-    }, [selectOrder]);
+    }, []);
+
+    const onUpdateOrder = useCallback((id: number, payload: OrderUpdatePayload) => {
+        dispatch(updateOrder({
+            id: id,
+            payload: payload,
+            onSuccess: order => alert("변경되었습니다."),
+            onFailure: error => {}
+        }));
+    }, []);
+
+    const onUpdateSearchCriteria = useCallback((searchCriteria: SearchCriteria) => {
+        dispatch(findOrderPage({
+            ...orderPageState.payload as FindPayload,
+            searchCriteria: searchCriteria,
+        }));
+    }, [orderPageState.payload]);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        updatePageCriteria({
-            ...(orderPageState.payload as FindPayload).pageCriteria,
-            page: selectedItem.selected + 1
-        });
-    }, [updatePageCriteria, orderPageState.payload]);
+        dispatch(findOrderPage({
+            ...orderPageState.payload as FindPayload,
+            pageCriteria: {
+                ...(orderPageState.payload as FindPayload).pageCriteria, 
+                page:selectedItem.selected + 1
+            }
+        }));
+    }, [orderPageState.payload]);
 
     return (
         <AdminLayout>
@@ -48,14 +78,14 @@ function OrderManagementPage() {
                         <h2>주문관리</h2>
                     </div>
                     <OrderManagementBar 
-                        onUpdateSearchCriteria={updateSearchCriteria}
+                        onUpdateSearchCriteria={onUpdateSearchCriteria}
                     />
                     <div className="row">
                         <div className="col-12">
                             <OrderList 
                                 orderList={orderPageState.result.list}
                                 onSelectOrder={onSelectOrder}
-                                onUpdateOrder={updateOrder} 
+                                onUpdateOrder={onUpdateOrder} 
                             />
                         </div>
                     </div>

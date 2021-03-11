@@ -24,8 +24,8 @@ const selectCartsAndcalcTotalPrice = (
 
 interface CartManagementProps {
     cartList: CartResult[];
-    onUpdateCart: (id: number, payload: CartUpdatePayload) => Promise<void>;
-    onRemoveCart: (ids: number[]) => Promise<void>;
+    onUpdateCart: (id: number, payload: CartUpdatePayload) => void;
+    onRemoveCart: (ids: number[], onSuccess: () => void) => void;
     onPurchase: (orderingProductList: OrderingProduct[]) => void;
 }
 
@@ -87,14 +87,25 @@ function CartManagement({cartList, onUpdateCart, onRemoveCart, onPurchase}: Cart
             return;
         }
 
-        onRemoveCart(selectedCartList.map(cart => cart.id))
-            .then(() => {
+        onRemoveCart(
+            selectedCartList.map(cart => cart.id),
+            () => {
                 const newSelectedMap = new Map<number, boolean>(selectedMap.entries());
                 selectedCartList.forEach(cart => newSelectedMap.delete(cart.id));
-
+    
                 setSelectedMap(newSelectedMap);
                 setAllSelected(false);
-            });
+            }
+        );
+
+        // onRemoveCart(selectedCartList.map(cart => cart.id))
+        //     .then(() => {
+        //         const newSelectedMap = new Map<number, boolean>(selectedMap.entries());
+        //         selectedCartList.forEach(cart => newSelectedMap.delete(cart.id));
+
+        //         setSelectedMap(newSelectedMap);
+        //         setAllSelected(false);
+        //     });
     }, [selectedCartList]);
 
     const onSaveOrder = useCallback(() => {

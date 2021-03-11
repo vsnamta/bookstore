@@ -1,7 +1,7 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useState } from 'react';
-import useSearchForm from '../../hooks/common/useSearchForm';
+import useSearchForm from '../../hooks/useSearchForm';
 import { SearchCriteria } from '../../models/common';
 
 interface ProductManagementBarProps {

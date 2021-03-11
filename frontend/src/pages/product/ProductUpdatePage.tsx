@@ -1,23 +1,18 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import AdminLayout from '../../components/layout/AdminLayout';
 import ProductUpdateForm from '../../components/product/ProductUpdateForm';
-import useCategoryList from '../../hooks/category/useCategoryList';
-import useDiscountPolicyList from '../../hooks/discountPolicy/useDiscountPolicyList';
-import useProduct from '../../hooks/product/useProduct';
-import { Page } from '../../models/common';
-import { ProductResult, ProductSaveOrUpdatePayload } from '../../models/products';
-import productApi from '../../apis/productApi';
-import { RootState } from '../../store';
-import { setProductResult } from '../../store/product';
-import { setProductPage } from '../../store/productPage';
 import { ApiError } from '../../error/ApiError';
+import { ProductDetailResult, ProductSaveOrUpdatePayload } from '../../models/products';
+import { RootState } from '../../store';
+import { findCategoryList } from '../../store/category/action';
+import { findDiscountPolicyList } from '../../store/discountPolicy/action';
+import { findProduct, updateProduct } from '../../store/product/action';
 
 function ProductUpdatePage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
-    const productPage= useSelector((state: RootState) => state.productPage.result);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
@@ -27,31 +22,31 @@ function ProductUpdatePage() {
     const history = useHistory();
 
     const { id } = useParams<{id: string}>();
-    const [productState] = useProduct(Number.parseInt(id));
-    const [discountPolicyListState] = useDiscountPolicyList();
-    const [categoryListState] = useCategoryList();
 
-    const onUpdateProduct = useCallback((id: number, payload: ProductSaveOrUpdatePayload) => {
-        productApi.update(id, payload)
-            .then(updatedProduct => {
-                dispatch(setProductResult(updatedProduct));
+    useEffect(() => {
+        dispatch(findProduct(Number.parseInt(id)));
+        dispatch(findDiscountPolicyList());
+        dispatch(findCategoryList());
+    }, []);
 
-                dispatch(setProductPage({
-                    ...productPage as Page<ProductResult>,
-                    list: (productPage as Page<ProductResult>).list
-                        .map(product => 
-                            product.id === updatedProduct.id
-                                ? updatedProduct
-                                : product
-                        )
-                }));
-                
+    const productsState = useSelector((state: RootState) => state.products);
+    const discountPolicyListState = useSelector((state: RootState) => state.discountPolcies.discountPolicyListAsync);
+    const categoryListState = useSelector((state: RootState) => state.categories.categoryListAsync);
+
+    const onUpdateProduct = useCallback((id: number, payload: ProductSaveOrUpdatePayload, file?: File) => {
+        dispatch(updateProduct({
+            id: id, 
+            payload: payload,
+            file: file,
+            onSuccess: product => {
+                alert("변경하였습니다.");
                 history.push(`/admin/product/${id}`);
-            })
-            .catch((error: ApiError) => {
-                alert("오류가 발생했습니다.");
-            });
-    }, [productPage]);
+            }, 
+            onFailure: error => {
+                alert("변경 오류 = " + error.message);
+            }
+        }));
+    }, []);
 
     const onUpdateCancel = useCallback(() => {
         history.goBack();
@@ -59,12 +54,12 @@ function ProductUpdatePage() {
 
     return (
         <AdminLayout>
-            {(productState.error || discountPolicyListState.error || categoryListState.error) && 
+            {(productsState.productAsync.error || discountPolicyListState.error || categoryListState.error) && 
             <ErrorDetail message={"오류 발생"} />}
 
-            {(productState.result && discountPolicyListState.result && categoryListState.result) &&
+            {(productsState.productAsync.result && discountPolicyListState.result && categoryListState.result) &&
             <ProductUpdateForm
-                product={productState.result}
+                product={productsState.productAsync.result}
                 discountPolicyList={discountPolicyListState.result}
                 categoryList={categoryListState.result}
                 onUpdateProduct={onUpdateProduct} 

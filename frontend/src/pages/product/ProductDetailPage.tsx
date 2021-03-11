@@ -1,38 +1,41 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import ProductDetail from '../../components/product/ProductDetail';
 import ReviewList from '../../components/reivew/ReviewList';
 import ReviewManagementBar from '../../components/reivew/ReviewManagementBar';
 import ReviewSaveModal from '../../components/reivew/ReviewSaveModal';
-import useModal from '../../hooks/common/useModal';
-import useProduct from '../../hooks/product/useProduct';
-import useReviewManagement from '../../hooks/review/useReviewManagement';
+import useModal from '../../hooks/useModal';
 import { CartSavePayload } from '../../models/carts';
 import { FindPayload } from '../../models/common';
 import { OrderingProduct } from '../../models/orders';
 import { ReviewSavePayload } from '../../models/reviews';
-import cartApi from '../../apis/cartApi';
 import { RootState } from '../../store';
-import { ApiError } from '../../error/ApiError';
-import ErrorDetail from '../../components/general/ErrorDetail';
+import { saveCart } from '../../store/cart/action';
+import { findProduct } from '../../store/product/action';
+import { findReviewPage, saveReview } from '../../store/review/action';
 
 function ProductDetailPage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     const history = useHistory();
 
     const { id } = useParams<{id: string}>();
-    const [productState] = useProduct(Number.parseInt(id));
     
-    const [reviewManagementState, useReviewManagementMethods] = useReviewManagement({ column: "productId", keyword: id });
-    const {reviewPageState} = reviewManagementState;
-    const {
-        updatePageCriteria,
-        saveReview
-    } = useReviewManagementMethods;
+    const productsState = useSelector((state: RootState) => state.products);
+    const reviewPageState = useSelector((state: RootState) => state.reviews.reviewPageAsync);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(findProduct(Number.parseInt(id)));
+        dispatch(findReviewPage({
+            searchCriteria: { column: "productId", keyword: id },
+            pageCriteria: { page: 1, size: 10 }
+        }));
+    }, []);
     
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
 
@@ -43,14 +46,15 @@ function ProductDetailPage() {
             return;
         }
 
-        cartApi.save(payload)
-            .then(savedCart => {
-                alert("장바구니에 저장되었습니다.");
-                history.push("/cart");
-            })
-            .catch((error: ApiError) => {
-                
-            });
+        dispatch(saveCart({
+            payload: payload,
+            onSuccess: cart => {
+                if(confirm("저장되었습니다. 장바구니로 이동하시겠습니까?")) {
+                    history.push("/cart");
+                }
+            },
+            onFailure: error => {}
+        }));
     }, [loginMember]);
 
     const onPurchase = useCallback((orderingProductList: OrderingProduct[]) => {
@@ -74,25 +78,34 @@ function ProductDetailPage() {
     }, [loginMember]);
 
     const onSaveReview = useCallback((payload: ReviewSavePayload) => {
-        saveReview(payload)
-            .then(() => closeSaveModal());
-    }, [saveReview]);
+        dispatch(saveReview({
+            payload: payload,
+            onSuccess: review => {
+                alert("저장되었습니다.");
+                closeSaveModal();
+            },
+            onFailure: error => {}
+        }));
+    }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        updatePageCriteria({
-            ...(reviewPageState.payload as FindPayload).pageCriteria,
-            page: selectedItem.selected + 1
-        });
-    }, [updatePageCriteria, reviewPageState.payload]);
+        dispatch(findReviewPage({
+            ...reviewPageState.payload as FindPayload,
+            pageCriteria: {
+                ...(reviewPageState.payload as FindPayload).pageCriteria, 
+                page:selectedItem.selected + 1
+            }
+        }));
+    }, [reviewPageState.payload]);
 
     return (
         <Layout>
             <main className=" inner-page-sec-padding-bottom">
                 <div className="container">
-                    {productState.error && <ErrorDetail message={"오류 발생"} />}
-                    {productState.result &&
+                    {productsState.productAsync.error && <ErrorDetail message={"오류 발생"} />}
+                    {productsState.productAsync.result &&
                     <ProductDetail 
-                        product={productState.result} 
+                        product={productsState.productAsync.result} 
                         onSaveCart={onSaveCart} 
                         onPurchase={onPurchase} 
                     />}

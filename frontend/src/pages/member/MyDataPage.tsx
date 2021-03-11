@@ -1,33 +1,35 @@
-import React, { useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import MemberDetail from '../../components/member/MemberDetail';
-import useDetail from '../../hooks/common/useDetail';
-import { MemberDetailResult, MemberUpdatePayload } from '../../models/members';
-import memberApi from '../../apis/memberApi';
+import { MemberUpdatePayload } from '../../models/members';
 import { RootState } from '../../store';
-import { ApiError } from '../../error/ApiError';
-import ErrorDetail from '../../components/general/ErrorDetail';
+import { findMember, updateMember } from '../../store/member/action';
 
 function MyDataPage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!loginMember) {
         return <Redirect to={{ pathname: "/login" }}/>
     }
 
-    const [memberState, setMember] = useDetail<MemberDetailResult>(loginMember.id, memberApi.findOne);
+    const dispatch = useDispatch();
+    const memberState = useSelector((state: RootState) => state.members.memberAsync);
+
+    useEffect(() => {
+        dispatch(findMember(loginMember.id));
+    }, []);
 
     const onUpdateMember = useCallback((id: number, payload: MemberUpdatePayload) => {
-        memberApi.update(id, payload)
-            .then(updatedMember => {
-                setMember(updatedMember);
-            })
-            .catch((error: ApiError) => {
-                
-            });  
+        dispatch(updateMember({
+            id: id,
+            payload: payload,
+            onSuccess: member => alert("변경되었습니다."),
+            onFailure: error => {}
+        }));
     }, []);
     
     return (

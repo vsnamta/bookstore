@@ -1,0 +1,15 @@
+export const FIND_ORDER_PAGE = 'order/FIND_ORDER_PAGE';
+export const FIND_ORDER_PAGE_REQUEST = 'order/FIND_ORDER_PAGE_REQUEST';
+export const FIND_ORDER_PAGE_SUCCESS = 'order/FIND_ORDER_PAGE_SUCCESS';
+export const FIND_ORDER_PAGE_FAILURE = 'order/FIND_ORDER_PAGE_FAILURE';
+
+export const FIND_ORDER = 'order/FIND_ORDER';
+export const FIND_ORDER_REQUEST = 'order/FIND_ORDER_REQUEST';
+export const FIND_ORDER_SUCCESS = 'order/FIND_ORDER_SUCCESS';
+export const FIND_ORDER_FAILURE = 'order/FIND_ORDER_FAILURE';
+
+export const UPDATE_ORDER = 'order/UPDATE_ORDER';
+export const UPDATE_ORDER_SUCCESS = 'order/UPDATE_ORDER_SUCCESS';
+
+export const SAVE_ORDER = 'order/SAVE_ORDER';
+export const SAVE_ORDER_SUCCESS = 'order/SAVE_ORDER_SUCCESS';

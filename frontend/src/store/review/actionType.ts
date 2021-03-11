@@ -1,0 +1,15 @@
+export const FIND_REVIEW_PAGE = 'review/FIND_REVIEW_PAGE';
+export const FIND_REVIEW_PAGE_REQUEST = 'review/FIND_REVIEW_PAGE_REQUEST';
+export const FIND_REVIEW_PAGE_SUCCESS = 'review/FIND_REVIEW_PAGE_SUCCESS';
+export const FIND_REVIEW_PAGE_FAILURE = 'review/FIND_REVIEW_PAGE_FAILURE';
+
+export const FIND_REVIEW = 'review/FIND_REVIEW';
+
+export const UPDATE_REVIEW = 'review/UPDATE_REVIEW';
+export const UPDATE_REVIEW_SUCCESS = 'review/UPDATE_REVIEW_SUCCESS';
+
+export const SAVE_REVIEW = 'review/SAVE_REVIEW';
+export const SAVE_REVIEW_SUCCESS = 'review/SAVE_REVIEW_SUCCESS';
+
+export const REMOVE_REVIEW = 'review/REMOVE_REVIEW';
+export const REMOVE_REVIEW_SUCCESS = 'review/REMOVE_REVIEW_SUCCESS';

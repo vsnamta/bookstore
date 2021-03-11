@@ -1,30 +1,42 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import PointHistoryList from '../../components/pointHistory/PointHistoryList';
-import usePointHistoryPage from '../../hooks/pointHistory/usePointHistoryPage';
 import { PointHistoryFindPayload } from '../../models/pointHistories';
 import { RootState } from '../../store';
+import { findPointHistoryPage } from '../../store/pointHistory/action';
 
 function MyPointHistoryPage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!loginMember) {
         return <Redirect to={{ pathname: "/login" }} />
     }
 
-    const [pointHistoryPageState, updateMemberId, updatePageCriteria] = usePointHistoryPage(loginMember.id);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(findPointHistoryPage({
+            memberId: loginMember.id,
+            pageCriteria: { page: 1, size: 10 }
+        }));
+    }, []);
+
+    const pointHistoryPageState = useSelector((state: RootState) => state.pointHistories.pointHistoryPageAsync);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        updatePageCriteria({
-            ...(pointHistoryPageState.payload as PointHistoryFindPayload).pageCriteria,
-            page: selectedItem.selected + 1
-        });
-    }, [updatePageCriteria, pointHistoryPageState.payload]);
+        dispatch(findPointHistoryPage({
+            ...pointHistoryPageState.payload as PointHistoryFindPayload,
+            pageCriteria: {
+                ...(pointHistoryPageState.payload as PointHistoryFindPayload).pageCriteria, 
+                page:selectedItem.selected + 1
+            }
+        }));
+    }, [pointHistoryPageState.payload]);
     
     return (
         <Layout>

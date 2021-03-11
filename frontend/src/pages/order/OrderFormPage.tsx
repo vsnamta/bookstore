@@ -1,19 +1,16 @@
-import React, { useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import OrderForm from '../../components/order/OrderForm';
-import useDetail from '../../hooks/common/useDetail';
-import { MemberDetailResult } from '../../models/members';
 import { OrderingProduct, OrderSavePayload } from '../../models/orders';
-import memberApi from '../../apis/memberApi';
-import orderApi from '../../apis/orderApi';
 import { RootState } from '../../store';
-import { ApiError } from '../../error/ApiError';
-import ErrorDetail from '../../components/general/ErrorDetail';
+import { findMember } from '../../store/member/action';
+import { saveOrder } from '../../store/order/action';
 
 function OrderFormPage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!loginMember) {
         return <Redirect to={{ pathname: "/login" }}/>
@@ -28,16 +25,20 @@ function OrderFormPage() {
         return <Redirect to={{ pathname: "/" }}/>
     }
 
-    const [memberState] = useDetail<MemberDetailResult>(loginMember.id, memberApi.findOne);
+    const dispatch = useDispatch();
 
-    const onSaveOrder = useCallback((payload: OrderSavePayload) => { 
-        orderApi.save(payload)
-            .then(savedOrder => {
-                history.push(`/order/${savedOrder.id}`);
-            })
-            .catch((error: ApiError) => {
-                
-            });
+    const memberState = useSelector((state: RootState) => state.members.memberAsync);
+
+    useEffect(() => {
+        dispatch(findMember(loginMember.id));
+    }, []);
+
+    const onSaveOrder = useCallback((payload: OrderSavePayload) => {
+        dispatch(saveOrder({
+            payload: payload,
+            onSuccess: order => history.push(`/order/${order.id}`),
+            onFailure: error => {}
+        }));
     }, []);
     
     return (

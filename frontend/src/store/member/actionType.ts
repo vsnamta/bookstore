@@ -1,0 +1,14 @@
+export const SET_MY_DATA = 'member/SET_MY_DATA';
+
+export const FIND_MEMBER_PAGE = 'member/FIND_MEMBER_PAGE';
+export const FIND_MEMBER_PAGE_REQUEST = 'member/FIND_MEMBER_PAGE_REQUEST';
+export const FIND_MEMBER_PAGE_SUCCESS = 'member/FIND_MEMBER_PAGE_SUCCESS';
+export const FIND_MEMBER_PAGE_FAILURE = 'member/FIND_MEMBER_PAGE_FAILURE';
+
+export const FIND_MEMBER = 'member/FIND_MEMBER';
+export const FIND_MEMBER_REQUEST = 'member/FIND_MEMBER_REQUEST';
+export const FIND_MEMBER_SUCCESS = 'member/FIND_MEMBER_SUCCESS';
+export const FIND_MEMBER_FAILURE = 'member/FIND_MEMBER_FAILURE';
+
+export const UPDATE_MEMBER = 'member/UPDATE_MEMBER';
+export const UPDATE_MEMBER_SUCCESS = 'member/UPDATE_MEMBER_SUCCESS';

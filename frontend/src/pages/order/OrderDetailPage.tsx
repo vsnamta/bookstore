@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import OrderDetail from '../../components/order/OrderDetail';
-import useDetail from '../../hooks/common/useDetail';
-import { OrderDetailResult } from '../../models/orders';
-import orderApi from '../../apis/orderApi';
-import ErrorDetail from '../../components/general/ErrorDetail';
+import { RootState } from '../../store';
+import { findOrder } from '../../store/order/action';
 
 function OrderDetailPage() {
     const { id } = useParams<{id: string}>();
-    const [orderState] = useDetail<OrderDetailResult>(Number.parseInt(id), orderApi.findOne);
-    
+
+    const dispatch = useDispatch();
+    const orderState = useSelector((state: RootState) => state.orders.orderAsync);
+
+    useEffect(() => {
+        dispatch(findOrder(Number.parseInt(id)));
+    }, []);
+
     return (
         <Layout>
             {orderState.error && <ErrorDetail message={"오류 발생"} />}

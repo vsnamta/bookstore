@@ -11,7 +11,7 @@ interface ProductUpdateFormProps {
 	product: ProductDetailResult;
     discountPolicyList: DiscountPolicyResult[]; 
     categoryList: CategoryResult[];
-    onUpdateProduct: (id: number, payload: ProductSaveOrUpdatePayload) => void;
+    onUpdateProduct: (id: number, payload: ProductSaveOrUpdatePayload, file?: File) => void;
 	onUpdateCancel: () => void;
 }
 
@@ -51,27 +51,29 @@ function ProductUpdateForm({ discountPolicyList, categoryList, product, onUpdate
 	}, []);
 	
 	const onSubmit = useCallback((payload: ProductSaveOrUpdatePayload) => {
-		if(!imageFileInfo.imageFile) {
-			onUpdateProduct(product.id, payload);
-			return;
-		}
+		onUpdateProduct(product.id, payload, imageFileInfo.imageFile);
+		
+		// if(!imageFileInfo.imageFile) {
+		// 	onUpdateProduct(product.id, payload);
+		// 	return;
+		// }
 
-		const formData = new FormData();
-		formData.append("file", imageFileInfo.imageFile);
+		// const formData = new FormData();
+		// formData.append("file", imageFileInfo.imageFile);
 
-		apiClient.post<string>('/api/files', formData, {
-			headers: {
-				"Content-Type": "multipart/form-data"
-			}
-		}).then(({ data }) => {
-			payload.imageFileName = data;
+		// apiClient.post<string>('/api/files', formData, {
+		// 	headers: {
+		// 		"Content-Type": "multipart/form-data"
+		// 	}
+		// }).then(({ data }) => {
+		// 	payload.imageFileName = data;
 			
-			return apiClient.delete<undefined>(`/api/files/${product.imageFileName}`);
-		}).then(() => {
-			onUpdateProduct(product.id, payload);
-		}).catch((error: AxiosError<ErrorResult>) => {
-			alert("처리 실패하였습니다.");
-		});
+		// 	return apiClient.delete<undefined>(`/api/files/${product.imageFileName}`);
+		// }).then(() => {
+		// 	onUpdateProduct(product.id, payload);
+		// }).catch((error: AxiosError<ErrorResult>) => {
+		// 	alert("처리 실패하였습니다.");
+		// });
 	}, [imageFileInfo, product]);
 
     return (

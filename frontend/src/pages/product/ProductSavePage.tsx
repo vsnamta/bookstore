@@ -1,20 +1,17 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import AdminLayout from '../../components/layout/AdminLayout';
 import ProductSaveForm from '../../components/product/ProductSaveForm';
-import useCategoryList from '../../hooks/category/useCategoryList';
-import useDiscountPolicyList from '../../hooks/discountPolicy/useDiscountPolicyList';
 import { ProductSaveOrUpdatePayload } from '../../models/products';
-import productApi from '../../apis/productApi';
 import { RootState } from '../../store';
-import { setProductError, setProductPayload, setProductResult } from "../../store/product";
-import { initProductPageState } from '../../store/productPage';
-import { ApiError } from '../../error/ApiError';
+import { findCategoryList } from '../../store/category/action';
+import { findDiscountPolicyList } from '../../store/discountPolicy/action';
+import { saveProduct } from '../../store/product/action';
 
 function ProductSavePage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
@@ -22,24 +19,27 @@ function ProductSavePage() {
     
     const history = useHistory();
     const dispatch = useDispatch();
-        
-    const [discountPolicyListState] = useDiscountPolicyList();
-    const [categoryListState] = useCategoryList();
 
-    const onSaveProduct = useCallback((payload: ProductSaveOrUpdatePayload) => {
-        productApi.save(payload)
-            .then(savedProduct => {  
-                dispatch(setProductPayload(savedProduct.id));
-                dispatch(setProductError(undefined));
-                dispatch(setProductResult(savedProduct));
-                
-                dispatch(initProductPageState());
-                
-                history.push(`admin/product/${savedProduct.id}`);
-            })
-            .catch((error: ApiError) => {
-                alert("오류가 발생했습니다.");
-            });
+    useEffect(() => {
+        dispatch(findDiscountPolicyList());
+        dispatch(findCategoryList());
+    }, []);
+
+    const discountPolicyListState = useSelector((state: RootState) => state.discountPolcies.discountPolicyListAsync);
+    const categoryListState = useSelector((state: RootState) => state.categories.categoryListAsync);
+
+    const onSaveProduct = useCallback((payload: ProductSaveOrUpdatePayload, file: File) => {
+        dispatch(saveProduct({
+            payload: payload,
+            file: file,
+            onSuccess: product => {
+                alert("저장하였습니다.");
+                history.push(`/admin/product/${product.id}`);
+            }, 
+            onFailure: error => {
+                alert("저장 오류 = " + error.message);
+            }
+        }));
     }, []);
 
     const onSaveCancel = useCallback(() => {

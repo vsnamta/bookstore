@@ -1,46 +1,69 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ReactModal from 'react-modal';
 import ReactPaginate from 'react-paginate';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import OrderDetail from '../../components/order/OrderDetail';
 import OrderList from '../../components/order/OrderList';
-import useModal from '../../hooks/common/useModal';
-import useOrderManagement from '../../hooks/order/useOrderManagement';
+import useModal from '../../hooks/useModal';
 import { FindPayload } from '../../models/common';
 import { LoginMember } from '../../models/members';
+import { OrderUpdatePayload } from '../../models/orders';
 import { RootState } from '../../store';
+import { findOrder, findOrderPage, updateOrder } from '../../store/order/action';
 
 function MyOrderPage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!loginMember) {
         return <Redirect to={{ pathname: "/login" }} />
     }
 
-    const [orderManagementState, useOrderManagementMethods] = useOrderManagement({
-        column: "memberId", 
-        keyword: (loginMember as LoginMember).id + ""
-    });
-    const {orderPageState, orderState} = orderManagementState;
-    const {updatePageCriteria, selectOrder, updateOrder} = useOrderManagementMethods;
-    
+    const { orderPageState, orderState } = useSelector((state: RootState) => ({
+        orderPageState: state.orders.orderPageAsync,
+        orderState: state.orders.orderAsync
+    }));
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(findOrderPage({
+            searchCriteria: { 
+                column: "memberId", 
+                keyword: (loginMember as LoginMember).id + ""
+             },
+            pageCriteria: { page: 1, size: 10 }
+        }));
+    }, []);
+
     const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
 
     const onSelectOrder = useCallback((id: number) => {
-        selectOrder(id);
+        dispatch(findOrder(id));
         openUpdateModal();
-    }, [selectOrder]);
+    }, []);
+
+    const onUpdateOrder = useCallback((id: number, payload: OrderUpdatePayload) => {
+        dispatch(updateOrder({
+            id: id,
+            payload: payload,
+            onSuccess: order => alert("변경되었습니다."),
+            onFailure: error => {}
+        }));
+    }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        updatePageCriteria({
-            ...(orderPageState.payload as FindPayload).pageCriteria,
-            page: selectedItem.selected + 1
-        });
-    }, [updatePageCriteria, orderPageState.payload]);
+        dispatch(findOrderPage({
+            ...orderPageState.payload as FindPayload,
+            pageCriteria: {
+                ...(orderPageState.payload as FindPayload).pageCriteria, 
+                page:selectedItem.selected + 1
+            }
+        }));
+    }, [orderPageState.payload]);
 
     return (
         <Layout>
@@ -52,7 +75,7 @@ function MyOrderPage() {
                     <OrderList 
                         orderList={orderPageState.result.list}
                         onSelectOrder={onSelectOrder} 
-                        onUpdateOrder={updateOrder} 
+                        onUpdateOrder={onUpdateOrder} 
                     />
                     <div className="row pt--30">
                         <div className="col-md-12">

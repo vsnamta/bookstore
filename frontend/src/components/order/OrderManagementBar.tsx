@@ -1,7 +1,7 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useState } from 'react';
-import useSearchForm from '../../hooks/common/useSearchForm';
+import useSearchForm from '../../hooks/useSearchForm';
 import { SearchCriteria } from '../../models/common';
 
 interface OrderManagementBarProps {
@@ -10,7 +10,7 @@ interface OrderManagementBarProps {
 
 function OrderManagementBar({ onUpdateSearchCriteria }: OrderManagementBarProps) {
     const [searchCriteria, useSearchFormMethods] = useSearchForm("id", onUpdateSearchCriteria);
-
+    
     const { onChangeSearchColumn, onChangeSearchKeyword, onClickSearchBtn, onKeyPress } = useSearchFormMethods;
 
     return (

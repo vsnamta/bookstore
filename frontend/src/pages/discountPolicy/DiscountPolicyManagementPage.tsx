@@ -1,35 +1,57 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import DiscountPolicyList from '../../components/discountPolicy/DiscountPolicyList';
 import DiscountPolicyManagementBar from '../../components/discountPolicy/DiscountPolicyManagementBar';
 import DiscountPolicySaveModal from '../../components/discountPolicy/DiscountPolicySaveModal';
 import DiscountPolicyUpdateModal from '../../components/discountPolicy/DiscountPolicyUpdateModal';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import AdminLayout from '../../components/layout/AdminLayout';
-import useModal from '../../hooks/common/useModal';
-import useDiscountPolicyManagement from '../../hooks/discountPolicy/useDiscountPolicyManagement';
+import useModal from '../../hooks/useModal';
 import { DiscountPolicySaveOrUpdatePayload } from '../../models/discountPolicies';
+import { RootState } from '../../store';
+import { findDiscountPolicy, findDiscountPolicyList, saveDiscountPolicy, updateDiscountPolicy } from '../../store/discountPolicy/action';
 
 function DiscountPolicyManagementPage() {
-    const [discountPolicyManagementState, useDiscountPolicyManagementMethods] = useDiscountPolicyManagement();
-    const {discountPolicyListState, discountPolicy} = discountPolicyManagementState;
-    const {selectDiscountPolicy, saveDiscountPolicy, updateDiscountPolicy} = useDiscountPolicyManagementMethods;
-    
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(findDiscountPolicyList());
+    }, []);
+
+    const { discountPolicyListState, discountPolicy } = useSelector((state: RootState) => ({
+        discountPolicyListState: state.discountPolcies.discountPolicyListAsync,
+        discountPolicy: state.discountPolcies.discountPolicy
+    }));
+
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
     const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
 
     const onSelectDiscountPolicy = useCallback((id: number) => {
-        selectDiscountPolicy(id);
+        dispatch(findDiscountPolicy(id));
         openUpdateModal();
-    }, [selectDiscountPolicy]);
+    }, []);
 
     const onSaveDiscountPolicy = useCallback((payload: DiscountPolicySaveOrUpdatePayload) => {
-        saveDiscountPolicy(payload)
-            .then(() => closeSaveModal());
+        dispatch(saveDiscountPolicy({
+            payload: payload,
+            onSuccess: discountPolicy => {
+                alert("저장되었습니다.");
+                closeSaveModal();
+                openUpdateModal();
+            },
+            onFailure: error => {}
+        }));
     }, []);
 
     const onUpdateDiscountPolicy = useCallback((id: number, payload: DiscountPolicySaveOrUpdatePayload) => {
-        updateDiscountPolicy(id, payload)
-            .then(() => closeUpdateModal());
+        dispatch(updateDiscountPolicy({
+            id: id,
+            payload: payload,
+            onSuccess: discountPolicy => {
+                alert("변경되었습니다.");
+            },
+            onFailure: error => {}
+        }));
     }, []);
 
     return (

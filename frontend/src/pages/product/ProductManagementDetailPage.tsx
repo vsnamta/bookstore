@@ -1,7 +1,7 @@
 import qs from 'qs';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import AdminLayout from '../../components/layout/AdminLayout';
@@ -9,14 +9,14 @@ import AdminProductDetail from '../../components/product/AdminProductDetail';
 import StockList from '../../components/stock/StockList';
 import StockManagementBar from '../../components/stock/StockManagementBar';
 import StockSaveModal from '../../components/stock/StockSaveModal';
-import useModal from '../../hooks/common/useModal';
-import useProduct from '../../hooks/product/useProduct';
-import useStockManagement from '../../hooks/stock/useStockManagement';
+import useModal from '../../hooks/useModal';
 import { StockFindPayload, StockSavePayload } from '../../models/stocks';
 import { RootState } from '../../store';
+import { findProduct } from '../../store/product/action';
+import { findStockPage, saveStock } from '../../store/stock/action';
 
 function ProductManagementDetailPage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
@@ -25,13 +25,19 @@ function ProductManagementDetailPage() {
     const history = useHistory();
     
     const { id } = useParams<{id: string}>();
-    const [productState] = useProduct(Number.parseInt(id));
-    const productFindPayload = useSelector((state: RootState) => state.productPage.payload);
-    
-    const [stockManagementState, useStockManagementMethods] = useStockManagement(Number.parseInt(id));
-    const {stockPageState} = stockManagementState;
-    const {updatePageCriteria, saveStock} = useStockManagementMethods;
-    
+
+    const productsState = useSelector((state: RootState) => state.products);
+    const stockPageState = useSelector((state: RootState) => state.stocks.stockPageAsync);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(findProduct(Number.parseInt(id)));
+        dispatch(findStockPage({
+            productId: Number.parseInt(id),
+            pageCriteria: { page: 1, size: 10 }
+        }));
+    }, []);
+
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
 
     const onMoveUpdate = useCallback(() => {
@@ -39,30 +45,39 @@ function ProductManagementDetailPage() {
     }, []);
 
     const onMoveList = useCallback(() => {
-        const queryString = qs.stringify(productFindPayload, { allowDots: true });
+        const queryString = qs.stringify(productsState.productPageAsync.payload, { allowDots: true });
         history.push(`/admin/product/list?${queryString}`);
-    }, [productFindPayload]);
+    }, [productsState.productPageAsync.payload]);
 
     const onSaveStock = useCallback((payload: StockSavePayload) => {
-        saveStock(payload)
-            .then(() => closeSaveModal());
-    }, [saveStock]);
+        dispatch(saveStock({
+            payload: payload,
+            onSuccess: stock => {
+                alert("저장되었습니다.");
+                closeSaveModal()
+            },
+            onFailure: error => {}
+        }));
+    }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        updatePageCriteria({
-            ...(stockPageState.payload as StockFindPayload).pageCriteria,
-            page: selectedItem.selected + 1
-        });
-    }, [updatePageCriteria, stockPageState.payload]);
+        dispatch(findStockPage({
+            ...stockPageState.payload as StockFindPayload,
+            pageCriteria: {
+                ...(stockPageState.payload as StockFindPayload).pageCriteria, 
+                page:selectedItem.selected + 1
+            }
+        }));
+    }, [stockPageState.payload]);
     
     return (
         <AdminLayout>
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
-                    {productState.error && <ErrorDetail message={"오류 발생"} />}
-                    {productState.result &&
+                    {productsState.productAsync.error && <ErrorDetail message={"오류 발생"} />}
+                    {productsState.productAsync.result &&
                     <AdminProductDetail 
-                        product={productState.result}
+                        product={productsState.productAsync.result}
                         onMoveUpdate={onMoveUpdate}
                         onMoveList={onMoveList}
                     />}

@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import CategoryList from '../../components/category/CategoryList';
 import CategoryManagementBar from '../../components/category/CategoryManagementBar';
@@ -7,22 +7,29 @@ import CategorySaveModal from '../../components/category/CategorySaveModal';
 import CategoryUpdateModal from '../../components/category/CategoryUpdateModal';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import AdminLayout from '../../components/layout/AdminLayout';
-import useCategoryManagement from '../../hooks/category/useCategoryManagement';
-import useModal from '../../hooks/common/useModal';
+import useModal from '../../hooks/useModal';
 import { CategorySaveOrUpdatePayload } from '../../models/categories';
 import { RootState } from '../../store';
+import { findCategory, findCategoryList, saveCategory, updateCategory, removeCategory } from '../../store/category/action';
 
 function CategoryManagementPage() {
-    const loginMember = useSelector((state: RootState) => state.loginMember.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
     }  
 
-    const [categoryManagementState, useCategoryManagementMethods] = useCategoryManagement();
-    const {categoryListState, category} = categoryManagementState;
-    const {selectCategory, saveCategory, updateCategory, removeCategory} = useCategoryManagementMethods;
-    
+    const dispatch = useDispatch();
+
+    const {categoryListState, category} = useSelector((state: RootState) => ({
+        categoryListState: state.categories.categoryListAsync,
+        category: state.categories.category
+    }));
+
+    useEffect(() => {
+        dispatch(findCategoryList());
+    }, []);
+
     const [saveCategoryType, setSaveCategoryType] = useState<string>("super");
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
     const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
@@ -33,18 +40,37 @@ function CategoryManagementPage() {
     }, []);
 
     const onSelectCategory = useCallback((id: number) => {
-        selectCategory(id);
+        dispatch(findCategory(id));
         openUpdateModal();
-    }, [selectCategory]);
+    }, []);
 
     const onSaveCategory = useCallback((payload: CategorySaveOrUpdatePayload) => {
-        saveCategory(payload)
-            .then(() => closeSaveModal());
+        dispatch(saveCategory({
+            payload: payload,
+            onSuccess: category => {
+                alert("저장되었습니다.");
+                closeSaveModal();
+                openUpdateModal();
+            },
+            onFailure: error => {}
+        }));
     }, []);
 
     const onUpdateCategory = useCallback((id: number, payload: CategorySaveOrUpdatePayload) => {
-        updateCategory(id, payload)
-            .then(() => closeUpdateModal());
+        dispatch(updateCategory({
+            id: id,
+            payload: payload,
+            onSuccess: category => alert("변경되었습니다."),
+            onFailure: error => {}
+        }));
+    }, []);
+
+    const onRemoveCategory = useCallback((id: number) => {
+        dispatch(removeCategory({
+            id: id,
+            onSuccess: () => alert("삭제되었습니다."),
+            onFailure: (error) => {}
+        }));
     }, []);
     
     return (
@@ -65,7 +91,7 @@ function CategoryManagementPage() {
                             <CategoryList 
                                 categoryList={categoryListState.result}
                                 onSelectCategory={onSelectCategory}
-                                onRemoveCategory={removeCategory}
+                                onRemoveCategory={onRemoveCategory}
                             />
                         </div>
                     </div>

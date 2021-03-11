@@ -9,14 +9,14 @@ interface LayoutProps {
 }
 
 function Layout({ children }: LayoutProps) {
-    const {loginMember, menuCategoryList} = useSelector(({ loginMember, menuCategoryList }: RootState) => ({
-        loginMember: loginMember.loginMember,
-        menuCategoryList: menuCategoryList.menuCategoryList
+    const { loginMember, categoryList } = useSelector(({ members, categories }: RootState) => ({
+        loginMember: members.loginMember,
+        categoryList: categories.categoryListAsync.result
     }));
 
     return (
         <div className="site-wrapper" id="top">
-            <Header loginMember={loginMember} categoryList={menuCategoryList} />
+            <Header loginMember={loginMember} categoryList={categoryList} />
             {children}
             <Footer />
         </div>

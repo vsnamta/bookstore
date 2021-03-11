@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { LoginMember } from '../../models/members';
 import memberApi from '../../apis/memberApi';
-import { setMyData } from '../../store/loginMember';
+import { setMyData } from '../../store/member/action';
 import { ApiError } from '../../error/ApiError';
 
 function LoginSuccessPage() {
