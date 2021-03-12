@@ -1,5 +1,5 @@
 export interface FindPayload {
-    searchCriteria: SearchCriteria;
+    searchCriteria?: SearchCriteria;
     pageCriteria: PageCriteria;
 }
 

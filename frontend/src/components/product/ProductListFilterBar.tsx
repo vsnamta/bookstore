@@ -2,12 +2,16 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback } from 'react';
 
-interface ProductListProps {
-    productListLength: number;
+interface ProductListFilterBar {
+    totalCount?: number;
     onSortChange: (sortCriteria: {sortColumn: string, sortDirection: string }) => void
 }
 
-function ProductListFilterBar({productListLength, onSortChange}: ProductListProps) {    
+function ProductListFilterBar({totalCount, onSortChange}: ProductListFilterBar) { 
+    if(!totalCount) {
+        return null;
+    }
+    
     const onChangeSort = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
         const selected = event.currentTarget.options[event.currentTarget.options.selectedIndex];
 
@@ -29,7 +33,7 @@ function ProductListFilterBar({productListLength, onSortChange}: ProductListProp
                 </div>
                 <div className="col-xl-3 col-md-4 col-sm-6  mt--10 mt-sm--0">
                     <span className="toolbar-status">
-                        {`검색: ${productListLength}건`}
+                        {`검색: ${totalCount}건`}
                     </span>
                 </div>
                 <div className="col-lg-2 col-md-2 col-sm-6  mt--10 mt-md--0">

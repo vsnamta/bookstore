@@ -3,6 +3,7 @@ import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
+import Pagination from '../../components/general/Pagination';
 import Layout from '../../components/layout/Layout';
 import ProductDetail from '../../components/product/ProductDetail';
 import ReviewList from '../../components/reivew/ReviewList';
@@ -102,44 +103,26 @@ function ProductDetailPage() {
         <Layout>
             <main className=" inner-page-sec-padding-bottom">
                 <div className="container">
-                    {productsState.productAsync.error && <ErrorDetail message={"오류 발생"} />}
-                    {productsState.productAsync.result &&
                     <ProductDetail 
                         product={productsState.productAsync.result} 
                         onSaveCart={onSaveCart} 
                         onPurchase={onPurchase} 
-                    />}
+                    />
+                    {productsState.productAsync.error && <ErrorDetail message={"오류 발생"} />}
                     <div className="section-title section-title--bordered">
                         <h2>리뷰</h2>
                     </div>
-                    {reviewPageState.result &&
-                    <>
-                        <ReviewManagementBar 
-                            onOpenSaveModal={onOpenSaveModal}
-                        /> 
-                        <ReviewList 
-                            reviewList={reviewPageState.result.list}
-                        />
-                        <div className="row pt--30">
-                            <div className="col-md-12">
-                                <div className="pagination-block">
-                                    <ReactPaginate 
-                                        pageCount={Math.ceil(reviewPageState.result.totalCount / 10)}
-                                        pageRangeDisplayed={10}
-                                        marginPagesDisplayed={0}
-                                        onPageChange={onPageChange}
-                                        containerClassName={"pagination-btns flex-center"}
-                                        previousLinkClassName={"single-btn prev-btn"}
-                                        previousLabel={"<"}
-                                        activeClassName={"active"}
-                                        pageLinkClassName={"single-btn"}
-                                        nextLinkClassName={"single-btn next-btn"}
-                                        nextLabel={">"}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </>}
+                    <ReviewManagementBar 
+                        onOpenSaveModal={onOpenSaveModal}
+                    /> 
+                    <ReviewList 
+                        reviewList={reviewPageState.result?.list}
+                    />
+                    <Pagination
+                        page={reviewPageState.payload?.pageCriteria.page}  
+                        totalCount={reviewPageState.result?.totalCount}
+                        onPageChange={onPageChange}
+                    />
                     <ReviewSaveModal 
                         isOpen={saveModalIsOpen}
                         onRequestClose={closeSaveModal}

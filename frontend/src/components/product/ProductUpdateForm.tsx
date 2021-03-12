@@ -5,14 +5,18 @@ import { DiscountPolicyResult } from '../../models/discountPolicies';
 import { ProductDetailResult, ProductSaveOrUpdatePayload } from '../../models/products';
 
 interface ProductUpdateFormProps {
-	product: ProductDetailResult;
-    discountPolicyList: DiscountPolicyResult[]; 
-    categoryList: CategoryResult[];
+	product?: ProductDetailResult;
+    discountPolicyList?: DiscountPolicyResult[]; 
+    categoryList?: CategoryResult[];
     onUpdateProduct: (id: number, payload: ProductSaveOrUpdatePayload, file?: File) => void;
 	onUpdateCancel: () => void;
 }
 
-function ProductUpdateForm({ discountPolicyList, categoryList, product, onUpdateProduct, onUpdateCancel }: ProductUpdateFormProps) {
+function ProductUpdateForm({ product, discountPolicyList, categoryList, onUpdateProduct, onUpdateCancel }: ProductUpdateFormProps) {
+	if(!product || !discountPolicyList || !categoryList) {
+        return null;
+    }
+	
 	const { register, handleSubmit, errors } = useForm<ProductSaveOrUpdatePayload>();
 
 	const [subCategoryList, setSubCategoryList] = useState<CategoryResult[]>(

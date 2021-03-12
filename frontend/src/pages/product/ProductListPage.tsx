@@ -4,6 +4,7 @@ import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
+import Pagination from '../../components/general/Pagination';
 import Layout from '../../components/layout/Layout';
 import ProductList from '../../components/product/ProductList';
 import ProductListFilterBar from '../../components/product/ProductListFilterBar';
@@ -62,33 +63,18 @@ function ProductListPage() {
 
     return (
         <Layout>
-            {productsState.productPageAsync.error && <ErrorDetail message={"오류 발생"} />}
-            {productsState.productPageAsync.result &&
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">         
-                    <ProductListFilterBar productListLength={productsState.productPageAsync.result.totalCount} onSortChange={onSortChange} />
-                    <ProductList productList={productsState.productPageAsync.result.list}/>
-                    <div className="row pt--30">
-                        <div className="col-md-12">
-                            <div className="pagination-block">
-                                <ReactPaginate 
-                                    pageCount={Math.ceil(productsState.productPageAsync.result.totalCount / 10)}
-                                    pageRangeDisplayed={10}
-                                    marginPagesDisplayed={0}
-                                    onPageChange={onPageChange}
-                                    containerClassName={"pagination-btns flex-center"}
-                                    previousLinkClassName={"single-btn prev-btn"}
-                                    previousLabel={"<"}
-                                    activeClassName={"active"}
-                                    pageLinkClassName={"single-btn"}
-                                    nextLinkClassName={"single-btn next-btn"}
-                                    nextLabel={">"}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <ProductListFilterBar totalCount={productsState.productPageAsync.result?.totalCount} onSortChange={onSortChange} />
+                    <ProductList productList={productsState.productPageAsync.result?.list} />
+                    <Pagination
+                        page={productsState.productPageAsync.payload?.pageCriteria.page}  
+                        totalCount={productsState.productPageAsync.result?.totalCount}
+                        onPageChange={onPageChange}
+                    />
+                    {productsState.productPageAsync.error && <ErrorDetail message={"오류 발생"} />}
                 </div>
-		    </main>}
+		    </main>
         </Layout>
     )
 };

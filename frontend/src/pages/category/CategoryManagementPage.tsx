@@ -75,9 +75,6 @@ function CategoryManagementPage() {
     
     return (
         <AdminLayout>
-            {categoryListState.error && <ErrorDetail message={"오류 발생"} />}
-
-            {categoryListState.result &&
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
                     <div className="section-title section-title--bordered">
@@ -95,22 +92,22 @@ function CategoryManagementPage() {
                             />
                         </div>
                     </div>
+                    {categoryListState.error && <ErrorDetail message={"오류 발생"} />}
                 </div>
-            </main>}
+            </main>
             <CategorySaveModal 
                 isOpen={saveModalIsOpen}
                 onRequestClose={closeSaveModal}
                 onSaveCategory={onSaveCategory}
                 categoryList={saveCategoryType === "super" ? undefined : categoryListState.result}
             />
-            {category &&
             <CategoryUpdateModal 
-                isOpen={updateModalIsOpen}
-                onRequestClose={closeUpdateModal}
                 category={category}
+                categoryList={!category?.parentId? undefined : categoryListState.result}
+                isOpen={updateModalIsOpen}
                 onUpdateCategory={onUpdateCategory}
-                categoryList={!category.parentId? undefined : categoryListState.result}
-            />}
+                onRequestClose={closeUpdateModal}
+            />
         </AdminLayout>
     )
 };

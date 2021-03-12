@@ -2,10 +2,14 @@ import React from 'react';
 import { PointHistoryResult } from '../../models/pointHistories';
 
 interface PointHistoryListProps {
-    pointhistoryList: PointHistoryResult[];
+    pointhistoryList?: PointHistoryResult[];
 }
 
 function PointHistoryList({pointhistoryList}: PointHistoryListProps) {    
+    if(!pointhistoryList) {
+        return null;
+    }
+
     return (
         <div className="myaccount-table table-responsive text-center">
             <table className="table table-bordered">

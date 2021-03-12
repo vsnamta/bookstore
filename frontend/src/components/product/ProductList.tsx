@@ -5,10 +5,14 @@ import { Link } from 'react-router-dom';
 import { ProductResult } from '../../models/products';
 
 interface ProductListProps {
-    productList: ProductResult[];
+    productList?: ProductResult[];
 }
 
 function ProductList({productList}: ProductListProps) {    
+    if(!productList) {
+        return null;
+    }
+    
     return (
         <div className="shop-product-wrap list with-pagination row space-db--30 shop-border">
             {productList.map(product => (

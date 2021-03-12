@@ -1,13 +1,17 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { OrderResult, OrderUpdatePayload } from '../../models/orders';
 
 interface OrderListProps {
-    orderList: OrderResult[];
+    orderList?: OrderResult[];
     onSelectOrder: (id: number) => void;
     onUpdateOrder: (id: number, payload: OrderUpdatePayload) => void;
 }
 
-function OrderList({orderList, onSelectOrder, onUpdateOrder}: OrderListProps) {    
+function OrderList({orderList, onSelectOrder, onUpdateOrder}: OrderListProps) {
+    if(!orderList) {
+        return null;
+    }
+        
     const onClickSelectBtn = useCallback((event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         onSelectOrder(parseInt(event.currentTarget.dataset.orderId as string));
     }, [onSelectOrder]);

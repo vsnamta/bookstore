@@ -4,6 +4,7 @@ import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
+import Pagination from '../../components/general/Pagination';
 import AdminLayout from '../../components/layout/AdminLayout';
 import AdminProductDetail from '../../components/product/AdminProductDetail';
 import StockList from '../../components/stock/StockList';
@@ -74,46 +75,28 @@ function ProductManagementDetailPage() {
         <AdminLayout>
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
-                    {productsState.productAsync.error && <ErrorDetail message={"오류 발생"} />}
-                    {productsState.productAsync.result &&
                     <AdminProductDetail 
                         product={productsState.productAsync.result}
                         onMoveUpdate={onMoveUpdate}
                         onMoveList={onMoveList}
-                    />}
+                    />
+                    {productsState.productAsync.error && <ErrorDetail message={"오류 발생"} />}
                     <div className="section-title section-title--bordered">
                         <h2>재고</h2>
                     </div>
-                    {stockPageState.result &&
-                    <>
-                        <StockManagementBar 
-                            onOpenSaveModal={openSaveModal}
-                        />
-                        <div className="row">
-                            <div className="col-12">
-                                <StockList stockList={stockPageState.result.list} />
-                            </div>
+                    <StockManagementBar 
+                        onOpenSaveModal={openSaveModal}
+                    />
+                    <div className="row">
+                        <div className="col-12">
+                            <StockList stockList={stockPageState.result?.list} />
                         </div>
-                        <div className="row pt--30">
-                            <div className="col-md-12">
-                                <div className="pagination-block">
-                                    <ReactPaginate 
-                                        pageCount={Math.ceil(stockPageState.result.totalCount / 10)}
-                                        pageRangeDisplayed={10}
-                                        marginPagesDisplayed={0}
-                                        onPageChange={onPageChange}
-                                        containerClassName={"pagination-btns flex-center"}
-                                        previousLinkClassName={"single-btn prev-btn"}
-                                        previousLabel={"<"}
-                                        activeClassName={"active"}
-                                        pageLinkClassName={"single-btn"}
-                                        nextLinkClassName={"single-btn next-btn"}
-                                        nextLabel={">"}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </>}
+                    </div>
+                    <Pagination
+                        page={stockPageState.payload?.pageCriteria.page}  
+                        totalCount={stockPageState.result?.totalCount}
+                        onPageChange={onPageChange}
+                    />
                     <StockSaveModal 
                         isOpen={saveModalIsOpen} 
                         onRequestClose={closeSaveModal}

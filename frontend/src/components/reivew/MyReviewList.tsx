@@ -5,12 +5,16 @@ import { Link } from 'react-router-dom';
 import { ReviewResult } from '../../models/reviews';
 
 interface MyReviewListProps {
-    reviewList: ReviewResult[];
+    reviewList?: ReviewResult[];
     onSelectReview: (id: number) => void;
     onRemoveReview: (id: number) => void;
 }
 
 function MyReviewList({reviewList, onSelectReview, onRemoveReview}: MyReviewListProps) {
+    if(!reviewList) {
+        return null;
+    }
+    
     const onClickUpdateBtn = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         onSelectReview(parseInt(event.currentTarget.value));
     }, [onSelectReview]);

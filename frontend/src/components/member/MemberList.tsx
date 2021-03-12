@@ -2,10 +2,14 @@ import React from 'react';
 import { MemberResult } from '../../models/members';
 
 interface MemberListProps {
-    memberList: MemberResult[];
+    memberList?: MemberResult[];
 }
 
-function MemberList({memberList}: MemberListProps) {    
+function MemberList({memberList}: MemberListProps) {   
+    if(!memberList) {
+        return null;
+    }
+
     return (
         <div className="myaccount-table table-responsive text-center">
             <table className="table table-bordered">

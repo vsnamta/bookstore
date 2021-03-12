@@ -4,13 +4,17 @@ import ReactModal from 'react-modal';
 import { ReviewResult, ReviewUpdatePayload } from '../../models/reviews';
 
 interface ReviewUpdateModalProps {
+    review?: ReviewResult;
     isOpen: boolean;
-    onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
-    review: ReviewResult;
     onUpdateReview: (id: number, payload: ReviewUpdatePayload) => void;
+    onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 
-function ReviewUpdateModal({ isOpen, onRequestClose, review, onUpdateReview }: ReviewUpdateModalProps) {
+function ReviewUpdateModal({ review, isOpen, onUpdateReview, onRequestClose }: ReviewUpdateModalProps) {
+    if(!review) {
+        return null;
+    }
+    
     const { register, handleSubmit, errors } = useForm<ReviewUpdatePayload>();
 
     const onSubmit = useCallback((payload: ReviewUpdatePayload) => {

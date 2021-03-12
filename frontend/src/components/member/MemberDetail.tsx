@@ -3,11 +3,15 @@ import { useForm } from 'react-hook-form';
 import { MemberDetailResult, MemberUpdatePayload } from '../../models/members';
 
 interface MemberDetailProps {
-    member: MemberDetailResult;
+    member?: MemberDetailResult;
     onUpdateMember: (id: number, payload: MemberUpdatePayload) => void;
 }
 
 function MemberDetail({member, onUpdateMember}: MemberDetailProps) {    
+    if(!member) {
+        return null;
+    }
+
     const { register, handleSubmit, errors } = useForm<MemberUpdatePayload>();
 
     const onSubmit = useCallback((payload: MemberUpdatePayload) => {

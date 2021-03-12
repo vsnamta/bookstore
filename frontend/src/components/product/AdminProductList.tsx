@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom';
 import { ProductResult } from '../../models/products';
 
 interface AdminProductListProps {
-    productList: ProductResult[];
+    productList?: ProductResult[];
 }
 
-function AdminProductList({productList}: AdminProductListProps) {    
+function AdminProductList({ productList }: AdminProductListProps) { 
+    if(!productList) {
+        return null;
+    }
+
     return (
         <div className="myaccount-table table-responsive text-center">
             <table className="table table-bordered">

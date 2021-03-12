@@ -61,9 +61,6 @@ function CartManagementPage() {
     
     return (
         <Layout>
-            {cartListState.error && <ErrorDetail message={"오류 발생"} />}
-            
-            {cartListState.result && 
             <CartManagement 
                 cartList={cartListState.result} 
                 onUpdateCart={onUpdateCart} 
@@ -71,7 +68,8 @@ function CartManagementPage() {
                 onCheckAllCart={onCheckAllCart}
                 onCheckCart={onCheckCart}
                 onPurchase={onPurchase}
-            />}
+            />
+            {cartListState.error && <ErrorDetail message={"오류 발생"} />}
         </Layout>
     )
 };

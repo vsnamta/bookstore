@@ -7,12 +7,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Link } from 'react-router-dom';
 
 interface ProductDetailProps {
-    product: ProductDetailResult;
+    product?: ProductDetailResult;
     onSaveCart: (payload: CartSavePayload) => void;
     onPurchase: (orderingProductList: OrderingProduct[]) => void;
 }
 
 function ProductDetail({ product, onSaveCart, onPurchase }: ProductDetailProps) {
+	if(!product) {
+        return null;
+    }
+	
     const [quantity, setQuantity] = useState<number>(1);
 
     const plusQuantity = useCallback(() => {

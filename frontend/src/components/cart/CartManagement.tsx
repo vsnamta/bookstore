@@ -21,7 +21,7 @@ const calcTotalPriceAndAllChecked = (cartList: CartResult[]) : [ number, boolean
 }
 
 interface CartManagementProps {
-    cartList: CartResult[];
+    cartList?: CartResult[];
     onUpdateCart: (id: number, payload: CartUpdatePayload) => void;
     onRemoveCart: (ids: number[]) => void;
     onCheckAllCart: (checked: boolean) => void;
@@ -30,6 +30,10 @@ interface CartManagementProps {
 }
 
 function CartManagement({cartList, onUpdateCart, onRemoveCart, onCheckAllCart, onCheckCart, onPurchase}: CartManagementProps) {    
+    if(!cartList) {
+        return null;
+    }
+    
     const [totalPrice, allChecked] = useMemo(
         () => calcTotalPriceAndAllChecked(cartList), 
         [cartList]

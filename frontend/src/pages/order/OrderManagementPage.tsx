@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
 import ReactModal from 'react-modal';
-import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
+import Pagination from '../../components/general/Pagination';
 import AdminLayout from '../../components/layout/AdminLayout';
 import OrderDetail from '../../components/order/OrderDetail';
 import OrderList from '../../components/order/OrderList';
@@ -30,7 +30,6 @@ function OrderManagementPage() {
 
     useEffect(() => {
         dispatch(findOrderPage({
-            searchCriteria: { column: "", keyword: "" },
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
@@ -53,10 +52,10 @@ function OrderManagementPage() {
 
     const onUpdateSearchCriteria = useCallback((searchCriteria: SearchCriteria) => {
         dispatch(findOrderPage({
-            ...orderPageState.payload as FindPayload,
             searchCriteria: searchCriteria,
+            pageCriteria: { page: 1, size: 10 }
         }));
-    }, [orderPageState.payload]);
+    }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(findOrderPage({
@@ -70,47 +69,32 @@ function OrderManagementPage() {
 
     return (
         <AdminLayout>
-            {orderPageState.error && <ErrorDetail message={"오류 발생"} />}
-            {orderPageState.result &&
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
                     <div className="section-title section-title--bordered">
                         <h2>주문관리</h2>
                     </div>
-                    <OrderManagementBar 
+                    <OrderManagementBar
+                        searchCriteria={orderPageState.payload?.searchCriteria} 
                         onUpdateSearchCriteria={onUpdateSearchCriteria}
                     />
                     <div className="row">
                         <div className="col-12">
                             <OrderList 
-                                orderList={orderPageState.result.list}
+                                orderList={orderPageState.result?.list}
                                 onSelectOrder={onSelectOrder}
                                 onUpdateOrder={onUpdateOrder} 
                             />
                         </div>
                     </div>
-                    <div className="row pt--30">
-                        <div className="col-md-12">
-                            <div className="pagination-block">
-                                <ReactPaginate 
-                                    pageCount={Math.ceil(orderPageState.result.totalCount / 10)}
-                                    pageRangeDisplayed={10}
-                                    marginPagesDisplayed={0}
-                                    onPageChange={onPageChange}
-                                    containerClassName={"pagination-btns flex-center"}
-                                    previousLinkClassName={"single-btn prev-btn"}
-                                    previousLabel={"<"}
-                                    activeClassName={"active"}
-                                    pageLinkClassName={"single-btn"}
-                                    nextLinkClassName={"single-btn next-btn"}
-                                    nextLabel={">"}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <Pagination
+                        page={orderPageState.payload?.pageCriteria.page} 
+                        totalCount={orderPageState.result?.totalCount}
+                        onPageChange={onPageChange}
+                    />
+                    {orderPageState.error && <ErrorDetail message={"오류 발생"} />}
                 </div>
-            </main>}
-            {orderState.result && 
+            </main>
             <ReactModal
                 isOpen={updateModalIsOpen}
                 onRequestClose={closeUpdateModal}
@@ -120,7 +104,7 @@ function OrderManagementPage() {
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <OrderDetail order={orderState.result}/>
-            </ReactModal>}
+            </ReactModal>
         </AdminLayout>
     )
 };

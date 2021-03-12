@@ -6,12 +6,16 @@ const convertFlatCategoryList = (categoryList: CategoryResult[]) => {
 };
 
 interface CategoryListProps {
-    categoryList: CategoryResult[];
+    categoryList?: CategoryResult[];
     onSelectCategory: (id: number) => void;
     onRemoveCategory: (id: number) => void;
 }
 
 function CategoryList({categoryList, onSelectCategory, onRemoveCategory}: CategoryListProps) {
+    if(!categoryList) {
+        return null;
+    }
+    
     const flatCategoryList = useMemo(() => convertFlatCategoryList(categoryList), [categoryList]);
 
     const onClickUpdateBtn = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

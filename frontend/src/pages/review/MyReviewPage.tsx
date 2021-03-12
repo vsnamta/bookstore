@@ -3,6 +3,7 @@ import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
+import Pagination from '../../components/general/Pagination';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import MyReviewList from '../../components/reivew/MyReviewList';
@@ -79,41 +80,23 @@ function MyReviewPage() {
         <Layout>
             <MyPageLayout>
                 <h3>리뷰내역</h3>
+                <MyReviewList 
+                    reviewList={reviewPageState.result?.list} 
+                    onSelectReview={onSelectReview}
+                    onRemoveReview={onRemoveReview} 
+                />
+                <Pagination
+                    page={reviewPageState.payload?.pageCriteria.page}  
+                    totalCount={reviewPageState.result?.totalCount}
+                    onPageChange={onPageChange}
+                />
                 {reviewPageState.error && <ErrorDetail message={"오류 발생"} />}
-                {reviewPageState.result && 
-                <>
-                    <MyReviewList 
-                        reviewList={reviewPageState.result.list} 
-                        onSelectReview={onSelectReview}
-                        onRemoveReview={onRemoveReview} 
-                    />
-                    <div className="row pt--30">
-                        <div className="col-md-12">
-                            <div className="pagination-block">
-                                <ReactPaginate 
-                                    pageCount={Math.ceil(reviewPageState.result.totalCount / 10)}
-                                    pageRangeDisplayed={10}
-                                    marginPagesDisplayed={0}
-                                    onPageChange={onPageChange}
-                                    containerClassName={"pagination-btns flex-center"}
-                                    previousLinkClassName={"single-btn prev-btn"}
-                                    previousLabel={"<"}
-                                    activeClassName={"active"}
-                                    pageLinkClassName={"single-btn"}
-                                    nextLinkClassName={"single-btn next-btn"}
-                                    nextLabel={">"}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </>}
-                {review && 
                 <ReviewUpdateModal 
-                    isOpen={updateModalIsOpen}
-                    onRequestClose={closeUpdateModal}
                     review={review}
+                    isOpen={updateModalIsOpen}
                     onUpdateReview={onUpdateReview}
-                />}
+                    onRequestClose={closeUpdateModal}
+                />
             </MyPageLayout>                                                 
         </Layout>
     )

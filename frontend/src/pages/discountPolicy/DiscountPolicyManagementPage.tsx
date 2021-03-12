@@ -56,9 +56,6 @@ function DiscountPolicyManagementPage() {
 
     return (
         <AdminLayout>
-            {discountPolicyListState.error && <ErrorDetail message={"오류 발생"} />}
-
-            {discountPolicyListState.result &&
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
                     <div className="section-title section-title--bordered">
@@ -75,20 +72,20 @@ function DiscountPolicyManagementPage() {
                             />
                         </div>
                     </div>
+                    {discountPolicyListState.error && <ErrorDetail message={"오류 발생"} />}
                 </div>
-            </main>}
+            </main>
             <DiscountPolicySaveModal 
                 isOpen={saveModalIsOpen}
                 onRequestClose={closeSaveModal}
                 onSaveDiscountPolicy={onSaveDiscountPolicy}
             />
-            {discountPolicy &&
             <DiscountPolicyUpdateModal 
-                isOpen={updateModalIsOpen}
-                onRequestClose={closeUpdateModal}
                 discountPolicy={discountPolicy}
+                isOpen={updateModalIsOpen}
                 onUpdateDiscountPolicy={onUpdateDiscountPolicy}
-            />}
+                onRequestClose={closeUpdateModal}
+            />
         </AdminLayout>
     )
 };

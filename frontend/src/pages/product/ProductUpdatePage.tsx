@@ -54,17 +54,15 @@ function ProductUpdatePage() {
 
     return (
         <AdminLayout>
-            {(productsState.productAsync.error || discountPolicyListState.error || categoryListState.error) && 
-            <ErrorDetail message={"오류 발생"} />}
-
-            {(productsState.productAsync.result && discountPolicyListState.result && categoryListState.result) &&
             <ProductUpdateForm
                 product={productsState.productAsync.result}
                 discountPolicyList={discountPolicyListState.result}
                 categoryList={categoryListState.result}
                 onUpdateProduct={onUpdateProduct} 
                 onUpdateCancel={onUpdateCancel}
-            />}
+            />
+            {(productsState.productAsync.error || discountPolicyListState.error || categoryListState.error) && 
+            <ErrorDetail message={"오류 발생"} />}
         </AdminLayout>
     )
 };

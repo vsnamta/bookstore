@@ -12,6 +12,7 @@ import { SearchCriteria } from '../../models/common';
 import { RootState } from '../../store';
 import { findProductPage } from '../../store/product/action';
 import { ProductsState } from '../../store/product/reducer';
+import Pagination from '../../components/general/Pagination';
 
 function ProductManagementPage() {
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
@@ -49,10 +50,10 @@ function ProductManagementPage() {
 
     const onUpdateSearchCriteria = useCallback((searchCriteria: SearchCriteria) => {
         dispatch(findProductPage({
-            ...productsState.productPageAsync.payload as ProductFindPayload,
             searchCriteria: searchCriteria,
+            pageCriteria: { page: 1, size: 10 }
         }));
-    }, [productsState.productPageAsync.payload]);
+    }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(findProductPage({
@@ -70,43 +71,29 @@ function ProductManagementPage() {
     
     return (
         <AdminLayout>
-            {productsState.productPageAsync.error && <ErrorDetail message={"오류 발생"} />}
-            {productsState.productPageAsync.result &&
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
                     <div className="section-title section-title--bordered">
                         <h2>상품관리</h2>
                     </div>
                     <ProductManagementBar
+                        searchCriteria={(productsState.productPageAsync.payload as ProductFindPayload).searchCriteria}
                         onUpdateSearchCriteria={onUpdateSearchCriteria}  
                         onMoveSave={onMoveSave}
                     />
                     <div className="row">
                         <div className="col-12">
-                            <AdminProductList productList={productsState.productPageAsync.result.list} />
+                            <AdminProductList productList={productsState.productPageAsync.result?.list} />
                         </div>
                     </div>
-                    <div className="row pt--30">
-                        <div className="col-md-12">
-                            <div className="pagination-block">
-                                <ReactPaginate 
-                                    pageCount={Math.ceil(productsState.productPageAsync.result.totalCount / 10)}
-                                    pageRangeDisplayed={10}
-                                    marginPagesDisplayed={0}
-                                    onPageChange={onPageChange}
-                                    containerClassName={"pagination-btns flex-center"}
-                                    previousLinkClassName={"single-btn prev-btn"}
-                                    previousLabel={"<"}
-                                    activeClassName={"active"}
-                                    pageLinkClassName={"single-btn"}
-                                    nextLinkClassName={"single-btn next-btn"}
-                                    nextLabel={">"}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <Pagination
+                        page={productsState.productPageAsync.payload?.pageCriteria.page}  
+                        totalCount={productsState.productPageAsync.result?.totalCount}
+                        onPageChange={onPageChange}
+                    />
+                    {productsState.productPageAsync.error && <ErrorDetail message={"오류 발생"} />}
                 </div>
-            </main>}
+            </main>
         </AdminLayout>
     )
 };

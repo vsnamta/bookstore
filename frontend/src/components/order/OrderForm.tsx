@@ -10,12 +10,16 @@ const calcTotalPrice = (orderingProductList: OrderingProduct[]) : number => {
 }
 
 interface OrderFormProps {
-    member: MemberDetailResult;
+    member?: MemberDetailResult;
     orderingProductList: OrderingProduct[];
     onSaveOrder: (payload: OrderSavePayload) => void;
 }
 
 function OrderForm({ member, orderingProductList, onSaveOrder }: OrderFormProps) {
+    if(!member) {
+        return null;
+    }
+    
     const { register, handleSubmit, errors } = useForm<OrderSavePayload>();
 
     const totalPrice = useMemo(() => calcTotalPrice(orderingProductList), [orderingProductList]);

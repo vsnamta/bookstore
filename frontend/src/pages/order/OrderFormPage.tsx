@@ -43,13 +43,12 @@ function OrderFormPage() {
     
     return (
         <Layout>
-            {memberState.error && <ErrorDetail message={"오류 발생"} />}
-            {memberState.result &&
             <OrderForm 
                 member={memberState.result}
                 orderingProductList={orderingProductList} 
                 onSaveOrder={onSaveOrder} 
-            />}
+            />
+            {memberState.error && <ErrorDetail message={"오류 발생"} />}
         </Layout>
     )
 };

@@ -2,10 +2,13 @@ import React from 'react';
 import { StockResult } from '../../models/stocks';
 
 interface StockListProps {
-    stockList: StockResult[];
+    stockList?: StockResult[];
 }
 
-function StockList({stockList}: StockListProps) {    
+function StockList({ stockList }: StockListProps) {
+    if(!stockList) {
+        return null;
+    }    
     return (
         <div className="myaccount-table table-responsive text-center">
             <table className="table table-bordered">

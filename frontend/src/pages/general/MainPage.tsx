@@ -14,8 +14,6 @@ function MainPage() {
 
     useEffect(() => {
         dispatch(findProductPage({
-            categoryId: undefined,
-            searchCriteria: undefined,
             pageCriteria: {
                 page: 1,
                 size: 8,
@@ -28,17 +26,15 @@ function MainPage() {
     return (
         <Layout>
             <Banner />
-            {productsState.productPageAsync.error && <ErrorDetail message={"오류 발생"} />}
-
-            {productsState.productPageAsync.result &&
             <main className="inner-page-sec-padding-bottom">
 			    <div className="container">
                     <div className="section-title section-title--bordered">
                         <h2>베스트 셀러</h2>
                     </div>
-                    <BestProductList productList={productsState.productPageAsync.result.list}/>
+                    <BestProductList productList={productsState.productPageAsync.result?.list}/>
+                    {productsState.productPageAsync.error && <ErrorDetail message={"오류 발생"} />}
                 </div>
-            </main>}
+            </main>
         </Layout>
     )
 };

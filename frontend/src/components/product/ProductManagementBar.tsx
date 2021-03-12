@@ -5,13 +5,16 @@ import useSearchForm from '../../hooks/useSearchForm';
 import { SearchCriteria } from '../../models/common';
 
 interface ProductManagementBarProps {
+    searchCriteria?: SearchCriteria;
     onUpdateSearchCriteria: (searchCriteria: SearchCriteria) => void;
     onMoveSave: () => void;
 }
 
-function ProductManagementBar({ onUpdateSearchCriteria, onMoveSave }: ProductManagementBarProps) {
-    const [searchCriteria, useSearchFormMethods] = useSearchForm("name", onUpdateSearchCriteria);
-    
+function ProductManagementBar({ searchCriteria, onUpdateSearchCriteria, onMoveSave }: ProductManagementBarProps) {
+    const [localSearchCriteria, useSearchFormMethods] = useSearchForm(
+        { column: "name", keyword: "" }, onUpdateSearchCriteria
+    );
+
     const { onChangeSearchColumn, onChangeSearchKeyword, onClickSearchBtn, onKeyPress } = useSearchFormMethods;
 
     return (
@@ -20,15 +23,16 @@ function ProductManagementBar({ onUpdateSearchCriteria, onMoveSave }: ProductMan
                 <div className="row align-items-center">
                     <div className="col-lg-2">
                         <select className="form-control" onChange={onChangeSearchColumn}>
-                            <option value="name">상품명</option>
-                            <option value="author">저자</option>
-                            <option value="isbn">ISBN</option>
+                            <option value="name" selected={localSearchCriteria.column === "name"}>상품명</option>
+                            <option value="author" selected={localSearchCriteria.column === "author"}>저자</option>
+                            <option value="isbn" selected={localSearchCriteria.column === "isbn"}>ISBN</option>
                         </select>
                     </div>
                     <div className="col-lg-3">
                         <div className="site-mini-search">
                             <input 
                                 type="text"
+                                value={localSearchCriteria.keyword}
                                 onChange={onChangeSearchKeyword}
                                 onKeyPress={onKeyPress}
                                 placeholder="Search" 

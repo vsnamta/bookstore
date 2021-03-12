@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom';
 import { OrderDetailResult } from '../../models/orders';
 
 interface OrderDetailProps {
-    order: OrderDetailResult;
+    order?: OrderDetailResult;
 }
 
-function OrderDetail({ order }: OrderDetailProps) {    
+function OrderDetail({ order }: OrderDetailProps) {
+	if(!order) {
+		return null;
+	}
+
     return (
         <section className="order-complete inner-page-sec-padding-bottom">
 			<div className="container">

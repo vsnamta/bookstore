@@ -19,8 +19,8 @@ function OrderDetailPage() {
 
     return (
         <Layout>
+            <OrderDetail order={orderState.result} />
             {orderState.error && <ErrorDetail message={"오류 발생"} />}
-            {orderState.result && <OrderDetail order={orderState.result} />}
         </Layout>
     )
 };

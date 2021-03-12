@@ -18,7 +18,7 @@ function Header({loginMember, categoryList}: HeaderProps) {
     const history = useHistory();
 
     const [searchCriteria, useSearchFormMethods] = useSearchForm(
-        "name", 
+        { column: "name", keyword: "" }, 
         (searchCriteria: SearchCriteria) => {
             const queryString = qs.stringify({searchCriteria}, { allowDots: true });
             history.push(`/product/list?${queryString}`);

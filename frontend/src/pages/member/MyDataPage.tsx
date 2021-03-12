@@ -36,12 +36,11 @@ function MyDataPage() {
         <Layout>
             <MyPageLayout>
                 <h3>나의 정보</h3>
-                {memberState.error && <ErrorDetail message={"오류 발생"} />}
-                { memberState.result &&
                 <MemberDetail 
                     member={memberState.result} 
                     onUpdateMember={onUpdateMember} 
-                />}
+                />
+                {memberState.error && <ErrorDetail message={"오류 발생"} />}
             </MyPageLayout>
         </Layout>
     )

@@ -2,11 +2,15 @@ import React, { useCallback } from 'react';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
 
 interface DiscountPolicyListProps {
-    discountPolicyList: DiscountPolicyResult[];
+    discountPolicyList?: DiscountPolicyResult[];
     onSelectDiscountPolicy: (id: number) => void;
 }
 
-function DiscountPolicyList({discountPolicyList, onSelectDiscountPolicy}: DiscountPolicyListProps) {    
+function DiscountPolicyList({ discountPolicyList, onSelectDiscountPolicy }: DiscountPolicyListProps) {    
+    if(!discountPolicyList) {
+        return null;
+    }
+    
     const onClickUpdateBtn = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         onSelectDiscountPolicy(parseInt(event.currentTarget.value));
     }, [onSelectDiscountPolicy]);

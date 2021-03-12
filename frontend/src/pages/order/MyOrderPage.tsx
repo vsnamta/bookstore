@@ -4,6 +4,7 @@ import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
+import Pagination from '../../components/general/Pagination';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import OrderDetail from '../../components/order/OrderDetail';
@@ -69,35 +70,17 @@ function MyOrderPage() {
         <Layout>
             <MyPageLayout>
                 <h3>주문내역</h3>
+                <OrderList 
+                    orderList={orderPageState.result?.list}
+                    onSelectOrder={onSelectOrder} 
+                    onUpdateOrder={onUpdateOrder} 
+                />
+                <Pagination
+                    page={orderPageState.payload?.pageCriteria.page}  
+                    totalCount={orderPageState.result?.totalCount}
+                    onPageChange={onPageChange}
+                />
                 {orderPageState.error && <ErrorDetail message={"오류 발생"} />}
-                {orderPageState.result &&
-                <>
-                    <OrderList 
-                        orderList={orderPageState.result.list}
-                        onSelectOrder={onSelectOrder} 
-                        onUpdateOrder={onUpdateOrder} 
-                    />
-                    <div className="row pt--30">
-                        <div className="col-md-12">
-                            <div className="pagination-block">
-                                <ReactPaginate 
-                                    pageCount={Math.ceil(orderPageState.result.totalCount / 10)}
-                                    pageRangeDisplayed={10}
-                                    marginPagesDisplayed={0}
-                                    onPageChange={onPageChange}
-                                    containerClassName={"pagination-btns flex-center"}
-                                    previousLinkClassName={"single-btn prev-btn"}
-                                    previousLabel={"<"}
-                                    activeClassName={"active"}
-                                    pageLinkClassName={"single-btn"}
-                                    nextLinkClassName={"single-btn next-btn"}
-                                    nextLabel={">"}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </>}
-                {orderState.result && 
                 <ReactModal
                     isOpen={updateModalIsOpen}
                     onRequestClose={closeUpdateModal}
@@ -107,7 +90,7 @@ function MyOrderPage() {
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <OrderDetail order={orderState.result}/>
-                </ReactModal>}
+                </ReactModal>
             </MyPageLayout>
         </Layout>
     )

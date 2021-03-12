@@ -48,15 +48,13 @@ function ProductSavePage() {
 
     return (
         <AdminLayout>
-            {(discountPolicyListState.error || categoryListState.error) && <ErrorDetail message={"오류 발생"} />}
-
-            {(discountPolicyListState.result && categoryListState.result) &&
             <ProductSaveForm
                 discountPolicyList={discountPolicyListState.result}
                 categoryList={categoryListState.result}
                 onSaveProduct={onSaveProduct} 
                 onSaveCancel={onSaveCancel}
-            />}
+            />
+            {(discountPolicyListState.error || categoryListState.error) && <ErrorDetail message={"오류 발생"} />}
         </AdminLayout>
     )
 };

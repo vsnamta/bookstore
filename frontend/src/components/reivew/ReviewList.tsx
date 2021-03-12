@@ -4,10 +4,14 @@ import React from 'react';
 import { ReviewResult } from '../../models/reviews';
 
 interface ReviewListProps {
-    reviewList: ReviewResult[];
+    reviewList?: ReviewResult[];
 }
 
 function ReviewList({ reviewList }: ReviewListProps) {
+    if(!reviewList) {
+        return null;
+    }
+
     return (
         <div className="review-wrapper">
             {reviewList.map(review => (

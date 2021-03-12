@@ -5,12 +5,15 @@ import useSearchForm from '../../hooks/useSearchForm';
 import { SearchCriteria } from '../../models/common';
 
 interface MemberManagementBarProps {
+    searchCriteria?: SearchCriteria;
     onUpdateSearchCriteria: (searchCriteria: SearchCriteria) => void;
 }
 
-function MemberManagementBar({ onUpdateSearchCriteria }: MemberManagementBarProps) {
-    const [searchCriteria, useSearchFormMethods] = useSearchForm("email", onUpdateSearchCriteria);
-
+function MemberManagementBar({ searchCriteria, onUpdateSearchCriteria }: MemberManagementBarProps) {
+    const [localSearchCriteria, useSearchFormMethods] = useSearchForm(
+        { column: "email", keyword: "" }, onUpdateSearchCriteria
+    );
+    
     const { onChangeSearchColumn, onChangeSearchKeyword, onClickSearchBtn, onKeyPress } = useSearchFormMethods;
 
     return (
@@ -19,14 +22,15 @@ function MemberManagementBar({ onUpdateSearchCriteria }: MemberManagementBarProp
                 <div className="row align-items-center">
                     <div className="col-lg-2">
                         <select className="form-control" onChange={onChangeSearchColumn}>
-                            <option value="email">이메일</option>
-                            <option value="name">이름</option>
+                            <option value="email" selected={localSearchCriteria.column === "email"}>이메일</option>
+                            <option value="name" selected={localSearchCriteria.column === "name"}>이름</option>
                         </select>
                     </div>
                     <div className="col-lg-3">
                         <div className="site-mini-search">
                             <input 
                                 type="text"
+                                value={localSearchCriteria.keyword}
                                 onChange={onChangeSearchKeyword}
                                 onKeyPress={onKeyPress}
                                 placeholder="Search" 

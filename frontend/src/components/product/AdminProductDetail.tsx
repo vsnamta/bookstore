@@ -2,12 +2,16 @@ import React from 'react';
 import { ProductDetailResult } from '../../models/products';
 
 interface AdminProductDetailProps {
-    product: ProductDetailResult;
+    product?: ProductDetailResult;
 	onMoveUpdate: () => void;
 	onMoveList: () => void;
 }
 
-function AdminProductDetail({product, onMoveUpdate, onMoveList}: AdminProductDetailProps) {    
+function AdminProductDetail({product, onMoveUpdate, onMoveList}: AdminProductDetailProps) {
+	if(!product) {
+        return null;
+    }
+
     return (
 		<>
 			<div className="row mb--60">
