@@ -17,7 +17,11 @@ function Layout({ children }: LayoutProps) {
     return (
         <div className="site-wrapper" id="top">
             <Header loginMember={loginMember} categoryList={categoryList} />
-            {children}
+            <main className="inner-page-sec-padding-bottom">
+                <div className="container">
+                    {children}
+                </div>
+            </main>
             <Footer />
         </div>
     )

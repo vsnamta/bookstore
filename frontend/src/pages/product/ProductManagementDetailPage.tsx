@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import Pagination from '../../components/general/Pagination';
+import Title from '../../components/general/Title';
 import AdminLayout from '../../components/layout/AdminLayout';
 import AdminProductDetail from '../../components/product/AdminProductDetail';
 import StockList from '../../components/stock/StockList';
@@ -17,19 +18,21 @@ import { findProduct } from '../../store/product/action';
 import { findStockPage, saveStock } from '../../store/stock/action';
 
 function ProductManagementDetailPage() {
+    const history = useHistory();
+    const { id } = useParams<{id: string}>();
+
+    const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
     } 
     
-    const history = useHistory();
-    
-    const { id } = useParams<{id: string}>();
-
-    const productsState = useSelector((state: RootState) => state.products);
-    const stockPageState = useSelector((state: RootState) => state.stocks.stockPageAsync);
-    const dispatch = useDispatch();
+    const { productPageAsync, productAsync } = useSelector((state: RootState) => ({
+        productPageAsync: state.products.productPageAsync,
+        productAsync: state.products.productAsync
+    }));
+    const stockPageAsync = useSelector((state: RootState) => state.stocks.stockPageAsync);
 
     useEffect(() => {
         dispatch(findProduct(Number.parseInt(id)));
@@ -46,9 +49,9 @@ function ProductManagementDetailPage() {
     }, []);
 
     const onMoveList = useCallback(() => {
-        const queryString = qs.stringify(productsState.productPageAsync.payload, { allowDots: true });
+        const queryString = qs.stringify(productPageAsync.payload, { allowDots: true });
         history.push(`/admin/product/list?${queryString}`);
-    }, [productsState.productPageAsync.payload]);
+    }, [productPageAsync.payload]);
 
     const onSaveStock = useCallback((payload: StockSavePayload) => {
         dispatch(saveStock({
@@ -57,53 +60,43 @@ function ProductManagementDetailPage() {
                 alert("저장되었습니다.");
                 closeSaveModal()
             },
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(findStockPage({
-            ...stockPageState.payload as StockFindPayload,
+            ...stockPageAsync.payload as StockFindPayload,
             pageCriteria: {
-                ...(stockPageState.payload as StockFindPayload).pageCriteria, 
+                ...(stockPageAsync.payload as StockFindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [stockPageState.payload]);
+    }, [stockPageAsync.payload]);
     
     return (
         <AdminLayout>
-            <main className="inner-page-sec-padding-bottom">
-                <div className="container">
-                    <AdminProductDetail 
-                        product={productsState.productAsync.result}
-                        onMoveUpdate={onMoveUpdate}
-                        onMoveList={onMoveList}
-                    />
-                    {productsState.productAsync.error && <ErrorDetail message={"오류 발생"} />}
-                    <div className="section-title section-title--bordered">
-                        <h2>재고</h2>
-                    </div>
-                    <StockManagementBar 
-                        onOpenSaveModal={openSaveModal}
-                    />
-                    <div className="row">
-                        <div className="col-12">
-                            <StockList stockList={stockPageState.result?.list} />
-                        </div>
-                    </div>
-                    <Pagination
-                        page={stockPageState.payload?.pageCriteria.page}  
-                        totalCount={stockPageState.result?.totalCount}
-                        onPageChange={onPageChange}
-                    />
-                    <StockSaveModal 
-                        isOpen={saveModalIsOpen} 
-                        onRequestClose={closeSaveModal}
-                        onSaveStock={onSaveStock}
-                    />
-                </div>
-            </main>
+            <AdminProductDetail 
+                product={productAsync.result}
+                onMoveUpdate={onMoveUpdate}
+                onMoveList={onMoveList}
+            />
+            {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
+            <Title content={"재고"} />
+            <StockManagementBar 
+                onOpenSaveModal={openSaveModal}
+            />
+            <StockList stockList={stockPageAsync.result?.list} />
+            <Pagination
+                page={stockPageAsync.payload?.pageCriteria.page}  
+                totalCount={stockPageAsync.result?.totalCount}
+                onPageChange={onPageChange}
+            />
+            <StockSaveModal 
+                isOpen={saveModalIsOpen} 
+                onSaveStock={onSaveStock}
+                onRequestClose={closeSaveModal}
+            />
         </AdminLayout>
     )
 };

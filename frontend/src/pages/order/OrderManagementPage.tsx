@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
-import ReactModal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import Pagination from '../../components/general/Pagination';
+import Title from '../../components/general/Title';
 import AdminLayout from '../../components/layout/AdminLayout';
-import OrderDetail from '../../components/order/OrderDetail';
+import OrderDetailModal from '../../components/order/OrderDetailModal';
 import OrderList from '../../components/order/OrderList';
 import OrderManagementBar from '../../components/order/OrderManagementBar';
 import useModal from '../../hooks/useModal';
@@ -15,18 +15,17 @@ import { RootState } from '../../store';
 import { findOrder, findOrderPage, updateOrder } from '../../store/order/action';
 
 function OrderManagementPage() {
+    const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
     } 
 
-    const { orderPageState, orderState } = useSelector((state: RootState) => ({
-        orderPageState: state.orders.orderPageAsync,
-        orderState: state.orders.orderAsync
+    const { orderPageAsync, orderAsync } = useSelector((state: RootState) => ({
+        orderPageAsync: state.orders.orderPageAsync,
+        orderAsync: state.orders.orderAsync
     }));
-
-    const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(findOrderPage({
@@ -46,7 +45,7 @@ function OrderManagementPage() {
             id: id,
             payload: payload,
             onSuccess: order => alert("변경되었습니다."),
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
 
@@ -59,52 +58,37 @@ function OrderManagementPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(findOrderPage({
-            ...orderPageState.payload as FindPayload,
+            ...orderPageAsync.payload as FindPayload,
             pageCriteria: {
-                ...(orderPageState.payload as FindPayload).pageCriteria, 
+                ...(orderPageAsync.payload as FindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [orderPageState.payload]);
+    }, [orderPageAsync.payload]);
 
     return (
         <AdminLayout>
-            <main className="inner-page-sec-padding-bottom">
-                <div className="container">
-                    <div className="section-title section-title--bordered">
-                        <h2>주문관리</h2>
-                    </div>
-                    <OrderManagementBar
-                        searchCriteria={orderPageState.payload?.searchCriteria} 
-                        onUpdateSearchCriteria={onUpdateSearchCriteria}
-                    />
-                    <div className="row">
-                        <div className="col-12">
-                            <OrderList 
-                                orderList={orderPageState.result?.list}
-                                onSelectOrder={onSelectOrder}
-                                onUpdateOrder={onUpdateOrder} 
-                            />
-                        </div>
-                    </div>
-                    <Pagination
-                        page={orderPageState.payload?.pageCriteria.page} 
-                        totalCount={orderPageState.result?.totalCount}
-                        onPageChange={onPageChange}
-                    />
-                    {orderPageState.error && <ErrorDetail message={"오류 발생"} />}
-                </div>
-            </main>
-            <ReactModal
+            <Title content={"주문 관리"} />
+            <OrderManagementBar
+                searchCriteria={orderPageAsync.payload?.searchCriteria} 
+                onUpdateSearchCriteria={onUpdateSearchCriteria}
+            />
+            <OrderList 
+                orderList={orderPageAsync.result?.list}
+                onSelectOrder={onSelectOrder}
+                onUpdateOrder={onUpdateOrder} 
+            />
+            <Pagination
+                page={orderPageAsync.payload?.pageCriteria.page} 
+                totalCount={orderPageAsync.result?.totalCount}
+                onPageChange={onPageChange}
+            />
+            {orderPageAsync.error && <ErrorDetail message={orderPageAsync.error.message} />}
+            <OrderDetailModal 
+                order={orderAsync.result}
                 isOpen={updateModalIsOpen}
                 onRequestClose={closeUpdateModal}
-            >
-                <button type="button" className="close modal-close-btn ml-auto" data-dismiss="modal"
-                    aria-label="Close" onClick={closeUpdateModal}>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <OrderDetail order={orderState.result}/>
-            </ReactModal>
+            />
         </AdminLayout>
     )
 };

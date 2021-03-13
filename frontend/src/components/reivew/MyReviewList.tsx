@@ -26,47 +26,51 @@ function MyReviewList({reviewList, onSelectReview, onRemoveReview}: MyReviewList
     }, []);
     
     return (
-        <div className="myaccount-table table-responsive text-center">
-            <table className="table table-bordered">
-                <thead className="thead-light">
-                    <tr>
-                        <th>상품명</th>
-                        <th>평점</th>
-                        <th>내용</th>
-                        <th>작성일</th>
-                        <th>관리</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {reviewList.map(review => (
-                        <tr key={review.id}>   
-                            <td>
-                                <Link to={`/admin/product/${review.productId}`}>{review.productName}</Link>
-                            </td>   
-                            <td>
-                                <div className="rating-block">
-                                    {new Array(5)
-                                        .fill(0)
-                                        .fill(1, 0, Math.round(review.rating))
-                                        .map(value => (
-                                            <span className={value === 1 ? "star_on" : ""}><FontAwesomeIcon icon={faStar} /></span>
-                                        ))
-                                    }
-                                </div>
-                            </td>
-                            <td>{review.contents}</td>
-                            <td>{review.createdDate}</td>
-                            <td>
-                                <div className="add-cart-btn">
-                                    <button className="btn btn-outlined--primary" value={review.id} onClick={onClickUpdateBtn} >수정</button>
-                                    <button className="btn btn-outlined--primary" value={review.id} onClick={onClickRemoveBtn} >삭제</button> 
-                                </div>   
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>	
+        <div className="row">
+            <div className="col-12">
+                <div className="myaccount-table table-responsive text-center">
+                    <table className="table table-bordered">
+                        <thead className="thead-light">
+                            <tr>
+                                <th>상품명</th>
+                                <th>평점</th>
+                                <th>내용</th>
+                                <th>작성일</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reviewList.map(review => (
+                                <tr key={review.id}>   
+                                    <td>
+                                        <Link to={`/admin/product/${review.productId}`}>{review.productName}</Link>
+                                    </td>   
+                                    <td>
+                                        <div className="rating-block">
+                                            {new Array(5)
+                                                .fill(0)
+                                                .fill(1, 0, Math.round(review.rating))
+                                                .map(value => (
+                                                    <span className={value === 1 ? "star_on" : ""}><FontAwesomeIcon icon={faStar} /></span>
+                                                ))
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>{review.contents}</td>
+                                    <td>{review.createdDate}</td>
+                                    <td>
+                                        <div className="add-cart-btn">
+                                            <button className="btn btn-outlined--primary" value={review.id} onClick={onClickUpdateBtn} >수정</button>
+                                            <button className="btn btn-outlined--primary" value={review.id} onClick={onClickRemoveBtn} >삭제</button> 
+                                        </div>   
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>	
+            </div>
+        </div>
     )
 };
 

@@ -94,10 +94,10 @@ function CartManagement({cartList, onUpdateCart, onRemoveCart, onCheckAllCart, o
         
         const stockShortageCartList = checkedCartList.filter(cart => cart.quantity > cart.stockQuantity);
 
-        if(stockShortageCartList.length >= 1) {
-            alert("재고가 부족한 상품이 있습니다.");
-            return;
-        }
+        // if(stockShortageCartList.length >= 1) {
+        //     alert("재고가 부족한 상품이 있습니다.");
+        //     return;
+        // }
 
         onPurchase(
             checkedCartList.map(cart => ({
@@ -114,8 +114,8 @@ function CartManagement({cartList, onUpdateCart, onRemoveCart, onCheckAllCart, o
     }, [cartList]);
 
     return (
-        <main className="cart-page-main-block inner-page-sec-padding-bottom">
-            <div className="cart_area cart-area-padding  ">
+        <>
+            <div className="cart_area cart-area-padding">
                 <div className="container">
                     <div className="page-section-title">
                         <h1>장바구니</h1>
@@ -197,7 +197,7 @@ function CartManagement({cartList, onUpdateCart, onRemoveCart, onCheckAllCart, o
                     </div>
                 </div>
             </div>
-        </main>
+        </>
     )
 };
 

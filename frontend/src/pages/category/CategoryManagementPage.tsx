@@ -6,23 +6,23 @@ import CategoryManagementBar from '../../components/category/CategoryManagementB
 import CategorySaveModal from '../../components/category/CategorySaveModal';
 import CategoryUpdateModal from '../../components/category/CategoryUpdateModal';
 import ErrorDetail from '../../components/general/ErrorDetail';
+import Title from '../../components/general/Title';
 import AdminLayout from '../../components/layout/AdminLayout';
 import useModal from '../../hooks/useModal';
 import { CategorySaveOrUpdatePayload } from '../../models/categories';
 import { RootState } from '../../store';
-import { findCategory, findCategoryList, saveCategory, updateCategory, removeCategory } from '../../store/category/action';
+import { findCategory, findCategoryList, removeCategory, saveCategory, updateCategory } from '../../store/category/action';
 
 function CategoryManagementPage() {
+    const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
     }  
 
-    const dispatch = useDispatch();
-
-    const {categoryListState, category} = useSelector((state: RootState) => ({
-        categoryListState: state.categories.categoryListAsync,
+    const { categoryListAsync, category } = useSelector((state: RootState) => ({
+        categoryListAsync: state.categories.categoryListAsync,
         category: state.categories.category
     }));
 
@@ -52,7 +52,7 @@ function CategoryManagementPage() {
                 closeSaveModal();
                 openUpdateModal();
             },
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
 
@@ -61,7 +61,7 @@ function CategoryManagementPage() {
             id: id,
             payload: payload,
             onSuccess: category => alert("변경되었습니다."),
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
 
@@ -69,41 +69,31 @@ function CategoryManagementPage() {
         dispatch(removeCategory({
             id: id,
             onSuccess: () => alert("삭제되었습니다."),
-            onFailure: (error) => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
     
     return (
         <AdminLayout>
-            <main className="inner-page-sec-padding-bottom">
-                <div className="container">
-                    <div className="section-title section-title--bordered">
-                        <h2>카테고리 관리</h2>
-                    </div>
-                    <CategoryManagementBar 
-                        onOpenSaveModal={onOpenSaveModal}
-                    />
-                    <div className="row">
-                        <div className="col-12">
-                            <CategoryList 
-                                categoryList={categoryListState.result}
-                                onSelectCategory={onSelectCategory}
-                                onRemoveCategory={onRemoveCategory}
-                            />
-                        </div>
-                    </div>
-                    {categoryListState.error && <ErrorDetail message={"오류 발생"} />}
-                </div>
-            </main>
+            <Title content={"카테고리 관리"} />
+            <CategoryManagementBar 
+                onOpenSaveModal={onOpenSaveModal}
+            />
+            <CategoryList 
+                categoryList={categoryListAsync.result}
+                onSelectCategory={onSelectCategory}
+                onRemoveCategory={onRemoveCategory}
+            />
+            {categoryListAsync.error && <ErrorDetail message={categoryListAsync.error.message} />}
             <CategorySaveModal 
+                categoryList={saveCategoryType === "super" ? undefined : categoryListAsync.result}
                 isOpen={saveModalIsOpen}
-                onRequestClose={closeSaveModal}
                 onSaveCategory={onSaveCategory}
-                categoryList={saveCategoryType === "super" ? undefined : categoryListState.result}
+                onRequestClose={closeSaveModal}
             />
             <CategoryUpdateModal 
                 category={category}
-                categoryList={!category?.parentId? undefined : categoryListState.result}
+                categoryList={!category?.parentId? undefined : categoryListAsync.result}
                 isOpen={updateModalIsOpen}
                 onUpdateCategory={onUpdateCategory}
                 onRequestClose={closeUpdateModal}

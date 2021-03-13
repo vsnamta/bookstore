@@ -13,24 +13,24 @@ import { RootState } from '../../store';
 import { findProductPage } from '../../store/product/action';
 import { ProductsState } from '../../store/product/reducer';
 import Pagination from '../../components/general/Pagination';
+import Title from '../../components/general/Title';
 
 function ProductManagementPage() {
+    const history = useHistory();
+    const location = useLocation();
+    const {categoryId, searchCriteria, pageCriteria} = qs.parse(location.search, { 
+        ignoreQueryPrefix: true, 
+        allowDots: true 
+    });
+
+    const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!(loginMember && loginMember.role === "ADMIN")) {
         return <Redirect to={{ pathname: "/" }} />
     } 
     
-    const history = useHistory();
-    const location = useLocation();
-
-    const {categoryId, searchCriteria, pageCriteria} = qs.parse(location.search, { 
-        ignoreQueryPrefix: true, 
-        allowDots: true 
-    });
-
-    const productsState: ProductsState = useSelector((state: RootState) => state.products);
-    const dispatch = useDispatch();
+    const productPageAsync = useSelector((state: RootState) => state.products.productPageAsync);
 
     useEffect(() => {
         dispatch(findProductPage({
@@ -57,13 +57,13 @@ function ProductManagementPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(findProductPage({
-            ...productsState.productPageAsync.payload as ProductFindPayload,
+            ...productPageAsync.payload as ProductFindPayload,
             pageCriteria: {
-                ...(productsState.productPageAsync.payload as ProductFindPayload).pageCriteria, 
+                ...(productPageAsync.payload as ProductFindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [productsState.productPageAsync.payload]);
+    }, [productPageAsync.payload]);
 
     const onMoveSave = useCallback(() => {
         history.push("/admin/product/save");
@@ -71,29 +71,21 @@ function ProductManagementPage() {
     
     return (
         <AdminLayout>
-            <main className="inner-page-sec-padding-bottom">
-                <div className="container">
-                    <div className="section-title section-title--bordered">
-                        <h2>상품관리</h2>
-                    </div>
-                    <ProductManagementBar
-                        searchCriteria={(productsState.productPageAsync.payload as ProductFindPayload).searchCriteria}
-                        onUpdateSearchCriteria={onUpdateSearchCriteria}  
-                        onMoveSave={onMoveSave}
-                    />
-                    <div className="row">
-                        <div className="col-12">
-                            <AdminProductList productList={productsState.productPageAsync.result?.list} />
-                        </div>
-                    </div>
-                    <Pagination
-                        page={productsState.productPageAsync.payload?.pageCriteria.page}  
-                        totalCount={productsState.productPageAsync.result?.totalCount}
-                        onPageChange={onPageChange}
-                    />
-                    {productsState.productPageAsync.error && <ErrorDetail message={"오류 발생"} />}
-                </div>
-            </main>
+            <Title content={"상품 관리"} />
+            <ProductManagementBar
+                searchCriteria={(productPageAsync.payload as ProductFindPayload).searchCriteria}
+                onUpdateSearchCriteria={onUpdateSearchCriteria}  
+                onMoveSave={onMoveSave}
+            />
+            <AdminProductList 
+                productList={productPageAsync.result?.list} 
+            />
+            <Pagination
+                page={productPageAsync.payload?.pageCriteria.page}  
+                totalCount={productPageAsync.result?.totalCount}
+                onPageChange={onPageChange}
+            />
+            {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
         </AdminLayout>
     )
 };

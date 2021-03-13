@@ -5,11 +5,11 @@ import { StockSavePayload } from '../../models/stocks';
 
 interface StockSaveModalProps {
     isOpen: boolean;
-    onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
     onSaveStock: (payload: StockSavePayload) => void;
+    onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 
-function StockSaveModal({ isOpen, onRequestClose, onSaveStock }: StockSaveModalProps) {
+function StockSaveModal({ isOpen, onSaveStock, onRequestClose }: StockSaveModalProps) {
     const { register, handleSubmit, errors } = useForm<StockSavePayload>();
 
     const onSubmit = useCallback((payload: StockSavePayload) => {
@@ -91,7 +91,6 @@ function StockSaveModal({ isOpen, onRequestClose, onSaveStock }: StockSaveModalP
                         <p className="form-messege"></p>
                     </div>
                 </div>
-                
             </div>
         </ReactModal>
     )

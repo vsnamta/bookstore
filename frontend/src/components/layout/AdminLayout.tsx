@@ -9,7 +9,11 @@ function AdminLayout({ children }: AdminLayoutProps) {
     return (
         <div className="site-wrapper" id="top">
             <AdminHeader />
-            {children}
+            <main className="inner-page-sec-padding-bottom">
+                <div className="container">
+                    {children}
+                </div>
+            </main>
         </div>
     )
 };

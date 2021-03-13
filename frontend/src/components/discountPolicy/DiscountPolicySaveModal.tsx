@@ -5,11 +5,11 @@ import { DiscountPolicySaveOrUpdatePayload } from '../../models/discountPolicies
 
 interface DiscountPolicySaveModalProps {
     isOpen: boolean;
-    onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
     onSaveDiscountPolicy: (payload: DiscountPolicySaveOrUpdatePayload) => void
+    onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 
-function DiscountPolicySaveModal({ isOpen, onRequestClose, onSaveDiscountPolicy }: DiscountPolicySaveModalProps) {
+function DiscountPolicySaveModal({ isOpen, onSaveDiscountPolicy, onRequestClose }: DiscountPolicySaveModalProps) {
     const { register, handleSubmit, errors } = useForm<DiscountPolicySaveOrUpdatePayload>();
 
     const onSubmit = useCallback((payload: DiscountPolicySaveOrUpdatePayload) => {

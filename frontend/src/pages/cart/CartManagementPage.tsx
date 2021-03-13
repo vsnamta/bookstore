@@ -10,27 +10,27 @@ import { RootState } from '../../store';
 import { checkAllCart, checkCart, findCartList, removeCart, updateCart } from '../../store/cart/action';
 
 function CartManagementPage() {
+    const history = useHistory();
+
+    const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!loginMember) {
         return <Redirect to={{ pathname: "/login" }}/>
     }
 
-    const history = useHistory();
-    const dispatch = useDispatch();
+    const cartListAsync = useSelector((state: RootState) => state.carts.cartListAsync);
 
     useEffect(() => {
         dispatch(findCartList({memberId: loginMember.id}));
     }, []);
-
-    const cartListState = useSelector((state: RootState) => state.carts.cartListAsync);
 
     const onUpdateCart = useCallback((id: number, payload: CartUpdatePayload) => {
         dispatch(updateCart({
             id: id,
             payload: payload,
             onSuccess: cart => alert("변경되었습니다."),
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
 
@@ -40,7 +40,7 @@ function CartManagementPage() {
             onSuccess: () => {
                 alert("삭제되었습니다.");
             },
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
 
@@ -62,14 +62,14 @@ function CartManagementPage() {
     return (
         <Layout>
             <CartManagement 
-                cartList={cartListState.result} 
+                cartList={cartListAsync.result} 
                 onUpdateCart={onUpdateCart} 
                 onRemoveCart={onRemoveCart}
                 onCheckAllCart={onCheckAllCart}
                 onCheckCart={onCheckCart}
                 onPurchase={onPurchase}
             />
-            {cartListState.error && <ErrorDetail message={"오류 발생"} />}
+            {cartListAsync.error && <ErrorDetail message={cartListAsync.error.message} />}
         </Layout>
     )
 };

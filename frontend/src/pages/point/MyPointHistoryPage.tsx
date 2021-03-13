@@ -12,13 +12,14 @@ import { RootState } from '../../store';
 import { findPointHistoryPage } from '../../store/pointHistory/action';
 
 function MyPointHistoryPage() {
+    const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!loginMember) {
         return <Redirect to={{ pathname: "/login" }} />
     }
 
-    const dispatch = useDispatch();
+    const pointHistoryPageAsync = useSelector((state: RootState) => state.pointHistories.pointHistoryPageAsync);
 
     useEffect(() => {
         dispatch(findPointHistoryPage({
@@ -27,29 +28,27 @@ function MyPointHistoryPage() {
         }));
     }, []);
 
-    const pointHistoryPageState = useSelector((state: RootState) => state.pointHistories.pointHistoryPageAsync);
-
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(findPointHistoryPage({
-            ...pointHistoryPageState.payload as PointHistoryFindPayload,
+            ...pointHistoryPageAsync.payload as PointHistoryFindPayload,
             pageCriteria: {
-                ...(pointHistoryPageState.payload as PointHistoryFindPayload).pageCriteria, 
+                ...(pointHistoryPageAsync.payload as PointHistoryFindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [pointHistoryPageState.payload]);
+    }, [pointHistoryPageAsync.payload]);
     
     return (
         <Layout>
             <MyPageLayout>
                 <h3>포인트내역</h3>
-                <PointHistoryList pointhistoryList={pointHistoryPageState.result?.list} />
+                <PointHistoryList pointhistoryList={pointHistoryPageAsync.result?.list} />
                 <Pagination
-                    page={pointHistoryPageState.payload?.pageCriteria.page}  
-                    totalCount={pointHistoryPageState.result?.totalCount}
+                    page={pointHistoryPageAsync.payload?.pageCriteria.page}  
+                    totalCount={pointHistoryPageAsync.result?.totalCount}
                     onPageChange={onPageChange}
                 />
-                {pointHistoryPageState.error && <ErrorDetail message={"오류 발생"} />}
+                {pointHistoryPageAsync.error && <ErrorDetail message={pointHistoryPageAsync.error.message} />}
             </MyPageLayout>                       
         </Layout>
     )

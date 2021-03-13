@@ -10,14 +10,14 @@ import { RootState } from '../../store';
 import { findMember, updateMember } from '../../store/member/action';
 
 function MyDataPage() {
+    const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!loginMember) {
         return <Redirect to={{ pathname: "/login" }}/>
     }
 
-    const dispatch = useDispatch();
-    const memberState = useSelector((state: RootState) => state.members.memberAsync);
+    const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
 
     useEffect(() => {
         dispatch(findMember(loginMember.id));
@@ -28,7 +28,7 @@ function MyDataPage() {
             id: id,
             payload: payload,
             onSuccess: member => alert("변경되었습니다."),
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
     
@@ -37,10 +37,10 @@ function MyDataPage() {
             <MyPageLayout>
                 <h3>나의 정보</h3>
                 <MemberDetail 
-                    member={memberState.result} 
+                    member={memberAsync.result} 
                     onUpdateMember={onUpdateMember} 
                 />
-                {memberState.error && <ErrorDetail message={"오류 발생"} />}
+                {memberAsync.error && <ErrorDetail message={memberAsync.error.message} />}
             </MyPageLayout>
         </Layout>
     )

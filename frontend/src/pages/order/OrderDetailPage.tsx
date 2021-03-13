@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import OrderDetail from '../../components/order/OrderDetail';
@@ -11,7 +11,13 @@ function OrderDetailPage() {
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const orderState = useSelector((state: RootState) => state.orders.orderAsync);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
+
+    if(!loginMember) {
+        return <Redirect to={{ pathname: "/login" }}/>
+    }
+
+    const orderAsync = useSelector((state: RootState) => state.orders.orderAsync);
 
     useEffect(() => {
         dispatch(findOrder(Number.parseInt(id)));
@@ -19,8 +25,8 @@ function OrderDetailPage() {
 
     return (
         <Layout>
-            <OrderDetail order={orderState.result} />
-            {orderState.error && <ErrorDetail message={"오류 발생"} />}
+            <OrderDetail order={orderAsync.result} />
+            {orderAsync.error && <ErrorDetail message={orderAsync.error.message} />}
         </Layout>
     )
 };

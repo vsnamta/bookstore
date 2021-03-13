@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import Pagination from '../../components/general/Pagination';
+import Title from '../../components/general/Title';
 import Layout from '../../components/layout/Layout';
 import ProductDetail from '../../components/product/ProductDetail';
 import ReviewList from '../../components/reivew/ReviewList';
@@ -20,15 +21,13 @@ import { findProduct } from '../../store/product/action';
 import { findReviewPage, saveReview } from '../../store/review/action';
 
 function ProductDetailPage() {
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
     const history = useHistory();
-
     const { id } = useParams<{id: string}>();
-    
-    const productsState = useSelector((state: RootState) => state.products);
-    const reviewPageState = useSelector((state: RootState) => state.reviews.reviewPageAsync);
+
     const dispatch = useDispatch();
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
+    const productAsync = useSelector((state: RootState) => state.products.productAsync);
+    const reviewPageAsync = useSelector((state: RootState) => state.reviews.reviewPageAsync);
 
     useEffect(() => {
         dispatch(findProduct(Number.parseInt(id)));
@@ -37,7 +36,7 @@ function ProductDetailPage() {
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
-    
+
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
 
     const onSaveCart = useCallback((payload: CartSavePayload) => {
@@ -54,7 +53,7 @@ function ProductDetailPage() {
                     history.push("/cart");
                 }
             },
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, [loginMember]);
 
@@ -85,51 +84,45 @@ function ProductDetailPage() {
                 alert("저장되었습니다.");
                 closeSaveModal();
             },
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(findReviewPage({
-            ...reviewPageState.payload as FindPayload,
+            ...reviewPageAsync.payload as FindPayload,
             pageCriteria: {
-                ...(reviewPageState.payload as FindPayload).pageCriteria, 
+                ...(reviewPageAsync.payload as FindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [reviewPageState.payload]);
+    }, [reviewPageAsync.payload]);
 
     return (
         <Layout>
-            <main className=" inner-page-sec-padding-bottom">
-                <div className="container">
-                    <ProductDetail 
-                        product={productsState.productAsync.result} 
-                        onSaveCart={onSaveCart} 
-                        onPurchase={onPurchase} 
-                    />
-                    {productsState.productAsync.error && <ErrorDetail message={"오류 발생"} />}
-                    <div className="section-title section-title--bordered">
-                        <h2>리뷰</h2>
-                    </div>
-                    <ReviewManagementBar 
-                        onOpenSaveModal={onOpenSaveModal}
-                    /> 
-                    <ReviewList 
-                        reviewList={reviewPageState.result?.list}
-                    />
-                    <Pagination
-                        page={reviewPageState.payload?.pageCriteria.page}  
-                        totalCount={reviewPageState.result?.totalCount}
-                        onPageChange={onPageChange}
-                    />
-                    <ReviewSaveModal 
-                        isOpen={saveModalIsOpen}
-                        onRequestClose={closeSaveModal}
-                        onSaveReview={onSaveReview}
-                    />
-                </div>
-            </main>
+            <ProductDetail 
+                product={productAsync.result} 
+                onSaveCart={onSaveCart} 
+                onPurchase={onPurchase} 
+            />
+            {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
+            <Title content={"리뷰"} />
+            <ReviewManagementBar 
+                onOpenSaveModal={onOpenSaveModal}
+            /> 
+            <ReviewList 
+                reviewList={reviewPageAsync.result?.list}
+            />
+            <Pagination
+                page={reviewPageAsync.payload?.pageCriteria.page}  
+                totalCount={reviewPageAsync.result?.totalCount}
+                onPageChange={onPageChange}
+            />
+            <ReviewSaveModal 
+                isOpen={saveModalIsOpen}
+                onRequestClose={closeSaveModal}
+                onSaveReview={onSaveReview}
+            />
         </Layout>
     )
 };

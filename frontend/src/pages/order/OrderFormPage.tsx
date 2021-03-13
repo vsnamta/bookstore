@@ -18,7 +18,6 @@ function OrderFormPage() {
 
     const history = useHistory();
     const location = useLocation<{orderingProductList: OrderingProduct[]}>();
-
     const orderingProductList = location.state ? location.state.orderingProductList : undefined;
 
     if(!orderingProductList) {
@@ -26,8 +25,8 @@ function OrderFormPage() {
     }
 
     const dispatch = useDispatch();
-
-    const memberState = useSelector((state: RootState) => state.members.memberAsync);
+    //const loginMember = useSelector((state: RootState) => state.members.loginMember);
+    const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
 
     useEffect(() => {
         dispatch(findMember(loginMember.id));
@@ -37,18 +36,18 @@ function OrderFormPage() {
         dispatch(saveOrder({
             payload: payload,
             onSuccess: order => history.push(`/order/${order.id}`),
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
     
     return (
         <Layout>
             <OrderForm 
-                member={memberState.result}
+                member={memberAsync.result}
                 orderingProductList={orderingProductList} 
                 onSaveOrder={onSaveOrder} 
             />
-            {memberState.error && <ErrorDetail message={"오류 발생"} />}
+            {memberAsync.error && <ErrorDetail message={memberAsync.error.message} />}
         </Layout>
     )
 };

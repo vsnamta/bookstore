@@ -29,34 +29,38 @@ function CategoryList({categoryList, onSelectCategory, onRemoveCategory}: Catego
     }, []);
     
     return (
-        <div className="myaccount-table table-responsive text-center">
-            <table className="table table-bordered">
-                <thead className="thead-light">
-                    <tr>
-                        <th>카테고리</th>
-                        <th>부모 카테고리</th>
-                        <th>관리</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {flatCategoryList.map(category => (
-                        <tr key={category.id}>
-                            <td>
-                                {category.parentId && "ㄴ "}
-                                {category.name}
-                            </td>
-                            <td>{category.parentName}</td>
-                            <td>
-                                <div className="add-cart-btn">
-                                    <button className="btn btn-outlined--primary" value={category.id} onClick={onClickUpdateBtn} >수정</button>
-                                    <button className="btn btn-outlined--primary" value={category.id} onClick={onClickRemoveBtn} >삭제</button> 
-                                </div>                                               
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div> 
+        <div className="row">
+            <div className="col-12">
+                <div className="myaccount-table table-responsive text-center">
+                    <table className="table table-bordered">
+                        <thead className="thead-light">
+                            <tr>
+                                <th>카테고리</th>
+                                <th>부모 카테고리</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {flatCategoryList.map(category => (
+                                <tr key={category.id}>
+                                    <td>
+                                        {category.parentId && "ㄴ "}
+                                        {category.name}
+                                    </td>
+                                    <td>{category.parentName}</td>
+                                    <td>
+                                        <div className="add-cart-btn">
+                                            <button className="btn btn-outlined--primary" value={category.id} onClick={onClickUpdateBtn} >수정</button>
+                                            <button className="btn btn-outlined--primary" value={category.id} onClick={onClickRemoveBtn} >삭제</button> 
+                                        </div>                                               
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div> 
+            </div>
+        </div>
     )
 };
 

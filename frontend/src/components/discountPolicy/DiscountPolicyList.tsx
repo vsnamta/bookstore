@@ -16,32 +16,36 @@ function DiscountPolicyList({ discountPolicyList, onSelectDiscountPolicy }: Disc
     }, [onSelectDiscountPolicy]);
     
     return (
-        <div className="myaccount-table table-responsive text-center">
-            <table className="table table-bordered">
-                <thead className="thead-light">
-                    <tr>
-                        <th>이름</th>
-                        <th>할인율</th>
-                        <th>적립률</th>
-                        <th>관리</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {discountPolicyList.map(discountPolicy => (
-                        <tr key={discountPolicy.id}>                                         
-                            <td>{discountPolicy.name}</td>
-                            <td>{discountPolicy.discountPercent}</td>
-                            <td>{discountPolicy.depositPercent}</td>
-                            <td>
-                                <div className="add-cart-btn">
-                                    <button className="btn btn-outlined--primary" value={discountPolicy.id} onClick={onClickUpdateBtn} >수정</button>
-                                </div>                                               
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div> 
+        <div className="row">
+            <div className="col-12">
+                <div className="myaccount-table table-responsive text-center">
+                    <table className="table table-bordered">
+                        <thead className="thead-light">
+                            <tr>
+                                <th>이름</th>
+                                <th>할인율</th>
+                                <th>적립률</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {discountPolicyList.map(discountPolicy => (
+                                <tr key={discountPolicy.id}>                                         
+                                    <td>{discountPolicy.name}</td>
+                                    <td>{discountPolicy.discountPercent}</td>
+                                    <td>{discountPolicy.depositPercent}</td>
+                                    <td>
+                                        <div className="add-cart-btn">
+                                            <button className="btn btn-outlined--primary" value={discountPolicy.id} onClick={onClickUpdateBtn} >수정</button>
+                                        </div>                                               
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div> 
+            </div>
+        </div>
     )
 };
 

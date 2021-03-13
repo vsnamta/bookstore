@@ -8,6 +8,7 @@ import Pagination from '../../components/general/Pagination';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import OrderDetail from '../../components/order/OrderDetail';
+import OrderDetailModal from '../../components/order/OrderDetailModal';
 import OrderList from '../../components/order/OrderList';
 import useModal from '../../hooks/useModal';
 import { FindPayload } from '../../models/common';
@@ -17,18 +18,17 @@ import { RootState } from '../../store';
 import { findOrder, findOrderPage, updateOrder } from '../../store/order/action';
 
 function MyOrderPage() {
+    const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!loginMember) {
         return <Redirect to={{ pathname: "/login" }} />
     }
 
-    const { orderPageState, orderState } = useSelector((state: RootState) => ({
-        orderPageState: state.orders.orderPageAsync,
-        orderState: state.orders.orderAsync
+    const { orderPageAsync, orderAsync } = useSelector((state: RootState) => ({
+        orderPageAsync: state.orders.orderPageAsync,
+        orderAsync: state.orders.orderAsync
     }));
-
-    const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(findOrderPage({
@@ -52,45 +52,40 @@ function MyOrderPage() {
             id: id,
             payload: payload,
             onSuccess: order => alert("변경되었습니다."),
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(findOrderPage({
-            ...orderPageState.payload as FindPayload,
+            ...orderPageAsync.payload as FindPayload,
             pageCriteria: {
-                ...(orderPageState.payload as FindPayload).pageCriteria, 
+                ...(orderPageAsync.payload as FindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [orderPageState.payload]);
+    }, [orderPageAsync.payload]);
 
     return (
         <Layout>
             <MyPageLayout>
                 <h3>주문내역</h3>
                 <OrderList 
-                    orderList={orderPageState.result?.list}
+                    orderList={orderPageAsync.result?.list}
                     onSelectOrder={onSelectOrder} 
                     onUpdateOrder={onUpdateOrder} 
                 />
                 <Pagination
-                    page={orderPageState.payload?.pageCriteria.page}  
-                    totalCount={orderPageState.result?.totalCount}
+                    page={orderPageAsync.payload?.pageCriteria.page}  
+                    totalCount={orderPageAsync.result?.totalCount}
                     onPageChange={onPageChange}
                 />
-                {orderPageState.error && <ErrorDetail message={"오류 발생"} />}
-                <ReactModal
+                {orderPageAsync.error && <ErrorDetail message={orderPageAsync.error.message} />}
+                <OrderDetailModal 
+                    order={orderAsync.result}
                     isOpen={updateModalIsOpen}
                     onRequestClose={closeUpdateModal}
-                >
-                    <button type="button" className="close modal-close-btn ml-auto" data-dismiss="modal"
-                        aria-label="Close" onClick={closeUpdateModal}>
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <OrderDetail order={orderState.result}/>
-                </ReactModal>
+                />
             </MyPageLayout>
         </Layout>
     )

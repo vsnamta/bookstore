@@ -16,18 +16,17 @@ import { RootState } from '../../store';
 import { findReview, findReviewPage, removeReview, updateReview } from '../../store/review/action';
 
 function MyReviewPage() {
+    const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember);
 
     if(!loginMember) {
         return <Redirect to={{ pathname: "/login" }}/>
     }
 
-    const { reviewPageState, review } = useSelector((state: RootState) => ({ 
-        reviewPageState: state.reviews.reviewPageAsync,
+    const { reviewPageAsync, review } = useSelector((state: RootState) => ({ 
+        reviewPageAsync: state.reviews.reviewPageAsync,
         review: state.reviews.review
     }));
-    
-    const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(findReviewPage({
@@ -38,7 +37,7 @@ function MyReviewPage() {
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
-    
+
     const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
 
     const onSelectReview = useCallback((id: number) => {
@@ -54,7 +53,7 @@ function MyReviewPage() {
                 alert("변경되었습니다.");
                 closeUpdateModal();
             },
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
 
@@ -62,35 +61,35 @@ function MyReviewPage() {
         dispatch(removeReview({
             id: id,
             onSuccess: () => alert("삭제되었습니다."),
-            onFailure: error => {}
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(findReviewPage({
-            ...reviewPageState.payload as FindPayload,
+            ...reviewPageAsync.payload as FindPayload,
             pageCriteria: {
-                ...(reviewPageState.payload as FindPayload).pageCriteria, 
+                ...(reviewPageAsync.payload as FindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [reviewPageState.payload]);
+    }, [reviewPageAsync.payload]);
     
     return (
         <Layout>
             <MyPageLayout>
                 <h3>리뷰내역</h3>
                 <MyReviewList 
-                    reviewList={reviewPageState.result?.list} 
+                    reviewList={reviewPageAsync.result?.list} 
                     onSelectReview={onSelectReview}
                     onRemoveReview={onRemoveReview} 
                 />
                 <Pagination
-                    page={reviewPageState.payload?.pageCriteria.page}  
-                    totalCount={reviewPageState.result?.totalCount}
+                    page={reviewPageAsync.payload?.pageCriteria.page}  
+                    totalCount={reviewPageAsync.result?.totalCount}
                     onPageChange={onPageChange}
                 />
-                {reviewPageState.error && <ErrorDetail message={"오류 발생"} />}
+                {reviewPageAsync.error && <ErrorDetail message={reviewPageAsync.error.message} />}
                 <ReviewUpdateModal 
                     review={review}
                     isOpen={updateModalIsOpen}

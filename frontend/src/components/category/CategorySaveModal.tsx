@@ -4,13 +4,13 @@ import ReactModal from 'react-modal';
 import { CategoryResult, CategorySaveOrUpdatePayload } from '../../models/categories';
 
 interface CategorySaveModalProps {
-    isOpen: boolean;
-    onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
-    onSaveCategory: (payload: CategorySaveOrUpdatePayload) => void;
     categoryList?: CategoryResult[];
+    isOpen: boolean;
+    onSaveCategory: (payload: CategorySaveOrUpdatePayload) => void;
+    onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 
-function CategorySaveModal({ isOpen, onRequestClose, onSaveCategory, categoryList }: CategorySaveModalProps) {
+function CategorySaveModal({ categoryList, isOpen, onSaveCategory, onRequestClose }: CategorySaveModalProps) {
     const { register, handleSubmit, errors } = useForm<CategorySaveOrUpdatePayload>();
 
     const onSubmit = useCallback((payload: CategorySaveOrUpdatePayload) => {
