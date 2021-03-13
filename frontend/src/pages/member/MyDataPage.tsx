@@ -5,18 +5,13 @@ import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import MemberDetail from '../../components/member/MemberDetail';
-import { MemberUpdatePayload } from '../../models/members';
+import { LoginMember, MemberUpdatePayload } from '../../models/members';
 import { RootState } from '../../store';
 import { findMember, updateMember } from '../../store/member/action';
 
 function MyDataPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!loginMember) {
-        return <Redirect to={{ pathname: "/login" }}/>
-    }
-
+    const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
     const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
 
     useEffect(() => {

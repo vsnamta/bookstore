@@ -14,12 +14,6 @@ function ProductSavePage() {
     const history = useHistory();
 
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!(loginMember && loginMember.role === "ADMIN")) {
-        return <Redirect to={{ pathname: "/" }} />
-    } 
-    
     const discountPolicyListAsync = useSelector((state: RootState) => state.discountPolcies.discountPolicyListAsync);
     const categoryListAsync = useSelector((state: RootState) => state.categories.categoryListAsync);
 

@@ -4,18 +4,13 @@ import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import OrderForm from '../../components/order/OrderForm';
+import { LoginMember } from '../../models/members';
 import { OrderingProduct, OrderSavePayload } from '../../models/orders';
 import { RootState } from '../../store';
 import { findMember } from '../../store/member/action';
 import { saveOrder } from '../../store/order/action';
 
 function OrderFormPage() {
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!loginMember) {
-        return <Redirect to={{ pathname: "/login" }}/>
-    }
-
     const history = useHistory();
     const location = useLocation<{orderingProductList: OrderingProduct[]}>();
     const orderingProductList = location.state ? location.state.orderingProductList : undefined;
@@ -25,7 +20,7 @@ function OrderFormPage() {
     }
 
     const dispatch = useDispatch();
-    //const loginMember = useSelector((state: RootState) => state.members.loginMember);
+    const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
     const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
 
     useEffect(() => {

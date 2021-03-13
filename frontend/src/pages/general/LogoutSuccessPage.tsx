@@ -16,12 +16,9 @@ function LogoutSuccessPage() {
                     localStorage.removeItem("loginMember");
                     dispatch(setMyData(undefined));
                 }
-                
-                history.push("/");
             })
-            .catch((error: ApiError) => {
-                
-            });
+            .catch((error: ApiError) => console.log(error.message))
+            .finally(() => history.push("/"));
     }, []);
 
     return null;

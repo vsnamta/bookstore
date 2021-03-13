@@ -11,12 +11,6 @@ function OrderDetailPage() {
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!loginMember) {
-        return <Redirect to={{ pathname: "/login" }}/>
-    }
-
     const orderAsync = useSelector((state: RootState) => state.orders.orderAsync);
 
     useEffect(() => {

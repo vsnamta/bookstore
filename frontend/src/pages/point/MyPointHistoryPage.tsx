@@ -7,18 +7,14 @@ import Pagination from '../../components/general/Pagination';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
 import PointHistoryList from '../../components/pointHistory/PointHistoryList';
+import { LoginMember } from '../../models/members';
 import { PointHistoryFindPayload } from '../../models/pointHistories';
 import { RootState } from '../../store';
 import { findPointHistoryPage } from '../../store/pointHistory/action';
 
 function MyPointHistoryPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!loginMember) {
-        return <Redirect to={{ pathname: "/login" }} />
-    }
-
+    const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
     const pointHistoryPageAsync = useSelector((state: RootState) => state.pointHistories.pointHistoryPageAsync);
 
     useEffect(() => {

@@ -15,12 +15,6 @@ import { findDiscountPolicy, findDiscountPolicyList, saveDiscountPolicy, updateD
 
 function DiscountPolicyManagementPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!(loginMember && loginMember.role === "ADMIN")) {
-        return <Redirect to={{ pathname: "/" }} />
-    } 
-
     const { discountPolicyListAsync, discountPolicy } = useSelector((state: RootState) => ({
         discountPolicyListAsync: state.discountPolcies.discountPolicyListAsync,
         discountPolicy: state.discountPolcies.discountPolicy

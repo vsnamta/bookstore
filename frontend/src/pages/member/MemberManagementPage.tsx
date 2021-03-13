@@ -14,12 +14,6 @@ import { findMemberPage } from '../../store/member/action';
 
 function MemberManagementPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!(loginMember && loginMember.role === "ADMIN")) {
-        return <Redirect to={{ pathname: "/" }} />
-    } 
-
     const memberPageAsync = useSelector((state: RootState) => state.members.memberPageAsync);
 
     useEffect(() => {

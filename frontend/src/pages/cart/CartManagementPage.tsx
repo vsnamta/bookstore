@@ -5,6 +5,7 @@ import CartManagement from '../../components/cart/CartManagement';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import Layout from '../../components/layout/Layout';
 import { CartUpdatePayload } from '../../models/carts';
+import { LoginMember } from '../../models/members';
 import { OrderingProduct } from '../../models/orders';
 import { RootState } from '../../store';
 import { checkAllCart, checkCart, findCartList, removeCart, updateCart } from '../../store/cart/action';
@@ -13,16 +14,11 @@ function CartManagementPage() {
     const history = useHistory();
 
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!loginMember) {
-        return <Redirect to={{ pathname: "/login" }}/>
-    }
-
+    const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
     const cartListAsync = useSelector((state: RootState) => state.carts.cartListAsync);
 
     useEffect(() => {
-        dispatch(findCartList({memberId: loginMember.id}));
+        dispatch(findCartList({ memberId: loginMember.id }));
     }, []);
 
     const onUpdateCart = useCallback((id: number, payload: CartUpdatePayload) => {

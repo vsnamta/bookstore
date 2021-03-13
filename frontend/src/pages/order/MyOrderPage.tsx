@@ -19,12 +19,7 @@ import { findOrder, findOrderPage, updateOrder } from '../../store/order/action'
 
 function MyOrderPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!loginMember) {
-        return <Redirect to={{ pathname: "/login" }} />
-    }
-
+    const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
     const { orderPageAsync, orderAsync } = useSelector((state: RootState) => ({
         orderPageAsync: state.orders.orderPageAsync,
         orderAsync: state.orders.orderAsync
@@ -34,7 +29,7 @@ function MyOrderPage() {
         dispatch(findOrderPage({
             searchCriteria: { 
                 column: "memberId", 
-                keyword: (loginMember as LoginMember).id + ""
+                keyword: loginMember.id + ""
              },
             pageCriteria: { page: 1, size: 10 }
         }));

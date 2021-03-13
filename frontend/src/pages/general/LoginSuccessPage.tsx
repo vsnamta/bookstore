@@ -17,12 +17,9 @@ function LoginSuccessPage() {
                     localStorage.setItem("loginMember", JSON.stringify(loginMember as LoginMember));
                     dispatch(setMyData(loginMember as LoginMember));                   
                 }
-
-                history.push("/");
             })
-            .catch((error: ApiError) => {
-                
-            });
+            .catch((error: ApiError) => console.log(error.message))
+            .finally(() => history.push("/"));
     }, []);
 
     return null;

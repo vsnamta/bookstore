@@ -15,12 +15,6 @@ function ProductUpdatePage() {
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!(loginMember && loginMember.role === "ADMIN")) {
-        return <Redirect to={{ pathname: "/" }} />
-    } 
-
     const productAsync = useSelector((state: RootState) => state.products.productAsync);
     const discountPolicyListAsync = useSelector((state: RootState) => state.discountPolcies.discountPolicyListAsync);
     const categoryListAsync = useSelector((state: RootState) => state.categories.categoryListAsync);

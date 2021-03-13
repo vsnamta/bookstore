@@ -16,12 +16,6 @@ import { findOrder, findOrderPage, updateOrder } from '../../store/order/action'
 
 function OrderManagementPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!(loginMember && loginMember.role === "ADMIN")) {
-        return <Redirect to={{ pathname: "/" }} />
-    } 
-
     const { orderPageAsync, orderAsync } = useSelector((state: RootState) => ({
         orderPageAsync: state.orders.orderPageAsync,
         orderAsync: state.orders.orderAsync

@@ -24,12 +24,6 @@ function ProductManagementPage() {
     });
 
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!(loginMember && loginMember.role === "ADMIN")) {
-        return <Redirect to={{ pathname: "/" }} />
-    } 
-    
     const productPageAsync = useSelector((state: RootState) => state.products.productPageAsync);
 
     useEffect(() => {

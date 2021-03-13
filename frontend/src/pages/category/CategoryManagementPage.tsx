@@ -15,12 +15,6 @@ import { findCategory, findCategoryList, removeCategory, saveCategory, updateCat
 
 function CategoryManagementPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!(loginMember && loginMember.role === "ADMIN")) {
-        return <Redirect to={{ pathname: "/" }} />
-    }  
-
     const { categoryListAsync, category } = useSelector((state: RootState) => ({
         categoryListAsync: state.categories.categoryListAsync,
         category: state.categories.category

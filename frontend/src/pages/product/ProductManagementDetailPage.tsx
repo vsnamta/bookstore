@@ -22,12 +22,6 @@ function ProductManagementDetailPage() {
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
-
-    if(!(loginMember && loginMember.role === "ADMIN")) {
-        return <Redirect to={{ pathname: "/" }} />
-    } 
-    
     const { productPageAsync, productAsync } = useSelector((state: RootState) => ({
         productPageAsync: state.products.productPageAsync,
         productAsync: state.products.productAsync
