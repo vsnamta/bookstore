@@ -11,6 +11,7 @@ import MemberManagementBar from '../../components/member/MemberManagementBar';
 import { FindPayload, SearchCriteria } from '../../models/common';
 import { RootState } from '../../store';
 import { findMemberPage } from '../../store/member/action';
+import MemberManagementTemplate from '../../templates/member/MemberManagementTemplate';
 
 function MemberManagementPage() {
     const dispatch = useDispatch();
@@ -40,22 +41,27 @@ function MemberManagementPage() {
     }, [memberPageAsync.payload]);
 
     return (
-        <AdminLayout>
-            <Title content={"회원 관리"} />
-            <MemberManagementBar
-                searchCriteria={memberPageAsync.payload?.searchCriteria} 
-                onUpdateSearchCriteria={onUpdateSearchCriteria}
-            />
-            <MemberList 
-                memberList={memberPageAsync.result?.list}
-            />
-            <Pagination 
-                page={memberPageAsync.payload?.pageCriteria.page} 
-                totalCount={memberPageAsync.result?.totalCount}
-                onPageChange={onPageChange}
-            />
-            {memberPageAsync.error && <ErrorDetail message={memberPageAsync.error.message} />}
-        </AdminLayout>
+        <MemberManagementTemplate 
+            memberPageAsync={memberPageAsync}
+            onUpdateSearchCriteria={onUpdateSearchCriteria}
+            onPageChange={onPageChange}
+        />
+        // <AdminLayout>
+        //     <Title content={"회원 관리"} />
+        //     <MemberManagementBar
+        //         searchCriteria={memberPageAsync.payload?.searchCriteria} 
+        //         onUpdateSearchCriteria={onUpdateSearchCriteria}
+        //     />
+        //     <MemberList 
+        //         memberList={memberPageAsync.result?.list}
+        //     />
+        //     <Pagination 
+        //         page={memberPageAsync.payload?.pageCriteria.page} 
+        //         totalCount={memberPageAsync.result?.totalCount}
+        //         onPageChange={onPageChange}
+        //     />
+        //     {memberPageAsync.error && <ErrorDetail message={memberPageAsync.error.message} />}
+        // </AdminLayout>
     )
 };
 

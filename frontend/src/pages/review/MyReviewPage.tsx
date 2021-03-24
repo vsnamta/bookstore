@@ -14,6 +14,7 @@ import { LoginMember } from '../../models/members';
 import { ReviewUpdatePayload } from '../../models/reviews';
 import { RootState } from '../../store';
 import { findReview, findReviewPage, removeReview, updateReview } from '../../store/review/action';
+import MyReviewTemplate from '../../templates/review/MyReviewTemplate';
 
 function MyReviewPage() {
     const dispatch = useDispatch();
@@ -68,28 +69,38 @@ function MyReviewPage() {
     }, [reviewPageAsync.payload]);
     
     return (
-        <Layout>
-            <MyPageLayout>
-                <h3>리뷰내역</h3>
-                <MyReviewList 
-                    reviewList={reviewPageAsync.result?.list} 
-                    onSelectReview={onSelectReview}
-                    onRemoveReview={onRemoveReview} 
-                />
-                <Pagination
-                    page={reviewPageAsync.payload?.pageCriteria.page}  
-                    totalCount={reviewPageAsync.result?.totalCount}
-                    onPageChange={onPageChange}
-                />
-                {reviewPageAsync.error && <ErrorDetail message={reviewPageAsync.error.message} />}
-                <ReviewUpdateModal 
-                    review={review}
-                    isOpen={updateModalIsOpen}
-                    onUpdateReview={onUpdateReview}
-                    onRequestClose={closeUpdateModal}
-                />
-            </MyPageLayout>                                                 
-        </Layout>
+        <MyReviewTemplate 
+            reviewPageAsync={reviewPageAsync}
+            review={review}
+            updateModalIsOpen={updateModalIsOpen}
+            onSelectReview={onSelectReview}
+            onRemoveReview={onRemoveReview}
+            onUpdateReview={onUpdateReview}
+            closeUpdateModal={closeUpdateModal}
+            onPageChange={onPageChange}
+        />
+        // <Layout>
+        //     <MyPageLayout>
+        //         <h3>리뷰내역</h3>
+        //         <MyReviewList 
+        //             reviewList={reviewPageAsync.result?.list} 
+        //             onSelectReview={onSelectReview}
+        //             onRemoveReview={onRemoveReview} 
+        //         />
+        //         <Pagination
+        //             page={reviewPageAsync.payload?.pageCriteria.page}  
+        //             totalCount={reviewPageAsync.result?.totalCount}
+        //             onPageChange={onPageChange}
+        //         />
+        //         {reviewPageAsync.error && <ErrorDetail message={reviewPageAsync.error.message} />}
+        //         <ReviewUpdateModal 
+        //             review={review}
+        //             isOpen={updateModalIsOpen}
+        //             onUpdateReview={onUpdateReview}
+        //             onRequestClose={closeUpdateModal}
+        //         />
+        //     </MyPageLayout>                                                 
+        // </Layout>
     )
 };
 

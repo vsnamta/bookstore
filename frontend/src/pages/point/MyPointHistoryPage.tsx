@@ -11,6 +11,7 @@ import { LoginMember } from '../../models/members';
 import { PointHistoryFindPayload } from '../../models/pointHistories';
 import { RootState } from '../../store';
 import { findPointHistoryPage } from '../../store/pointHistory/action';
+import MyPointHistoryTemplate from '../../templates/point/MyPointHistoryTemplate';
 
 function MyPointHistoryPage() {
     const dispatch = useDispatch();
@@ -35,18 +36,22 @@ function MyPointHistoryPage() {
     }, [pointHistoryPageAsync.payload]);
     
     return (
-        <Layout>
-            <MyPageLayout>
-                <h3>포인트내역</h3>
-                <PointHistoryList pointhistoryList={pointHistoryPageAsync.result?.list} />
-                <Pagination
-                    page={pointHistoryPageAsync.payload?.pageCriteria.page}  
-                    totalCount={pointHistoryPageAsync.result?.totalCount}
-                    onPageChange={onPageChange}
-                />
-                {pointHistoryPageAsync.error && <ErrorDetail message={pointHistoryPageAsync.error.message} />}
-            </MyPageLayout>                       
-        </Layout>
+        <MyPointHistoryTemplate 
+            pointHistoryPageAsync={pointHistoryPageAsync}
+            onPageChange={onPageChange}
+        />
+        // <Layout>
+        //     <MyPageLayout>
+        //         <h3>포인트내역</h3>
+        //         <PointHistoryList pointhistoryList={pointHistoryPageAsync.result?.list} />
+        //         <Pagination
+        //             page={pointHistoryPageAsync.payload?.pageCriteria.page}  
+        //             totalCount={pointHistoryPageAsync.result?.totalCount}
+        //             onPageChange={onPageChange}
+        //         />
+        //         {pointHistoryPageAsync.error && <ErrorDetail message={pointHistoryPageAsync.error.message} />}
+        //     </MyPageLayout>                       
+        // </Layout>
     )
 };
 

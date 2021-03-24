@@ -1,13 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
-import ReactModal from 'react-modal';
-import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import ErrorDetail from '../../components/general/ErrorDetail';
 import Pagination from '../../components/general/Pagination';
 import Layout from '../../components/layout/Layout';
 import MyPageLayout from '../../components/layout/MyPageLayout';
-import OrderDetail from '../../components/order/OrderDetail';
 import OrderDetailModal from '../../components/order/OrderDetailModal';
 import OrderList from '../../components/order/OrderList';
 import useModal from '../../hooks/useModal';
@@ -16,6 +12,7 @@ import { LoginMember } from '../../models/members';
 import { OrderUpdatePayload } from '../../models/orders';
 import { RootState } from '../../store';
 import { findOrder, findOrderPage, updateOrder } from '../../store/order/action';
+import MyOrderTemplate from '../../templates/order/MyOrderTemplate';
 
 function MyOrderPage() {
     const dispatch = useDispatch();
@@ -59,27 +56,36 @@ function MyOrderPage() {
     }, [orderPageAsync.payload]);
 
     return (
-        <Layout>
-            <MyPageLayout>
-                <h3>주문내역</h3>
-                <OrderList 
-                    orderList={orderPageAsync.result?.list}
-                    onSelectOrder={onSelectOrder} 
-                    onUpdateOrder={onUpdateOrder} 
-                />
-                <Pagination
-                    page={orderPageAsync.payload?.pageCriteria.page}  
-                    totalCount={orderPageAsync.result?.totalCount}
-                    onPageChange={onPageChange}
-                />
-                {orderPageAsync.error && <ErrorDetail message={orderPageAsync.error.message} />}
-                <OrderDetailModal 
-                    order={orderAsync.result}
-                    isOpen={updateModalIsOpen}
-                    onRequestClose={closeUpdateModal}
-                />
-            </MyPageLayout>
-        </Layout>
+        <MyOrderTemplate 
+            orderPageAsync={orderPageAsync}
+            orderAsync={orderAsync}
+            updateModalIsOpen={updateModalIsOpen}
+            onSelectOrder={onSelectOrder}
+            onUpdateOrder={onUpdateOrder}
+            closeUpdateModal={closeUpdateModal}
+            onPageChange={onPageChange}
+        />
+        // <Layout>
+        //     <MyPageLayout>
+        //         <h3>주문내역</h3>
+        //         <OrderList 
+        //             orderList={orderPageAsync.result?.list}
+        //             onSelectOrder={onSelectOrder} 
+        //             onUpdateOrder={onUpdateOrder} 
+        //         />
+        //         <Pagination
+        //             page={orderPageAsync.payload?.pageCriteria.page}  
+        //             totalCount={orderPageAsync.result?.totalCount}
+        //             onPageChange={onPageChange}
+        //         />
+        //         {orderPageAsync.error && <ErrorDetail message={orderPageAsync.error.message} />}
+        //         <OrderDetailModal 
+        //             order={orderAsync.result}
+        //             isOpen={updateModalIsOpen}
+        //             onRequestClose={closeUpdateModal}
+        //         />
+        //     </MyPageLayout>
+        // </Layout>
     )
 };
 

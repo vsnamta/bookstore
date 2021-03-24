@@ -19,6 +19,7 @@ import { RootState } from '../../store';
 import { saveCart } from '../../store/cart/action';
 import { findProduct } from '../../store/product/action';
 import { findReviewPage, saveReview } from '../../store/review/action';
+import ProductDetailTemplate from '../../templates/product/ProductDetailTemplate';
 
 function ProductDetailPage() {
     const history = useHistory();
@@ -99,31 +100,42 @@ function ProductDetailPage() {
     }, [reviewPageAsync.payload]);
 
     return (
-        <Layout>
-            <ProductDetail 
-                product={productAsync.result} 
-                onSaveCart={onSaveCart} 
-                onPurchase={onPurchase} 
-            />
-            {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
-            <Title content={"리뷰"} />
-            <ReviewManagementBar 
-                onOpenSaveModal={onOpenSaveModal}
-            /> 
-            <ReviewList 
-                reviewList={reviewPageAsync.result?.list}
-            />
-            <Pagination
-                page={reviewPageAsync.payload?.pageCriteria.page}  
-                totalCount={reviewPageAsync.result?.totalCount}
-                onPageChange={onPageChange}
-            />
-            <ReviewSaveModal 
-                isOpen={saveModalIsOpen}
-                onRequestClose={closeSaveModal}
-                onSaveReview={onSaveReview}
-            />
-        </Layout>
+        <ProductDetailTemplate 
+            productAsync={productAsync}
+            reviewPageAsync={reviewPageAsync}
+            saveModalIsOpen={saveModalIsOpen}
+            onSaveCart={onSaveCart}
+            onPurchase={onPurchase}
+            onSaveReview={onSaveReview}
+            onOpenSaveModal={onOpenSaveModal}
+            closeSaveModal={closeSaveModal}
+            onPageChange={onPageChange}
+        />
+        // <Layout>
+        //     <ProductDetail 
+        //         product={productAsync.result} 
+        //         onSaveCart={onSaveCart} 
+        //         onPurchase={onPurchase} 
+        //     />
+        //     {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
+        //     <Title content={"리뷰"} />
+        //     <ReviewManagementBar 
+        //         onOpenSaveModal={onOpenSaveModal}
+        //     /> 
+        //     <ReviewList 
+        //         reviewList={reviewPageAsync.result?.list}
+        //     />
+        //     <Pagination
+        //         page={reviewPageAsync.payload?.pageCriteria.page}  
+        //         totalCount={reviewPageAsync.result?.totalCount}
+        //         onPageChange={onPageChange}
+        //     />
+        //     <ReviewSaveModal 
+        //         isOpen={saveModalIsOpen}
+        //         onRequestClose={closeSaveModal}
+        //         onSaveReview={onSaveReview}
+        //     />
+        // </Layout>
     )
 };
 

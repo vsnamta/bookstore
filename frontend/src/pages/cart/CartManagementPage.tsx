@@ -9,6 +9,7 @@ import { LoginMember } from '../../models/members';
 import { OrderingProduct } from '../../models/orders';
 import { RootState } from '../../store';
 import { checkAllCart, checkCart, findCartList, removeCart, updateCart } from '../../store/cart/action';
+import CartManagementTemplate from '../../templates/cart/CartManagementTemplate';
 
 function CartManagementPage() {
     const history = useHistory();
@@ -56,17 +57,25 @@ function CartManagementPage() {
     }, []);
     
     return (
-        <Layout>
-            <CartManagement 
-                cartList={cartListAsync.result} 
-                onUpdateCart={onUpdateCart} 
-                onRemoveCart={onRemoveCart}
-                onCheckAllCart={onCheckAllCart}
-                onCheckCart={onCheckCart}
-                onPurchase={onPurchase}
-            />
-            {cartListAsync.error && <ErrorDetail message={cartListAsync.error.message} />}
-        </Layout>
+        <CartManagementTemplate 
+            cartListAsync={cartListAsync} 
+            onUpdateCart={onUpdateCart} 
+            onRemoveCart={onRemoveCart}
+            onCheckAllCart={onCheckAllCart}
+            onCheckCart={onCheckCart}
+            onPurchase={onPurchase}
+        />
+        // <Layout>
+        //     <CartManagement 
+        //         cartList={cartListAsync.result} 
+        //         onUpdateCart={onUpdateCart} 
+        //         onRemoveCart={onRemoveCart}
+        //         onCheckAllCart={onCheckAllCart}
+        //         onCheckCart={onCheckCart}
+        //         onPurchase={onPurchase}
+        //     />
+        //     {cartListAsync.error && <ErrorDetail message={cartListAsync.error.message} />}
+        // </Layout>
     )
 };
 

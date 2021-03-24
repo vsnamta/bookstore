@@ -9,6 +9,7 @@ import { OrderingProduct, OrderSavePayload } from '../../models/orders';
 import { RootState } from '../../store';
 import { findMember } from '../../store/member/action';
 import { saveOrder } from '../../store/order/action';
+import OrderFormTemplate from '../../templates/order/OrderFormTemplate';
 
 function OrderFormPage() {
     const history = useHistory();
@@ -36,14 +37,19 @@ function OrderFormPage() {
     }, []);
     
     return (
-        <Layout>
-            <OrderForm 
-                member={memberAsync.result}
-                orderingProductList={orderingProductList} 
-                onSaveOrder={onSaveOrder} 
-            />
-            {memberAsync.error && <ErrorDetail message={memberAsync.error.message} />}
-        </Layout>
+        <OrderFormTemplate 
+            memberAsync={memberAsync}
+            orderingProductList={orderingProductList}
+            onSaveOrder={onSaveOrder}
+        />
+        // <Layout>
+        //     <OrderForm 
+        //         member={memberAsync.result}
+        //         orderingProductList={orderingProductList} 
+        //         onSaveOrder={onSaveOrder} 
+        //     />
+        //     {memberAsync.error && <ErrorDetail message={memberAsync.error.message} />}
+        // </Layout>
     )
 };
 

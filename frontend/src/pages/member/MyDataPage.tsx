@@ -8,6 +8,7 @@ import MemberDetail from '../../components/member/MemberDetail';
 import { LoginMember, MemberUpdatePayload } from '../../models/members';
 import { RootState } from '../../store';
 import { findMember, updateMember } from '../../store/member/action';
+import MyDataTemplate from '../../templates/member/MyDataTemplate';
 
 function MyDataPage() {
     const dispatch = useDispatch();
@@ -28,16 +29,20 @@ function MyDataPage() {
     }, []);
     
     return (
-        <Layout>
-            <MyPageLayout>
-                <h3>나의 정보</h3>
-                <MemberDetail 
-                    member={memberAsync.result} 
-                    onUpdateMember={onUpdateMember} 
-                />
-                {memberAsync.error && <ErrorDetail message={memberAsync.error.message} />}
-            </MyPageLayout>
-        </Layout>
+        <MyDataTemplate 
+            memberAsync={memberAsync}
+            onUpdateMember={onUpdateMember}
+        />
+        // <Layout>
+        //     <MyPageLayout>
+        //         <h3>나의 정보</h3>
+        //         <MemberDetail 
+        //             member={memberAsync.result} 
+        //             onUpdateMember={onUpdateMember} 
+        //         />
+        //         {memberAsync.error && <ErrorDetail message={memberAsync.error.message} />}
+        //     </MyPageLayout>
+        // </Layout>
     )
 };
 

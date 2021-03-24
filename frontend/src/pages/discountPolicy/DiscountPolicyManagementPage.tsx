@@ -12,6 +12,7 @@ import useModal from '../../hooks/useModal';
 import { DiscountPolicySaveOrUpdatePayload } from '../../models/discountPolicies';
 import { RootState } from '../../store';
 import { findDiscountPolicy, findDiscountPolicyList, saveDiscountPolicy, updateDiscountPolicy } from '../../store/discountPolicy/action';
+import DiscountPolicyManagementTemplate from '../../templates/discountPolicy/DiscountPolicyManagementTemplate';
 
 function DiscountPolicyManagementPage() {
     const dispatch = useDispatch();
@@ -53,28 +54,40 @@ function DiscountPolicyManagementPage() {
     }, []);
 
     return (
-        <AdminLayout>
-            <Title content={"할인정책 관리"} />
-            <DiscountPolicyManagementBar 
-                onOpenSaveModal={openSaveModal}
-            /> 
-            <DiscountPolicyList 
-                discountPolicyList={discountPolicyListAsync.result} 
-                onSelectDiscountPolicy={onSelectDiscountPolicy}
-            />
-            {discountPolicyListAsync.error && <ErrorDetail message={discountPolicyListAsync.error.message} />}
-            <DiscountPolicySaveModal 
-                isOpen={saveModalIsOpen}
-                onSaveDiscountPolicy={onSaveDiscountPolicy}
-                onRequestClose={closeSaveModal}
-            />
-            <DiscountPolicyUpdateModal 
-                discountPolicy={discountPolicy}
-                isOpen={updateModalIsOpen}
-                onUpdateDiscountPolicy={onUpdateDiscountPolicy}
-                onRequestClose={closeUpdateModal}
-            />
-        </AdminLayout>
+        <DiscountPolicyManagementTemplate 
+            discountPolicyListAsync={discountPolicyListAsync}
+            discountPolicy={discountPolicy}
+            saveModalIsOpen={saveModalIsOpen}
+            updateModalIsOpen={updateModalIsOpen}
+            onSelectDiscountPolicy={onSelectDiscountPolicy}
+            onUpdateDiscountPolicy={onUpdateDiscountPolicy}
+            onSaveDiscountPolicy={onSaveDiscountPolicy}
+            onOpenSaveModal={openSaveModal}
+            closeSaveModal={closeSaveModal}
+            closeUpdateModal={closeUpdateModal} 
+        />
+        // <AdminLayout>
+        //     <Title content={"할인정책 관리"} />
+        //     <DiscountPolicyManagementBar 
+        //         onOpenSaveModal={openSaveModal}
+        //     /> 
+        //     <DiscountPolicyList 
+        //         discountPolicyList={discountPolicyListAsync.result} 
+        //         onSelectDiscountPolicy={onSelectDiscountPolicy}
+        //     />
+        //     {discountPolicyListAsync.error && <ErrorDetail message={discountPolicyListAsync.error.message} />}
+        //     <DiscountPolicySaveModal 
+        //         isOpen={saveModalIsOpen}
+        //         onSaveDiscountPolicy={onSaveDiscountPolicy}
+        //         onRequestClose={closeSaveModal}
+        //     />
+        //     <DiscountPolicyUpdateModal 
+        //         discountPolicy={discountPolicy}
+        //         isOpen={updateModalIsOpen}
+        //         onUpdateDiscountPolicy={onUpdateDiscountPolicy}
+        //         onRequestClose={closeUpdateModal}
+        //     />
+        // </AdminLayout>
     )
 };
 

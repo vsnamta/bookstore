@@ -10,6 +10,7 @@ import ProductListFilterBar from '../../components/product/ProductListFilterBar'
 import { ProductFindPayload } from '../../models/products';
 import { RootState } from '../../store';
 import { findProductPage } from '../../store/product/action';
+import ProductListTemplate from '../../templates/product/ProductListTemplate';
 
 function ProductListPage() {  
     const location = useLocation();
@@ -59,16 +60,21 @@ function ProductListPage() {
     }, [productPageAsync.payload]);
 
     return (
-        <Layout>      
-            <ProductListFilterBar totalCount={productPageAsync.result?.totalCount} onSortChange={onSortChange} />
-            <ProductList productList={productPageAsync.result?.list} />
-            <Pagination
-                page={productPageAsync.payload?.pageCriteria.page}  
-                totalCount={productPageAsync.result?.totalCount}
-                onPageChange={onPageChange}
-            />
-            {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
-        </Layout>
+        <ProductListTemplate 
+            productPageAsync={productPageAsync}
+            onPageChange={onPageChange}
+            onSortChange={onSortChange}
+        />
+        // <Layout>      
+        //     <ProductListFilterBar totalCount={productPageAsync.result?.totalCount} onSortChange={onSortChange} />
+        //     <ProductList productList={productPageAsync.result?.list} />
+        //     <Pagination
+        //         page={productPageAsync.payload?.pageCriteria.page}  
+        //         totalCount={productPageAsync.result?.totalCount}
+        //         onPageChange={onPageChange}
+        //     />
+        //     {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
+        // </Layout>
     )
 };
 

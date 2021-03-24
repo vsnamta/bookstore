@@ -13,6 +13,7 @@ import { FindPayload, SearchCriteria } from '../../models/common';
 import { OrderUpdatePayload } from '../../models/orders';
 import { RootState } from '../../store';
 import { findOrder, findOrderPage, updateOrder } from '../../store/order/action';
+import OrderManagementTemplate from '../../templates/order/OrderManagementTemplate';
 
 function OrderManagementPage() {
     const dispatch = useDispatch();
@@ -58,29 +59,39 @@ function OrderManagementPage() {
     }, [orderPageAsync.payload]);
 
     return (
-        <AdminLayout>
-            <Title content={"주문 관리"} />
-            <OrderManagementBar
-                searchCriteria={orderPageAsync.payload?.searchCriteria} 
-                onUpdateSearchCriteria={onUpdateSearchCriteria}
-            />
-            <OrderList 
-                orderList={orderPageAsync.result?.list}
-                onSelectOrder={onSelectOrder}
-                onUpdateOrder={onUpdateOrder} 
-            />
-            <Pagination
-                page={orderPageAsync.payload?.pageCriteria.page} 
-                totalCount={orderPageAsync.result?.totalCount}
-                onPageChange={onPageChange}
-            />
-            {orderPageAsync.error && <ErrorDetail message={orderPageAsync.error.message} />}
-            <OrderDetailModal 
-                order={orderAsync.result}
-                isOpen={updateModalIsOpen}
-                onRequestClose={closeUpdateModal}
-            />
-        </AdminLayout>
+        <OrderManagementTemplate 
+            orderPageAsync={orderPageAsync}
+            orderAsync={orderAsync}
+            updateModalIsOpen={updateModalIsOpen}
+            onSelectOrder={onSelectOrder}
+            onUpdateOrder={onUpdateOrder}
+            closeUpdateModal={closeUpdateModal}
+            onUpdateSearchCriteria={onUpdateSearchCriteria}
+            onPageChange={onPageChange}
+        />
+        // <AdminLayout>
+        //     <Title content={"주문 관리"} />
+        //     <OrderManagementBar
+        //         searchCriteria={orderPageAsync.payload?.searchCriteria} 
+        //         onUpdateSearchCriteria={onUpdateSearchCriteria}
+        //     />
+        //     <OrderList 
+        //         orderList={orderPageAsync.result?.list}
+        //         onSelectOrder={onSelectOrder}
+        //         onUpdateOrder={onUpdateOrder} 
+        //     />
+        //     <Pagination
+        //         page={orderPageAsync.payload?.pageCriteria.page} 
+        //         totalCount={orderPageAsync.result?.totalCount}
+        //         onPageChange={onPageChange}
+        //     />
+        //     {orderPageAsync.error && <ErrorDetail message={orderPageAsync.error.message} />}
+        //     <OrderDetailModal 
+        //         order={orderAsync.result}
+        //         isOpen={updateModalIsOpen}
+        //         onRequestClose={closeUpdateModal}
+        //     />
+        // </AdminLayout>
     )
 };
 

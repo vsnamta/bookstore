@@ -11,6 +11,7 @@ import useModal from '../../hooks/useModal';
 import { CategorySaveOrUpdatePayload } from '../../models/categories';
 import { RootState } from '../../store';
 import { findCategory, findCategoryList, removeCategory, saveCategory, updateCategory } from '../../store/category/action';
+import CategoryManagementTemplate from '../../templates/category/CategoryManagementTemplate';
 
 function CategoryManagementPage() {
     const dispatch = useDispatch();
@@ -64,31 +65,45 @@ function CategoryManagementPage() {
     }, []);
     
     return (
-        <AdminLayout>
-            <Title content={"카테고리 관리"} />
-            <CategoryManagementBar 
-                onOpenSaveModal={onOpenSaveModal}
-            />
-            <CategoryList 
-                categoryList={categoryListAsync.result}
-                onSelectCategory={onSelectCategory}
-                onRemoveCategory={onRemoveCategory}
-            />
-            {categoryListAsync.error && <ErrorDetail message={categoryListAsync.error.message} />}
-            <CategorySaveModal 
-                categoryList={saveCategoryType === "super" ? undefined : categoryListAsync.result}
-                isOpen={saveModalIsOpen}
-                onSaveCategory={onSaveCategory}
-                onRequestClose={closeSaveModal}
-            />
-            <CategoryUpdateModal 
-                category={category}
-                categoryList={!category?.parentId? undefined : categoryListAsync.result}
-                isOpen={updateModalIsOpen}
-                onUpdateCategory={onUpdateCategory}
-                onRequestClose={closeUpdateModal}
-            />
-        </AdminLayout>
+        <CategoryManagementTemplate 
+            categoryListAsync={categoryListAsync}
+            category={category}
+            saveCategoryType={saveCategoryType}
+            saveModalIsOpen={saveModalIsOpen}
+            updateModalIsOpen={updateModalIsOpen}
+            onSelectCategory={onSelectCategory}
+            onRemoveCategory={onRemoveCategory}
+            onUpdateCategory={onUpdateCategory}
+            onSaveCategory={onSaveCategory}
+            onOpenSaveModal={onOpenSaveModal}
+            closeSaveModal={closeSaveModal}
+            closeUpdateModal={closeUpdateModal}
+        />
+        // <AdminLayout>
+        //     <Title content={"카테고리 관리"} />
+        //     <CategoryManagementBar 
+        //         onOpenSaveModal={onOpenSaveModal}
+        //     />
+        //     <CategoryList 
+        //         categoryList={categoryListAsync.result}
+        //         onSelectCategory={onSelectCategory}
+        //         onRemoveCategory={onRemoveCategory}
+        //     />
+        //     {categoryListAsync.error && <ErrorDetail message={categoryListAsync.error.message} />}
+        //     <CategorySaveModal 
+        //         categoryList={saveCategoryType === "super" ? undefined : categoryListAsync.result}
+        //         isOpen={saveModalIsOpen}
+        //         onSaveCategory={onSaveCategory}
+        //         onRequestClose={closeSaveModal}
+        //     />
+        //     <CategoryUpdateModal 
+        //         category={category}
+        //         categoryList={!category?.parentId? undefined : categoryListAsync.result}
+        //         isOpen={updateModalIsOpen}
+        //         onUpdateCategory={onUpdateCategory}
+        //         onRequestClose={closeUpdateModal}
+        //     />
+        // </AdminLayout>
     )
 };
 

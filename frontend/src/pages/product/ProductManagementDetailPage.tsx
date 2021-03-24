@@ -16,6 +16,7 @@ import { StockFindPayload, StockSavePayload } from '../../models/stocks';
 import { RootState } from '../../store';
 import { findProduct } from '../../store/product/action';
 import { findStockPage, saveStock } from '../../store/stock/action';
+import ProductManagementDetailTemplate from '../../templates/product/ProductManagementDetailTemplate';
 
 function ProductManagementDetailPage() {
     const history = useHistory();
@@ -66,29 +67,40 @@ function ProductManagementDetailPage() {
     }, [stockPageAsync.payload]);
     
     return (
-        <AdminLayout>
-            <AdminProductDetail 
-                product={productAsync.result}
-                onMoveUpdate={onMoveUpdate}
-                onMoveList={onMoveList}
-            />
-            {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
-            <Title content={"재고"} />
-            <StockManagementBar 
-                onOpenSaveModal={openSaveModal}
-            />
-            <StockList stockList={stockPageAsync.result?.list} />
-            <Pagination
-                page={stockPageAsync.payload?.pageCriteria.page}  
-                totalCount={stockPageAsync.result?.totalCount}
-                onPageChange={onPageChange}
-            />
-            <StockSaveModal 
-                isOpen={saveModalIsOpen} 
-                onSaveStock={onSaveStock}
-                onRequestClose={closeSaveModal}
-            />
-        </AdminLayout>
+        <ProductManagementDetailTemplate 
+            productAsync={productAsync}
+            stockPageAsync={stockPageAsync}
+            saveModalIsOpen={saveModalIsOpen}
+            onMoveUpdate={onMoveUpdate}
+            onMoveList={onMoveList}
+            onSaveStock={onSaveStock}
+            onOpenSaveModal={openSaveModal}
+            closeSaveModal={closeSaveModal}
+            onPageChange={onPageChange}
+        />
+        // <AdminLayout>
+        //     <AdminProductDetail 
+        //         product={productAsync.result}
+        //         onMoveUpdate={onMoveUpdate}
+        //         onMoveList={onMoveList}
+        //     />
+        //     {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
+        //     <Title content={"재고"} />
+        //     <StockManagementBar 
+        //         onOpenSaveModal={openSaveModal}
+        //     />
+        //     <StockList stockList={stockPageAsync.result?.list} />
+        //     <Pagination
+        //         page={stockPageAsync.payload?.pageCriteria.page}  
+        //         totalCount={stockPageAsync.result?.totalCount}
+        //         onPageChange={onPageChange}
+        //     />
+        //     <StockSaveModal 
+        //         isOpen={saveModalIsOpen} 
+        //         onSaveStock={onSaveStock}
+        //         onRequestClose={closeSaveModal}
+        //     />
+        // </AdminLayout>
     )
 };
 

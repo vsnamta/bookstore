@@ -7,6 +7,7 @@ import Layout from '../../components/layout/Layout';
 import BestProductList from '../../components/product/BestProductList';
 import { RootState } from '../../store';
 import { findProductPage } from '../../store/product/action';
+import MainTemplate from '../../templates/general/MainTemplate';
 
 function MainPage() {
     const dispatch = useDispatch();
@@ -24,12 +25,15 @@ function MainPage() {
     }, []);
     
     return (
-        <Layout>
-            <Banner />
-            <Title content={"베스트 셀러"} />
-            <BestProductList productList={productPageAsync.result?.list}/>
-            {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
-        </Layout>
+        <MainTemplate 
+            productPageAsync={productPageAsync}
+        />
+        // <Layout>
+        //     <Banner />
+        //     <Title content={"베스트 셀러"} />
+        //     <BestProductList productList={productPageAsync.result?.list}/>
+        //     {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
+        // </Layout>
     )
 };
 

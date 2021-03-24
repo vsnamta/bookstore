@@ -9,6 +9,7 @@ import { RootState } from '../../store';
 import { findCategoryList } from '../../store/category/action';
 import { findDiscountPolicyList } from '../../store/discountPolicy/action';
 import { findProduct, updateProduct } from '../../store/product/action';
+import ProductUpdateTemplate from '../../templates/product/ProductUpdateTemplate';
 
 function ProductUpdatePage() {
     const history = useHistory();
@@ -43,17 +44,24 @@ function ProductUpdatePage() {
     }, []);
 
     return (
-        <AdminLayout>
-            <ProductUpdateForm
-                product={productAsync.result}
-                discountPolicyList={discountPolicyListAsync.result}
-                categoryList={categoryListAsync.result}
-                onUpdateProduct={onUpdateProduct} 
-                onUpdateCancel={onUpdateCancel}
-            />
-            {(productAsync.error || discountPolicyListAsync.error || categoryListAsync.error) && 
-            <ErrorDetail message={"오류 발생"} />}
-        </AdminLayout>
+        <ProductUpdateTemplate
+            productAsync={productAsync} 
+            discountPolicyListAsync={discountPolicyListAsync}
+            categoryListAsync={categoryListAsync}
+            onUpdateProduct={onUpdateProduct}
+            onUpdateCancel={onUpdateCancel}
+        />
+        // <AdminLayout>
+        //     <ProductUpdateForm
+        //         product={productAsync.result}
+        //         discountPolicyList={discountPolicyListAsync.result}
+        //         categoryList={categoryListAsync.result}
+        //         onUpdateProduct={onUpdateProduct} 
+        //         onUpdateCancel={onUpdateCancel}
+        //     />
+        //     {(productAsync.error || discountPolicyListAsync.error || categoryListAsync.error) && 
+        //     <ErrorDetail message={"오류 발생"} />}
+        // </AdminLayout>
     )
 };
 

@@ -9,6 +9,7 @@ import { RootState } from '../../store';
 import { findCategoryList } from '../../store/category/action';
 import { findDiscountPolicyList } from '../../store/discountPolicy/action';
 import { saveProduct } from '../../store/product/action';
+import ProductSaveTemplate from '../../templates/product/ProductSaveTemplate';
 
 function ProductSavePage() {
     const history = useHistory();
@@ -39,16 +40,22 @@ function ProductSavePage() {
     }, []);
 
     return (
-        <AdminLayout>
-            <ProductSaveForm
-                discountPolicyList={discountPolicyListAsync.result}
-                categoryList={categoryListAsync.result}
-                onSaveProduct={onSaveProduct} 
-                onSaveCancel={onSaveCancel}
-            />
-            {(discountPolicyListAsync.error || categoryListAsync.error) && 
-            <ErrorDetail message={"오류 발생"} />}
-        </AdminLayout>
+        <ProductSaveTemplate 
+            discountPolicyListAsync={discountPolicyListAsync}
+            categoryListAsync={categoryListAsync}
+            onSaveProduct={onSaveProduct}
+            onSaveCancel={onSaveCancel}
+        />
+        // <AdminLayout>
+        //     <ProductSaveForm
+        //         discountPolicyList={discountPolicyListAsync.result}
+        //         categoryList={categoryListAsync.result}
+        //         onSaveProduct={onSaveProduct} 
+        //         onSaveCancel={onSaveCancel}
+        //     />
+        //     {(discountPolicyListAsync.error || categoryListAsync.error) && 
+        //     <ErrorDetail message={"오류 발생"} />}
+        // </AdminLayout>
     )
 };
 

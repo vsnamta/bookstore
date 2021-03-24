@@ -14,6 +14,7 @@ import { findProductPage } from '../../store/product/action';
 import { ProductsState } from '../../store/product/reducer';
 import Pagination from '../../components/general/Pagination';
 import Title from '../../components/general/Title';
+import ProductManagementTemplate from '../../templates/product/ProductManagementTemplate';
 
 function ProductManagementPage() {
     const history = useHistory();
@@ -64,23 +65,29 @@ function ProductManagementPage() {
     }, []);  
     
     return (
-        <AdminLayout>
-            <Title content={"상품 관리"} />
-            <ProductManagementBar
-                searchCriteria={(productPageAsync.payload as ProductFindPayload).searchCriteria}
-                onUpdateSearchCriteria={onUpdateSearchCriteria}  
-                onMoveSave={onMoveSave}
-            />
-            <AdminProductList 
-                productList={productPageAsync.result?.list} 
-            />
-            <Pagination
-                page={productPageAsync.payload?.pageCriteria.page}  
-                totalCount={productPageAsync.result?.totalCount}
-                onPageChange={onPageChange}
-            />
-            {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
-        </AdminLayout>
+        <ProductManagementTemplate 
+            productPageAsync={productPageAsync}
+            onUpdateSearchCriteria={onUpdateSearchCriteria}
+            onPageChange={onPageChange}
+            onMoveSave={onMoveSave}
+        />
+        // <AdminLayout>
+        //     <Title content={"상품 관리"} />
+        //     <ProductManagementBar
+        //         searchCriteria={(productPageAsync.payload as ProductFindPayload).searchCriteria}
+        //         onUpdateSearchCriteria={onUpdateSearchCriteria}  
+        //         onMoveSave={onMoveSave}
+        //     />
+        //     <AdminProductList 
+        //         productList={productPageAsync.result?.list} 
+        //     />
+        //     <Pagination
+        //         page={productPageAsync.payload?.pageCriteria.page}  
+        //         totalCount={productPageAsync.result?.totalCount}
+        //         onPageChange={onPageChange}
+        //     />
+        //     {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
+        // </AdminLayout>
     )
 };
 

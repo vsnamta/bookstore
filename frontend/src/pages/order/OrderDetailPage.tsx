@@ -6,6 +6,7 @@ import Layout from '../../components/layout/Layout';
 import OrderDetail from '../../components/order/OrderDetail';
 import { RootState } from '../../store';
 import { findOrder } from '../../store/order/action';
+import OrderDetailTemplate from '../../templates/order/OrderDetailTemplate';
 
 function OrderDetailPage() {
     const { id } = useParams<{id: string}>();
@@ -18,10 +19,13 @@ function OrderDetailPage() {
     }, []);
 
     return (
-        <Layout>
-            <OrderDetail order={orderAsync.result} />
-            {orderAsync.error && <ErrorDetail message={orderAsync.error.message} />}
-        </Layout>
+        <OrderDetailTemplate 
+            orderAsync={orderAsync}
+        />
+        // <Layout>
+        //     <OrderDetail order={orderAsync.result} />
+        //     {orderAsync.error && <ErrorDetail message={orderAsync.error.message} />}
+        // </Layout>
     )
 };
 
