@@ -14,7 +14,7 @@ interface HeaderProps {
     categoryList?: CategoryResult[];
 }
 
-function Header({loginMember, categoryList}: HeaderProps) {
+function Header({ loginMember, categoryList }: HeaderProps) {
     const history = useHistory();
 
     const [searchCriteria, useSearchFormMethods] = useSearchForm(

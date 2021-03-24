@@ -29,7 +29,7 @@ interface CartManagementProps {
     onPurchase: (orderingProductList: OrderingProduct[]) => void;
 }
 
-function CartManagement({cartList, onUpdateCart, onRemoveCart, onCheckAllCart, onCheckCart, onPurchase}: CartManagementProps) {    
+function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, onCheckCart, onPurchase }: CartManagementProps) {    
     if(!cartList) {
         return null;
     }

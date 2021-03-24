@@ -15,10 +15,7 @@ import { findDiscountPolicy, findDiscountPolicyList, saveDiscountPolicy, updateD
 
 function DiscountPolicyManagementPage() {
     const dispatch = useDispatch();
-    const { discountPolicyListAsync, discountPolicy } = useSelector((state: RootState) => ({
-        discountPolicyListAsync: state.discountPolcies.discountPolicyListAsync,
-        discountPolicy: state.discountPolcies.discountPolicy
-    }));
+    const { discountPolicyListAsync, discountPolicy } = useSelector((state: RootState) => state.discountPolcies);
 
     useEffect(() => {
         dispatch(findDiscountPolicyList());

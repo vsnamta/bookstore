@@ -10,7 +10,7 @@ interface MyReviewListProps {
     onRemoveReview: (id: number) => void;
 }
 
-function MyReviewList({reviewList, onSelectReview, onRemoveReview}: MyReviewListProps) {
+function MyReviewList({ reviewList, onSelectReview, onRemoveReview }: MyReviewListProps) {
     if(!reviewList) {
         return null;
     }

@@ -9,10 +9,12 @@ interface LayoutProps {
 }
 
 function Layout({ children }: LayoutProps) {
-    const { loginMember, categoryList } = useSelector(({ members, categories }: RootState) => ({
-        loginMember: members.loginMember,
-        categoryList: categories.categoryListAsync.result
-    }));
+    // const { loginMember, categoryList } = useSelector(({ members, categories }: RootState) => ({
+    //     loginMember: members.loginMember,
+    //     categoryList: categories.categoryListAsync.result
+    // }));
+    const loginMember = useSelector((state: RootState) => state.members.loginMember);
+    const categoryList = useSelector((state: RootState) => state.categories.categoryListAsync.result);
 
     return (
         <div className="site-wrapper" id="top">

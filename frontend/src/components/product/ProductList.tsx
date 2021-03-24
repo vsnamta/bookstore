@@ -8,7 +8,7 @@ interface ProductListProps {
     productList?: ProductResult[];
 }
 
-function ProductList({productList}: ProductListProps) {    
+function ProductList({ productList }: ProductListProps) {    
     if(!productList) {
         return null;
     }

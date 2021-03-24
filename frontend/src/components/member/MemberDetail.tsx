@@ -7,7 +7,7 @@ interface MemberDetailProps {
     onUpdateMember: (id: number, payload: MemberUpdatePayload) => void;
 }
 
-function MemberDetail({member, onUpdateMember}: MemberDetailProps) {    
+function MemberDetail({ member, onUpdateMember }: MemberDetailProps) {    
     if(!member) {
         return null;
     }

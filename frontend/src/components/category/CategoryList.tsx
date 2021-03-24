@@ -11,7 +11,7 @@ interface CategoryListProps {
     onRemoveCategory: (id: number) => void;
 }
 
-function CategoryList({categoryList, onSelectCategory, onRemoveCategory}: CategoryListProps) {
+function CategoryList({ categoryList, onSelectCategory, onRemoveCategory }: CategoryListProps) {
     if(!categoryList) {
         return null;
     }

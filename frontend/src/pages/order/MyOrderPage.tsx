@@ -20,10 +20,7 @@ import { findOrder, findOrderPage, updateOrder } from '../../store/order/action'
 function MyOrderPage() {
     const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
-    const { orderPageAsync, orderAsync } = useSelector((state: RootState) => ({
-        orderPageAsync: state.orders.orderPageAsync,
-        orderAsync: state.orders.orderAsync
-    }));
+    const { orderPageAsync, orderAsync } = useSelector((state: RootState) => state.orders);
 
     useEffect(() => {
         dispatch(findOrderPage({

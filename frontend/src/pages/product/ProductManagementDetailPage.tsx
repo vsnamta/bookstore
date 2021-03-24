@@ -22,10 +22,7 @@ function ProductManagementDetailPage() {
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const { productPageAsync, productAsync } = useSelector((state: RootState) => ({
-        productPageAsync: state.products.productPageAsync,
-        productAsync: state.products.productAsync
-    }));
+    const { productPageAsync, productAsync } = useSelector((state: RootState) => state.products);
     const stockPageAsync = useSelector((state: RootState) => state.stocks.stockPageAsync);
 
     useEffect(() => {

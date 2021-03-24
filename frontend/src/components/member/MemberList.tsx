@@ -5,7 +5,7 @@ interface MemberListProps {
     memberList?: MemberResult[];
 }
 
-function MemberList({memberList}: MemberListProps) {   
+function MemberList({ memberList }: MemberListProps) {   
     if(!memberList) {
         return null;
     }

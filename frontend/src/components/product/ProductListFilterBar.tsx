@@ -7,7 +7,7 @@ interface ProductListFilterBar {
     onSortChange: (sortCriteria: {sortColumn: string, sortDirection: string }) => void
 }
 
-function ProductListFilterBar({totalCount, onSortChange}: ProductListFilterBar) { 
+function ProductListFilterBar({ totalCount, onSortChange }: ProductListFilterBar) { 
     if(!totalCount) {
         return null;
     }

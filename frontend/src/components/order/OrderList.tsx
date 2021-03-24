@@ -7,7 +7,7 @@ interface OrderListProps {
     onUpdateOrder: (id: number, payload: OrderUpdatePayload) => void;
 }
 
-function OrderList({orderList, onSelectOrder, onUpdateOrder}: OrderListProps) {
+function OrderList({ orderList, onSelectOrder, onUpdateOrder }: OrderListProps) {
     if(!orderList) {
         return null;
     }

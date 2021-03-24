@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import CategoryList from '../../components/category/CategoryList';
 import CategoryManagementBar from '../../components/category/CategoryManagementBar';
 import CategorySaveModal from '../../components/category/CategorySaveModal';
@@ -15,10 +14,7 @@ import { findCategory, findCategoryList, removeCategory, saveCategory, updateCat
 
 function CategoryManagementPage() {
     const dispatch = useDispatch();
-    const { categoryListAsync, category } = useSelector((state: RootState) => ({
-        categoryListAsync: state.categories.categoryListAsync,
-        category: state.categories.category
-    }));
+    const { categoryListAsync, category } = useSelector((state: RootState) => state.categories);
 
     useEffect(() => {
         dispatch(findCategoryList());

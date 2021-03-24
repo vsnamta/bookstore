@@ -18,10 +18,7 @@ import { findReview, findReviewPage, removeReview, updateReview } from '../../st
 function MyReviewPage() {
     const dispatch = useDispatch();
     const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
-    const { reviewPageAsync, review } = useSelector((state: RootState) => ({ 
-        reviewPageAsync: state.reviews.reviewPageAsync,
-        review: state.reviews.review
-    }));
+    const { reviewPageAsync, review } = useSelector((state: RootState) => state.reviews);
 
     useEffect(() => {
         dispatch(findReviewPage({

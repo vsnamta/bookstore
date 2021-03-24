@@ -5,7 +5,7 @@ interface PointHistoryListProps {
     pointhistoryList?: PointHistoryResult[];
 }
 
-function PointHistoryList({pointhistoryList}: PointHistoryListProps) {    
+function PointHistoryList({ pointhistoryList }: PointHistoryListProps) {    
     if(!pointhistoryList) {
         return null;
     }

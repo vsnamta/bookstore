@@ -7,7 +7,7 @@ interface AdminProductDetailProps {
 	onMoveList: () => void;
 }
 
-function AdminProductDetail({product, onMoveUpdate, onMoveList}: AdminProductDetailProps) {
+function AdminProductDetail({ product, onMoveUpdate, onMoveList }: AdminProductDetailProps) {
 	if(!product) {
         return null;
     }
