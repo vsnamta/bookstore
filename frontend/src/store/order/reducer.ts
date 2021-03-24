@@ -5,17 +5,21 @@ import { OrderDetailResult, OrderResult } from '../../models/orders';
 import { OrdersAction } from './action';
 import { FIND_ORDER_FAILURE, FIND_ORDER_PAGE_FAILURE, FIND_ORDER_PAGE_REQUEST, FIND_ORDER_PAGE_SUCCESS, FIND_ORDER_REQUEST, FIND_ORDER_SUCCESS, SAVE_ORDER_SUCCESS, UPDATE_ORDER_SUCCESS } from './actionType';
 
+export interface OrderPageAsync {
+    payload?: FindPayload;
+    result?: Page<OrderResult>;
+    error?: ApiError; 
+}
+
+export interface OrderAsync {
+    payload?: number;
+    result?: OrderDetailResult;
+    error?: ApiError;
+}
+
 export interface OrdersState {
-    orderPageAsync: {
-        payload?: FindPayload;
-        result?: Page<OrderResult>;
-        error?: ApiError; 
-    };
-    orderAsync: {
-        payload?: number;
-        result?: OrderDetailResult;
-        error?: ApiError;
-    };
+    orderPageAsync: OrderPageAsync;
+    orderAsync: OrderAsync;
 }
 
 const initialState: OrdersState = {

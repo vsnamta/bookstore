@@ -2,11 +2,12 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { ReviewResult, ReviewUpdatePayload } from '../../models/reviews';
+import { ReviewUpdateActionPayload } from '../../store/review/action';
 
 interface ReviewUpdateModalProps {
     review?: ReviewResult;
     isOpen: boolean;
-    onUpdateReview: (id: number, payload: ReviewUpdatePayload) => void;
+    onUpdateReview: (payload: ReviewUpdateActionPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 
@@ -18,7 +19,12 @@ function ReviewUpdateModal({ review, isOpen, onUpdateReview, onRequestClose }: R
     const { register, handleSubmit, errors } = useForm<ReviewUpdatePayload>();
 
     const onSubmit = useCallback((payload: ReviewUpdatePayload) => {
-        onUpdateReview(review.id, payload);
+        onUpdateReview({
+            id: review.id,
+            payload: payload,
+            onSuccess: review => alert("변경되었습니다."),
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, []);
 
     return (

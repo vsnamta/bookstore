@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useParams } from 'react-router-dom';
-import ErrorDetail from '../../components/general/ErrorDetail';
-import Layout from '../../components/layout/Layout';
-import OrderDetail from '../../components/order/OrderDetail';
+import { useParams } from 'react-router-dom';
 import { RootState } from '../../store';
-import { findOrder } from '../../store/order/action';
-import OrderDetailTemplate from '../../templates/order/OrderDetailTemplate';
+import { createFindOrderAction } from '../../store/order/action';
+import OrderDetailTemplate from '../../components/order/OrderDetailTemplate';
 
 function OrderDetailPage() {
     const { id } = useParams<{id: string}>();
@@ -15,17 +12,13 @@ function OrderDetailPage() {
     const orderAsync = useSelector((state: RootState) => state.orders.orderAsync);
 
     useEffect(() => {
-        dispatch(findOrder(Number.parseInt(id)));
+        dispatch(createFindOrderAction(Number.parseInt(id)));
     }, []);
 
     return (
         <OrderDetailTemplate 
             orderAsync={orderAsync}
         />
-        // <Layout>
-        //     <OrderDetail order={orderAsync.result} />
-        //     {orderAsync.error && <ErrorDetail message={orderAsync.error.message} />}
-        // </Layout>
     )
 };
 

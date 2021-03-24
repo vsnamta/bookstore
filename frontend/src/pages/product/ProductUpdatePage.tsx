@@ -1,18 +1,13 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useHistory, useParams } from 'react-router-dom';
-import ErrorDetail from '../../components/general/ErrorDetail';
-import AdminLayout from '../../components/layout/AdminLayout';
-import ProductUpdateForm from '../../components/product/ProductUpdateForm';
-import { ProductSaveOrUpdatePayload } from '../../models/products';
+import { useParams } from 'react-router-dom';
 import { RootState } from '../../store';
-import { findCategoryList } from '../../store/category/action';
-import { findDiscountPolicyList } from '../../store/discountPolicy/action';
-import { findProduct, updateProduct } from '../../store/product/action';
-import ProductUpdateTemplate from '../../templates/product/ProductUpdateTemplate';
+import { createFindCategoryListAction } from '../../store/category/action';
+import { createFindDiscountPolicyListAction } from '../../store/discountPolicy/action';
+import { createFindProductAction, createUpdateProductAction, ProductUpdateActionPayload } from '../../store/product/action';
+import ProductUpdateTemplate from '../../components/product/ProductUpdateTemplate';
 
 function ProductUpdatePage() {
-    const history = useHistory();
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
@@ -21,26 +16,13 @@ function ProductUpdatePage() {
     const categoryListAsync = useSelector((state: RootState) => state.categories.categoryListAsync);
 
     useEffect(() => {
-        dispatch(findProduct(Number.parseInt(id)));
-        dispatch(findDiscountPolicyList());
-        dispatch(findCategoryList());
+        dispatch(createFindProductAction(Number.parseInt(id)));
+        dispatch(createFindDiscountPolicyListAction());
+        dispatch(createFindCategoryListAction());
     }, []);
 
-    const onUpdateProduct = useCallback((id: number, payload: ProductSaveOrUpdatePayload, file?: File) => {
-        dispatch(updateProduct({
-            id: id, 
-            payload: payload,
-            file: file,
-            onSuccess: product => {
-                alert("변경하였습니다.");
-                history.push(`/admin/product/${id}`);
-            }, 
-            onFailure: error => alert(`오류발생 = ${error.message}`)
-        }));
-    }, []);
-
-    const onUpdateCancel = useCallback(() => {
-        history.goBack();
+    const updateProduct = useCallback((payload: ProductUpdateActionPayload) => {
+        dispatch(createUpdateProductAction(payload));
     }, []);
 
     return (
@@ -48,20 +30,8 @@ function ProductUpdatePage() {
             productAsync={productAsync} 
             discountPolicyListAsync={discountPolicyListAsync}
             categoryListAsync={categoryListAsync}
-            onUpdateProduct={onUpdateProduct}
-            onUpdateCancel={onUpdateCancel}
+            updateProduct={updateProduct}
         />
-        // <AdminLayout>
-        //     <ProductUpdateForm
-        //         product={productAsync.result}
-        //         discountPolicyList={discountPolicyListAsync.result}
-        //         categoryList={categoryListAsync.result}
-        //         onUpdateProduct={onUpdateProduct} 
-        //         onUpdateCancel={onUpdateCancel}
-        //     />
-        //     {(productAsync.error || discountPolicyListAsync.error || categoryListAsync.error) && 
-        //     <ErrorDetail message={"오류 발생"} />}
-        // </AdminLayout>
     )
 };
 

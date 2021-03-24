@@ -2,38 +2,38 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 import memberApi from '../../apis/memberApi';
 import { Page } from '../../models/common';
 import { MemberDetailResult, MemberResult } from '../../models/members';
-import { findMember, findMemberAsync, findMemberPage, findMemberPageAsync, updateMember, updateMemberSuccess } from './action';
+import { createFindMemberAction, createFindMemberPageAction, createUpdateMemberAction, createUpdateMemberSuccessAction, findMemberAsyncActionCreator, findMemberPageAsyncActionCreator } from './action';
 import { FIND_MEMBER, FIND_MEMBER_PAGE, UPDATE_MEMBER } from './actionType';
 
-function* findMemberPageSaga(action: ReturnType<typeof findMemberPage>) {
-    yield put(findMemberPageAsync.request(action.payload));
+function* findMemberPageSaga(action: ReturnType<typeof createFindMemberPageAction>) {
+    yield put(findMemberPageAsyncActionCreator.request(action.payload));
 
     try {
         const memberList: Page<MemberResult> = yield call(memberApi.findAll, action.payload);
 
-        yield put(findMemberPageAsync.success(memberList));
+        yield put(findMemberPageAsyncActionCreator.success(memberList));
     } catch (error) {
-        yield put(findMemberPageAsync.failure(error));
+        yield put(findMemberPageAsyncActionCreator.failure(error));
     }
 };
 
-function* findMemberSaga(action: ReturnType<typeof findMember>) {
-    yield put(findMemberAsync.request(action.payload));
+function* findMemberSaga(action: ReturnType<typeof createFindMemberAction>) {
+    yield put(findMemberAsyncActionCreator.request(action.payload));
 
     try {
         const member: MemberDetailResult = yield call(memberApi.findOne, action.payload);
 
-        yield put(findMemberAsync.success(member));
+        yield put(findMemberAsyncActionCreator.success(member));
     } catch (error) {
-        yield put(findMemberAsync.failure(error));
+        yield put(findMemberAsyncActionCreator.failure(error));
     }
 };
 
-function* updateMemberSaga(action: ReturnType<typeof updateMember>) {
+function* updateMemberSaga(action: ReturnType<typeof createUpdateMemberAction>) {
     try {
         const member: MemberDetailResult = yield call(memberApi.update, action.payload.id, action.payload.payload);
 
-        yield put(updateMemberSuccess(member));
+        yield put(createUpdateMemberSuccessAction(member));
         action.payload.onSuccess && action.payload.onSuccess(member);
     } catch (error) {
         action.payload.onFailure && action.payload.onFailure(error);

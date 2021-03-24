@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 import { OrderResult, OrderUpdatePayload } from '../../models/orders';
+import { OrderUpdateActionPayload } from '../../store/order/action';
 
 interface OrderListProps {
     orderList?: OrderResult[];
     onSelectOrder: (id: number) => void;
-    onUpdateOrder: (id: number, payload: OrderUpdatePayload) => void;
+    onUpdateOrder: (payload: OrderUpdateActionPayload) => void;
 }
 
 function OrderList({ orderList, onSelectOrder, onUpdateOrder }: OrderListProps) {
@@ -18,10 +19,12 @@ function OrderList({ orderList, onSelectOrder, onUpdateOrder }: OrderListProps) 
 
     const onClickUpdateBtn = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if(confirm("변경하시겠습니까?")) {
-            onUpdateOrder(
-                parseInt(event.currentTarget.dataset.orderId as string), 
-                {status: event.currentTarget.dataset.status as string}
-            );
+            onUpdateOrder({
+                id: parseInt(event.currentTarget.dataset.orderId as string),
+                payload: { status: event.currentTarget.dataset.status as string },
+                onSuccess: order => alert("변경되었습니다."),
+                onFailure: error => alert(`오류발생 = ${error.message}`)
+            });
         }
     }, []);
 

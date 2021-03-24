@@ -5,12 +5,14 @@ import { StockFindPayload, StockResult } from '../../models/stocks';
 import { StocksAction } from './action';
 import { FIND_STOCK_PAGE_FAILURE, FIND_STOCK_PAGE_REQUEST, FIND_STOCK_PAGE_SUCCESS, SAVE_STOCK_SUCCESS } from './actionType';
 
+export interface StockPageAsync {
+    payload?: StockFindPayload;
+    result?: Page<StockResult>;
+    error?: ApiError; 
+}
+
 export interface StocksState {
-    stockPageAsync: {
-        payload?: StockFindPayload;
-        result?: Page<StockResult>;
-        error?: ApiError; 
-    };
+    stockPageAsync: StockPageAsync;
 }
 
 const initialState: StocksState = {

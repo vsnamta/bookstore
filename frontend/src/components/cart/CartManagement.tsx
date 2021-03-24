@@ -1,9 +1,9 @@
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { CartResult, CartUpdatePayload } from '../../models/carts';
-import { OrderingProduct } from '../../models/orders';
+import { CartRemoveActionPayload, CartUpdateActionPayload } from "../../store/cart/action";
 
 const calcTotalPriceAndAllChecked = (cartList: CartResult[]) : [ number, boolean ] => {
     const checkedCartList = cartList.filter(cart => cart.checked === true);
@@ -22,17 +22,18 @@ const calcTotalPriceAndAllChecked = (cartList: CartResult[]) : [ number, boolean
 
 interface CartManagementProps {
     cartList?: CartResult[];
-    onUpdateCart: (id: number, payload: CartUpdatePayload) => void;
-    onRemoveCart: (ids: number[]) => void;
+    onUpdateCart: (payload: CartUpdateActionPayload) => void;
+    onRemoveCart: (payload: CartRemoveActionPayload) => void;
     onCheckAllCart: (checked: boolean) => void;
     onCheckCart: (id: number, checked: boolean) => void;
-    onPurchase: (orderingProductList: OrderingProduct[]) => void;
 }
 
-function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, onCheckCart, onPurchase }: CartManagementProps) {    
+function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, onCheckCart }: CartManagementProps) {    
     if(!cartList) {
         return null;
     }
+
+    const history = useHistory();
     
     const [totalPrice, allChecked] = useMemo(
         () => calcTotalPriceAndAllChecked(cartList), 
@@ -44,11 +45,16 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
             .find(cart => cart.id === parseInt(event.currentTarget.value)) as CartResult;
 
         if(cart.quantity >= cart.stockQuantity) {
-            alert(`최대 구매수량은 ${cart.stockQuantity} 개 입니다`);
+            alert(`현재 재고는 ${cart.stockQuantity} 개 입니다`);
             return;
         }
 
-        onUpdateCart(cart.id, { quantity: cart.quantity + 1 });
+        onUpdateCart({
+            id: cart.id,
+            payload: { quantity: cart.quantity + 1 },
+            onSuccess: cart => alert("변경되었습니다."),
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, [cartList]);
 
     const onMinusQuantity = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -60,7 +66,12 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
             return;
         }
 
-        onUpdateCart(cart.id, {quantity: cart.quantity - 1});
+        onUpdateCart({
+            id: cart.id,
+            payload: { quantity: cart.quantity - 1 },
+            onSuccess: cart => alert("변경되었습니다."),
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, [cartList]);
 
     const onChangeAllCheck = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,10 +92,16 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
             return;
         }
         
-        onRemoveCart(checkedIds);
+        onRemoveCart({
+            ids: checkedIds,
+            onSuccess: () => {
+                alert("삭제되었습니다.");
+            },
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, [cartList]);
 
-    const onSaveOrder = useCallback(() => {
+    const onPurchase = useCallback(() => {
         const checkedCartList = cartList.filter(cart => cart.checked === true);
 
         if(checkedCartList.length === 0) {
@@ -92,14 +109,15 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
             return;
         }
         
-        const stockShortageCartList = checkedCartList.filter(cart => cart.quantity > cart.stockQuantity);
+        // const stockShortageCartList = checkedCartList.filter(cart => cart.quantity > cart.stockQuantity);
 
         // if(stockShortageCartList.length >= 1) {
         //     alert("재고가 부족한 상품이 있습니다.");
         //     return;
         // }
 
-        onPurchase(
+        history.push(
+            "/order/form",
             checkedCartList.map(cart => ({
                 cartId: cart.id,
                 productId: cart.productId,
@@ -182,7 +200,7 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
                     <div className="row">
                         <div className="col-lg-6 col-12 mb--30 mb-lg--0">
                             <a href="javascript:void(0)" className="btn btn-outlined--primary" onClick={onRemove}>선택 삭제</a>
-                            <a href="javascript:void(0)" className="btn btn-outlined--primary" onClick={onSaveOrder}>선택 주문</a>
+                            <a href="javascript:void(0)" className="btn btn-outlined--primary" onClick={onPurchase}>선택 주문</a>
                         </div>
                         {/* <!-- Cart Summary --> */}
                         <div className="col-lg-6 col-12 d-flex">

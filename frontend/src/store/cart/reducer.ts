@@ -3,13 +3,14 @@ import { ApiError } from '../../error/ApiError';
 import { CartResult } from '../../models/carts';
 import { CartsAction } from './action';
 import { CHECK_ALL_CART, CHECK_CART, FIND_CART_LIST_FAILURE, FIND_CART_LIST_REQUEST, FIND_CART_LIST_SUCCESS, REMOVE_CART_SUCCESS, SAVE_CART_SUCCESS, UPDATE_CART_SUCCESS } from './actionType';
-import cartsSaga from './saga';
+
+export interface CartListAsync {
+    result?: CartResult[];
+    error?: ApiError;
+}
 
 export interface CartsState {
-    cartListAsync: {
-        result?: CartResult[];
-        error?: ApiError;
-    }
+    cartListAsync: CartListAsync;
 }
 
 const initialState: CartsState = {

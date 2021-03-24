@@ -1,6 +1,6 @@
 import React from 'react';
-import Login from '../../components/general/Login';
-import Layout from '../../components/layout/Layout';
+import Login from './Login';
+import Layout from '../common/Layout';
 
 function LoginTemplate() {
     return (

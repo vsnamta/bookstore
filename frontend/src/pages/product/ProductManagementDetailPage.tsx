@@ -1,25 +1,13 @@
-import qs from 'qs';
 import React, { useCallback, useEffect } from 'react';
-import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useHistory, useParams } from 'react-router-dom';
-import ErrorDetail from '../../components/general/ErrorDetail';
-import Pagination from '../../components/general/Pagination';
-import Title from '../../components/general/Title';
-import AdminLayout from '../../components/layout/AdminLayout';
-import AdminProductDetail from '../../components/product/AdminProductDetail';
-import StockList from '../../components/stock/StockList';
-import StockManagementBar from '../../components/stock/StockManagementBar';
-import StockSaveModal from '../../components/stock/StockSaveModal';
-import useModal from '../../hooks/useModal';
-import { StockFindPayload, StockSavePayload } from '../../models/stocks';
+import { useParams } from 'react-router-dom';
+import { StockFindPayload } from '../../models/stocks';
 import { RootState } from '../../store';
-import { findProduct } from '../../store/product/action';
-import { findStockPage, saveStock } from '../../store/stock/action';
-import ProductManagementDetailTemplate from '../../templates/product/ProductManagementDetailTemplate';
+import { createFindProductAction } from '../../store/product/action';
+import { createFindStockPageAction, createSaveStockAction, StockSaveActionPayload } from '../../store/stock/action';
+import ProductManagementDetailTemplate from '../../components/product/ProductManagementDetailTemplate';
 
 function ProductManagementDetailPage() {
-    const history = useHistory();
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
@@ -27,37 +15,19 @@ function ProductManagementDetailPage() {
     const stockPageAsync = useSelector((state: RootState) => state.stocks.stockPageAsync);
 
     useEffect(() => {
-        dispatch(findProduct(Number.parseInt(id)));
-        dispatch(findStockPage({
+        dispatch(createFindProductAction(Number.parseInt(id)));
+        dispatch(createFindStockPageAction({
             productId: Number.parseInt(id),
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
-    const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
-
-    const onMoveUpdate = useCallback(() => {
-        history.push(`/admin/product/update/${id}`);
-    }, []);
-
-    const onMoveList = useCallback(() => {
-        const queryString = qs.stringify(productPageAsync.payload, { allowDots: true });
-        history.push(`/admin/product/list?${queryString}`);
-    }, [productPageAsync.payload]);
-
-    const onSaveStock = useCallback((payload: StockSavePayload) => {
-        dispatch(saveStock({
-            payload: payload,
-            onSuccess: stock => {
-                alert("저장되었습니다.");
-                closeSaveModal()
-            },
-            onFailure: error => alert(`오류발생 = ${error.message}`)
-        }));
+    const saveStock = useCallback((payload: StockSaveActionPayload) => {
+        dispatch(createSaveStockAction(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(findStockPage({
+        dispatch(createFindStockPageAction({
             ...stockPageAsync.payload as StockFindPayload,
             pageCriteria: {
                 ...(stockPageAsync.payload as StockFindPayload).pageCriteria, 
@@ -70,37 +40,9 @@ function ProductManagementDetailPage() {
         <ProductManagementDetailTemplate 
             productAsync={productAsync}
             stockPageAsync={stockPageAsync}
-            saveModalIsOpen={saveModalIsOpen}
-            onMoveUpdate={onMoveUpdate}
-            onMoveList={onMoveList}
-            onSaveStock={onSaveStock}
-            onOpenSaveModal={openSaveModal}
-            closeSaveModal={closeSaveModal}
+            saveStock={saveStock}
             onPageChange={onPageChange}
         />
-        // <AdminLayout>
-        //     <AdminProductDetail 
-        //         product={productAsync.result}
-        //         onMoveUpdate={onMoveUpdate}
-        //         onMoveList={onMoveList}
-        //     />
-        //     {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
-        //     <Title content={"재고"} />
-        //     <StockManagementBar 
-        //         onOpenSaveModal={openSaveModal}
-        //     />
-        //     <StockList stockList={stockPageAsync.result?.list} />
-        //     <Pagination
-        //         page={stockPageAsync.payload?.pageCriteria.page}  
-        //         totalCount={stockPageAsync.result?.totalCount}
-        //         onPageChange={onPageChange}
-        //     />
-        //     <StockSaveModal 
-        //         isOpen={saveModalIsOpen} 
-        //         onSaveStock={onSaveStock}
-        //         onRequestClose={closeSaveModal}
-        //     />
-        // </AdminLayout>
     )
 };
 

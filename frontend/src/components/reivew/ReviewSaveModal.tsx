@@ -2,18 +2,23 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { ReviewSavePayload } from '../../models/reviews';
+import { ReviewSaveActionPayload } from '../../store/review/action';
 
 interface ReviewSaveModalProps {
     isOpen: boolean;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
-    onSaveReview: (payload: ReviewSavePayload) => void
+    onSaveReview: (payload: ReviewSaveActionPayload) => void
 }
 
 function ReviewSaveModal({ isOpen, onRequestClose, onSaveReview }: ReviewSaveModalProps) {
     const { register, handleSubmit, errors } = useForm<ReviewSavePayload>();
     
     const onSubmit = useCallback((payload: ReviewSavePayload) => {
-        onSaveReview(payload);
+        onSaveReview({
+            payload: payload,
+            onSuccess: review => alert("저장되었습니다."),
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, []);
 
     return (

@@ -2,12 +2,13 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { CategoryResult, CategorySaveOrUpdatePayload } from '../../models/categories';
+import { CategoryUpdateActionPayload } from '../../store/category/action';
 
 interface CategoryUpdateModalProps {
     category?: CategoryResult;
     categoryList?: CategoryResult[];
     isOpen: boolean;
-    onUpdateCategory: (id: number, payload: CategorySaveOrUpdatePayload) => void;
+    onUpdateCategory: (payload: CategoryUpdateActionPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 
@@ -19,7 +20,12 @@ function CategoryUpdateModal({ category, categoryList, isOpen, onUpdateCategory,
     const { register, handleSubmit, errors } = useForm<CategorySaveOrUpdatePayload>();
 
     const onSubmit = useCallback((payload: CategorySaveOrUpdatePayload) => {
-        onUpdateCategory(category.id, payload);
+        onUpdateCategory({
+            id: category.id,
+            payload: payload,
+            onSuccess: category => alert("변경되었습니다."),
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, [category.id]);
 
     return (

@@ -2,11 +2,12 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { CategoryResult, CategorySaveOrUpdatePayload } from '../../models/categories';
+import { CategorySaveActionPayload } from '../../store/category/action';
 
 interface CategorySaveModalProps {
     categoryList?: CategoryResult[];
     isOpen: boolean;
-    onSaveCategory: (payload: CategorySaveOrUpdatePayload) => void;
+    onSaveCategory: (payload: CategorySaveActionPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 
@@ -14,7 +15,11 @@ function CategorySaveModal({ categoryList, isOpen, onSaveCategory, onRequestClos
     const { register, handleSubmit, errors } = useForm<CategorySaveOrUpdatePayload>();
 
     const onSubmit = useCallback((payload: CategorySaveOrUpdatePayload) => {
-        onSaveCategory(payload);
+        onSaveCategory({
+            payload: payload,
+            onSuccess: category => alert("저장되었습니다."),
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, []);
 
     return (

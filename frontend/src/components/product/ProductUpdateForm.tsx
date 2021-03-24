@@ -1,21 +1,24 @@
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
 import { CategoryResult } from '../../models/categories';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
 import { ProductDetailResult, ProductSaveOrUpdatePayload } from '../../models/products';
+import { ProductUpdateActionPayload } from '../../store/product/action';
 
 interface ProductUpdateFormProps {
 	product?: ProductDetailResult;
     discountPolicyList?: DiscountPolicyResult[]; 
     categoryList?: CategoryResult[];
-    onUpdateProduct: (id: number, payload: ProductSaveOrUpdatePayload, file?: File) => void;
-	onUpdateCancel: () => void;
+    onUpdateProduct: (payload: ProductUpdateActionPayload) => void;
 }
 
-function ProductUpdateForm({ product, discountPolicyList, categoryList, onUpdateProduct, onUpdateCancel }: ProductUpdateFormProps) {
+function ProductUpdateForm({ product, discountPolicyList, categoryList, onUpdateProduct }: ProductUpdateFormProps) {
 	if(!product || !discountPolicyList || !categoryList) {
         return null;
     }
+
+	const history = useHistory();
 	
 	const { register, handleSubmit, errors } = useForm<ProductSaveOrUpdatePayload>();
 
@@ -52,8 +55,21 @@ function ProductUpdateForm({ product, discountPolicyList, categoryList, onUpdate
 	}, []);
 	
 	const onSubmit = useCallback((payload: ProductSaveOrUpdatePayload) => {
-		onUpdateProduct(product.id, payload, imageFileInfo.imageFile);
+		onUpdateProduct({
+            id: product.id, 
+            payload: payload,
+            file: imageFileInfo.imageFile,
+            onSuccess: product => {
+                alert("변경하였습니다.");
+                history.push(`/admin/product/${product.id}`);
+            }, 
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
 	}, [imageFileInfo, product]);
+
+	const onUpdateCancel = useCallback(() => {
+        history.goBack();
+    }, []);
 
     return (
 		<div className="row mb--60">

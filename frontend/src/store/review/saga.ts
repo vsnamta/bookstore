@@ -2,48 +2,48 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 import reviewApi from '../../apis/reviewApi';
 import { Page } from '../../models/common';
 import { ReviewResult } from '../../models/reviews';
-import { findReviewPage, findReviewPageAsync, removeReview, removeReviewSuccess, saveReview, saveReviewSuccess, updateReview, updateReviewSuccess } from './action';
+import { createFindReviewPageAction, createRemoveReviewAction, createRemoveReviewSuccessAction, createSaveReviewAction, createSaveReviewSuccessAction, createUpdateReviewAction, createUpdateReviewSuccessAction, findReviewPageAsyncActionCreator } from './action';
 import { FIND_REVIEW_PAGE, REMOVE_REVIEW, SAVE_REVIEW, UPDATE_REVIEW } from './actionType';
 
-function* findReviewPageSaga(action: ReturnType<typeof findReviewPage>) {
-    yield put(findReviewPageAsync.request(action.payload));
+function* findReviewPageSaga(action: ReturnType<typeof createFindReviewPageAction>) {
+    yield put(findReviewPageAsyncActionCreator.request(action.payload));
 
     try {
         const reviewPage: Page<ReviewResult> = yield call(reviewApi.findAll, action.payload);
 
-        yield put(findReviewPageAsync.success(reviewPage));
+        yield put(findReviewPageAsyncActionCreator.success(reviewPage));
     } catch (error) {
-        yield put(findReviewPageAsync.failure(error));
+        yield put(findReviewPageAsyncActionCreator.failure(error));
     }
 };
 
-function* updateReviewSaga(action: ReturnType<typeof updateReview>) {
+function* updateReviewSaga(action: ReturnType<typeof createUpdateReviewAction>) {
     try {
         const review: ReviewResult = yield call(reviewApi.update, action.payload.id, action.payload.payload);
 
-        yield put(updateReviewSuccess(review));
+        yield put(createUpdateReviewSuccessAction(review));
         action.payload.onSuccess && action.payload.onSuccess(review);
     } catch (error) {
         action.payload.onFailure && action.payload.onFailure(error);
     }
 };
 
-function* saveReviewSaga(action: ReturnType<typeof saveReview>) {
+function* saveReviewSaga(action: ReturnType<typeof createSaveReviewAction>) {
     try {
         const review: ReviewResult = yield call(reviewApi.save, action.payload.payload);
 
-        yield put(saveReviewSuccess(review));
+        yield put(createSaveReviewSuccessAction(review));
         action.payload.onSuccess && action.payload.onSuccess(review);
     } catch (error) {
         action.payload.onFailure && action.payload.onFailure(error);
     }
 };
 
-function* removeReviewSaga(action: ReturnType<typeof removeReview>) {
+function* removeReviewSaga(action: ReturnType<typeof createRemoveReviewAction>) {
     try {
         yield call(reviewApi.remove, action.payload.id);
 
-        yield put(removeReviewSuccess(action.payload.id));
+        yield put(createRemoveReviewSuccessAction(action.payload.id));
         action.payload.onSuccess && action.payload.onSuccess();
     } catch (error) {
         action.payload.onFailure && action.payload.onFailure(error);

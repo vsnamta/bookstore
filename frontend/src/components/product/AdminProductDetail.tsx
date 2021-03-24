@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router';
 import { ProductDetailResult } from '../../models/products';
 
 interface AdminProductDetailProps {
     product?: ProductDetailResult;
-	onMoveUpdate: () => void;
-	onMoveList: () => void;
+	//onMoveList: () => void;
 }
 
-function AdminProductDetail({ product, onMoveUpdate, onMoveList }: AdminProductDetailProps) {
+function AdminProductDetail({ product }: AdminProductDetailProps) {
 	if(!product) {
         return null;
     }
+
+	const history = useHistory();
+
+    const onMoveUpdate = useCallback(() => {
+        history.push(`/admin/product/update/${product.id}`);
+    }, []);
 
     return (
 		<>
@@ -49,7 +55,7 @@ function AdminProductDetail({ product, onMoveUpdate, onMoveList }: AdminProductD
 						<div className="add-to-cart-row">
 							<div className="add-cart-btn">
 								<a href="javascript:void(0)" className="btn btn-outlined--primary" onClick={onMoveUpdate}>수정</a>
-								<a href="javascript:void(0)" className="btn btn-outlined--primary" onClick={onMoveList}>목록</a>
+								{/* <a href="javascript:void(0)" className="btn btn-outlined--primary" onClick={onMoveList}>목록</a> */}
 							</div>
 						</div>
 					</div>

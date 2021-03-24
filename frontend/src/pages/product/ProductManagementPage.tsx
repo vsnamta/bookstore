@@ -1,23 +1,14 @@
 import qs from 'qs';
 import React, { useCallback, useEffect } from 'react';
-import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useHistory, useLocation } from 'react-router-dom';
-import ErrorDetail from '../../components/general/ErrorDetail';
-import AdminLayout from '../../components/layout/AdminLayout';
-import AdminProductList from '../../components/product/AdminProductList';
-import ProductManagementBar from '../../components/product/ProductManagementBar';
-import { ProductFindPayload } from '../../models/products';
+import { useLocation } from 'react-router-dom';
 import { SearchCriteria } from '../../models/common';
+import { ProductFindPayload } from '../../models/products';
 import { RootState } from '../../store';
-import { findProductPage } from '../../store/product/action';
-import { ProductsState } from '../../store/product/reducer';
-import Pagination from '../../components/general/Pagination';
-import Title from '../../components/general/Title';
-import ProductManagementTemplate from '../../templates/product/ProductManagementTemplate';
+import { createFindProductPageAction } from '../../store/product/action';
+import ProductManagementTemplate from '../../components/product/ProductManagementTemplate';
 
 function ProductManagementPage() {
-    const history = useHistory();
     const location = useLocation();
     const {categoryId, searchCriteria, pageCriteria} = qs.parse(location.search, { 
         ignoreQueryPrefix: true, 
@@ -28,7 +19,7 @@ function ProductManagementPage() {
     const productPageAsync = useSelector((state: RootState) => state.products.productPageAsync);
 
     useEffect(() => {
-        dispatch(findProductPage({
+        dispatch(createFindProductPageAction({
             categoryId: categoryId? Number.parseInt(categoryId as string): undefined,
             searchCriteria: searchCriteria
                 ? {
@@ -44,14 +35,14 @@ function ProductManagementPage() {
     }, []);
 
     const onUpdateSearchCriteria = useCallback((searchCriteria: SearchCriteria) => {
-        dispatch(findProductPage({
+        dispatch(createFindProductPageAction({
             searchCriteria: searchCriteria,
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(findProductPage({
+        dispatch(createFindProductPageAction({
             ...productPageAsync.payload as ProductFindPayload,
             pageCriteria: {
                 ...(productPageAsync.payload as ProductFindPayload).pageCriteria, 
@@ -59,35 +50,13 @@ function ProductManagementPage() {
             }
         }));
     }, [productPageAsync.payload]);
-
-    const onMoveSave = useCallback(() => {
-        history.push("/admin/product/save");
-    }, []);  
     
     return (
         <ProductManagementTemplate 
             productPageAsync={productPageAsync}
             onUpdateSearchCriteria={onUpdateSearchCriteria}
             onPageChange={onPageChange}
-            onMoveSave={onMoveSave}
         />
-        // <AdminLayout>
-        //     <Title content={"상품 관리"} />
-        //     <ProductManagementBar
-        //         searchCriteria={(productPageAsync.payload as ProductFindPayload).searchCriteria}
-        //         onUpdateSearchCriteria={onUpdateSearchCriteria}  
-        //         onMoveSave={onMoveSave}
-        //     />
-        //     <AdminProductList 
-        //         productList={productPageAsync.result?.list} 
-        //     />
-        //     <Pagination
-        //         page={productPageAsync.payload?.pageCriteria.page}  
-        //         totalCount={productPageAsync.result?.totalCount}
-        //         onPageChange={onPageChange}
-        //     />
-        //     {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
-        // </AdminLayout>
     )
 };
 

@@ -4,11 +4,13 @@ import { DiscountPolicyResult } from '../../models/discountPolicies';
 import { DiscountPoliciesAction } from './action';
 import { FIND_DISCOUNT_POLICY, FIND_DISCOUNT_POLICY_LIST_FAILURE, FIND_DISCOUNT_POLICY_LIST_REQUEST, FIND_DISCOUNT_POLICY_LIST_SUCCESS, SAVE_DISCOUNT_POLICY_SUCCESS, UPDATE_DISCOUNT_POLICY_SUCCESS } from './actionType';
 
+export interface DiscountPolicyListAsync {
+    result?: DiscountPolicyResult[];
+    error?: ApiError;
+}
+
 export interface DiscountPoliciesState {
-    discountPolicyListAsync: {
-        result?: DiscountPolicyResult[];
-        error?: ApiError;
-    },
+    discountPolicyListAsync: DiscountPolicyListAsync,
     discountPolicy?: DiscountPolicyResult;
 }
 

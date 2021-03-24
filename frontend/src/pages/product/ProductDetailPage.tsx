@@ -1,28 +1,14 @@
 import React, { useCallback, useEffect } from 'react';
-import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
-import ErrorDetail from '../../components/general/ErrorDetail';
-import Pagination from '../../components/general/Pagination';
-import Title from '../../components/general/Title';
-import Layout from '../../components/layout/Layout';
-import ProductDetail from '../../components/product/ProductDetail';
-import ReviewList from '../../components/reivew/ReviewList';
-import ReviewManagementBar from '../../components/reivew/ReviewManagementBar';
-import ReviewSaveModal from '../../components/reivew/ReviewSaveModal';
-import useModal from '../../hooks/useModal';
-import { CartSavePayload } from '../../models/carts';
+import { useParams } from 'react-router-dom';
 import { FindPayload } from '../../models/common';
-import { OrderingProduct } from '../../models/orders';
-import { ReviewSavePayload } from '../../models/reviews';
 import { RootState } from '../../store';
-import { saveCart } from '../../store/cart/action';
-import { findProduct } from '../../store/product/action';
-import { findReviewPage, saveReview } from '../../store/review/action';
-import ProductDetailTemplate from '../../templates/product/ProductDetailTemplate';
+import { CartSaveActionPayload, createSaveCartAction } from '../../store/cart/action';
+import { createFindProductAction } from '../../store/product/action';
+import { createFindReviewPageAction, createSaveReviewAction, ReviewSaveActionPayload } from '../../store/review/action';
+import ProductDetailTemplate from '../../components/product/ProductDetailTemplate';
 
 function ProductDetailPage() {
-    const history = useHistory();
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
@@ -31,66 +17,23 @@ function ProductDetailPage() {
     const reviewPageAsync = useSelector((state: RootState) => state.reviews.reviewPageAsync);
 
     useEffect(() => {
-        dispatch(findProduct(Number.parseInt(id)));
-        dispatch(findReviewPage({
+        dispatch(createFindProductAction(Number.parseInt(id)));
+        dispatch(createFindReviewPageAction({
             searchCriteria: { column: "productId", keyword: id },
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
-    const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
-
-    const onSaveCart = useCallback((payload: CartSavePayload) => {
-        if(!loginMember) {
-            alert("로그인이 필요합니다.");
-            history.push("/login");
-            return;
-        }
-
-        dispatch(saveCart({
-            payload: payload,
-            onSuccess: cart => {
-                if(confirm("저장되었습니다. 장바구니로 이동하시겠습니까?")) {
-                    history.push("/cart");
-                }
-            },
-            onFailure: error => alert(`오류발생 = ${error.message}`)
-        }));
+    const saveCart = useCallback((payload: CartSaveActionPayload) => {
+        dispatch(createSaveCartAction(payload));
     }, [loginMember]);
 
-    const onPurchase = useCallback((orderingProductList: OrderingProduct[]) => {
-        if(!loginMember) {
-            alert("로그인이 필요합니다.");
-            history.push("/login");
-            return;
-        }
-
-        history.push("/order/form", { orderingProductList });
-    }, [loginMember]);
-
-    const onOpenSaveModal = useCallback(() => {
-        if(!loginMember) {
-            alert("로그인이 필요합니다.");
-            history.push("/login");
-            return;
-        }
-
-        openSaveModal();
-    }, [loginMember]);
-
-    const onSaveReview = useCallback((payload: ReviewSavePayload) => {
-        dispatch(saveReview({
-            payload: payload,
-            onSuccess: review => {
-                alert("저장되었습니다.");
-                closeSaveModal();
-            },
-            onFailure: error => alert(`오류발생 = ${error.message}`)
-        }));
+    const saveReview = useCallback((payload: ReviewSaveActionPayload) => {
+        dispatch(createSaveReviewAction(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(findReviewPage({
+        dispatch(createFindReviewPageAction({
             ...reviewPageAsync.payload as FindPayload,
             pageCriteria: {
                 ...(reviewPageAsync.payload as FindPayload).pageCriteria, 
@@ -103,39 +46,11 @@ function ProductDetailPage() {
         <ProductDetailTemplate 
             productAsync={productAsync}
             reviewPageAsync={reviewPageAsync}
-            saveModalIsOpen={saveModalIsOpen}
-            onSaveCart={onSaveCart}
-            onPurchase={onPurchase}
-            onSaveReview={onSaveReview}
-            onOpenSaveModal={onOpenSaveModal}
-            closeSaveModal={closeSaveModal}
+            loginMember={loginMember}
+            saveCart={saveCart}
+            saveReview={saveReview}
             onPageChange={onPageChange}
         />
-        // <Layout>
-        //     <ProductDetail 
-        //         product={productAsync.result} 
-        //         onSaveCart={onSaveCart} 
-        //         onPurchase={onPurchase} 
-        //     />
-        //     {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
-        //     <Title content={"리뷰"} />
-        //     <ReviewManagementBar 
-        //         onOpenSaveModal={onOpenSaveModal}
-        //     /> 
-        //     <ReviewList 
-        //         reviewList={reviewPageAsync.result?.list}
-        //     />
-        //     <Pagination
-        //         page={reviewPageAsync.payload?.pageCriteria.page}  
-        //         totalCount={reviewPageAsync.result?.totalCount}
-        //         onPageChange={onPageChange}
-        //     />
-        //     <ReviewSaveModal 
-        //         isOpen={saveModalIsOpen}
-        //         onRequestClose={closeSaveModal}
-        //         onSaveReview={onSaveReview}
-        //     />
-        // </Layout>
     )
 };
 

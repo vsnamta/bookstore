@@ -2,10 +2,11 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { DiscountPolicySaveOrUpdatePayload } from '../../models/discountPolicies';
+import { DiscountPolicySaveActionPayload } from '../../store/discountPolicy/action';
 
 interface DiscountPolicySaveModalProps {
     isOpen: boolean;
-    onSaveDiscountPolicy: (payload: DiscountPolicySaveOrUpdatePayload) => void
+    onSaveDiscountPolicy: (payload: DiscountPolicySaveActionPayload) => void
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 
@@ -13,7 +14,11 @@ function DiscountPolicySaveModal({ isOpen, onSaveDiscountPolicy, onRequestClose 
     const { register, handleSubmit, errors } = useForm<DiscountPolicySaveOrUpdatePayload>();
 
     const onSubmit = useCallback((payload: DiscountPolicySaveOrUpdatePayload) => {
-        onSaveDiscountPolicy(payload);
+        onSaveDiscountPolicy({
+            payload: payload,
+            onSuccess: discountPolicy => alert("저장되었습니다."),
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, []);
 
     return (

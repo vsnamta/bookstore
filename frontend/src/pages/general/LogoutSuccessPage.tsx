@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import memberApi from '../../apis/memberApi';
 import { ApiError } from '../../error/ApiError';
-import { setMyData } from '../../store/member/action';
+import { createSetMyDataAction } from '../../store/member/action';
 
 function LogoutSuccessPage() {
     const history = useHistory();
@@ -14,7 +14,7 @@ function LogoutSuccessPage() {
             .then(loginMember => {
                 if(loginMember === "") {
                     localStorage.removeItem("loginMember");
-                    dispatch(setMyData(undefined));
+                    dispatch(createSetMyDataAction(undefined));
                 }
             })
             .catch((error: ApiError) => console.log(error.message))

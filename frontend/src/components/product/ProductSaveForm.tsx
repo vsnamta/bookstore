@@ -1,21 +1,24 @@
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
 import { CategoryResult } from '../../models/categories';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
 import { ProductSaveOrUpdatePayload } from '../../models/products';
+import { ProductSaveActionPayload } from '../../store/product/action';
 
 interface ProductSaveFormProps {
     discountPolicyList?: DiscountPolicyResult[]; 
     categoryList?: CategoryResult[];
-    onSaveProduct: (payload: ProductSaveOrUpdatePayload, file: File) => void;
-	onSaveCancel: () => void;
+    onSaveProduct: (payload: ProductSaveActionPayload) => void;
 }
 
-function ProductSaveForm({ discountPolicyList, categoryList, onSaveProduct, onSaveCancel }: ProductSaveFormProps) {
+function ProductSaveForm({ discountPolicyList, categoryList, onSaveProduct }: ProductSaveFormProps) {
 	if(!discountPolicyList || !categoryList) {
         return null;
     }	
 	
+	const history = useHistory();
+
 	const { register, handleSubmit, errors } = useForm<ProductSaveOrUpdatePayload>();
 
 	const [subCategoryList, setSubCategoryList] = useState<CategoryResult[]>(
@@ -53,8 +56,21 @@ function ProductSaveForm({ discountPolicyList, categoryList, onSaveProduct, onSa
 	}, [imageFileInfo]);
 
 	const onSubmit = useCallback((payload: ProductSaveOrUpdatePayload) => {
-		onSaveProduct(payload, imageFileInfo.imageFile as File);
+		onSaveProduct({
+            payload: payload,
+            file: imageFileInfo.imageFile as File,
+            onSuccess: product => {
+                alert("저장하였습니다.");
+                history.push(`/admin/product/${product.id}`);
+            }, 
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
+
 	}, [imageFileInfo]);
+
+    const onSaveCancel = useCallback(() => {
+        history.goBack();
+    }, []);
 
     return (
 		<div className="row mb--60">

@@ -5,17 +5,21 @@ import { ProductDetailResult, ProductFindPayload, ProductResult } from '../../mo
 import { ProductsAction } from './action';
 import { FIND_PRODUCT_FAILURE, FIND_PRODUCT_PAGE_FAILURE, FIND_PRODUCT_PAGE_REQUEST, FIND_PRODUCT_PAGE_SUCCESS, FIND_PRODUCT_REQUEST, FIND_PRODUCT_SUCCESS, SAVE_PRODUCT_SUCCESS, UPDATE_PRODUCT_SUCCESS } from './actionType';
 
+export interface ProductPageAsync {
+    payload?: ProductFindPayload;
+    result?: Page<ProductResult>;
+    error?: ApiError; 
+}
+
+export interface ProductAsync {
+    payload?: number;
+    result?: ProductDetailResult;
+    error?: ApiError;
+}
+
 export interface ProductsState {
-    productPageAsync: {
-        payload?: ProductFindPayload;
-        result?: Page<ProductResult>;
-        error?: ApiError; 
-    };
-    productAsync: {
-        payload?: number;
-        result?: ProductDetailResult;
-        error?: ApiError;
-    };
+    productPageAsync: ProductPageAsync;
+    productAsync: ProductAsync;
 }
 
 const initialState: ProductsState = {

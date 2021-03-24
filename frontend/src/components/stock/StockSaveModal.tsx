@@ -2,10 +2,11 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { StockSavePayload } from '../../models/stocks';
+import { StockSaveActionPayload } from '../../store/stock/action';
 
 interface StockSaveModalProps {
     isOpen: boolean;
-    onSaveStock: (payload: StockSavePayload) => void;
+    onSaveStock: (payload: StockSaveActionPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 
@@ -13,7 +14,11 @@ function StockSaveModal({ isOpen, onSaveStock, onRequestClose }: StockSaveModalP
     const { register, handleSubmit, errors } = useForm<StockSavePayload>();
 
     const onSubmit = useCallback((payload: StockSavePayload) => {
-        onSaveStock(payload);
+        onSaveStock({
+            payload: payload,
+            onSuccess: stock => alert("저장되었습니다."),
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, [onSaveStock]);
 
     return (

@@ -1,7 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
 import { MemberDetailResult } from '../../models/members';
 import { OrderingProduct, OrderSavePayload } from '../../models/orders';
+import { OrderSaveActionPayload } from '../../store/order/action';
 
 const calcTotalPrice = (orderingProductList: OrderingProduct[]) : number => {
     return orderingProductList
@@ -12,13 +14,15 @@ const calcTotalPrice = (orderingProductList: OrderingProduct[]) : number => {
 interface OrderFormProps {
     member?: MemberDetailResult;
     orderingProductList: OrderingProduct[];
-    onSaveOrder: (payload: OrderSavePayload) => void;
+    onSaveOrder: (payload: OrderSaveActionPayload) => void;
 }
 
 function OrderForm({ member, orderingProductList, onSaveOrder }: OrderFormProps) {
     if(!member) {
         return null;
     }
+
+    const history = useHistory();
     
     const { register, handleSubmit, errors } = useForm<OrderSavePayload>();
 
@@ -67,7 +71,11 @@ function OrderForm({ member, orderingProductList, onSaveOrder }: OrderFormProps)
             productId: orderingProduct.productId, 
             quantity: orderingProduct.quantity}));
 
-        onSaveOrder(orderSavePayload);
+        onSaveOrder({
+            payload: orderSavePayload,
+            onSuccess: order => history.push(`/order/${order.id}`),
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, [orderingProductList]);
 
     return (

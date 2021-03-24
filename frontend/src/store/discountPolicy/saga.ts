@@ -1,37 +1,37 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 import discountPolicyApi from '../../apis/discountPolicyApi';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
-import { findDiscountPolicyList, findDiscountPolicyListAsync, saveDiscountPolicy, saveDiscountPolicySuccess, updateDiscountPolicy, updateDiscountPolicySuccess } from './action';
+import { createFindDiscountPolicyListAction, createSaveDiscountPolicyAction, createSaveDiscountPolicySuccessAction, createUpdateDiscountPolicyAction, createUpdateDiscountPolicySuccessAction, findDiscountPolicyListAsyncActionCreator } from './action';
 import { FIND_DISCOUNT_POLICY_LIST, SAVE_DISCOUNT_POLICY, UPDATE_DISCOUNT_POLICY } from './actionType';
 
-function* findDiscountPolicyListSaga(action: ReturnType<typeof findDiscountPolicyList>) {
-    yield put(findDiscountPolicyListAsync.request());
+function* findDiscountPolicyListSaga(action: ReturnType<typeof createFindDiscountPolicyListAction>) {
+    yield put(findDiscountPolicyListAsyncActionCreator.request());
 
     try {
         const discountPolicyList: DiscountPolicyResult[] = yield call(discountPolicyApi.findAll);
 
-        yield put(findDiscountPolicyListAsync.success(discountPolicyList));
+        yield put(findDiscountPolicyListAsyncActionCreator.success(discountPolicyList));
     } catch (error) {
-        yield put(findDiscountPolicyListAsync.failure(error));
+        yield put(findDiscountPolicyListAsyncActionCreator.failure(error));
     }
 };
 
-function* updateDiscountPolicySaga(action: ReturnType<typeof updateDiscountPolicy>) {
+function* updateDiscountPolicySaga(action: ReturnType<typeof createUpdateDiscountPolicyAction>) {
     try {
         const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.update, action.payload.id, action.payload.payload);
 
-        yield put(updateDiscountPolicySuccess(discountPolicy));
+        yield put(createUpdateDiscountPolicySuccessAction(discountPolicy));
         action.payload.onSuccess && action.payload.onSuccess(discountPolicy);
     } catch (error) {
         action.payload.onFailure && action.payload.onFailure(error);
     }
 };
 
-function* saveDiscountPolicySaga(action: ReturnType<typeof saveDiscountPolicy>) {
+function* saveDiscountPolicySaga(action: ReturnType<typeof createSaveDiscountPolicyAction>) {
     try {
         const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.save, action.payload.payload);
 
-        yield put(saveDiscountPolicySuccess(discountPolicy));
+        yield put(createSaveDiscountPolicySuccessAction(discountPolicy));
         action.payload.onSuccess && action.payload.onSuccess(discountPolicy);
     } catch (error) {
         action.payload.onFailure && action.payload.onFailure(error);

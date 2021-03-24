@@ -5,12 +5,14 @@ import { ReviewResult } from '../../models/reviews';
 import { ReviewsAction } from './action';
 import { FIND_REVIEW, FIND_REVIEW_PAGE_FAILURE, FIND_REVIEW_PAGE_REQUEST, FIND_REVIEW_PAGE_SUCCESS, REMOVE_REVIEW_SUCCESS, SAVE_REVIEW_SUCCESS, UPDATE_REVIEW_SUCCESS } from './actionType';
 
+export interface ReviewPageAsync {
+    payload?: FindPayload;
+    result?: Page<ReviewResult>;
+    error?: ApiError; 
+}
+
 export interface ReviewsState {
-    reviewPageAsync: {
-        payload?: FindPayload;
-        result?: Page<ReviewResult>;
-        error?: ApiError; 
-    };
+    reviewPageAsync: ReviewPageAsync;
     review?: ReviewResult;
 }
 

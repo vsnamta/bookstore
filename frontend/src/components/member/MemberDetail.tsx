@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { MemberDetailResult, MemberUpdatePayload } from '../../models/members';
+import { MemberUpdateActionPayload } from '../../store/member/action';
 
 interface MemberDetailProps {
     member?: MemberDetailResult;
-    onUpdateMember: (id: number, payload: MemberUpdatePayload) => void;
+    onUpdateMember: (payload: MemberUpdateActionPayload) => void;
 }
 
 function MemberDetail({ member, onUpdateMember }: MemberDetailProps) {    
@@ -15,7 +16,12 @@ function MemberDetail({ member, onUpdateMember }: MemberDetailProps) {
     const { register, handleSubmit, errors } = useForm<MemberUpdatePayload>();
 
     const onSubmit = useCallback((payload: MemberUpdatePayload) => {
-        onUpdateMember(member.id, payload);
+        onUpdateMember({
+            id: member.id,
+            payload: payload,
+            onSuccess: member => alert("변경되었습니다."),
+            onFailure: error => alert(`오류발생 = ${error.message}`)
+        });
     }, []);
 
     return (

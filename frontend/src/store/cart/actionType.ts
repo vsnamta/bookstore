@@ -13,4 +13,5 @@ export const REMOVE_CART = 'cart/REMOVE_CART';
 export const REMOVE_CART_SUCCESS = 'cart/REMOVE_CART_SUCCESS';
 
 export const CHECK_ALL_CART = 'cart/CHECK_ALL_CART';
+
 export const CHECK_CART = 'cart/CHECK_CART';

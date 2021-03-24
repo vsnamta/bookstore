@@ -5,12 +5,14 @@ import { PointHistoryFindPayload, PointHistoryResult } from '../../models/pointH
 import { PointHistoriesAction } from './action';
 import { FIND_POINT_HISTORY_PAGE_FAILURE, FIND_POINT_HISTORY_PAGE_REQUEST, FIND_POINT_HISTORY_PAGE_SUCCESS } from './actionType';
 
+export interface PointHistoryPageAsync {
+    payload?: PointHistoryFindPayload;
+    result?: Page<PointHistoryResult>;
+    error?: ApiError; 
+}
+
 export interface PointHistoriesState {
-    pointHistoryPageAsync: {
-        payload?: PointHistoryFindPayload;
-        result?: Page<PointHistoryResult>;
-        error?: ApiError; 
-    };
+    pointHistoryPageAsync: PointHistoryPageAsync;
 }
 
 const initialState: PointHistoriesState = {

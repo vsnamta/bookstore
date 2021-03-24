@@ -4,23 +4,27 @@ import { OrderingProduct } from '../../models/orders';
 import { ProductDetailResult } from '../../models/products';
 import { faChevronUp, faChevronDown, faStar } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { LoginMember } from '../../models/members';
+import { CartSaveActionPayload } from '../../store/cart/action';
 
 interface ProductDetailProps {
     product?: ProductDetailResult;
-    onSaveCart: (payload: CartSavePayload) => void;
-    onPurchase: (orderingProductList: OrderingProduct[]) => void;
+	loginMember?: LoginMember;
+    onSaveCart: (payload: CartSaveActionPayload) => void;
 }
 
-function ProductDetail({ product, onSaveCart, onPurchase }: ProductDetailProps) {
+function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps) {
 	if(!product) {
         return null;
     }
+
+	const history = useHistory();
 	
     const [quantity, setQuantity] = useState<number>(1);
 
     const plusQuantity = useCallback(() => {
-        if(quantity > product.stockQuantity) {
+        if(quantity >= product.stockQuantity) {
             alert(`현재 재고는 ${product.stockQuantity} 개 입니다`);
             return;
         }
@@ -38,24 +42,45 @@ function ProductDetail({ product, onSaveCart, onPurchase }: ProductDetailProps) 
 	}, [quantity]);
 	
 	const onClickCartSaveBtn = useCallback(() => {
+        if(!loginMember) {
+            alert("로그인이 필요합니다.");
+            history.push("/login");
+            return;
+        }
+
         onSaveCart({
-            productId: product.id,
-            quantity: quantity
+            payload: { productId: product.id, quantity: quantity },
+            onSuccess: cart => {
+                if(confirm("저장되었습니다. 장바구니로 이동하시겠습니까?")) {
+                    history.push("/cart");
+                }
+            },
+            onFailure: error => alert(`오류발생 = ${error.message}`)
         });
-    }, [onSaveCart, product, quantity]);
+
+    }, [loginMember, product, quantity, onSaveCart]);
 
     const onClickPurchaseBtn = useCallback(() => {
-        onPurchase([{
-            cartId: undefined,
-            productId: product.id,
-            productName: product.name,
-            imageFileName: product.imageFileName,
-            regularPrice: product.regularPrice,
-            discountPercent: product.discountPercent,
-            depositPercent: product.depositPercent,
-            quantity: quantity
-        }]);
-    }, [onPurchase, product, quantity]);
+        if(!loginMember) {
+            alert("로그인이 필요합니다.");
+            history.push("/login");
+            return;
+        }
+
+        history.push(
+			"/order/form",
+			[{
+				cartId: undefined,
+				productId: product.id,
+				productName: product.name,
+				imageFileName: product.imageFileName,
+				regularPrice: product.regularPrice,
+				discountPercent: product.discountPercent,
+				depositPercent: product.depositPercent,
+				quantity: quantity
+			}]	
+		);
+    }, [loginMember, product, quantity]);
     
     return (
 		<>

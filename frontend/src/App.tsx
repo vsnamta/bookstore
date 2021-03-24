@@ -1,8 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
-import RestrictRoute from './components/general/RestrictRoute';
-import { LoginMember } from './models/members';
+import { Switch } from 'react-router-dom';
+import RestrictRoute from './components/common/RestrictRoute';
 import CartManagementPage from './pages/cart/CartManagementPage';
 import CategoryManagementPage from './pages/category/CategoryManagementPage';
 import DiscountPolicyManagementPage from './pages/discountPolicy/DiscountPolicyManagementPage';

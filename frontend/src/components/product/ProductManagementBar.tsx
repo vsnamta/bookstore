@@ -1,21 +1,27 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useState } from 'react';
+import { useHistory } from 'react-router';
 import useSearchForm from '../../hooks/useSearchForm';
 import { SearchCriteria } from '../../models/common';
 
 interface ProductManagementBarProps {
     searchCriteria?: SearchCriteria;
     onUpdateSearchCriteria: (searchCriteria: SearchCriteria) => void;
-    onMoveSave: () => void;
 }
 
-function ProductManagementBar({ searchCriteria, onUpdateSearchCriteria, onMoveSave }: ProductManagementBarProps) {
+function ProductManagementBar({ searchCriteria, onUpdateSearchCriteria }: ProductManagementBarProps) {
+    const history = useHistory();
+    
     const [localSearchCriteria, useSearchFormMethods] = useSearchForm(
         { column: "name", keyword: "" }, onUpdateSearchCriteria
     );
 
     const { onChangeSearchColumn, onChangeSearchKeyword, onClickSearchBtn, onKeyPress } = useSearchFormMethods;
+
+    const onMoveSave = useCallback(() => {
+        history.push("/admin/product/save");
+    }, []);  
 
     return (
         <div className="header-bottom pb--10">

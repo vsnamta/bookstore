@@ -2,15 +2,10 @@ import qs from 'qs';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import ErrorDetail from '../../components/general/ErrorDetail';
-import Pagination from '../../components/general/Pagination';
-import Layout from '../../components/layout/Layout';
-import ProductList from '../../components/product/ProductList';
-import ProductListFilterBar from '../../components/product/ProductListFilterBar';
 import { ProductFindPayload } from '../../models/products';
 import { RootState } from '../../store';
-import { findProductPage } from '../../store/product/action';
-import ProductListTemplate from '../../templates/product/ProductListTemplate';
+import { createFindProductPageAction } from '../../store/product/action';
+import ProductListTemplate from '../../components/product/ProductListTemplate';
 
 function ProductListPage() {  
     const location = useLocation();
@@ -23,7 +18,7 @@ function ProductListPage() {
     const productPageAsync = useSelector((state: RootState) => state.products.productPageAsync);
 
     useEffect(() => {
-        dispatch(findProductPage({
+        dispatch(createFindProductPageAction({
             categoryId: categoryId? Number.parseInt(categoryId as string): undefined,
             searchCriteria: searchCriteria
                 ? {
@@ -39,7 +34,7 @@ function ProductListPage() {
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(findProductPage({
+        dispatch(createFindProductPageAction({
             ...productPageAsync.payload as ProductFindPayload,
             pageCriteria: {
                 ...(productPageAsync.payload as ProductFindPayload).pageCriteria, 
@@ -49,7 +44,7 @@ function ProductListPage() {
     }, [productPageAsync.payload]);
 
     const onSortChange = useCallback((sortCriteria: { sortColumn: string, sortDirection: string }) => {
-        dispatch(findProductPage({
+        dispatch(createFindProductPageAction({
             ...productPageAsync.payload as ProductFindPayload,
             pageCriteria: {
                 ...(productPageAsync.payload as ProductFindPayload).pageCriteria, 
@@ -65,16 +60,6 @@ function ProductListPage() {
             onPageChange={onPageChange}
             onSortChange={onSortChange}
         />
-        // <Layout>      
-        //     <ProductListFilterBar totalCount={productPageAsync.result?.totalCount} onSortChange={onSortChange} />
-        //     <ProductList productList={productPageAsync.result?.list} />
-        //     <Pagination
-        //         page={productPageAsync.payload?.pageCriteria.page}  
-        //         totalCount={productPageAsync.result?.totalCount}
-        //         onPageChange={onPageChange}
-        //     />
-        //     {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
-        // </Layout>
     )
 };
 

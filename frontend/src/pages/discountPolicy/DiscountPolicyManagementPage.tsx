@@ -1,93 +1,37 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router';
-import DiscountPolicyList from '../../components/discountPolicy/DiscountPolicyList';
-import DiscountPolicyManagementBar from '../../components/discountPolicy/DiscountPolicyManagementBar';
-import DiscountPolicySaveModal from '../../components/discountPolicy/DiscountPolicySaveModal';
-import DiscountPolicyUpdateModal from '../../components/discountPolicy/DiscountPolicyUpdateModal';
-import ErrorDetail from '../../components/general/ErrorDetail';
-import Title from '../../components/general/Title';
-import AdminLayout from '../../components/layout/AdminLayout';
-import useModal from '../../hooks/useModal';
-import { DiscountPolicySaveOrUpdatePayload } from '../../models/discountPolicies';
 import { RootState } from '../../store';
-import { findDiscountPolicy, findDiscountPolicyList, saveDiscountPolicy, updateDiscountPolicy } from '../../store/discountPolicy/action';
-import DiscountPolicyManagementTemplate from '../../templates/discountPolicy/DiscountPolicyManagementTemplate';
+import { createFindDiscountPolicyAction, createFindDiscountPolicyListAction, createSaveDiscountPolicyAction, createUpdateDiscountPolicyAction, DiscountPolicySaveActionPayload, DiscountPolicyUpdateActionPayload } from '../../store/discountPolicy/action';
+import DiscountPolicyManagementTemplate from '../../components/discountPolicy/DiscountPolicyManagementTemplate';
 
 function DiscountPolicyManagementPage() {
     const dispatch = useDispatch();
     const { discountPolicyListAsync, discountPolicy } = useSelector((state: RootState) => state.discountPolcies);
 
     useEffect(() => {
-        dispatch(findDiscountPolicyList());
+        dispatch(createFindDiscountPolicyListAction());
     }, []);
 
-    const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
-    const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
-
-    const onSelectDiscountPolicy = useCallback((id: number) => {
-        dispatch(findDiscountPolicy(id));
-        openUpdateModal();
+    const selectDiscountPolicy = useCallback((id: number) => {
+        dispatch(createFindDiscountPolicyAction(id));
     }, []);
 
-    const onSaveDiscountPolicy = useCallback((payload: DiscountPolicySaveOrUpdatePayload) => {
-        dispatch(saveDiscountPolicy({
-            payload: payload,
-            onSuccess: discountPolicy => {
-                alert("저장되었습니다.");
-                closeSaveModal();
-                openUpdateModal();
-            },
-            onFailure: error => alert(`오류발생 = ${error.message}`)
-        }));
+    const saveDiscountPolicy = useCallback((payload: DiscountPolicySaveActionPayload) => {
+        dispatch(createSaveDiscountPolicyAction(payload));
     }, []);
 
-    const onUpdateDiscountPolicy = useCallback((id: number, payload: DiscountPolicySaveOrUpdatePayload) => {
-        dispatch(updateDiscountPolicy({
-            id: id,
-            payload: payload,
-            onSuccess: discountPolicy => {
-                alert("변경되었습니다.");
-            },
-            onFailure: error => alert(`오류발생 = ${error.message}`)
-        }));
+    const updateDiscountPolicy = useCallback((payload: DiscountPolicyUpdateActionPayload) => {
+        dispatch(createUpdateDiscountPolicyAction(payload));
     }, []);
 
     return (
         <DiscountPolicyManagementTemplate 
             discountPolicyListAsync={discountPolicyListAsync}
             discountPolicy={discountPolicy}
-            saveModalIsOpen={saveModalIsOpen}
-            updateModalIsOpen={updateModalIsOpen}
-            onSelectDiscountPolicy={onSelectDiscountPolicy}
-            onUpdateDiscountPolicy={onUpdateDiscountPolicy}
-            onSaveDiscountPolicy={onSaveDiscountPolicy}
-            onOpenSaveModal={openSaveModal}
-            closeSaveModal={closeSaveModal}
-            closeUpdateModal={closeUpdateModal} 
+            selectDiscountPolicy={selectDiscountPolicy}
+            updateDiscountPolicy={updateDiscountPolicy}
+            saveDiscountPolicy={saveDiscountPolicy}
         />
-        // <AdminLayout>
-        //     <Title content={"할인정책 관리"} />
-        //     <DiscountPolicyManagementBar 
-        //         onOpenSaveModal={openSaveModal}
-        //     /> 
-        //     <DiscountPolicyList 
-        //         discountPolicyList={discountPolicyListAsync.result} 
-        //         onSelectDiscountPolicy={onSelectDiscountPolicy}
-        //     />
-        //     {discountPolicyListAsync.error && <ErrorDetail message={discountPolicyListAsync.error.message} />}
-        //     <DiscountPolicySaveModal 
-        //         isOpen={saveModalIsOpen}
-        //         onSaveDiscountPolicy={onSaveDiscountPolicy}
-        //         onRequestClose={closeSaveModal}
-        //     />
-        //     <DiscountPolicyUpdateModal 
-        //         discountPolicy={discountPolicy}
-        //         isOpen={updateModalIsOpen}
-        //         onUpdateDiscountPolicy={onUpdateDiscountPolicy}
-        //         onRequestClose={closeUpdateModal}
-        //     />
-        // </AdminLayout>
     )
 };
 

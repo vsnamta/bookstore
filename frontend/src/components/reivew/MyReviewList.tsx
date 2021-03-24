@@ -3,11 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ReviewResult } from '../../models/reviews';
+import { ReviewRemoveActionPayload } from '../../store/review/action';
 
 interface MyReviewListProps {
     reviewList?: ReviewResult[];
     onSelectReview: (id: number) => void;
-    onRemoveReview: (id: number) => void;
+    onRemoveReview: (payload: ReviewRemoveActionPayload) => void;
 }
 
 function MyReviewList({ reviewList, onSelectReview, onRemoveReview }: MyReviewListProps) {
@@ -21,7 +22,11 @@ function MyReviewList({ reviewList, onSelectReview, onRemoveReview }: MyReviewLi
 
     const onClickRemoveBtn = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if(confirm("삭제하시겠습니까?")) {
-            onRemoveReview(parseInt(event.currentTarget.value));
+            onRemoveReview({
+                id: parseInt(event.currentTarget.value),
+                onSuccess: () => alert("삭제되었습니다."),
+                onFailure: error => alert(`오류발생 = ${error.message}`)
+            });
         }
     }, []);
     

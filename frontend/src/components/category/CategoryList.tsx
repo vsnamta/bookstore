@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { CategoryResult } from '../../models/categories';
+import { CategoryRemoveActionPayload } from '../../store/category/action';
 
 const convertFlatCategoryList = (categoryList: CategoryResult[]) => {
     return categoryList.flatMap(category => [category, ...category.children]);
@@ -8,7 +9,7 @@ const convertFlatCategoryList = (categoryList: CategoryResult[]) => {
 interface CategoryListProps {
     categoryList?: CategoryResult[];
     onSelectCategory: (id: number) => void;
-    onRemoveCategory: (id: number) => void;
+    onRemoveCategory: (payload: CategoryRemoveActionPayload) => void;
 }
 
 function CategoryList({ categoryList, onSelectCategory, onRemoveCategory }: CategoryListProps) {
@@ -24,7 +25,11 @@ function CategoryList({ categoryList, onSelectCategory, onRemoveCategory }: Cate
 
     const onClickRemoveBtn = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if(confirm("삭제하시겠습니까?")) {
-            onRemoveCategory(parseInt(event.currentTarget.value));
+            onRemoveCategory({
+                id: parseInt(event.currentTarget.value),
+                onSuccess: () => alert("삭제되었습니다."),
+                onFailure: error => alert(`오류발생 = ${error.message}`)
+            });
         }
     }, []);
     

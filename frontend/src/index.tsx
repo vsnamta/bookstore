@@ -10,8 +10,8 @@ import createSagaMiddleware from 'redux-saga';
 import App from './App';
 import { LoginMember } from './models/members';
 import rootReducer, { rootSaga } from './store';
-import { findCategoryList } from './store/category/action';
-import { setMyData } from './store/member/action';
+import { createFindCategoryListAction } from './store/category/action';
+import { createSetMyDataAction } from './store/member/action';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -26,10 +26,10 @@ function initalizeStore() {
     const loginMember = localStorage.getItem("loginMember");
 
     if (loginMember !== null) {
-        store.dispatch(setMyData(JSON.parse(loginMember) as LoginMember));
+        store.dispatch(createSetMyDataAction(JSON.parse(loginMember) as LoginMember));
     }
 
-    store.dispatch(findCategoryList());
+    store.dispatch(createFindCategoryListAction());
 }
 
 initalizeStore();    

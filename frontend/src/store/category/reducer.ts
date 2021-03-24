@@ -4,11 +4,13 @@ import { CategoryResult } from '../../models/categories';
 import { CategoriesAction } from './action';
 import { FIND_CATEGORY, FIND_CATEGORY_LIST_FAILURE, FIND_CATEGORY_LIST_REQUEST, FIND_CATEGORY_LIST_SUCCESS, REMOVE_CATEGORY_SUCCESS, SAVE_CATEGORY_SUCCESS, UPDATE_CATEGORY_SUCCESS } from './actionType';
 
+export interface CategoryListAsync {
+    result?: CategoryResult[];
+    error?: ApiError;
+}
+
 export interface CategoriesState {
-    categoryListAsync: {
-        result?: CategoryResult[];
-        error?: ApiError;
-    }
+    categoryListAsync: CategoryListAsync;
     category?: CategoryResult;
 }
 

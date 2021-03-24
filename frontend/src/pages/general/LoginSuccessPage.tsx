@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { LoginMember } from '../../models/members';
 import memberApi from '../../apis/memberApi';
-import { setMyData } from '../../store/member/action';
+import { createSetMyDataAction } from '../../store/member/action';
 import { ApiError } from '../../error/ApiError';
 
 function LoginSuccessPage() {
@@ -15,7 +15,7 @@ function LoginSuccessPage() {
             .then(loginMember => {
                 if(loginMember !== "") {
                     localStorage.setItem("loginMember", JSON.stringify(loginMember as LoginMember));
-                    dispatch(setMyData(loginMember as LoginMember));                   
+                    dispatch(createSetMyDataAction(loginMember as LoginMember));                   
                 }
             })
             .catch((error: ApiError) => console.log(error.message))

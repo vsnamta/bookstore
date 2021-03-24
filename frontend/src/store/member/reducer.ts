@@ -5,18 +5,22 @@ import { LoginMember, MemberDetailResult, MemberResult } from '../../models/memb
 import { MembersAction } from './action';
 import { FIND_MEMBER_FAILURE, FIND_MEMBER_PAGE_FAILURE, FIND_MEMBER_PAGE_REQUEST, FIND_MEMBER_PAGE_SUCCESS, FIND_MEMBER_REQUEST, FIND_MEMBER_SUCCESS, SET_MY_DATA, UPDATE_MEMBER_SUCCESS } from './actionType';
 
+export interface MemberPageAsync {
+    payload?: FindPayload;
+    result?: Page<MemberResult>;
+    error?: ApiError; 
+}
+
+export interface MemberAsync {
+    payload?: number;
+    result?: MemberDetailResult;
+    error?: ApiError;
+}
+
 export interface MembersState {
     loginMember?: LoginMember;
-    memberPageAsync: {
-        payload?: FindPayload;
-        result?: Page<MemberResult>;
-        error?: ApiError; 
-    };
-    memberAsync: {
-        payload?: number;
-        result?: MemberDetailResult;
-        error?: ApiError;
-    };
+    memberPageAsync: MemberPageAsync;
+    memberAsync: MemberAsync;
 }
 
 const initialState: MembersState = {
