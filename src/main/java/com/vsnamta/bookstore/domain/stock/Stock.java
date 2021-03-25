@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import com.vsnamta.bookstore.domain.product.Product;
 
@@ -25,7 +26,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Stock {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "STOCK_SEQ_GENERATOR", sequenceName = "STOCK_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STOCK_SEQ_GENERATOR")
     @Column(name = "STOCK_ID")
     private Long id;
 

@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import com.vsnamta.bookstore.domain.member.Member;
 
@@ -25,7 +26,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class PointHistory {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "POINT_HISTORY_SEQ_GENERATOR", sequenceName = "POINT_HISTORY_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "POINT_HISTORY_SEQ_GENERATOR")
     @Column(name = "POINT_HISTORY_ID")
     private Long id;
 

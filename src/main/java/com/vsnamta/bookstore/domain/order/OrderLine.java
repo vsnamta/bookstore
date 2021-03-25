@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import com.vsnamta.bookstore.domain.product.Product;
 
@@ -21,7 +22,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class OrderLine {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "ORDER_LINE_SEQ_GENERATOR", sequenceName = "ORDER_LINE_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ORDER_LINE_SEQ_GENERATOR")
     @Column(name = "ORDER_LINE_ID")
     private Long id;
 

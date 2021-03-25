@@ -1,5 +1,17 @@
+create sequence cart_seq start with 1 increment by 1;
+create sequence category_seq start with 1 increment by 1;
+create sequence discount_policy_seq start with 1 increment by 1;
+create sequence member_seq start with 1 increment by 1;
+create sequence order_line_seq start with 1 increment by 1;
+create sequence order_seq start with 1 increment by 1;
+create sequence order_status_history_seq start with 1 increment by 1;
+create sequence point_history_seq start with 1 increment by 1;
+create sequence product_seq start with 1 increment by 1;
+create sequence review_seq start with 1 increment by 1;
+create sequence stock_seq start with 1 increment by 1;
+
 create table cart (
-    cart_id bigint not null auto_increment,
+    cart_id bigint not null,
     quantity integer not null,
     member_id bigint,
     product_id bigint,
@@ -7,14 +19,14 @@ create table cart (
 ) engine=InnoDB;
 
 create table category (
-    category_id bigint not null auto_increment,
+    category_id bigint not null,
     name varchar(255),
     parent_id bigint,
     primary key (category_id)
 ) engine=InnoDB;
 
 create table discount_policy (
-    discount_policy_id bigint not null auto_increment,
+    discount_policy_id bigint not null,
     deposit_percent integer not null,
     discount_percent integer not null,
     name varchar(255),
@@ -22,7 +34,7 @@ create table discount_policy (
 ) engine=InnoDB;
 
 create table member (
-    member_id bigint not null auto_increment,
+    member_id bigint not null,
     address1 varchar(255),
     address2 varchar(255),
     zip_code varchar(255),
@@ -36,7 +48,7 @@ create table member (
 ) engine=InnoDB;
 
 create table order_line (
-    order_line_id bigint not null auto_increment,
+    order_line_id bigint not null,
     amounts integer not null,
     deposit_point integer not null,
     price integer not null,
@@ -47,7 +59,7 @@ create table order_line (
 ) engine=InnoDB;
 
 create table orders (
-    order_id bigint not null auto_increment,
+    order_id bigint not null,
     delivery_address1 varchar(255),
     delivery_address2 varchar(255),
     delivery_zip_code varchar(255),
@@ -65,7 +77,7 @@ create table orders (
 ) engine=InnoDB;
 
 create table order_status_history (
-    order_status_history_id bigint not null auto_increment,
+    order_status_history_id bigint not null,
     created_date datetime(6),
     status varchar(255),
     order_id bigint,
@@ -73,7 +85,7 @@ create table order_status_history (
 ) engine=InnoDB;
 
 create table point_history (
-    point_history_id bigint not null auto_increment,
+    point_history_id bigint not null,
     amounts integer not null,
     contents varchar(255),
     created_date datetime(6),
@@ -83,7 +95,7 @@ create table point_history (
 ) engine=InnoDB;
 
 create table product (
-    product_id bigint not null auto_increment,
+    product_id bigint not null,
     author varchar(255),
     author_introduction varchar(255),
     book_introduction varchar(255),
@@ -106,7 +118,7 @@ create table product (
 ) engine=InnoDB;
 
 create table review (
-    review_id bigint not null auto_increment,
+    review_id bigint not null,
     contents varchar(255),
     created_date datetime(6),
     rating integer not null,
@@ -117,7 +129,7 @@ create table review (
 ) engine=InnoDB;
 
 create table stock (
-    stock_id bigint not null auto_increment,
+    stock_id bigint not null,
     contents varchar(255),
     created_date datetime(6),
     quantity integer not null,

@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,7 +21,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class OrderStatusHistory {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "ORDER_STATUS_HISTORY_SEQ_GENERATOR", sequenceName = "ORDER_STATUS_HISTORY_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ORDER_STATUS_HISTORY_SEQ_GENERATOR")
     @Column(name = "ORDER_STATUS_HISTORY_ID")
     private Long id;
 

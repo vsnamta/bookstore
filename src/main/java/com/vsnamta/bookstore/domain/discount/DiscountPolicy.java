@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 import com.vsnamta.bookstore.domain.product.Product;
 
@@ -18,7 +19,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class DiscountPolicy {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "DISCOUNT_POLICY_SEQ_GENERATOR", sequenceName = "DISCOUNT_POLICY_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DISCOUNT_POLICY_SEQ_GENERATOR")
     @Column(name = "DISCOUNT_POLICY_ID")
     private Long id;
 
