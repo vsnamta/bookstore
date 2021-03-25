@@ -81,7 +81,7 @@ public class OrderStatusSettingService {
         return Stock.createStock(
             orderLine.getProduct(), 
             orderLine.getQuantity() * stockStatus.getWeighting(),
-            stockStatus.getName(),
+            stockStatus.getName() + " (주문상품번호 : " + orderLine.getId() + ")",
             stockStatus 
         );
     }
@@ -90,7 +90,7 @@ public class OrderStatusSettingService {
         return PointHistory.createPointHistory(
             order.getMember(), 
             point * pointStatus.getWeighting(), 
-            pointStatus.getName(), 
+            pointStatus.getName() + " (주문번호 : " + order.getId() + ")", 
             pointStatus
         );
     }

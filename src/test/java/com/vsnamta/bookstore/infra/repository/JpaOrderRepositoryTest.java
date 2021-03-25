@@ -59,13 +59,15 @@ public class JpaOrderRepositoryTest {
 
         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
-        Order order = Order.createOrder(
-            member, 
-            Arrays.asList(
-                OrderLine.createOrderLine(product, 1)
-            ), 
-            0, 
-            aDeliveryInfo().build()
+        Order order = orderRepository.save(
+            Order.createOrder(
+                member, 
+                Arrays.asList(
+                    OrderLine.createOrderLine(product, 1)
+                ), 
+                0, 
+                aDeliveryInfo().build()
+            )
         );
         
         order.updateStatusInfo(
@@ -74,8 +76,6 @@ public class JpaOrderRepositoryTest {
                 .updatedDate(LocalDateTime.now().minusDays(8))
                 .build()
         );
-
-        orderRepository.save(order);
 
         // when
         List<Order> orders = orderRepository.findAllWillBeCompleted(aPageRequest().build());
@@ -94,21 +94,21 @@ public class JpaOrderRepositoryTest {
         Product product1 = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
         Product product2 = productRepository.save(aProduct().discountPolicy(discountPolicy).name("리팩토링").build());
 
-        Order order = Order.createOrder(
-            member, 
-            Arrays.asList(
-                OrderLine.createOrderLine(product1, 1),
-                OrderLine.createOrderLine(product2, 1)
-            ), 
-            0, 
-            aDeliveryInfo().build()
+        Order order = orderRepository.save(
+            Order.createOrder(
+                member, 
+                Arrays.asList(
+                    OrderLine.createOrderLine(product1, 1),
+                    OrderLine.createOrderLine(product2, 1)
+                ), 
+                0, 
+                aDeliveryInfo().build()
+            )
         );
         order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
 
-        Long id = orderRepository.save(order).getId();
-
         // when
-        order = orderRepository.findOne(id).get();
+        order = orderRepository.findOne(order.getId()).get();
         
         // then
         assertEquals("홍길동", order.getMember().getName()); 
@@ -124,17 +124,17 @@ public class JpaOrderRepositoryTest {
 
         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
-        Order order = Order.createOrder(
-            member, 
-            Arrays.asList(
-                OrderLine.createOrderLine(product, 1)
-            ), 
-            0, 
-            aDeliveryInfo().build()
+        Order order = orderRepository.save(
+            Order.createOrder(
+                member, 
+                Arrays.asList(
+                    OrderLine.createOrderLine(product, 1)
+                ), 
+                0, 
+                aDeliveryInfo().build()
+            )
         );
         order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
-
-        orderRepository.save(order);
 
         // when
         List<Order> orders = orderRepository.findAll(

@@ -56,9 +56,8 @@ public class OrderService {
         List<OrderLine> orderLines = createOrderLines(orderSavePayload.getOrderProducts());
 
         Order order = Order.createOrder(member, orderLines, orderSavePayload.getUsedPoint(), orderSavePayload.createDeliveryInfo());      
-        orderStatusSettingService.ordered(order);
-        
         orderRepository.save(order);
+        orderStatusSettingService.ordered(order);
 
         return new OrderDetailResult(order);
     }

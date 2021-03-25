@@ -138,17 +138,17 @@ public class OrderApiControllerTest {
                 .build()
         );
 
-        Order order = Order.createOrder(
-            member,
-            Arrays.asList(
-                OrderLine.createOrderLine(product, 1)
-            ), 
-            0, 
-            aDeliveryInfo().build()
+        Order order = orderRepository.save(
+            Order.createOrder(
+                member,
+                Arrays.asList(
+                    OrderLine.createOrderLine(product, 1)
+                ), 
+                0, 
+                aDeliveryInfo().build()
+            )
         );
         orderStatusSettingService.ordered(order);
-
-        Long id = orderRepository.save(order).getId();
 
         OrderUpdatePayload orderUpdatePayload = new OrderUpdatePayload();
         orderUpdatePayload.setStatus(OrderStatus.CANCELED);
@@ -156,7 +156,7 @@ public class OrderApiControllerTest {
         // when
         ResultActions resultActions =
             mockMvc.perform(
-                put("/api/orders/" + id)
+                put("/api/orders/" + order.getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(orderUpdatePayload))
                 .sessionAttr("loginMember", new LoginMember(member)));
@@ -178,23 +178,23 @@ public class OrderApiControllerTest {
         Product product1 = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
         Product product2 = productRepository.save(aProduct().discountPolicy(discountPolicy).name("리팩토링").build());
 
-        Order order = Order.createOrder(
-            member, 
-            Arrays.asList(
-                OrderLine.createOrderLine(product1, 1),
-                OrderLine.createOrderLine(product2, 1)
-            ), 
-            0, 
-            aDeliveryInfo().build()
+        Order order = orderRepository.save(
+            Order.createOrder(
+                member, 
+                Arrays.asList(
+                    OrderLine.createOrderLine(product1, 1),
+                    OrderLine.createOrderLine(product2, 1)
+                ), 
+                0, 
+                aDeliveryInfo().build()
+            )
         );
         order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
-
-        Long id = orderRepository.save(order).getId();
 
         // when
         ResultActions resultActions =
             mockMvc.perform(
-                get("/api/orders/" + id)
+                get("/api/orders/" + order.getId())
                     .sessionAttr("loginMember", new LoginMember(member)));
 
         // then
@@ -213,17 +213,17 @@ public class OrderApiControllerTest {
  
          Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
-        Order order = Order.createOrder(
-            member, 
-            Arrays.asList(
-                OrderLine.createOrderLine(product, 1)
-            ), 
-            0, 
-            aDeliveryInfo().build()
+        Order order = orderRepository.save(
+            Order.createOrder(
+                member, 
+                Arrays.asList(
+                    OrderLine.createOrderLine(product, 1)
+                ), 
+                0, 
+                aDeliveryInfo().build()
+            )
         );
         order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
-
-        orderRepository.save(order).getId();
 
         // when
         ResultActions resultActions =
