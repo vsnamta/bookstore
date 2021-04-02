@@ -74,7 +74,8 @@ function ProductDetailTemplate({
                 totalCount={reviewPageAsync.result?.totalCount}
                 onPageChange={onPageChange}
             />
-            <ReviewSaveModal 
+            <ReviewSaveModal
+                product={productAsync.result} 
                 isOpen={saveModalIsOpen}
                 onRequestClose={closeSaveModal}
                 onSaveReview={onSaveReview}

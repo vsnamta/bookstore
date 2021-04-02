@@ -9,7 +9,7 @@
       "esnext"
     ],
     "jsx": "react",
-    "downlevelIteration": true, 
+    //"downlevelIteration": true, 
     "strict": true,		
     "esModuleInterop": true,
     "skipLibCheck": true,

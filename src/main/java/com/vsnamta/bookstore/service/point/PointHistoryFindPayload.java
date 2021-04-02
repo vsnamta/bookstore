@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 public class PointHistoryFindPayload {
     @NotNull(message = "회원번호를 선택해주세요.")
-    private Long memberId;
+    private String memberId;
 
     @Valid
     private PageCriteria pageCriteria = new PageCriteria();

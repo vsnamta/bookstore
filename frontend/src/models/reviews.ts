@@ -12,7 +12,6 @@ export interface ReviewUpdatePayload {
 export interface ReviewResult {
     id: number;
     memberId: number;
-    memberEmail: string;
     memberName: string;
     productId: number;
     productName: string;

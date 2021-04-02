@@ -5,10 +5,11 @@ import { LoginMember } from '../../models/members';
 import { RootState } from '../../store';
 import { createFindOrderAction, createFindOrderPageAction, createUpdateOrderAction, OrderUpdateActionPayload } from '../../store/order/action';
 import MyOrderTemplate from '../../components/order/MyOrderTemplate';
+import { MyData } from '../../models/auths';
 
 function MyOrderPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
+    const loginMember = useSelector((state: RootState) => state.auths.myData) as MyData;
     const { orderPageAsync, orderAsync } = useSelector((state: RootState) => state.orders);
 
     useEffect(() => {

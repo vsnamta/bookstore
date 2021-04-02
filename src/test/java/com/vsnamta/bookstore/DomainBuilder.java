@@ -49,7 +49,7 @@ public class DomainBuilder {
     public static MemberBuilder aMember() {
         return Member.builder()
             .name("홍길동")
-            .email("test@gmail.com")
+            .password("password")
             .phoneNumber("010-1234-5678")
             .address(anAddress().build())
             .point(0)

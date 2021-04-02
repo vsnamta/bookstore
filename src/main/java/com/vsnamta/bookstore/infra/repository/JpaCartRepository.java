@@ -41,7 +41,7 @@ public class JpaCartRepository implements CartRepository {
     }
 
     @Override
-    public Optional<Cart> findByMemberIdAndProductId(Long memberId, Long productId) {
+    public Optional<Cart> findByMemberIdAndProductId(String memberId, Long productId) {
         JPAQueryFactory query = new JPAQueryFactory(entityManager);
 
         Cart result = 
@@ -67,7 +67,7 @@ public class JpaCartRepository implements CartRepository {
     }
 
     @Override
-    public List<Cart> findAll(Long memberId) {
+    public List<Cart> findAll(String memberId) {
         JPAQueryFactory query = new JPAQueryFactory(entityManager);
 
         List<Cart> results = 

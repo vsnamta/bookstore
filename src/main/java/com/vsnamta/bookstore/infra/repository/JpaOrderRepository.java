@@ -134,8 +134,8 @@ public class JpaOrderRepository implements OrderRepository {
             switch (column) { 
                 case "id":
                     return order.id.eq(Long.valueOf(keyword));
-                case "memberEmail":
-                    return order.member.email.contains(keyword);
+                case "memberId":
+                    return order.member.id.contains(keyword);
                 case "memberName":
                     return order.member.name.contains(keyword);
             }

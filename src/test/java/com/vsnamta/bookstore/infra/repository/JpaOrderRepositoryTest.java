@@ -53,7 +53,7 @@ public class JpaOrderRepositoryTest {
     @Test
     public void 일주일이_지나도록_주문완료_상태인_주문_조회() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 
@@ -87,7 +87,7 @@ public class JpaOrderRepositoryTest {
     @Test
     public void 주문번호로_주문_조회() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 
@@ -118,7 +118,7 @@ public class JpaOrderRepositoryTest {
     @Test
     public void 회원번호로_주문_조회() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 

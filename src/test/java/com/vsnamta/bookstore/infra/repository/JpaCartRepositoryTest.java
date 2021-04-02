@@ -47,7 +47,7 @@ public class JpaCartRepositoryTest {
     @Test
     public void 회원번호와_상품번호로_장바구니_조회() {
         //given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());
 
         cartRepository.save(aCart().member(member).product(product).quantity(1).build());
@@ -64,7 +64,7 @@ public class JpaCartRepositoryTest {
     @Test
     public void 장바구니번호_여러개로_장바구니_조회() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         Product product1 = productRepository.save(aProduct().name("Clean Code").build());
         Cart cart1 = cartRepository.save(aCart().member(member).product(product1).quantity(1).build());
@@ -82,7 +82,7 @@ public class JpaCartRepositoryTest {
     @Test
     public void 회원번호로_장바구니_조회() {
         //given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 

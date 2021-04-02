@@ -1,16 +1,22 @@
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
+import { ProductDetailResult } from '../../models/products';
 import { ReviewSavePayload } from '../../models/reviews';
 import { ReviewSaveActionPayload } from '../../store/review/action';
 
 interface ReviewSaveModalProps {
+    product?: ProductDetailResult;
     isOpen: boolean;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
     onSaveReview: (payload: ReviewSaveActionPayload) => void
 }
 
-function ReviewSaveModal({ isOpen, onRequestClose, onSaveReview }: ReviewSaveModalProps) {
+function ReviewSaveModal({ product, isOpen, onRequestClose, onSaveReview }: ReviewSaveModalProps) {
+    if(!product) {
+        return null;
+    }
+    
     const { register, handleSubmit, errors } = useForm<ReviewSavePayload>();
     
     const onSubmit = useCallback((payload: ReviewSavePayload) => {
@@ -71,9 +77,10 @@ function ReviewSaveModal({ isOpen, onRequestClose, onSaveReview }: ReviewSaveMod
                                         type="hidden" 
                                         name="productId" 
                                         className="form-control"
+                                        defaultValue={product.id}
                                         ref={register({ required: true })} 
                                     />
-                                    {errors.productId && <span>평점을 입력해주세요.</span>}
+                                    {errors.productId && <span>상품을 선택해주세요.</span>}
                                 </div>
                             </div>        
                             <div className="col-lg-6">

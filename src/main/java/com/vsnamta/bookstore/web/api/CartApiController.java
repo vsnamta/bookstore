@@ -3,7 +3,6 @@ package com.vsnamta.bookstore.web.api;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.vsnamta.bookstore.service.cart.CartFindPayload;
@@ -12,7 +11,8 @@ import com.vsnamta.bookstore.service.cart.CartSavePayload;
 import com.vsnamta.bookstore.service.cart.CartService;
 import com.vsnamta.bookstore.service.cart.CartUpdatePayload;
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
-import com.vsnamta.bookstore.service.member.LoginMember;
+import com.vsnamta.bookstore.web.securiry.AuthUser;
+import com.vsnamta.bookstore.web.securiry.CustomUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,36 +39,28 @@ public class CartApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/carts")
-    public CartResult save(@Valid @RequestBody CartSavePayload cartSavePayload, HttpSession httpSession) {
-        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
-
-        cartSavePayload.setMemberId(loginMember.getId());
+    public CartResult save(@Valid @RequestBody CartSavePayload cartSavePayload, @AuthUser CustomUser customUser) {
+        cartSavePayload.setMemberId(customUser.getId());
 
         return cartService.save(cartSavePayload);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/carts/{id}")
-    public CartResult update(@PathVariable Long id, @Valid @RequestBody CartUpdatePayload cartUpdatePayload, HttpSession httpSession) {
-        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
-
-        return cartService.update(loginMember, id, cartUpdatePayload);
+    public CartResult update(@PathVariable Long id, @Valid @RequestBody CartUpdatePayload cartUpdatePayload, @AuthUser CustomUser customUser) {
+        return cartService.update(customUser.getId(), id, cartUpdatePayload);
     }
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/api/carts")
-    public void remove(Long[] ids, HttpSession httpSession) {
-        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
-
-        cartService.remove(loginMember, Arrays.asList(ids));
+    public void remove(Long[] ids, @AuthUser CustomUser customUser) {
+        cartService.remove(customUser.getId(), Arrays.asList(ids));
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/api/carts")
-    public List<CartResult> findAll(@Valid CartFindPayload cartFindPayload, HttpSession httpSession) {
-        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
-
-        if(loginMember.hasUserRole() && !cartFindPayload.getMemberId().equals(loginMember.getId())) {
+    public List<CartResult> findAll(@Valid CartFindPayload cartFindPayload, @AuthUser CustomUser customUser) {
+        if(customUser.hasUserRole() && !cartFindPayload.getMemberId().equals(customUser.getId())) {
             throw new NotEnoughPermissionException("요청 권한이 없습니다.");
         }
 

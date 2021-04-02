@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewResult {
     private Long id;
-    private Long memberId;
-    private String memberEmail;
+    private String memberId;
     private String memberName;
     private Long productId;
     private String productName;
@@ -25,7 +24,6 @@ public class ReviewResult {
     public ReviewResult(Review review) {
         this.id = review.getId();
         this.memberId = review.getMember().getId();
-        this.memberEmail = review.getMember().getEmail();
         this.memberName = review.getMember().getName();
         this.productId = review.getProduct().getId();
         this.productName = review.getProduct().getName();

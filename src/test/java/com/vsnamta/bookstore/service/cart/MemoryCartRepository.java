@@ -15,7 +15,7 @@ public class MemoryCartRepository extends BaseMemoryRepository<Cart> implements 
     }
 
     @Override
-    public Optional<Cart> findByMemberIdAndProductId(Long memberId, Long productId) {
+    public Optional<Cart> findByMemberIdAndProductId(String memberId, Long productId) {
         return getMap().values()
             .stream()
             .filter(cart -> cart.getMember().getId().equals(memberId) && cart.getProduct().getId().equals(productId))
@@ -31,7 +31,7 @@ public class MemoryCartRepository extends BaseMemoryRepository<Cart> implements 
     }
 
     @Override
-    public List<Cart> findAll(Long memberId) {
+    public List<Cart> findAll(String memberId) {
         return null;
     }
 }

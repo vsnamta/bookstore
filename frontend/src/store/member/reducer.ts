@@ -3,7 +3,7 @@ import { ApiError } from '../../error/ApiError';
 import { FindPayload, Page } from '../../models/common';
 import { LoginMember, MemberDetailResult, MemberResult } from '../../models/members';
 import { MembersAction } from './action';
-import { FIND_MEMBER_FAILURE, FIND_MEMBER_PAGE_FAILURE, FIND_MEMBER_PAGE_REQUEST, FIND_MEMBER_PAGE_SUCCESS, FIND_MEMBER_REQUEST, FIND_MEMBER_SUCCESS, SET_MY_DATA, UPDATE_MEMBER_SUCCESS } from './actionType';
+import { FIND_MEMBER_FAILURE, FIND_MEMBER_PAGE_FAILURE, FIND_MEMBER_PAGE_REQUEST, FIND_MEMBER_PAGE_SUCCESS, FIND_MEMBER_REQUEST, FIND_MEMBER_SUCCESS, SAVE_MEMBER_SUCCESS, SET_MY_DATA, UPDATE_MEMBER_SUCCESS } from './actionType';
 
 export interface MemberPageAsync {
     payload?: FindPayload;
@@ -91,6 +91,14 @@ export default createReducer<MembersState, MembersAction>(initialState, {
         memberAsync: {
             ...state.memberAsync,
             result: action.payload
+        }
+    }),
+    [SAVE_MEMBER_SUCCESS]: (state, action) => ({
+        memberPageAsync: initialState.memberPageAsync,
+        memberAsync: {
+            payload: action.payload.id,
+            result: action.payload,
+            error: undefined
         }
     })
 });

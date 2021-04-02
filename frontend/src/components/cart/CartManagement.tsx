@@ -117,17 +117,18 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
         // }
 
         history.push(
-            "/order/form",
-            checkedCartList.map(cart => ({
-                cartId: cart.id,
-                productId: cart.productId,
-                productName: cart.productName,
-                imageFileName: cart.imageFileName,
-                regularPrice: cart.regularPrice,
-                discountPercent: cart.discountPercent,
-                depositPercent: cart.depositPercent,
-                quantity: cart.quantity
-            })) 
+            "/order/form", {
+                "orderingProductList": checkedCartList.map(cart => ({
+                    cartId: cart.id,
+                    productId: cart.productId,
+                    productName: cart.productName,
+                    imageFileName: cart.imageFileName,
+                    regularPrice: cart.regularPrice,
+                    discountPercent: cart.discountPercent,
+                    depositPercent: cart.depositPercent,
+                    quantity: cart.quantity
+                })) 
+            }
         );
     }, [cartList]);
 

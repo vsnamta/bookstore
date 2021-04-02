@@ -1,5 +1,7 @@
 import { all } from "@redux-saga/core/effects";
 import { combineReducers } from "redux";
+import auths from "./auth/reducer";
+import authsSaga from "./auth/saga";
 import carts from "./cart/reducer";
 import cartsSaga from "./cart/saga";
 import categories from "./category/reducer";
@@ -20,6 +22,7 @@ import stocks from "./stock/reducer";
 import stocksSaga from "./stock/saga";
 
 const rootReducer = combineReducers({
+    auths,
     carts,
     categories,
     discountPolcies,
@@ -35,6 +38,7 @@ export type RootState = ReturnType<typeof rootReducer>;
 
 export function* rootSaga() {
     yield all([
+        authsSaga(),
         cartsSaga(),
         categoriesSaga(), 
         discountPoliciesSaga(),

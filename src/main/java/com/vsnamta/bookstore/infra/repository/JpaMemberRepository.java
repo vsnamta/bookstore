@@ -30,27 +30,14 @@ public class JpaMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findById(Long id) {
+    public Optional<Member> findById(String id) {
         Member result = entityManager.find(Member.class, id);
         
         return Optional.ofNullable(result);
     }
 
     @Override
-    public Optional<Member> findByEmail(String email) {
-        JPAQueryFactory query = new JPAQueryFactory(entityManager);
-
-        Member result = 
-            query.select(member)
-                .from(member)
-                .where(member.email.eq(email))
-                .fetchOne();
-
-        return Optional.ofNullable(result);
-    }
-
-    @Override
-    public Optional<Member> findOne(Long id) {
+    public Optional<Member> findOne(String id) {
         JPAQueryFactory query = new JPAQueryFactory(entityManager);
 
         Member result = 
@@ -98,8 +85,8 @@ public class JpaMemberRepository implements MemberRepository {
 
         if (column != null && keyword != null) {
             switch (column) {
-                case "email":
-                    return member.email.contains(keyword);
+                case "id":
+                    return member.id.contains(keyword);
                 case "name":
                     return member.name.contains(keyword);
             }

@@ -10,7 +10,7 @@ public interface PointHistoryRepository {
 
     Optional<PointHistory> findById(Long id);
 
-    List<PointHistory> findAll(Long memberId, PageRequest pageRequest);
+    List<PointHistory> findAll(String memberId, PageRequest pageRequest);
 
-    long findTotalCount(Long memberId);
+    long findTotalCount(String memberId);
 }

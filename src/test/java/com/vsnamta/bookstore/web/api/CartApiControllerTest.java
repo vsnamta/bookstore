@@ -22,7 +22,6 @@ import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.service.cart.CartSavePayload;
 import com.vsnamta.bookstore.service.cart.CartUpdatePayload;
-import com.vsnamta.bookstore.service.member.LoginMember;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +72,7 @@ public class CartApiControllerTest {
     @Test
     public void 장바구니_저장() throws Exception {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
@@ -81,13 +80,13 @@ public class CartApiControllerTest {
         cartSavePayload.setProductId(product.getId());
         cartSavePayload.setQuantity(1);
 
-        // when and then
+        // when
         ResultActions resultActions =
             mockMvc.perform(
                 post("/api/carts")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(objectMapper.writeValueAsString(cartSavePayload))
-                    .sessionAttr("loginMember", new LoginMember(member)));
+                    .content(objectMapper.writeValueAsString(cartSavePayload)));
+                    //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions
@@ -99,7 +98,7 @@ public class CartApiControllerTest {
     @Test
     public void 장바구니_수량_변경() throws Exception {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
@@ -113,8 +112,8 @@ public class CartApiControllerTest {
             mockMvc.perform(
                 put("/api/carts/" + cart.getId())
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(objectMapper.writeValueAsString(cartUpdatePayload))
-                    .sessionAttr("loginMember", new LoginMember(member)));
+                    .content(objectMapper.writeValueAsString(cartUpdatePayload)));
+                    //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions
@@ -126,7 +125,7 @@ public class CartApiControllerTest {
     @Test
     public void 장바구니_삭제() throws Exception {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         Product product1 = productRepository.save(aProduct().name("Clean Code").build());
         Cart cart1 = cartRepository.save(aCart().member(member).product(product1).quantity(1).build());
@@ -139,8 +138,8 @@ public class CartApiControllerTest {
             mockMvc.perform(
                 delete("/api/carts")
                     .param("ids", String.valueOf(cart1.getId()))
-                    .param("ids", String.valueOf(cart2.getId()))
-                    .sessionAttr("loginMember", new LoginMember(member)));
+                    .param("ids", String.valueOf(cart2.getId())));
+                    //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions
@@ -152,7 +151,7 @@ public class CartApiControllerTest {
     @Test
     public void 회원번호로_장바구니_조회() throws Exception {
          // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 
@@ -166,8 +165,8 @@ public class CartApiControllerTest {
         ResultActions resultActions =
             mockMvc.perform(
                 get("/api/carts")
-                    .param("memberId", String.valueOf(member.getId()))
-                    .sessionAttr("loginMember", new LoginMember(member)));
+                    .param("memberId", String.valueOf(member.getId())));
+                    //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions

@@ -47,7 +47,7 @@ export default createReducer<CartsState, CartsAction>(initialState, {
             cartListAsync: {
                 result: cartList.map(cart => 
                     cart.id === updatedCart.id 
-                        ? updatedCart 
+                        ? {...updatedCart, checked: true} 
                         : cart
                 ),
                 error: undefined
@@ -61,7 +61,7 @@ export default createReducer<CartsState, CartsAction>(initialState, {
         return {
             cartListAsync: {
                 result: cartList 
-                    ? cartList.concat(savedCart)
+                    ? cartList.concat({...savedCart, checked: true})
                     : undefined,
                 error: undefined
             }

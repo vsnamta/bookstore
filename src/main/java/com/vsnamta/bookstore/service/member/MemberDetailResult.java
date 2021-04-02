@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberDetailResult {
-    private Long id;
-    private String email;
+    private String id;
     private String name;
     private String phoneNumber;
     private String zipCode;
@@ -24,7 +23,6 @@ public class MemberDetailResult {
 
     public MemberDetailResult(Member member) {
         this.id = member.getId();
-        this.email = member.getEmail();
         this.name = member.getName();
         this.phoneNumber = member.getPhoneNumber();
         this.zipCode = member.getAddress().getZipCode();

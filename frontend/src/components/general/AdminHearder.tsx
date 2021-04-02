@@ -1,10 +1,17 @@
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Logo from '../../assets/image/logo.png';
+import { LogoutActionPayload } from '../../store/auth/action';
 
-function AdminHeader() {
+interface AdminHeaderProps {
+    onLogout: (payload: LogoutActionPayload) => void;
+}
+
+function AdminHeader({ onLogout }: AdminHeaderProps) {
+    const history = useHistory();
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false); 
 
     const onClickOpenMobileMenuBtn = useCallback(() => {
@@ -13,6 +20,13 @@ function AdminHeader() {
 
     const onClickCloseMobileMenuBtn = useCallback(() => {
         setIsMobileMenuOpen(false);
+    }, []);
+
+    const onClickLogoutBtn = useCallback(() => {
+        onLogout({
+            onSuccess: () => history.push("/"),
+            onFailure: error => alert(`오류 발생 : ${error}`)
+        });
     }, []);
     
     return (
@@ -26,7 +40,7 @@ function AdminHeader() {
                         <div className="col-lg-8 flex-lg-right">
                             <ul className="header-top-list">
                                 <li>관리자 님</li>                         
-                                <li><a href="/logout">로그아웃</a></li>
+                                <li><a href="javascript:void(0)" onClick={onClickLogoutBtn}>로그아웃</a></li>
                                 <li><Link to="/">일반페이지로</Link></li>
                             </ul>
                         </div>
@@ -119,7 +133,7 @@ function AdminHeader() {
                         <nav className="off-canvas-nav">
                             <ul className="mobile-menu menu-block-2">
                                 <li>관리자 님</li>                         
-                                <li><a href="/logout">로그아웃</a></li>
+                                <li><a href="javascript:void(0)" onClick={onClickLogoutBtn}>로그아웃</a></li>
                                 <li><Link to="/">일반페이지로</Link></li>
                             </ul>
                         </nav>

@@ -44,6 +44,6 @@ export default createReducer<StocksState, StocksAction>(initialState, {
         } 
     }),
     [SAVE_STOCK_SUCCESS]: (state, action) => ({
-        stockPageAsync: initialState.stockPageAsync
+        stockPageAsync: action.payload
     })
 });

@@ -9,12 +9,12 @@ import com.vsnamta.bookstore.service.common.BaseMemoryRepository;
 
 public class MemoryPointHistoryRepository extends BaseMemoryRepository<PointHistory> implements PointHistoryRepository {
     @Override
-    public List<PointHistory> findAll(Long memberId, PageRequest pageRequest) {
+    public List<PointHistory> findAll(String memberId, PageRequest pageRequest) {
         return null;
     }
 
     @Override
-    public long findTotalCount(Long memberId) {
+    public long findTotalCount(String memberId) {
         return 0;
     }
 }

@@ -10,5 +10,8 @@ export const FIND_MEMBER_REQUEST = 'member/FIND_MEMBER_REQUEST';
 export const FIND_MEMBER_SUCCESS = 'member/FIND_MEMBER_SUCCESS';
 export const FIND_MEMBER_FAILURE = 'member/FIND_MEMBER_FAILURE';
 
+export const SAVE_MEMBER = 'member/SAVE_MEMBER';
+export const SAVE_MEMBER_SUCCESS = 'member/SAVE_MEMBER_SUCCESS';
+
 export const UPDATE_MEMBER = 'member/UPDATE_MEMBER';
 export const UPDATE_MEMBER_SUCCESS = 'member/UPDATE_MEMBER_SUCCESS';

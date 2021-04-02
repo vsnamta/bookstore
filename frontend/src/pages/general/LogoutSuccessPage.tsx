@@ -13,7 +13,7 @@ function LogoutSuccessPage() {
         memberApi.findMyData()
             .then(loginMember => {
                 if(loginMember === "") {
-                    localStorage.removeItem("loginMember");
+                    localStorage.removeItem("tempMyData");
                     dispatch(createSetMyDataAction(undefined));
                 }
             })

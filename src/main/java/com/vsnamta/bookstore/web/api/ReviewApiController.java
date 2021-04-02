@@ -1,15 +1,15 @@
 package com.vsnamta.bookstore.web.api;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.vsnamta.bookstore.service.common.model.FindPayload;
 import com.vsnamta.bookstore.service.common.model.Page;
-import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.review.ReviewResult;
 import com.vsnamta.bookstore.service.review.ReviewSavePayload;
 import com.vsnamta.bookstore.service.review.ReviewService;
 import com.vsnamta.bookstore.service.review.ReviewUpdatePayload;
+import com.vsnamta.bookstore.web.securiry.AuthUser;
+import com.vsnamta.bookstore.web.securiry.CustomUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,28 +36,22 @@ public class ReviewApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/reviews")
-    public ReviewResult save(@Valid @RequestBody ReviewSavePayload reviewSavePayload, HttpSession httpSession) {
-        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
-
-        reviewSavePayload.setMemberId(loginMember.getId());
+    public ReviewResult save(@Valid @RequestBody ReviewSavePayload reviewSavePayload, @AuthUser CustomUser customUser) {
+        reviewSavePayload.setMemberId(customUser.getId());
 
         return reviewService.save(reviewSavePayload);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/reviews/{id}")
-    public ReviewResult update(@PathVariable Long id, @Valid @RequestBody ReviewUpdatePayload reviewUpdatePayload, HttpSession httpSession) {
-        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
-
-        return reviewService.update(loginMember, id, reviewUpdatePayload);
+    public ReviewResult update(@PathVariable Long id, @Valid @RequestBody ReviewUpdatePayload reviewUpdatePayload, @AuthUser CustomUser customUser) {
+        return reviewService.update(customUser.getId(), id, reviewUpdatePayload);
     }
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/api/reviews/{id}")
-    public void remove(@PathVariable Long id, HttpSession httpSession) {
-        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
-        
-        reviewService.remove(loginMember, id);
+    public void remove(@PathVariable Long id, @AuthUser CustomUser customUser) {
+        reviewService.remove(customUser.getId(), id);
     }
 
     @GetMapping("/api/reviews")

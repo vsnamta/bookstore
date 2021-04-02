@@ -7,9 +7,12 @@ import { RootState } from '../../store';
 import { createFindMemberAction } from '../../store/member/action';
 import { createSaveOrderAction, OrderSaveActionPayload } from '../../store/order/action';
 import OrderFormTemplate from '../../components/order/OrderFormTemplate';
+import { MyData } from '../../models/auths';
 
 function OrderFormPage() {
     const location = useLocation<{orderingProductList: OrderingProduct[]}>();
+    console.log(location);
+
     const orderingProductList = location.state ? location.state.orderingProductList : undefined;
 
     if(!orderingProductList) {
@@ -17,7 +20,7 @@ function OrderFormPage() {
     }
 
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
+    const loginMember = useSelector((state: RootState) => state.auths.myData) as MyData;
     const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
 
     useEffect(() => {

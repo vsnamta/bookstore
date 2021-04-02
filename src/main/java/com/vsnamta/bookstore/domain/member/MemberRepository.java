@@ -9,11 +9,9 @@ import com.vsnamta.bookstore.domain.common.model.SearchRequest;
 public interface MemberRepository {
     Member save(Member member);
 
-    Optional<Member> findById(Long id);
+    Optional<Member> findById(String id);
 
-    Optional<Member> findByEmail(String email);
-
-    Optional<Member> findOne(Long id);
+    Optional<Member> findOne(String id);
 
     List<Member> findAll(SearchRequest searchRequest, PageRequest pageRequest);
 

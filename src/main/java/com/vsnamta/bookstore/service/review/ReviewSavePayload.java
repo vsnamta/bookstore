@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ReviewSavePayload {
-    private Long memberId;
+    private String memberId;
 
     @NotNull(message = "상품을 선택해주세요.")
     private Long productId;

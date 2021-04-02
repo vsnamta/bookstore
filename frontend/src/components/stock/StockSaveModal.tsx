@@ -1,16 +1,22 @@
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
+import { ProductDetailResult } from '../../models/products';
 import { StockSavePayload } from '../../models/stocks';
 import { StockSaveActionPayload } from '../../store/stock/action';
 
 interface StockSaveModalProps {
+    product?: ProductDetailResult;
     isOpen: boolean;
     onSaveStock: (payload: StockSaveActionPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 
-function StockSaveModal({ isOpen, onSaveStock, onRequestClose }: StockSaveModalProps) {
+function StockSaveModal({ product, isOpen, onSaveStock, onRequestClose }: StockSaveModalProps) {
+    if(!product) {
+        return null;
+    }
+    
     const { register, handleSubmit, errors } = useForm<StockSavePayload>();
 
     const onSubmit = useCallback((payload: StockSavePayload) => {
@@ -77,7 +83,8 @@ function StockSaveModal({ isOpen, onSaveStock, onRequestClose }: StockSaveModalP
                                     <input 
                                         type="hidden" 
                                         name="productId" 
-                                        className="form-control" 
+                                        className="form-control"
+                                        defaultValue={product.id} 
                                         ref={register({ required: true })} 
                                     />
                                     {errors.productId && <span>상품을 선택해주세요.</span>}

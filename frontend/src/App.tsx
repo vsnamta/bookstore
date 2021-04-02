@@ -6,12 +6,11 @@ import CartManagementPage from './pages/cart/CartManagementPage';
 import CategoryManagementPage from './pages/category/CategoryManagementPage';
 import DiscountPolicyManagementPage from './pages/discountPolicy/DiscountPolicyManagementPage';
 import LoginPage from './pages/general/LoginPage';
-import LoginSuccessPage from './pages/general/LoginSuccessPage';
-import LogoutSuccessPage from './pages/general/LogoutSuccessPage';
 import MainPage from './pages/general/MainPage';
 import NotFoundPage from './pages/general/NotFoundPage';
 import MemberManagementPage from './pages/member/MemberManagementPage';
 import MyDataPage from './pages/member/MyDataPage';
+import RegisterPage from './pages/member/RegisterPage';
 import MyOrderPage from './pages/order/MyOrderPage';
 import OrderDetailPage from './pages/order/OrderDetailPage';
 import OrderFormPage from './pages/order/OrderFormPage';
@@ -27,16 +26,15 @@ import MyReviewPage from './pages/review/MyReviewPage';
 import { RootState } from './store';
 
 function App() {
-  const loginMember = useSelector((state: RootState) => state.members.loginMember);
-  const hasUserRole = !!loginMember;
-  const hasAdminRole = !!loginMember && loginMember.role === "ADMIN";
+  const myData = useSelector((state: RootState) => state.auths.myData);
+  const hasUserRole = !!myData;
+  const hasAdminRole = !!myData && myData.role === "ADMIN";
 
   return (
       <Switch>
         <RestrictRoute path="/" component={MainPage} exact={true} isAllow={true} />
         <RestrictRoute path="/login" component={LoginPage} isAllow={true} />
-        <RestrictRoute path="/loginSuccess" component={LoginSuccessPage} isAllow={true} />
-        <RestrictRoute path="/logoutSuccess" component={LogoutSuccessPage} isAllow={true} />
+        <RestrictRoute path="/register" component={RegisterPage} isAllow={true} />
         <RestrictRoute path="/myData" component={MyDataPage} isAllow={hasUserRole} />
         <RestrictRoute path="/myPointHistory" component={MyPointHistoryPage} isAllow={hasUserRole} />
         <RestrictRoute path="/myOrder" component={MyOrderPage} isAllow={hasUserRole} />

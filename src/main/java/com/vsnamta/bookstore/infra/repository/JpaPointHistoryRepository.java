@@ -35,7 +35,7 @@ public class JpaPointHistoryRepository implements PointHistoryRepository {
     }
 
     @Override
-    public List<PointHistory> findAll(Long memberId, PageRequest pageRequest) {
+    public List<PointHistory> findAll(String memberId, PageRequest pageRequest) {
         JPAQueryFactory query = new JPAQueryFactory(entityManager);
 
         List<PointHistory> results = 
@@ -51,7 +51,7 @@ public class JpaPointHistoryRepository implements PointHistoryRepository {
     }
 
     @Override
-    public long findTotalCount(Long memberId) {
+    public long findTotalCount(String memberId) {
         JPAQueryFactory query = new JPAQueryFactory(entityManager);
 
         long totalCount = 

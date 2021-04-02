@@ -14,7 +14,7 @@ function LoginSuccessPage() {
         memberApi.findMyData()
             .then(loginMember => {
                 if(loginMember !== "") {
-                    localStorage.setItem("loginMember", JSON.stringify(loginMember as LoginMember));
+                    localStorage.setItem("tempMyData", JSON.stringify(loginMember as LoginMember));
                     dispatch(createSetMyDataAction(loginMember as LoginMember));                   
                 }
             })

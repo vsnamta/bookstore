@@ -28,7 +28,6 @@ import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.service.cart.MemoryCartRepository;
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.discount.MemoryDiscountPolicyRepository;
-import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.member.MemoryMemberRepository;
 import com.vsnamta.bookstore.service.point.MemoryPointHistoryRepository;
 import com.vsnamta.bookstore.service.product.MemoryProductRepository;
@@ -66,7 +65,7 @@ public class OrderServiceTest {
     @Test
     public void 주문완료시_해당_장바구니_삭제() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 
@@ -98,7 +97,7 @@ public class OrderServiceTest {
     @Test
     public void 주문완료시_상품의_재고_감소_및_회원의_사용포인트_감소() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").point(1000).build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").point(1000).build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 
@@ -135,7 +134,7 @@ public class OrderServiceTest {
     @Test
     public void 주문취소시_상품의_재고_증가_및_회원의_사용포인트_증가() {
         // given   
-        Member member = memberRepository.save(aMember().name("홍길동").point(1000).build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").point(1000).build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 
@@ -163,7 +162,7 @@ public class OrderServiceTest {
         orderUpdatePayload.setStatus(OrderStatus.CANCELED);
 
         // when
-        orderService.update(new LoginMember(member), order.getId(), orderUpdatePayload);
+        orderService.update(member.getId(), order.getId(), orderUpdatePayload);
 
         // then
         order = orderRepository.findById(order.getId()).get();
@@ -178,7 +177,7 @@ public class OrderServiceTest {
     @Test(expected = NotEnoughPermissionException.class)
     public void 주문취소는_본인만_가능() {
         // given   
-        Member member = memberRepository.save(aMember().name("홍길동").point(1000).build());
+        Member member = memberRepository.save(aMember().id("test1").name("홍길동").point(1000).build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 
@@ -205,10 +204,10 @@ public class OrderServiceTest {
         OrderUpdatePayload orderUpdatePayload = new OrderUpdatePayload();
         orderUpdatePayload.setStatus(OrderStatus.CANCELED);
 
-        Member otherMember = memberRepository.save(aMember().name("임꺽정").build());
+        Member otherMember = memberRepository.save(aMember().id("test2").name("임꺽정").build());
 
         // when
-        orderService.update(new LoginMember(otherMember), order.getId(), orderUpdatePayload);
+        orderService.update(otherMember.getId(), order.getId(), orderUpdatePayload);
 
         // then
         fail();
@@ -217,7 +216,7 @@ public class OrderServiceTest {
     @Test
     public void 구매확정시_회원의_적립금_증가() {
         // given   
-        Member member = memberRepository.save(aMember().name("홍길동").point(0).build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").point(0).build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(
             aDiscountPolicy().name("기본").discountPercent(10).depositPercent(5).build()
@@ -243,7 +242,7 @@ public class OrderServiceTest {
         orderUpdatePayload.setStatus(OrderStatus.COMPLETED);
 
         // when
-        orderService.update(new LoginMember(member), order.getId(), orderUpdatePayload);
+        orderService.update(member.getId(), order.getId(), orderUpdatePayload);
 
         // then
         order = orderRepository.findById(order.getId()).get();

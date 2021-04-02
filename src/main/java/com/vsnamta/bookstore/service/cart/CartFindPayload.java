@@ -9,5 +9,5 @@ import lombok.Setter;
 @Getter
 public class CartFindPayload {
     @NotNull(message = "회원번호를 선택해주세요.")
-    private Long memberId;
+    private String memberId;
 }

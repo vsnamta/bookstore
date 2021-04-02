@@ -22,7 +22,7 @@ function OrderManagementBar({ searchCriteria, onUpdateSearchCriteria }: OrderMan
                     <div className="col-lg-2">
                         <select className="form-control" onChange={onChangeSearchColumn}>
                             <option value="id" selected={localSearchCriteria.column === "id"}>주문번호</option>
-                            <option value="memberEmail" selected={localSearchCriteria.column === "memberEmail"}>이메일</option>
+                            <option value="memberId" selected={localSearchCriteria.column === "memberId"}>이메일</option>
                             <option value="memberName" selected={localSearchCriteria.column === "memberName"}>이름</option>
                         </select>
                     </div>

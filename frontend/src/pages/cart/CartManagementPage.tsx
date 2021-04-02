@@ -4,10 +4,11 @@ import { LoginMember } from '../../models/members';
 import { RootState } from '../../store';
 import { CartRemoveActionPayload, CartUpdateActionPayload, createCheckAllCartAction, createCheckCartAction, createFindCartListAction, createRemoveCartAction, createUpdateCartAction } from '../../store/cart/action';
 import CartManagementTemplate from '../../components/cart/CartManagementTemplate';
+import { MyData } from '../../models/auths';
 
 function CartManagementPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
+    const loginMember = useSelector((state: RootState) => state.auths.myData) as MyData;
     const cartListAsync = useSelector((state: RootState) => state.carts.cartListAsync);
 
     useEffect(() => {

@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { SearchCriteria } from "../models/common";
 
 export interface UseSearchFormMethods {
-    setSearchCriteria: React.Dispatch<React.SetStateAction<SearchCriteria>>;
     onChangeSearchColumn: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     onChangeSearchKeyword: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onClickSearchBtn: () => void;
@@ -52,7 +51,6 @@ function useSearchForm(
     }, [onClickSearchBtn]);
 
     return [searchCriteria, {
-        setSearchCriteria, 
         onChangeSearchColumn, 
         onChangeSearchKeyword, 
         onClickSearchBtn, 

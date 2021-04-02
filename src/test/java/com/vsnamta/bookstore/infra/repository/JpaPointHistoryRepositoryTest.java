@@ -36,7 +36,7 @@ public class JpaPointHistoryRepositoryTest {
     @Test
     public void 회원번호로_포인트내역_조회() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         pointHistoryRepository.save(aPointHistory().member(member).amounts(1000).status(PointStatus.BUYING_DEPOSIT).build());
         pointHistoryRepository.save(aPointHistory().member(member).amounts(-500).status(PointStatus.BUYING_WITHDRAWAL).build());

@@ -12,7 +12,6 @@ import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.domain.review.Review;
 import com.vsnamta.bookstore.domain.review.ReviewRepository;
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
-import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.member.MemoryMemberRepository;
 import com.vsnamta.bookstore.service.product.MemoryProductRepository;
 
@@ -37,7 +36,7 @@ public class ReviewServiceTest {
     @Test
     public void 리뷰_저장() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());
 
         ReviewSavePayload reviewSavePayload = new ReviewSavePayload();
@@ -61,7 +60,7 @@ public class ReviewServiceTest {
     @Test
     public void 리뷰_수정() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());
 
         Review review = reviewRepository.save(
@@ -73,7 +72,7 @@ public class ReviewServiceTest {
         reviewUpdatePayload.setContents("아주 좋아요.");
 
         // when
-        reviewService.update(new LoginMember(member), review.getId(), reviewUpdatePayload);
+        reviewService.update(member.getId(), review.getId(), reviewUpdatePayload);
 
         // then
         review = reviewRepository.findById(review.getId()).get();
@@ -87,7 +86,7 @@ public class ReviewServiceTest {
     @Test(expected = NotEnoughPermissionException.class)
     public void 리뷰_수정은_본인만_가능() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test1").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());
 
         Review review = reviewRepository.save(
@@ -98,10 +97,10 @@ public class ReviewServiceTest {
         reviewUpdatePayload.setRating(5);
         reviewUpdatePayload.setContents("아주 좋아요.");
 
-        Member otherMember = memberRepository.save(aMember().name("임꺽정").build());
+        Member otherMember = memberRepository.save(aMember().id("test2").name("임꺽정").build());
 
         // when
-        reviewService.update(new LoginMember(otherMember), review.getId(), reviewUpdatePayload);
+        reviewService.update(otherMember.getId(), review.getId(), reviewUpdatePayload);
 
         // then
         fail();
@@ -110,7 +109,7 @@ public class ReviewServiceTest {
     @Test
     public void 리뷰_삭제() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());
 
         Review review = reviewRepository.save(
@@ -118,7 +117,7 @@ public class ReviewServiceTest {
         );
 
         // when
-        reviewService.remove(new LoginMember(member), review.getId());
+        reviewService.remove(member.getId(), review.getId());
 
         //then
         review = reviewRepository.findById(review.getId()).get();
@@ -130,17 +129,17 @@ public class ReviewServiceTest {
 
     @Test(expected = NotEnoughPermissionException.class)
     public void 리뷰_삭제는_본인만_가능() {
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test1").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());
 
         Review review = reviewRepository.save(
             Review.createReview(member, product, 4, "좋아요.")
         );
 
-        Member otherMember = memberRepository.save(aMember().name("임꺽정").build());
+        Member otherMember = memberRepository.save(aMember().id("test2").name("임꺽정").build());
 
         // when
-        reviewService.remove(new LoginMember(otherMember), review.getId());
+        reviewService.remove(otherMember.getId(), review.getId());
 
         //then
         fail();

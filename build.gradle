@@ -38,7 +38,8 @@ dependencies {
     compile('org.mariadb.jdbc:mariadb-java-client')
     compile('com.querydsl:querydsl-jpa')
     compileOnly('com.querydsl:querydsl-apt')
-    compile('org.springframework.boot:spring-boot-starter-oauth2-client')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     compile('org.flywaydb:flyway-core')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
@@ -83,11 +84,16 @@ task buildFrontend(type: NpmTask) {
     args = ['run', 'build']
 }
 
+task testFrontend(type: NpmTask) {
+    args = ['run', 'test']
+}
+
 task copyFrontend(type: Copy) {
     from 'frontend/dist/.'
     into 'build/resources/main/static/.'
 }
 
 buildFrontend.dependsOn npmInstall
-copyFrontend.dependsOn buildFrontend
-compileJava.dependsOn copyFrontend
+testFrontend.dependsOn buildFrontend
+copyFrontend.dependsOn testFrontend
+processResources.dependsOn copyFrontend

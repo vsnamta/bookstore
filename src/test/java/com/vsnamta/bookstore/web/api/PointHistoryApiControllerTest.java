@@ -10,7 +10,6 @@ import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
 import com.vsnamta.bookstore.domain.point.PointHistoryRepository;
 import com.vsnamta.bookstore.domain.point.PointStatus;
-import com.vsnamta.bookstore.service.member.LoginMember;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +50,7 @@ public class PointHistoryApiControllerTest {
     @Test
     public void 회원번호로_포인트내역_조회() throws Exception {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         pointHistoryRepository.save(aPointHistory().member(member).amounts(1000).status(PointStatus.BUYING_DEPOSIT).build());
         pointHistoryRepository.save(aPointHistory().member(member).amounts(-500).status(PointStatus.BUYING_WITHDRAWAL).build());
@@ -62,8 +61,8 @@ public class PointHistoryApiControllerTest {
                 get("/api/pointHistories")
                     .param("memberId", String.valueOf(member.getId()))
                     .param("pageCriteria.page", String.valueOf(1))    
-                    .param("pageCriteria.size", String.valueOf(10))
-                    .sessionAttr("loginMember", new LoginMember(member)));
+                    .param("pageCriteria.size", String.valueOf(10)));
+                    //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions

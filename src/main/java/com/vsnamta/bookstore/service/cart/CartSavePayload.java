@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CartSavePayload {
-    private Long memberId;
+    private String memberId;
 
     @NotNull(message = "상품을 선택해 주세요.")
     private Long productId;

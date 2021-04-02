@@ -68,12 +68,6 @@ export default createReducer<ReviewsState, ReviewsAction>(initialState, {
         },
         review: action.payload
     }),
-    [SAVE_REVIEW_SUCCESS]: (state, action) => ({
-        reviewPageAsync: initialState.reviewPageAsync,
-        review: action.payload
-    }),
-    [REMOVE_REVIEW_SUCCESS]: (state, action) => ({
-        reviewPageAsync: initialState.reviewPageAsync,
-        review: undefined
-    })
+    [SAVE_REVIEW_SUCCESS]: (state, action) => state,
+    [REMOVE_REVIEW_SUCCESS]: (state, action) => state
 });

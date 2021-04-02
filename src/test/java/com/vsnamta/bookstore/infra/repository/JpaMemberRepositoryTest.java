@@ -28,35 +28,22 @@ public class JpaMemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
-    public void 이메일로_회원_조회() {
+    public void 아이디로_회원_조회() {
         //given
-        memberRepository.save(aMember().name("홍길동").email("test@gmail.com").build());
-
-        // when
-        Member member = memberRepository.findByEmail("test@gmail.com").get();
-
-        // then
-        assertEquals("홍길동", member.getName());
-        assertEquals("test@gmail.com", member.getEmail());
-    } 
-
-    @Test
-    public void 회원번호로_회원_조회() {
-        //given
-        Member member = memberRepository.save(aMember().name("홍길동").email("test@gmail.com").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         // when
         member = memberRepository.findOne(member.getId()).get();
 
         // then
+        assertEquals("test", member.getId());
         assertEquals("홍길동", member.getName());
-        assertEquals("test@gmail.com", member.getEmail());
     }
 
     @Test
     public void 이름으로_회원_조회() {
         // given
-        memberRepository.save(aMember().name("홍길동").build());
+        memberRepository.save(aMember().id("test").name("홍길동").build());
 
         // when
         List<Member> members = memberRepository.findAll(

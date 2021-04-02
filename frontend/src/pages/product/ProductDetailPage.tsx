@@ -12,7 +12,7 @@ function ProductDetailPage() {
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember);
+    const loginMember = useSelector((state: RootState) => state.auths.myData);
     const productAsync = useSelector((state: RootState) => state.products.productAsync);
     const reviewPageAsync = useSelector((state: RootState) => state.reviews.reviewPageAsync);
 

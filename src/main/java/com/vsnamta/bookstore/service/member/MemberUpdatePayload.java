@@ -1,6 +1,7 @@
 package com.vsnamta.bookstore.service.member;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.vsnamta.bookstore.domain.common.model.Address;
 
@@ -10,6 +11,16 @@ import lombok.Setter;
 @Setter
 @Getter
 public class MemberUpdatePayload {
+    @Size(min = 8, message = "현재 비밀번호를 8자 이상 입력해주세요.")
+    @Size(max = 16, message = "현재 비밀번호를 16자 이하 입력해주세요.")
+    @NotBlank(message = "현재 비밀번호를 입력해주세요.")
+    private String currentPassword;
+    
+    @Size(min = 8, message = "새로운 비밀번호를 8자 이상 입력해주세요.")
+    @Size(max = 16, message = "새로운 비밀번호를 16자 이하 입력해주세요.")
+    @NotBlank(message = "새로운 비밀번호를 입력해주세요.")
+    private String newPassword;
+
     @NotBlank(message = "휴대폰 번호를 입력해주세요.")
     private String phoneNumber;
 

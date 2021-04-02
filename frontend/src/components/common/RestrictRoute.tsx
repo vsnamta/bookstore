@@ -19,7 +19,6 @@ function RestrictRoute({ isAllow, render, component: Component, ...rest }: Restr
         <Route
             {...rest}
             render={(props) => {
-                console.log("AuthRoute 호출");
                 if(!isAllow) {
                     return <Redirect to={{ pathname: "/login" }} />
                 }

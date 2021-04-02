@@ -68,17 +68,18 @@ function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps)
         }
 
         history.push(
-			"/order/form",
-			[{
-				cartId: undefined,
-				productId: product.id,
-				productName: product.name,
-				imageFileName: product.imageFileName,
-				regularPrice: product.regularPrice,
-				discountPercent: product.discountPercent,
-				depositPercent: product.depositPercent,
-				quantity: quantity
-			}]	
+			"/order/form", {
+				"orderingProductList": [{
+					cartId: undefined,
+					productId: product.id,
+					productName: product.name,
+					imageFileName: product.imageFileName,
+					regularPrice: product.regularPrice,
+					discountPercent: product.discountPercent,
+					depositPercent: product.depositPercent,
+					quantity: quantity
+				}]
+			}
 		);
     }, [loginMember, product, quantity]);
     

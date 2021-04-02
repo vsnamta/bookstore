@@ -3,6 +3,7 @@ import { ApiError } from '../../error/ApiError';
 import { FindPayload, Page } from '../../models/common';
 import { ReviewResult, ReviewSavePayload, ReviewUpdatePayload } from '../../models/reviews';
 import { FIND_REVIEW, FIND_REVIEW_PAGE, FIND_REVIEW_PAGE_FAILURE, FIND_REVIEW_PAGE_REQUEST, FIND_REVIEW_PAGE_SUCCESS, REMOVE_REVIEW, REMOVE_REVIEW_SUCCESS, SAVE_REVIEW, SAVE_REVIEW_SUCCESS, UPDATE_REVIEW, UPDATE_REVIEW_SUCCESS } from './actionType';
+import { ReviewsState } from './reducer';
 
 export interface ReviewUpdateActionPayload { 
     id: number, 
@@ -32,10 +33,10 @@ export const createUpdateReviewAction = createAction(UPDATE_REVIEW)<ReviewUpdate
 export const createUpdateReviewSuccessAction = createAction(UPDATE_REVIEW_SUCCESS)<ReviewResult>();
 
 export const createSaveReviewAction = createAction(SAVE_REVIEW)<ReviewSaveActionPayload>();
-export const createSaveReviewSuccessAction = createAction(SAVE_REVIEW_SUCCESS)<ReviewResult>();
+export const createSaveReviewSuccessAction = createAction(SAVE_REVIEW_SUCCESS)<ReviewsState>();
 
 export const createRemoveReviewAction = createAction(REMOVE_REVIEW)<ReviewRemoveActionPayload>();
-export const createRemoveReviewSuccessAction = createAction(REMOVE_REVIEW_SUCCESS)<number>();
+export const createRemoveReviewSuccessAction = createAction(REMOVE_REVIEW_SUCCESS)<ReviewsState>();
 
 export const actions = {
     createFindReviewPageAction, findReviewPageAsyncActionCreator,

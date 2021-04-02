@@ -1,6 +1,5 @@
 package com.vsnamta.bookstore.web.api;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
@@ -9,13 +8,19 @@ import com.vsnamta.bookstore.service.common.model.Page;
 import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.member.MemberDetailResult;
 import com.vsnamta.bookstore.service.member.MemberResult;
+import com.vsnamta.bookstore.service.member.MemberSavePayload;
 import com.vsnamta.bookstore.service.member.MemberService;
 import com.vsnamta.bookstore.service.member.MemberUpdatePayload;
+import com.vsnamta.bookstore.web.securiry.AuthUser;
+import com.vsnamta.bookstore.web.securiry.CustomUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,12 +38,15 @@ public class MemberApiController {
         this.memberService = memberService;
     } 
 
+    @PostMapping("/api/members")
+    public MemberDetailResult save(@Valid @RequestBody MemberSavePayload memberSavePayload) {
+        return memberService.save(memberSavePayload);
+    }
+
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/members/{id}")
-    public MemberDetailResult update(@PathVariable Long id, @Valid @RequestBody MemberUpdatePayload memberUpdatePayload, HttpSession httpSession) {
-        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
-
-        if(loginMember.hasUserRole() && !id.equals(loginMember.getId())) {
+    public MemberDetailResult update(@PathVariable String id, @Valid @RequestBody MemberUpdatePayload memberUpdatePayload, @AuthUser CustomUser customUser) {
+        if(customUser.hasUserRole() && !id.equals(customUser.getId())) {
             throw new NotEnoughPermissionException("요청 권한이 없습니다.");
         }
 
@@ -46,16 +54,24 @@ public class MemberApiController {
     }
 
     @GetMapping("/api/members/me")
-    public LoginMember findMyData(HttpSession httpSession) {
-        return (LoginMember)httpSession.getAttribute("loginMember");
+    public LoginMember findMyData(@AuthenticationPrincipal Object principal) {
+        if(principal instanceof CustomUser == false) {
+            return null;
+        }
+        
+        CustomUser customUser = (CustomUser)principal;
+
+        return new LoginMember(
+            customUser.getId(),
+            customUser.getName(),
+            customUser.getRole().name()
+        );
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/api/members/{id}")
-    public MemberDetailResult findOne(@PathVariable Long id, HttpSession httpSession) {
-        LoginMember loginMember = (LoginMember)httpSession.getAttribute("loginMember");
-
-        if(loginMember.hasUserRole() && !id.equals(loginMember.getId())) {
+    public MemberDetailResult findOne(@PathVariable String id, @AuthUser CustomUser customUser) {
+        if(customUser.hasUserRole() && !id.equals(customUser.getId())) {
             throw new NotEnoughPermissionException("요청 권한이 없습니다.");
         }
 

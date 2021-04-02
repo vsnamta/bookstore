@@ -1,7 +1,6 @@
 create sequence cart_seq start with 1 increment by 1;
 create sequence category_seq start with 1 increment by 1;
 create sequence discount_policy_seq start with 1 increment by 1;
-create sequence member_seq start with 1 increment by 1;
 create sequence order_line_seq start with 1 increment by 1;
 create sequence order_seq start with 1 increment by 1;
 create sequence order_status_history_seq start with 1 increment by 1;
@@ -13,7 +12,7 @@ create sequence stock_seq start with 1 increment by 1;
 create table cart (
     cart_id bigint not null,
     quantity integer not null,
-    member_id bigint,
+    member_id varchar(255),
     product_id bigint,
     primary key (cart_id)
 ) engine=InnoDB;
@@ -34,13 +33,13 @@ create table discount_policy (
 ) engine=InnoDB;
 
 create table member (
-    member_id bigint not null,
+    member_id varchar(255) not null,
     address1 varchar(255),
     address2 varchar(255),
     zip_code varchar(255),
     created_date datetime(6),
-    email varchar(255),
     name varchar(255),
+    password varchar(255),
     phone_number varchar(255),
     point integer not null,
     role varchar(255),
@@ -72,7 +71,7 @@ create table orders (
     used_point integer not null,
     status varchar(255),
     status_updated_date datetime(6),
-    member_id bigint,
+    member_id varchar(255),
     primary key (order_id)
 ) engine=InnoDB;
 
@@ -90,7 +89,7 @@ create table point_history (
     contents varchar(255),
     created_date datetime(6),
     status varchar(255),
-    member_id bigint,
+    member_id varchar(255),
     primary key (point_history_id)
 ) engine=InnoDB;
 
@@ -123,7 +122,7 @@ create table review (
     created_date datetime(6),
     rating integer not null,
     removed bit not null,
-    member_id bigint,
+    member_id varchar(255),
     product_id bigint,
     primary key (review_id)
 ) engine=InnoDB;
@@ -138,67 +137,67 @@ create table stock (
     primary key (stock_id)
 ) engine=InnoDB;
 
-alter table cart
-    add constraint FKix170nytunweovf2v9137mx2o
-    foreign key (member_id)
+alter table cart 
+    add constraint FKix170nytunweovf2v9137mx2o 
+    foreign key (member_id) 
     references member (member_id);
 
-alter table cart
-    add constraint FK3d704slv66tw6x5hmbm6p2x3u
-    foreign key (product_id)
+alter table cart 
+    add constraint FK3d704slv66tw6x5hmbm6p2x3u 
+    foreign key (product_id) 
     references product (product_id);
 
-alter table category
-    add constraint FK2y94svpmqttx80mshyny85wqr
-    foreign key (parent_id)
+alter table category 
+    add constraint FK2y94svpmqttx80mshyny85wqr 
+    foreign key (parent_id) 
     references category (category_id);
 
-alter table order_line
-    add constraint FKpf904tci8garypkvm32cqupye
-    foreign key (product_id)
+alter table order_line 
+    add constraint FKpf904tci8garypkvm32cqupye 
+    foreign key (product_id) 
     references product (product_id);
 
-alter table order_line
-    add constraint FKk9f9t1tmkbq5w27u8rrjbxxg6
-    foreign key (order_id)
+alter table order_line 
+    add constraint FKk9f9t1tmkbq5w27u8rrjbxxg6 
+    foreign key (order_id) 
     references orders (order_id);
 
-alter table orders
-    add constraint FKpktxwhj3x9m4gth5ff6bkqgeb
-    foreign key (member_id)
+alter table orders 
+    add constraint FKpktxwhj3x9m4gth5ff6bkqgeb 
+    foreign key (member_id) 
     references member (member_id);
 
-alter table order_status_history
-    add constraint FKnmcbg3mmbt8wfva97ra40nmp3
-    foreign key (order_id)
+alter table order_status_history 
+    add constraint FKnmcbg3mmbt8wfva97ra40nmp3 
+    foreign key (order_id) 
     references orders (order_id);
 
-alter table point_history
-    add constraint FKn7yuk3drkv7qwgq0op21olmwy
-    foreign key (member_id)
+alter table point_history 
+    add constraint FKn7yuk3drkv7qwgq0op21olmwy 
+    foreign key (member_id) 
     references member (member_id);
 
-alter table product
-    add constraint FK1mtsbur82frn64de7balymq9s
-    foreign key (category_id)
+alter table product 
+    add constraint FK1mtsbur82frn64de7balymq9s 
+    foreign key (category_id) 
     references category (category_id);
 
-alter table product
-    add constraint FKrwdp12h2r63yoe84im0jkrwyu
-    foreign key (discount_policy_id)
+alter table product 
+    add constraint FKrwdp12h2r63yoe84im0jkrwyu 
+    foreign key (discount_policy_id) 
     references discount_policy (discount_policy_id);
 
-alter table review
-    add constraint FKk0ccx5i4ci2wd70vegug074w1
-    foreign key (member_id)
+alter table review 
+    add constraint FKk0ccx5i4ci2wd70vegug074w1 
+    foreign key (member_id) 
     references member (member_id);
 
-alter table review
-    add constraint FKiyof1sindb9qiqr9o8npj8klt
-    foreign key (product_id)
+alter table review 
+    add constraint FKiyof1sindb9qiqr9o8npj8klt 
+    foreign key (product_id) 
     references product (product_id);
 
-alter table stock
-    add constraint FKjghkvw2snnsr5gpct0of7xfcf
-    foreign key (product_id)
+alter table stock 
+    add constraint FKjghkvw2snnsr5gpct0of7xfcf 
+    foreign key (product_id) 
     references product (product_id);

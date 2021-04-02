@@ -7,10 +7,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 import com.vsnamta.bookstore.domain.common.model.Address;
 
@@ -24,12 +21,10 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Member {
     @Id
-    @SequenceGenerator(name = "MEMBER_SEQ_GENERATOR", sequenceName = "MEMBER_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MEMBER_SEQ_GENERATOR")
     @Column(name = "MEMBER_ID")
-    private Long id;
+    private String id;
 
-    private String email;
+    private String password;
     private String name;
     private String phoneNumber;
 
@@ -44,9 +39,10 @@ public class Member {
     private LocalDateTime createdDate;
 
     @Builder
-    public Member(String email, String name, String phoneNumber, Address address, int point, MemberRole role,
-            LocalDateTime createdDate) {
-        this.email = email;
+    public Member(String id, String password, String name, String phoneNumber, Address address, int point,
+            MemberRole role, LocalDateTime createdDate) {
+        this.id = id;
+        this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
@@ -55,19 +51,21 @@ public class Member {
         this.createdDate = createdDate;
     }
 
-    public static Member createMember(String email, String name) {
+    public static Member createMember(String id, String password, String name, String phoneNumber, Address address) {
         return Member.builder()
-            .email(email)
+            .id(id)
+            .password(password)
             .name(name)
-            .phoneNumber("")
-            .address(new Address("", "", ""))
+            .phoneNumber(phoneNumber)
+            .address(address)
             .point(0)
             .role(MemberRole.USER)
             .createdDate(LocalDateTime.now())
             .build();
     }
 
-    public void update(String phoneNumber, Address address) {
+    public void update(String password, String phoneNumber, Address address) {
+        this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
     }

@@ -32,7 +32,6 @@ public abstract class BaseMemoryRepository<T> {
         ReflectionUtils.makeAccessible(field);
 
         ReflectionUtils.setField(field, object, id);
-
     }
 
     public Optional<T> findById(Long id) {

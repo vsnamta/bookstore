@@ -5,10 +5,11 @@ import { LoginMember } from '../../models/members';
 import { RootState } from '../../store';
 import { createFindReviewAction, createFindReviewPageAction, createRemoveReviewAction, createUpdateReviewAction, ReviewRemoveActionPayload, ReviewUpdateActionPayload } from '../../store/review/action';
 import MyReviewTemplate from '../../components/reivew/MyReviewTemplate';
+import { MyData } from '../../models/auths';
 
 function MyReviewPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
+    const loginMember = useSelector((state: RootState) => state.auths.myData) as MyData;
     const { reviewPageAsync, review } = useSelector((state: RootState) => state.reviews);
 
     useEffect(() => {

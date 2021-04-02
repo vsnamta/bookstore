@@ -78,7 +78,7 @@ public class JpaReviewRepository implements ReviewRepository {
                 case "productId":
                     return review.product.id.eq(Long.valueOf(keyword));
                 case "memberId":
-                    return review.member.id.eq(Long.valueOf(keyword));
+                    return review.member.id.eq(keyword);
             }
         }
 

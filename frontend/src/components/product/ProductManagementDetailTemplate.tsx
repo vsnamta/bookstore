@@ -58,7 +58,8 @@ function ProductManagementDetailTemplate({ productAsync, stockPageAsync, saveSto
                 onPageChange={onPageChange}
             />
             <StockSaveModal 
-                isOpen={saveModalIsOpen} 
+                product={productAsync.result} 
+                isOpen={saveModalIsOpen}
                 onSaveStock={onSaveStock}
                 onRequestClose={closeSaveModal}
             />

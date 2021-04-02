@@ -16,7 +16,6 @@ function MyPageLayout({ children }: MyPageLayoutProps) {
                             <Link to="/myOrder">주문내역</Link>
                             <Link to="/myPointHistory">포인트내역</Link>
                             <Link to="/myReview">나의리뷰</Link>
-                            <a href="/logout">로그아웃</a>
                         </div>
                     </div> 
                     <div className="col-lg-9 col-12 mt--30 mt-lg--0">

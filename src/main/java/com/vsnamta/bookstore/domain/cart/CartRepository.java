@@ -10,9 +10,9 @@ public interface CartRepository {
 
     Optional<Cart> findById(Long id);
 
-    Optional<Cart> findByMemberIdAndProductId(Long memberId, Long productId);
+    Optional<Cart> findByMemberIdAndProductId(String memberId, Long productId);
 
     List<Cart> findByIds(List<Long> ids);
 
-    List<Cart> findAll(Long memberId);
+    List<Cart> findAll(String memberId);
 }

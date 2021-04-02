@@ -2,8 +2,9 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 import memberApi from '../../apis/memberApi';
 import { Page } from '../../models/common';
 import { MemberDetailResult, MemberResult } from '../../models/members';
-import { createFindMemberAction, createFindMemberPageAction, createUpdateMemberAction, createUpdateMemberSuccessAction, findMemberAsyncActionCreator, findMemberPageAsyncActionCreator } from './action';
-import { FIND_MEMBER, FIND_MEMBER_PAGE, UPDATE_MEMBER } from './actionType';
+import { createLoginAction } from '../auth/action';
+import { createFindMemberAction, createFindMemberPageAction, createSaveMemberAction, createSaveMemberSuccessAction, createUpdateMemberAction, createUpdateMemberSuccessAction, findMemberAsyncActionCreator, findMemberPageAsyncActionCreator } from './action';
+import { FIND_MEMBER, FIND_MEMBER_PAGE, SAVE_MEMBER, UPDATE_MEMBER } from './actionType';
 
 function* findMemberPageSaga(action: ReturnType<typeof createFindMemberPageAction>) {
     yield put(findMemberPageAsyncActionCreator.request(action.payload));
@@ -40,8 +41,21 @@ function* updateMemberSaga(action: ReturnType<typeof createUpdateMemberAction>) 
     }
 };
 
+function* saveMemberSaga(action: ReturnType<typeof createSaveMemberAction>) {
+    try {
+        const member: MemberDetailResult = yield call(memberApi.save, action.payload.payload);
+
+        yield put(createSaveMemberSuccessAction(member));
+
+        action.payload.onSuccess && action.payload.onSuccess(member);
+    } catch (error) {
+        action.payload.onFailure && action.payload.onFailure(error);
+    }
+};
+
 export default function* membersSaga() {
     yield takeEvery(FIND_MEMBER_PAGE, findMemberPageSaga);
     yield takeEvery(FIND_MEMBER, findMemberSaga);
     yield takeEvery(UPDATE_MEMBER, updateMemberSaga);
+    yield takeEvery(SAVE_MEMBER, saveMemberSaga);
 }

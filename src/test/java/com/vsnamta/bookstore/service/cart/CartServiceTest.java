@@ -20,7 +20,6 @@ import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.discount.MemoryDiscountPolicyRepository;
-import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.member.MemoryMemberRepository;
 import com.vsnamta.bookstore.service.product.MemoryProductRepository;
 
@@ -47,7 +46,7 @@ public class CartServiceTest {
     @Test
     public void 장바구니_저장() {
         // given   
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
@@ -69,7 +68,7 @@ public class CartServiceTest {
     @Test
     public void 장바구니_저장시_이미_존재하는_상품은_수량이_증가() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
 
@@ -93,7 +92,7 @@ public class CartServiceTest {
     @Test
     public void 장바구니_수량_변경() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
         
@@ -103,7 +102,7 @@ public class CartServiceTest {
         cartUpdatePayload.setQuantity(1);
 
         // when
-        cartService.update(new LoginMember(member), cart.getId(), cartUpdatePayload);
+        cartService.update(member.getId(), cart.getId(), cartUpdatePayload);
 
         // then
         cart = cartRepository.findById(cart.getId()).get();
@@ -115,7 +114,7 @@ public class CartServiceTest {
     @Test(expected = NotEnoughPermissionException.class)
     public void 장바구니_수량_변경은_본인만_가능() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test1").name("홍길동").build());
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
         
@@ -124,10 +123,10 @@ public class CartServiceTest {
         CartUpdatePayload cartUpdatePayload = new CartUpdatePayload();
         cartUpdatePayload.setQuantity(1);
 
-        Member otherMember = memberRepository.save(aMember().name("임꺽정").build());
+        Member otherMember = memberRepository.save(aMember().id("test2").name("임꺽정").build());
 
         // when
-        cartService.update(new LoginMember(otherMember), cart.getId(), cartUpdatePayload);
+        cartService.update(otherMember.getId(), cart.getId(), cartUpdatePayload);
 
         // then
         fail();
@@ -136,7 +135,7 @@ public class CartServiceTest {
     @Test
     public void 장바구니_삭제() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         Product product1 = productRepository.save(aProduct().name("Clean Code").build());
         Cart cart1 = cartRepository.save(aCart().member(member).product(product1).quantity(1).build());
@@ -146,7 +145,7 @@ public class CartServiceTest {
 
         // when
         cartService.remove(
-            new LoginMember(member), 
+            member.getId(), 
             Arrays.asList(cart1.getId(), cart2.getId())
         );
 
@@ -160,15 +159,15 @@ public class CartServiceTest {
 
     @Test(expected = NotEnoughPermissionException.class)
     public void 장바구니_삭제는_본인만_가능() {
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test1").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());
 
         Cart cart = cartRepository.save(aCart().member(member).product(product).quantity(1).build());
 
-        Member otherMember = memberRepository.save(aMember().name("임꺽정").build());
+        Member otherMember = memberRepository.save(aMember().id("test2").name("임꺽정").build());
 
         // when
-        cartService.remove(new LoginMember(otherMember), Arrays.asList(cart.getId()));
+        cartService.remove(otherMember.getId(), Arrays.asList(cart.getId()));
 
         // then
         fail();

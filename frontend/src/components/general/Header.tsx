@@ -8,13 +8,15 @@ import useSearchForm from "../../hooks/useSearchForm";
 import { CategoryResult } from '../../models/categories';
 import { SearchCriteria } from '../../models/common';
 import { LoginMember } from '../../models/members';
+import { LogoutActionPayload } from "../../store/auth/action";
 
 interface HeaderProps {
     loginMember?: LoginMember;
     categoryList?: CategoryResult[];
+    onLogout: (payload: LogoutActionPayload) => void;
 }
 
-function Header({ loginMember, categoryList }: HeaderProps) {
+function Header({ loginMember, categoryList, onLogout }: HeaderProps) {
     const history = useHistory();
 
     const [searchCriteria, useSearchFormMethods] = useSearchForm(
@@ -37,6 +39,13 @@ function Header({ loginMember, categoryList }: HeaderProps) {
         setIsMobileMenuOpen(false);
     }, []);
 
+    const onClickLogoutBtn = useCallback(() => {
+        onLogout({
+            onSuccess: () => history.push("/"),
+            onFailure: error => alert(`오류 발생 : ${error}`)
+        });
+    }, []);
+
     return (
         <>
             <div className="site-header header-2 mb--20 d-none d-lg-block">           
@@ -48,10 +57,10 @@ function Header({ loginMember, categoryList }: HeaderProps) {
                         <div className="col-lg-8 flex-lg-right">
                             <ul className="header-top-list">
                                 {!loginMember 
-                                    ? <li><Link to="/login"> 로그인 </Link></li>
-                                    : 
-                                    <li><a href="/logout">로그아웃 </a></li>
+                                    ? <li><Link to="/login">로그인</Link></li>
+                                    : <li><a href="javascript:void(0)" onClick={onClickLogoutBtn}>로그아웃</a></li>
                                 }
+                                {!loginMember && <li><Link to="/register">회원가입</Link></li>}
                                 <li className="dropdown-trigger language-dropdown">
                                     <a href="javascript:void(0)">마이 페이지</a> <FontAwesomeIcon icon={faChevronDown} />
                                     <ul className="dropdown-box">
@@ -214,9 +223,8 @@ function Header({ loginMember, categoryList }: HeaderProps) {
                         <nav className="off-canvas-nav">
                             <ul className="mobile-menu menu-block-2">
                                 {!loginMember 
-                                    ? <li><Link to="/login"> 로그인 </Link></li>
-                                    : 
-                                    <li><a href="/logout">로그아웃 </a></li>
+                                    ? <li><Link to="/login">로그인</Link></li>
+                                    : <li><a href="javascript:void(0)" onClick={onClickLogoutBtn}>로그아웃</a></li>
                                 }
                                 <li><Link to="/myData">마이페이지</Link></li>
                                 <li><Link to="/cart">장바구니</Link></li>

@@ -26,16 +26,16 @@ public class PointHistoryService {
 
     @Transactional(readOnly = true)
     public Page<PointHistoryResult> findAll(PointHistoryFindPayload pointHistoryFindPayload) {
-        Long productId = pointHistoryFindPayload.getMemberId();
+        String memberId = pointHistoryFindPayload.getMemberId();
         PageRequest pageRequest = pointHistoryFindPayload.getPageCriteria().toRequest();
 
         List<PointHistoryResult> pointHistoryResults = 
-            pointHistoryRepository.findAll(productId, pageRequest)
+            pointHistoryRepository.findAll(memberId, pageRequest)
                 .stream()
                 .map(PointHistoryResult::new)
                 .collect(Collectors.toList());
 
-        long totalCount = pointHistoryRepository.findTotalCount(productId);
+        long totalCount = pointHistoryRepository.findTotalCount(memberId);
     
         return new Page<PointHistoryResult>(pointHistoryResults, totalCount);
     }

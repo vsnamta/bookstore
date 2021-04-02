@@ -11,7 +11,7 @@ interface MemberManagementBarProps {
 
 function MemberManagementBar({ searchCriteria, onUpdateSearchCriteria }: MemberManagementBarProps) {
     const [localSearchCriteria, useSearchFormMethods] = useSearchForm(
-        { column: "email", keyword: "" }, onUpdateSearchCriteria
+        { column: "id", keyword: "" }, onUpdateSearchCriteria
     );
     
     const { onChangeSearchColumn, onChangeSearchKeyword, onClickSearchBtn, onKeyPress } = useSearchFormMethods;
@@ -22,7 +22,7 @@ function MemberManagementBar({ searchCriteria, onUpdateSearchCriteria }: MemberM
                 <div className="row align-items-center">
                     <div className="col-lg-2">
                         <select className="form-control" onChange={onChangeSearchColumn}>
-                            <option value="email" selected={localSearchCriteria.column === "email"}>이메일</option>
+                            <option value="id" selected={localSearchCriteria.column === "id"}>아이디</option>
                             <option value="name" selected={localSearchCriteria.column === "name"}>이름</option>
                         </select>
                     </div>

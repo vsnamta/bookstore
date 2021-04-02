@@ -59,7 +59,7 @@ public class OrderStatusUpdateTaskTest {
     @Test
     public void 일주일이_지나도록_주문완료_상태인_주문은_구매확정_상태로_변경() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").point(0).build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").point(0).build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(
             aDiscountPolicy().name("기본").discountPercent(10).depositPercent(5).build()

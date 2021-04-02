@@ -1,4 +1,16 @@
+export interface MemberSavePayload {
+    id: string;
+    password: string;
+    name: string;
+    phoneNumber: string;
+    zipCode: string;
+    address1: string;
+    address2: string;
+}
+
 export interface MemberUpdatePayload {
+    currentPassword: string;
+    newPassword: string;
     phoneNumber: string;
     zipCode: string;
     address1: string;
@@ -7,7 +19,6 @@ export interface MemberUpdatePayload {
 
 export interface MemberResult {
     id: number;
-    email: string;
     name: string;
     phoneNumber: string;
     roleName: string;
@@ -16,7 +27,6 @@ export interface MemberResult {
 
 export interface MemberDetailResult {
     id: number;
-    email: string;
     name: string;
     phoneNumber: string;
     zipCode: string;
@@ -30,6 +40,5 @@ export interface MemberDetailResult {
 export interface LoginMember {
     id: number;
     name: string;
-    email: string;
     role: string;
 }

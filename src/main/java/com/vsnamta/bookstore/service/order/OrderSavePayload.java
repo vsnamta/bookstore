@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class OrderSavePayload {
-    private Long memberId;
+    private String memberId;
     
     @NotNull(message = "주문상품을 선택해주세요.")
     @Valid

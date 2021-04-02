@@ -42,7 +42,7 @@ public class JpaReviewRepositoryTest {
     @Test
     public void 상품번호로_리뷰_조회() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());
 
         reviewRepository.save(aReview().member(member).product(product).rating(5).contents("아주 좋아요.").build());
@@ -63,7 +63,7 @@ public class JpaReviewRepositoryTest {
     @Test
     public void 회원번호로_리뷰_조회() {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());
 
         reviewRepository.save(aReview().member(member).product(product).rating(5).contents("아주 좋아요.").build());

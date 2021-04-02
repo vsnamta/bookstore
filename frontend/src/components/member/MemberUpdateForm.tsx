@@ -3,12 +3,12 @@ import { useForm } from 'react-hook-form';
 import { MemberDetailResult, MemberUpdatePayload } from '../../models/members';
 import { MemberUpdateActionPayload } from '../../store/member/action';
 
-interface MemberDetailProps {
+interface MemberUpdateFormProps {
     member?: MemberDetailResult;
     onUpdateMember: (payload: MemberUpdateActionPayload) => void;
 }
 
-function MemberDetail({ member, onUpdateMember }: MemberDetailProps) {    
+function MemberUpdateForm({ member, onUpdateMember }: MemberUpdateFormProps) {    
     if(!member) {
         return null;
     }
@@ -27,18 +27,7 @@ function MemberDetail({ member, onUpdateMember }: MemberDetailProps) {
     return (
         <div className="account-details-form">
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">    
-                    <div className="col-lg-12">
-                        <div className="form-group">
-                            <label>이메일 <span className="required">*</span></label>
-                            <input type="text" 
-                                name="email" 
-                                className="form-control"
-                                defaultValue={member.email}
-                                disabled={true} 
-                            />
-                        </div>
-                    </div>
+                <div className="row">
                     <div className="col-lg-12">
                         <div className="form-group">
                             <label>이름 <span className="required">*</span></label>
@@ -98,6 +87,32 @@ function MemberDetail({ member, onUpdateMember }: MemberDetailProps) {
                             {errors.address2 && <span>상세 주소를 입력해주세요.</span>}
                         </div>
                     </div>
+                    <div className="col-lg-12">
+                        <div className="form-group">
+                            <label>현재 비밀번호 <span className="required">*</span></label>
+                            <input type="password" 
+                                name="currentPassword" 
+                                className="form-control"
+                                ref={register({ required: true, min:8, max: 16 })} 
+                            />
+                            {errors.currentPassword?.type === "required" && <span>현재 비밀번호를 입력해주세요.</span>}
+                            {errors.currentPassword?.type === "min" && <span>현재 비밀번호를 8자 이상 입력해주세요.</span>}
+                            {errors.currentPassword?.type === "max" && <span>현재 비밀번호를 16자 이하 입력해주세요.</span>}
+                        </div>
+                    </div>
+                    <div className="col-lg-12">
+                        <div className="form-group">
+                            <label>새 비밀번호 <span className="required">*</span></label>
+                            <input type="password" 
+                                name="newPassword" 
+                                className="form-control"
+                                ref={register({ required: true, min:8, max: 16 })} 
+                            />
+                            {errors.newPassword?.type === "required" && <span>새 비밀번호를 입력해주세요.</span>}
+                            {errors.newPassword?.type === "min" && <span>새 비밀번호를 8자 이상 입력해주세요.</span>}
+                            {errors.newPassword?.type === "max" && <span>새 비밀번호를 16자 이하 입력해주세요.</span>}
+                        </div>
+                    </div>
                     <div className="col-lg-6">
                         <div className="form-btn">
                             <button type="submit" value="submit" id="submit" className="btn btn-black"
@@ -111,4 +126,4 @@ function MemberDetail({ member, onUpdateMember }: MemberDetailProps) {
     )
 };
 
-export default React.memo(MemberDetail);
+export default React.memo(MemberUpdateForm);

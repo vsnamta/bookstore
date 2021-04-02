@@ -5,10 +5,11 @@ import { PointHistoryFindPayload } from '../../models/pointHistories';
 import { RootState } from '../../store';
 import { createFindPointHistoryPageAction } from '../../store/pointHistory/action';
 import MyPointHistoryTemplate from '../../components/pointHistory/MyPointHistoryTemplate';
+import { MyData } from '../../models/auths';
 
 function MyPointHistoryPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.members.loginMember) as LoginMember;
+    const loginMember = useSelector((state: RootState) => state.auths.myData) as MyData;
     const pointHistoryPageAsync = useSelector((state: RootState) => state.pointHistories.pointHistoryPageAsync);
 
     useEffect(() => {

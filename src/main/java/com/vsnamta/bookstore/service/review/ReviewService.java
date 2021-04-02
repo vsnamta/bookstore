@@ -15,7 +15,6 @@ import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.common.model.FindPayload;
 import com.vsnamta.bookstore.service.common.model.Page;
-import com.vsnamta.bookstore.service.member.LoginMember;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +45,12 @@ public class ReviewService {
         Product product = productRepository.findById(reviewSavePayload.getProductId())
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
-        Review review = Review.createReview(member, product, reviewSavePayload.getRating(), reviewSavePayload.getContents());
+        Review review = Review.createReview(
+            member, 
+            product, 
+            reviewSavePayload.getRating(), 
+            reviewSavePayload.getContents()
+        );
         
         reviewRepository.save(review);
 
@@ -54,25 +58,32 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewResult update(LoginMember loginMember, Long id, ReviewUpdatePayload reviewUpdatePayload) {
+    public ReviewResult update(String memberId, Long id, ReviewUpdatePayload reviewUpdatePayload) {
+        Member member = memberRepository.findById(memberId).get();
+
         Review review = reviewRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
-        if(!loginMember.checkMyReview(review)) {
+        if (!member.getId().equals(review.getMember().getId())) {
             throw new NotEnoughPermissionException("요청 권한이 없습니다.");
         }
 
-        review.update(reviewUpdatePayload.getRating(), reviewUpdatePayload.getContents());
+        review.update(
+            reviewUpdatePayload.getRating(), 
+            reviewUpdatePayload.getContents()
+        );
 
         return new ReviewResult(review);
     }
 
     @Transactional
-    public void remove(LoginMember loginMember, Long id) {
+    public void remove(String memberId, Long id) {
+        Member member = memberRepository.findById(memberId).get();
+
         Review review = reviewRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
-        if(!loginMember.checkMyReview(review)) {
+        if (!member.getId().equals(review.getMember().getId())) {
             throw new NotEnoughPermissionException("요청 권한이 없습니다.");
         }
         

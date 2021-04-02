@@ -1,11 +1,20 @@
 import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, FindPayload, Page } from '../models/common';
-import { LoginMember, MemberDetailResult, MemberResult, MemberUpdatePayload } from '../models/members';
+import { LoginMember, MemberDetailResult, MemberResult, MemberSavePayload, MemberUpdatePayload } from '../models/members';
 import apiClient from './apiClient';
 import apiErrorParser from '../utills/apiErrorParser';
 
 const memberApi = {
+    save(payload: MemberSavePayload): Promise<MemberDetailResult> {
+        return new Promise((resolve, reject) => {
+            apiClient.post<MemberDetailResult>('/api/members', payload).then(({ data }) => {
+                resolve(data);
+            }).catch((error: AxiosError<ErrorResult>) => {
+                reject(apiErrorParser.parse(error));
+            });
+        });
+    },
     update(id: number, payload: MemberUpdatePayload): Promise<MemberDetailResult> {
         return new Promise((resolve, reject) => {
             apiClient.put<MemberDetailResult>(`/api/members/${id}`, payload).then(({ data }) => {

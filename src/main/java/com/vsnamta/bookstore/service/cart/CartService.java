@@ -11,7 +11,6 @@ import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
-import com.vsnamta.bookstore.service.member.LoginMember;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,12 +59,18 @@ public class CartService {
     }
 
     @Transactional
-    public CartResult update(LoginMember loginMember, Long id, CartUpdatePayload cartUpdatePayload) {
+    public CartResult update(String memberId, Long id, CartUpdatePayload cartUpdatePayload) {
+        Member member = memberRepository.findById(memberId).get();
+
         Cart cart = cartRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
-        if(!loginMember.checkMyCart(cart)) {
+        if (!member.getId().equals(cart.getMember().getId())) {
             throw new NotEnoughPermissionException("요청 권한이 없습니다.");
+        }
+
+        if(cartUpdatePayload.getQuantity() > cart.getProduct().getStockInfo().getStockQuantity()) {
+            // 익셉션 처리
         }
 
         cart.updateQuantity(cartUpdatePayload.getQuantity());
@@ -74,19 +79,22 @@ public class CartService {
     }
 
     @Transactional
-    public void remove(LoginMember loginMember, List<Long> ids) {
+    public void remove(String memberId, List<Long> ids) {
+        Member member = memberRepository.findById(memberId).get();
+
         List<Cart> carts = cartRepository.findByIds(ids);
 
         for(Cart cart : carts) {
-            if(!loginMember.checkMyCart(cart)) {
+            if (!member.getId().equals(cart.getMember().getId())) {
                 throw new NotEnoughPermissionException("요청 권한이 없습니다.");
             }
+
             cartRepository.remove(cart);
         }
     }
 
     @Transactional(readOnly = true)
-    public List<CartResult> findAll(Long memberId) {
+    public List<CartResult> findAll(String memberId) {
         return cartRepository.findAll(memberId)
             .stream()
             .map(CartResult::new)

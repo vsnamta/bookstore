@@ -1,24 +1,43 @@
 package com.vsnamta.bookstore.service.member;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.vsnamta.bookstore.domain.common.model.PageRequest;
 import com.vsnamta.bookstore.domain.common.model.SearchRequest;
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
-import com.vsnamta.bookstore.service.common.BaseMemoryRepository;
 
-public class MemoryMemberRepository extends BaseMemoryRepository<Member> implements MemberRepository {
-    public Optional<Member> findByEmail(String email) {
-        return getMap().values()
-            .stream()
-            .filter(member -> member.getEmail().equals(email))
-            .findFirst();
+public class MemoryMemberRepository implements MemberRepository {
+    private Map<String, Member> map = new HashMap<>();
+
+    @Override
+    public Member save(Member member) {
+        if(member.getId() == null) {
+            throw new RuntimeException("아이디를 입력해주세요.");
+        }
+
+        boolean hasDuplicatedId = map.values().stream()
+            .anyMatch(m -> m.getId().equals(member.getId()));
+
+        if(hasDuplicatedId) {
+            throw new RuntimeException("아이디 중복 오류");
+        }
+
+        map.put(member.getId(), member);
+
+        return member;
     }
 
     @Override
-    public Optional<Member> findOne(Long id) {
+    public Optional<Member> findById(String id) {
+        return Optional.ofNullable(map.get(id));
+    }
+    
+    @Override
+    public Optional<Member> findOne(String id) {
         return null;
     }
 

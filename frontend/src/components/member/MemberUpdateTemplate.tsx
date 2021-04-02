@@ -2,21 +2,21 @@ import React from 'react';
 import Layout from '../common/Layout';
 import MyPageLayout from '../common/MyPageLayout';
 import ErrorDetail from '../general/ErrorDetail';
-import MemberDetail from './MemberDetail';
+import MemberUpdateForm from './MemberUpdateForm';
 import { MemberUpdateActionPayload } from '../../store/member/action';
 import { MemberAsync } from '../../store/member/reducer';
 
-interface MyDataTemplateProps {
+interface MemberUpdateTemplateProps {
     memberAsync: MemberAsync;
     updateMember: (payload: MemberUpdateActionPayload) => void;
 }
 
-function MyDataTemplate({ memberAsync, updateMember }: MyDataTemplateProps) {
+function MemberUpdateTemplate({ memberAsync, updateMember }: MemberUpdateTemplateProps) {
     return (
         <Layout>
             <MyPageLayout>
                 <h3>나의 정보</h3>
-                <MemberDetail 
+                <MemberUpdateForm 
                     member={memberAsync.result} 
                     onUpdateMember={updateMember} 
                 />
@@ -26,4 +26,4 @@ function MyDataTemplate({ memberAsync, updateMember }: MyDataTemplateProps) {
     )
 };
 
-export default MyDataTemplate;
+export default MemberUpdateTemplate;

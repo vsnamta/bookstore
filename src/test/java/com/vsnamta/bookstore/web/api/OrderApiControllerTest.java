@@ -26,7 +26,6 @@ import com.vsnamta.bookstore.domain.order.OrderStatus;
 import com.vsnamta.bookstore.domain.order.OrderStatusSettingService;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
-import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.order.OrderSavePayload;
 import com.vsnamta.bookstore.service.order.OrderUpdatePayload;
 
@@ -82,7 +81,7 @@ public class OrderApiControllerTest {
     @Test
     public void 주문() throws Exception {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").point(1000).build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").point(1000).build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 
@@ -113,8 +112,8 @@ public class OrderApiControllerTest {
             mockMvc.perform(
                 post("/api/orders")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(objectMapper.writeValueAsString(orderSavePayload))
-                    .sessionAttr("loginMember", new LoginMember(member)));
+                    .content(objectMapper.writeValueAsString(orderSavePayload)));
+                    //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions
@@ -126,7 +125,7 @@ public class OrderApiControllerTest {
     @Test
     public void 주문취소() throws Exception {
         // given  
-        Member member = memberRepository.save(aMember().name("홍길동").point(1000).build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").point(1000).build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 
@@ -158,8 +157,8 @@ public class OrderApiControllerTest {
             mockMvc.perform(
                 put("/api/orders/" + order.getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(orderUpdatePayload))
-                .sessionAttr("loginMember", new LoginMember(member)));
+                .content(objectMapper.writeValueAsString(orderUpdatePayload)));
+                //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions
@@ -171,7 +170,7 @@ public class OrderApiControllerTest {
     @Test
     public void 주문번호로_주문_조회() throws Exception {
         // given
-        Member member = memberRepository.save(aMember().name("홍길동").build());
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
 
@@ -194,8 +193,8 @@ public class OrderApiControllerTest {
         // when
         ResultActions resultActions =
             mockMvc.perform(
-                get("/api/orders/" + order.getId())
-                    .sessionAttr("loginMember", new LoginMember(member)));
+                get("/api/orders/" + order.getId()));
+                    //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions
@@ -207,7 +206,7 @@ public class OrderApiControllerTest {
     @Test
     public void 회원번호로_주문_조회() throws Exception {
          // given
-         Member member = memberRepository.save(aMember().name("홍길동").build());
+         Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
          DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
  
@@ -232,8 +231,8 @@ public class OrderApiControllerTest {
                     .param("searchCriteria.column", "memberId")
                     .param("searchCriteria.keyword", String.valueOf(member.getId()))
                     .param("pageCriteria.page", String.valueOf(1))    
-                    .param("pageCriteria.size", String.valueOf(10))
-                    .sessionAttr("loginMember", new LoginMember(member)));
+                    .param("pageCriteria.size", String.valueOf(10)));
+                    //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions

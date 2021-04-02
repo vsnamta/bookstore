@@ -10,6 +10,7 @@ import com.vsnamta.bookstore.domain.common.model.PageRequest;
 import com.vsnamta.bookstore.domain.common.model.SearchRequest;
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
+import com.vsnamta.bookstore.domain.member.MemberRole;
 import com.vsnamta.bookstore.domain.order.Order;
 import com.vsnamta.bookstore.domain.order.OrderLine;
 import com.vsnamta.bookstore.domain.order.OrderRepository;
@@ -21,7 +22,6 @@ import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.common.model.FindPayload;
 import com.vsnamta.bookstore.service.common.model.Page;
-import com.vsnamta.bookstore.service.member.LoginMember;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,11 +106,13 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDetailResult update(LoginMember loginMember, Long id, OrderUpdatePayload orderUpdatePayload) {
+    public OrderDetailResult update(String memberId, Long id, OrderUpdatePayload orderUpdatePayload) {
+        Member member = memberRepository.findById(memberId).get();
+        
         Order order = orderRepository.findById(id)
             .orElseThrow(() -> new InvalidArgumentException("잘못된 요청값에 의해 처리 실패하였습니다."));
 
-        if(loginMember.hasUserRole() && !loginMember.checkMyOrder(order)) {
+        if (member.getRole().equals(MemberRole.USER) && !member.getId().equals(order.getMember().getId())) {
             throw new NotEnoughPermissionException("요청 권한이 없습니다.");
         }
 
@@ -127,11 +129,13 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderDetailResult findOne(LoginMember loginMember, Long id) {
+    public OrderDetailResult findOne(String memberId, Long id) {
+        Member member = memberRepository.findById(memberId).get();
+
         Order order = orderRepository.findOne(id)
             .orElseThrow(() -> new DataNotFoundException("요청하신 데이터를 찾을 수 없습니다."));
 
-        if(loginMember.hasUserRole() && !loginMember.checkMyOrder(order)) {
+        if (member.getRole().equals(MemberRole.USER) && !member.getId().equals(order.getMember().getId())) {
             throw new NotEnoughPermissionException("요청 권한이 없습니다.");
         }
 
