@@ -61,14 +61,15 @@ function ReviewUpdateModal({ review, isOpen, onUpdateReview, onRequestClose }: R
                             <div className="col-lg-12">
                                 <div className="form-group">
                                     <label>내용 <span className="required">*</span></label>
-                                    <input type="text" 
+                                    <input 
+                                        type="text" 
                                         name="contents" 
                                         className="form-control"
                                         defaultValue={review.contents}
-                                        ref={register({ required: true, maxLength: 100 })} 
+                                        ref={register({ required: true, maxLength: 30 })} 
                                     />
                                     {errors.contents?.type === "required" && <span>내용을 입력해주세요.</span>}
-                                    {errors.contents?.type === "maxLength" && <span>내용을 100자 이하 입력해주세요.</span>}
+                                    {errors.contents?.type === "maxLength" && <span>내용을 30자 이하 입력해주세요.</span>}
                                 </div>
                             </div>   
                             <div className="col-lg-6">

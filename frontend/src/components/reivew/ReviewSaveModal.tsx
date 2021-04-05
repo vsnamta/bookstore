@@ -65,10 +65,10 @@ function ReviewSaveModal({ product, isOpen, onRequestClose, onSaveReview }: Revi
                                         type="text" 
                                         name="contents" 
                                         className="form-control"
-                                        ref={register({ required: true, maxLength: 100 })} 
+                                        ref={register({ required: true, maxLength: 30 })} 
                                     />
                                     {errors.contents?.type === "required" && <span>내용을 입력해주세요.</span>}
-                                    {errors.contents?.type === "maxLength" && <span>내용을 100자 이하 입력해주세요.</span>}
+                                    {errors.contents?.type === "maxLength" && <span>내용을 30자 이하 입력해주세요.</span>}
                                 </div>
                             </div>  
                             <div className="col-lg-12">

@@ -1,19 +1,23 @@
+import qs from 'qs';
 import React, { useCallback } from 'react';
+import { useHistory } from 'react-router';
+import useModal from '../../hooks/useModal';
+import { ProductFindPayload } from '../../models/products';
+import { ProductAsync } from '../../store/product/reducer';
+import { StockSaveActionPayload } from '../../store/stock/action';
+import { StockPageAsync } from '../../store/stock/reducer';
 import AdminLayout from '../common/AdminLayout';
 import ErrorDetail from '../general/ErrorDetail';
 import Pagination from '../general/Pagination';
 import Title from '../general/Title';
-import AdminProductDetail from './AdminProductDetail';
 import StockList from '../stock/StockList';
 import StockManagementBar from '../stock/StockManagementBar';
 import StockSaveModal from '../stock/StockSaveModal';
-import useModal from '../../hooks/useModal';
-import { ProductAsync } from '../../store/product/reducer';
-import { StockSaveActionPayload } from '../../store/stock/action';
-import { StockPageAsync } from '../../store/stock/reducer';
+import AdminProductDetail from './AdminProductDetail';
 
 interface ProductManagementDetailTemplateProps {
     productAsync: ProductAsync;
+    productFindPayload: ProductFindPayload;
     stockPageAsync: StockPageAsync;
     saveStock: (payload: StockSaveActionPayload) => void;
     onPageChange: (selectedItem: {
@@ -21,13 +25,15 @@ interface ProductManagementDetailTemplateProps {
     }) => void;
 }
 
-function ProductManagementDetailTemplate({ productAsync, stockPageAsync, saveStock, onPageChange }: ProductManagementDetailTemplateProps) {
+function ProductManagementDetailTemplate({ productAsync, productFindPayload, stockPageAsync, saveStock, onPageChange }: ProductManagementDetailTemplateProps) {
+    const history = useHistory();
+    
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
 
-    // const onMoveList = useCallback(() => {
-    //     const queryString = qs.stringify(productPageAsync.payload, { allowDots: true });
-    //     history.push(`/admin/product/list?${queryString}`);
-    // }, [productPageAsync.payload]);
+    const onMoveList = useCallback(() => {
+        const queryString = qs.stringify(productFindPayload, { allowDots: true });
+        history.push(`/admin/product/list?${queryString}`);
+    }, [productFindPayload]);
 
     const onSaveStock = useCallback((payload: StockSaveActionPayload) => {
         saveStock({
@@ -44,7 +50,7 @@ function ProductManagementDetailTemplate({ productAsync, stockPageAsync, saveSto
         <AdminLayout>
             <AdminProductDetail 
                 product={productAsync.result}
-                //onMoveList={onMoveList}
+                onMoveList={onMoveList}
             />
             {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
             <Title content={"재고"} />

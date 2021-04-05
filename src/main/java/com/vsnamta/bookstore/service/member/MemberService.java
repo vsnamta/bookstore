@@ -40,6 +40,10 @@ public class MemberService {
             throw new DuplicateMemberException("이미 존재하는 아이디입니다.");
         }
 
+        if(!memberSavePayload.validatePassword()) {
+            throw new InvalidArgumentException("비밀번호를 정확히 입력해주세요.");
+        }
+
         Member member = Member.createMember(
             memberSavePayload.getId(), 
             passwordEncoder.encode(memberSavePayload.getPassword()),
@@ -62,8 +66,12 @@ public class MemberService {
             throw new PasswordNotMatchingException("현재 비밀번호를 정확히 입력해주세요.");
         }
 
+        if(!memberUpdatePayload.validatePassword()) {
+            throw new InvalidArgumentException("비밀번호를 정확히 입력해주세요.");
+        }
+
         member.update(
-            passwordEncoder.encode(memberUpdatePayload.getNewPassword()),
+            passwordEncoder.encode(memberUpdatePayload.getPassword()),
             memberUpdatePayload.getPhoneNumber(), 
             memberUpdatePayload.createAddress()
         );

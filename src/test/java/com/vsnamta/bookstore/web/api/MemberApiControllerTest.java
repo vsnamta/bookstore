@@ -59,6 +59,7 @@ public class MemberApiControllerTest {
         MemberSavePayload memberSavePayload = new MemberSavePayload();
         memberSavePayload.setId("test");
         memberSavePayload.setPassword("password");
+        memberSavePayload.setPasswordConfirm("password");
         memberSavePayload.setName("홍길동");
         memberSavePayload.setPhoneNumber("010-1234-5678");
         memberSavePayload.setZipCode("123-456");
@@ -88,7 +89,8 @@ public class MemberApiControllerTest {
 
         MemberUpdatePayload memberUpdatePayload = new MemberUpdatePayload();
         memberUpdatePayload.setCurrentPassword("password");
-        memberUpdatePayload.setNewPassword("passw0rd");
+        memberUpdatePayload.setPassword("passw0rd");
+        memberUpdatePayload.setPasswordConfirm("passw0rd");
         memberUpdatePayload.setPhoneNumber("010-1234-5678");
         memberUpdatePayload.setZipCode("123-456");
         memberUpdatePayload.setAddress1("서울시 중구 명동 123번지");

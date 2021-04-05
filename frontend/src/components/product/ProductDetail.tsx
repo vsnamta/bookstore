@@ -162,7 +162,11 @@ function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps)
 						<h3 className="blog-title">책 소개</h3>
 					</header>
 					<article className="review-article">
-						<p>{product.bookIntroduction}</p>
+						<p>
+							{product.bookIntroduction.split("\n").map(line => (
+                            	<>{line}<br/></>
+                        	))}
+						</p>
 					</article>
 				</div>
 				<hr/>
@@ -171,7 +175,11 @@ function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps)
 						<h3 className="blog-title">저자 소개</h3>
 					</header>
 					<article className="review-article">
-						<p>{product.authorIntroduction}</p>
+						<p>
+							{product.authorIntroduction.split("\n").map(line => (
+                            	<>{line}<br/></>
+                        	))}
+						</p>
 					</article>
 				</div>
 				<hr/>
@@ -180,7 +188,11 @@ function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps)
 						<h3 className="blog-title">목차</h3>
 					</header>
 					<article className="review-article">
-						<p>{product.tableOfContents}</p>
+						<p>
+							{product.tableOfContents.split("\n").map((line, index) => (
+                            	<React.Fragment key={index}>{line}<br/></React.Fragment>
+                        	))}
+						</p>
 					</article>
 				</div>
 			</div>

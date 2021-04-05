@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
+import com.vsnamta.bookstore.service.common.exception.InvalidArgumentException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +50,22 @@ public class MemberServiceTest {
         MemberSavePayload memberSavePayload = new MemberSavePayload();
         memberSavePayload.setId("test");
         memberSavePayload.setPassword("password");
+        memberSavePayload.setPasswordConfirm("password");
+
+        // when
+        memberService.save(memberSavePayload).getId();
+
+        // then
+        fail();
+    }
+
+    @Test(expected = InvalidArgumentException.class)
+    public void 회원_등록시_비밀번호_확인_실패() {
+        // given 
+        MemberSavePayload memberSavePayload = new MemberSavePayload();
+        memberSavePayload.setId("test");
+        memberSavePayload.setPassword("password");
+        memberSavePayload.setPasswordConfirm("password1");
 
         // when
         memberService.save(memberSavePayload).getId();
@@ -66,7 +83,8 @@ public class MemberServiceTest {
 
         MemberUpdatePayload memberUpdatePayload = new MemberUpdatePayload();
         memberUpdatePayload.setCurrentPassword("password");
-        memberUpdatePayload.setNewPassword("passw0rd");
+        memberUpdatePayload.setPassword("passw0rd");
+        memberUpdatePayload.setPasswordConfirm("passw0rd");
 
         // when
         memberService.update(member.getId(), memberUpdatePayload);
@@ -86,7 +104,27 @@ public class MemberServiceTest {
 
         MemberUpdatePayload memberUpdatePayload = new MemberUpdatePayload();
         memberUpdatePayload.setCurrentPassword("abcdefg");
-        memberUpdatePayload.setNewPassword("passw0rd");
+        memberUpdatePayload.setPassword("passw0rd");
+        memberUpdatePayload.setPasswordConfirm("passw0rd");
+
+        // when
+        memberService.update(member.getId(), memberUpdatePayload);
+
+        // then
+        fail();
+    }
+
+    @Test(expected = InvalidArgumentException.class)
+    public void 회원_수정시_비밀번호_확인_실패() {
+        // given 
+        Member member = memberRepository.save(
+            aMember().id("test").password(passwordEncoder.encode("password")).build()
+        );
+
+        MemberUpdatePayload memberUpdatePayload = new MemberUpdatePayload();
+        memberUpdatePayload.setCurrentPassword("password");
+        memberUpdatePayload.setPassword("passw0rd");
+        memberUpdatePayload.setPasswordConfirm("passw0rd1");
 
         // when
         memberService.update(member.getId(), memberUpdatePayload);

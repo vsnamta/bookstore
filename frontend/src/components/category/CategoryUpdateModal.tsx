@@ -52,7 +52,11 @@ function CategoryUpdateModal({ category, categoryList, isOpen, onUpdateCategory,
                                         ref={register({ required: true })}
                                     >
                                         {categoryList.map(superCategory => 
-                                            <option value={superCategory.id} key={superCategory.id} selected={superCategory.id === category.parentId}>
+                                            <option 
+                                                value={superCategory.id} 
+                                                key={superCategory.id} 
+                                                selected={superCategory.id === category.parentId}
+                                            >
                                                 {superCategory.name}
                                             </option>
                                         )}													

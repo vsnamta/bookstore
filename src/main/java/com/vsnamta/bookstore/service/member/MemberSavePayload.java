@@ -19,6 +19,11 @@ public class MemberSavePayload {
     @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;
 
+    @Size(min = 8, message = "비밀번호를 8자 이상 입력해주세요.")
+    @Size(max = 16, message = "비밀번호를 16자 이하 입력해주세요.")
+    @NotBlank(message = "비밀번호를 입력해주세요.")
+    private String passwordConfirm;
+
     @NotBlank(message = "이름을 입력해주세요.")
     private String name;
 
@@ -40,5 +45,9 @@ public class MemberSavePayload {
             .address1(address1)
             .address2(address2)
             .build();
+    }
+
+    public boolean validatePassword() {
+        return password.equals(passwordConfirm);
     }
 }

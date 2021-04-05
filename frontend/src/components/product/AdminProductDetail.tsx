@@ -4,13 +4,15 @@ import { ProductDetailResult } from '../../models/products';
 
 interface AdminProductDetailProps {
     product?: ProductDetailResult;
-	//onMoveList: () => void;
+	onMoveList: () => void;
 }
 
-function AdminProductDetail({ product }: AdminProductDetailProps) {
+function AdminProductDetail({ product, onMoveList }: AdminProductDetailProps) {
 	if(!product) {
         return null;
     }
+
+	console.log(product.tableOfContents.split("\n"));
 
 	const history = useHistory();
 
@@ -55,7 +57,7 @@ function AdminProductDetail({ product }: AdminProductDetailProps) {
 						<div className="add-to-cart-row">
 							<div className="add-cart-btn">
 								<a href="javascript:void(0)" className="btn btn-outlined--primary" onClick={onMoveUpdate}>수정</a>
-								{/* <a href="javascript:void(0)" className="btn btn-outlined--primary" onClick={onMoveList}>목록</a> */}
+								<a href="javascript:void(0)" className="btn btn-outlined--primary" onClick={onMoveList}>목록</a>
 							</div>
 						</div>
 					</div>
@@ -67,7 +69,11 @@ function AdminProductDetail({ product }: AdminProductDetailProps) {
 						<h3 className="blog-title">책 소개</h3>
 					</header>
 					<article className="review-article">
-						<p>{product.bookIntroduction}</p>
+						<p>
+							{product.bookIntroduction.split("\n").map(line => (
+                            	<>{line}<br/></>
+                        	))}
+						</p>
 					</article>
 				</div>
 				<hr/>
@@ -76,7 +82,11 @@ function AdminProductDetail({ product }: AdminProductDetailProps) {
 						<h3 className="blog-title">저자 소개</h3>
 					</header>
 					<article className="review-article">
-						<p>{product.authorIntroduction}</p>
+						<p>
+							{product.authorIntroduction.split("\n").map(line => (
+                            	<>{line}<br/></>
+                        	))}
+						</p>
 					</article>
 				</div>
 				<hr/>
@@ -85,7 +95,11 @@ function AdminProductDetail({ product }: AdminProductDetailProps) {
 						<h3 className="blog-title">목차</h3>
 					</header>
 					<article className="review-article">
-						<p>{product.tableOfContents}</p>
+						<p>
+							{product.tableOfContents.split("\n").map(line => (
+                            	<>{line}<br/></>
+                        	))}
+						</p>
 					</article>
 				</div>
 			</div>

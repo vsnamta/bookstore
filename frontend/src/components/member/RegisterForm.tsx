@@ -11,7 +11,11 @@ interface RegisterFormProps {
 function RegisterForm({ onSaveMember }: RegisterFormProps) {
     const history = useHistory();
 
-    const { register, handleSubmit, errors } = useForm<MemberSavePayload>();
+    const { register, handleSubmit, getValues, errors } = useForm<MemberSavePayload>();
+
+    const validatePasswordConfirm = useCallback((passwordConfirm: string) => {
+        return passwordConfirm === getValues("password");
+    }, []);
 
     const onSubmit = useCallback((payload: MemberSavePayload) => {
         onSaveMember({
@@ -51,9 +55,25 @@ function RegisterForm({ onSaveMember }: RegisterFormProps) {
                                     type="password" 
                                     name="password" 
                                     placeholder="Enter your password" 
-                                    ref={register({ required: true })} 
+                                    ref={register({ required: true, minLength:8, maxLength: 16 })} 
                                 />
-                                {errors.password && <span>비밀번호를 입력해주세요.</span>}
+                                {errors.password?.type === "required" && <span>비밀번호를 입력해주세요.</span>}
+                                {errors.password?.type === "minLength" && <span>비밀번호를 8자 이상 입력해주세요.</span>}
+                                {errors.password?.type === "maxLength" && <span>비밀번호를 16자 이하 입력해주세요.</span>}
+                            </div>
+                            <div className="col-lg-6 mb--20">
+                                <label htmlFor="password">비밀번호 확인</label>
+                                <input 
+                                    className="mb-0 form-control" 
+                                    type="password" 
+                                    name="passwordConfirm" 
+                                    placeholder="Enter your password" 
+                                    ref={register({ required: true, minLength:8, maxLength: 16, validate: validatePasswordConfirm })} 
+                                />
+                                {errors.passwordConfirm?.type === "required" && <span>비밀번호를 입력해주세요.</span>}
+                                {errors.passwordConfirm?.type === "minLength" && <span>비밀번호를 8자 이상 입력해주세요.</span>}
+                                {errors.passwordConfirm?.type === "maxLength" && <span>비밀번호를 16자 이하 입력해주세요.</span>}
+                                {errors.passwordConfirm?.type === "validate" && <span>비밀번호 다시 확인해주세요.</span>}
                             </div>
                             <div className="col-12 mb--20">
                                 <label htmlFor="name">이름</label>

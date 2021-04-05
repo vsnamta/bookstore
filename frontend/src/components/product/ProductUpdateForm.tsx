@@ -98,7 +98,11 @@ function ProductUpdateForm({ product, discountPolicyList, categoryList, onUpdate
 											ref={register({ required: true })}
 										>
 											{discountPolicyList.map(discountPolicy => 
-												<option value={discountPolicy.id} key={discountPolicy.id}>
+												<option 
+													value={discountPolicy.id} 
+													key={discountPolicy.id} 
+													selected={product.discountPolicyId === discountPolicy.id}
+												>
 													{`${discountPolicy.name}(할인 ${discountPolicy.discountPercent}%, 적립 ${discountPolicy.depositPercent}%)`}
 												</option>
 											)}													
@@ -111,7 +115,11 @@ function ProductUpdateForm({ product, discountPolicyList, categoryList, onUpdate
 										<label>상위 카테고리 <span className="required">*</span></label>
 										<select className="form-control" onChange={onChangeSuperCategory}>
 											{categoryList.map(category => 
-												<option value={category.id} key={category.id}>
+												<option 
+													value={category.id} 
+													key={category.id}
+													selected={product.superCategoryId === category.id}
+												>
 													{category.name}
 												</option>
 											)}																									
@@ -123,7 +131,11 @@ function ProductUpdateForm({ product, discountPolicyList, categoryList, onUpdate
 										<label>하위 카테고리 <span className="required">*</span></label>
 										<select name="categoryId" className="form-control" ref={register({ required: true })}>													
 											{subCategoryList.map(category => 
-												<option value={category.id} key={category.id}>
+												<option 
+													value={category.id} 
+													key={category.id}
+													selected={product.subCategoryId === category.id}
+												>
 													{category.name}
 												</option>
 											)}

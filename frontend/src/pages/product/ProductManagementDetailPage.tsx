@@ -6,6 +6,7 @@ import { RootState } from '../../store';
 import { createFindProductAction } from '../../store/product/action';
 import { createFindStockPageAction, createSaveStockAction, StockSaveActionPayload } from '../../store/stock/action';
 import ProductManagementDetailTemplate from '../../components/product/ProductManagementDetailTemplate';
+import { ProductFindPayload } from '../../models/products';
 
 function ProductManagementDetailPage() {
     const { id } = useParams<{id: string}>();
@@ -39,6 +40,7 @@ function ProductManagementDetailPage() {
     return (
         <ProductManagementDetailTemplate 
             productAsync={productAsync}
+            productFindPayload={productPageAsync.payload as ProductFindPayload}
             stockPageAsync={stockPageAsync}
             saveStock={saveStock}
             onPageChange={onPageChange}

@@ -11,7 +11,6 @@ import { MyData } from '../../models/auths';
 
 function OrderFormPage() {
     const location = useLocation<{orderingProductList: OrderingProduct[]}>();
-    console.log(location);
 
     const orderingProductList = location.state ? location.state.orderingProductList : undefined;
 

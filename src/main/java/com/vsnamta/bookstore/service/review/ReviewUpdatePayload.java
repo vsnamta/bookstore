@@ -15,7 +15,7 @@ public class ReviewUpdatePayload {
     @Max(value = 5, message = "평점을 5 이하 입력해주세요.")
     private int rating;
 
-    @Size(max = 100, message = "내용을 100자 이하 입력해주세요.")
+    @Size(max = 30, message = "내용을 30자 이하 입력해주세요.")
     @NotBlank(message = "내용을 입력해주세요.")
     private String contents;
 }
