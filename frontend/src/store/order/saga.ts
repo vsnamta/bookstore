@@ -5,11 +5,11 @@ import { OrderDetailResult, OrderResult } from '../../models/orders';
 import { createFindOrderAction, createFindOrderPageAction, createSaveOrderAction, createSaveOrderSuccessAction, createUpdateOrderAction, createUpdateOrderSuccessAction, findOrderAsyncActionCreator, findOrderPageAsyncActionCreator } from './action';
 import { FIND_ORDER, FIND_ORDER_PAGE, SAVE_ORDER, UPDATE_ORDER } from './actionType';
 
-function* findOrderPageSaga(action: ReturnType<typeof createFindOrderPageAction>) {
-    yield put(findOrderPageAsyncActionCreator.request(action.payload));
+function* findOrderPageSaga({ payload: findPayload }: ReturnType<typeof createFindOrderPageAction>) {
+    yield put(findOrderPageAsyncActionCreator.request(findPayload));
 
     try {
-        const orderPage: Page<OrderResult> = yield call(orderApi.findAll, action.payload);
+        const orderPage: Page<OrderResult> = yield call(orderApi.findAll, findPayload);
 
         yield put(findOrderPageAsyncActionCreator.success(orderPage));
     } catch (error) {
@@ -17,11 +17,11 @@ function* findOrderPageSaga(action: ReturnType<typeof createFindOrderPageAction>
     }
 };
 
-function* findOrderSaga(action: ReturnType<typeof createFindOrderAction>) {
-    yield put(findOrderAsyncActionCreator.request(action.payload));
+function* findOrderSaga({ payload: id }: ReturnType<typeof createFindOrderAction>) {
+    yield put(findOrderAsyncActionCreator.request(id));
 
     try {
-        const order: OrderDetailResult = yield call(orderApi.findOne, action.payload);
+        const order: OrderDetailResult = yield call(orderApi.findOne, id);
 
         yield put(findOrderAsyncActionCreator.success(order));
     } catch (error) {

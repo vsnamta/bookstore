@@ -2,7 +2,7 @@ import { createReducer, PayloadAction } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { FindPayload, Page } from '../../models/common';
 import { LoginMember, MemberDetailResult, MemberResult } from '../../models/members';
-import { createSaveMemberSuccessAction, MembersAction } from './action';
+import { createSaveMemberSuccessAction, createUpdateMemberSuccessAction, findMemberAsyncActionCreator, findMemberPageAsyncActionCreator, MembersAction } from './action';
 import { FIND_MEMBER_FAILURE, FIND_MEMBER_PAGE_FAILURE, FIND_MEMBER_PAGE_REQUEST, FIND_MEMBER_PAGE_SUCCESS, FIND_MEMBER_REQUEST, FIND_MEMBER_SUCCESS, SAVE_MEMBER_SUCCESS, SET_MY_DATA, UPDATE_MEMBER_SUCCESS } from './actionType';
 
 export interface MemberPageAsync {
@@ -38,59 +38,59 @@ const initialState: MembersState = {
 };
 
 export default createReducer<MembersState, MembersAction>(initialState, {
-    [SET_MY_DATA]: (state, action) => ({
-        ...state,
-        loginMember: action.payload
-    }),
-    [FIND_MEMBER_PAGE_REQUEST]: (state, action) => ({
+    // [SET_MY_DATA]: (state, action) => ({
+    //     ...state,
+    //     loginMember: action.payload
+    // }),
+    [FIND_MEMBER_PAGE_REQUEST]: (state, { payload: findPayload }: ReturnType<typeof findMemberPageAsyncActionCreator.request>) => ({
         ...state,
         memberPageAsync: {
-            payload: action.payload,
+            payload: findPayload,
             result: undefined,
             error: undefined
         }
     }),
-    [FIND_MEMBER_PAGE_SUCCESS]: (state, action) => ({
+    [FIND_MEMBER_PAGE_SUCCESS]: (state, { payload: memberPage }: ReturnType<typeof findMemberPageAsyncActionCreator.success>) => ({
         ...state,
         memberPageAsync: {
             ...state.memberPageAsync,
-            result: action.payload
+            result: memberPage
         } 
     }),
-    [FIND_MEMBER_PAGE_FAILURE]: (state, action) => ({
+    [FIND_MEMBER_PAGE_FAILURE]: (state, { payload: error }: ReturnType<typeof findMemberPageAsyncActionCreator.failure>) => ({
         ...state,
         memberPageAsync: {
             ...state.memberPageAsync,
-            error: action.payload
+            error: error
         } 
     }),
-    [FIND_MEMBER_REQUEST]: (state, action) => ({
+    [FIND_MEMBER_REQUEST]: (state, { payload: id }: ReturnType<typeof findMemberAsyncActionCreator.request>) => ({
         ...state,
         memberAsync: {
-            payload: action.payload,
+            payload: id,
             result: undefined,
             error: undefined
         }
     }),
-    [FIND_MEMBER_SUCCESS]: (state, action) => ({
+    [FIND_MEMBER_SUCCESS]: (state, { payload: member }: ReturnType<typeof findMemberAsyncActionCreator.success>) => ({
         ...state,
         memberAsync: {
             ...state.memberAsync,
-            result: action.payload
+            result: member
         }
     }),
-    [FIND_MEMBER_FAILURE]: (state, action) => ({
+    [FIND_MEMBER_FAILURE]: (state, { payload: error }: ReturnType<typeof findMemberAsyncActionCreator.failure>) => ({
         ...state,
         memberAsync: {
             ...state.memberAsync,
-            error: action.payload
+            error: error
         }
     }),
-    [UPDATE_MEMBER_SUCCESS]: (state, action) => ({
+    [UPDATE_MEMBER_SUCCESS]: (state, { payload: member }: ReturnType<typeof createUpdateMemberSuccessAction>) => ({
         ...state,
         memberAsync: {
             ...state.memberAsync,
-            result: action.payload
+            result: member
         }
     }),
     [SAVE_MEMBER_SUCCESS]: (state, { payload: savedMember }: ReturnType<typeof createSaveMemberSuccessAction>) => ({

@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
-import { createSaveDiscountPolicySuccessAction, createUpdateDiscountPolicySuccessAction, DiscountPoliciesAction } from './action';
+import { createFindDiscountPolicyAction, createSaveDiscountPolicySuccessAction, createUpdateDiscountPolicySuccessAction, DiscountPoliciesAction, findDiscountPolicyListAsyncActionCreator } from './action';
 import { FIND_DISCOUNT_POLICY, FIND_DISCOUNT_POLICY_LIST_FAILURE, FIND_DISCOUNT_POLICY_LIST_REQUEST, FIND_DISCOUNT_POLICY_LIST_SUCCESS, SAVE_DISCOUNT_POLICY_SUCCESS, UPDATE_DISCOUNT_POLICY_SUCCESS } from './actionType';
 
 export interface DiscountPolicyListAsync {
@@ -30,24 +30,24 @@ export default createReducer<DiscountPoliciesState, DiscountPoliciesAction>(init
             error: undefined
         }
     }),
-    [FIND_DISCOUNT_POLICY_LIST_SUCCESS]: (state, action) => ({
+    [FIND_DISCOUNT_POLICY_LIST_SUCCESS]: (state, { payload: discountPolicies }: ReturnType<typeof findDiscountPolicyListAsyncActionCreator.success>) => ({
         ...state,
         discountPolicyListAsync: {
             ...state.discountPolicyListAsync,
-            result: action.payload
+            result: discountPolicies
         } 
     }),
-    [FIND_DISCOUNT_POLICY_LIST_FAILURE]: (state, action) => ({
+    [FIND_DISCOUNT_POLICY_LIST_FAILURE]: (state, { payload: error }: ReturnType<typeof findDiscountPolicyListAsyncActionCreator.failure>) => ({
         ...state,
         discountPolicyListAsync: {
             ...state.discountPolicyListAsync,
-            error: action.payload
+            error: error
         } 
     }),
-    [FIND_DISCOUNT_POLICY]: (state, action) => ({
+    [FIND_DISCOUNT_POLICY]: (state, { payload: id }: ReturnType<typeof createFindDiscountPolicyAction>) => ({
         ...state,
         discountPolicy: (state.discountPolicyListAsync.result as DiscountPolicyResult[])
-            .find(discountPolicy => discountPolicy.id === action.payload)
+            .find(discountPolicy => discountPolicy.id === id)
     }),
     [UPDATE_DISCOUNT_POLICY_SUCCESS]: (state, { payload: updatedDiscountPolicy }: ReturnType<typeof createUpdateDiscountPolicySuccessAction>) => ({
         discountPolicyListAsync: {

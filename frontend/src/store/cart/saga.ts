@@ -4,13 +4,13 @@ import { CartResult } from '../../models/carts';
 import { createFindCartListAction, findCartListAsyncActionCreator, createRemoveCartAction, createRemoveCartSuccessAction, createSaveCartAction, createSaveCartSuccessAction, createUpdateCartAction, createUpdateCartSuccessAction } from './action';
 import { FIND_CART_LIST, REMOVE_CART, SAVE_CART, UPDATE_CART } from './actionType';
 
-function* findCartListSaga(action: ReturnType<typeof createFindCartListAction>) {
+function* findCartListSaga({ payload: cartFindPayload }: ReturnType<typeof createFindCartListAction>) {
     yield put(findCartListAsyncActionCreator.request());
 
     try {
-        const cartList: CartResult[] = yield call(cartApi.findAll, action.payload);
+        const cartList: CartResult[] = yield call(cartApi.findAll, cartFindPayload);
 
-        yield put(findCartListAsyncActionCreator.success(cartList));
+        yield put(findCartListAsyncActionCreator.success(cartList.map(cart => ({ ...cart, checked: true }))));
     } catch (error) {
         yield put(findCartListAsyncActionCreator.failure(error));
     }
@@ -19,6 +19,7 @@ function* findCartListSaga(action: ReturnType<typeof createFindCartListAction>) 
 function* updateCartSaga({ payload: cartUpdateActionPayload }: ReturnType<typeof createUpdateCartAction>) {
     try {
         const cart: CartResult = yield call(cartApi.update, cartUpdateActionPayload.id, cartUpdateActionPayload.payload);
+        cart.checked = true;
 
         yield put(createUpdateCartSuccessAction(cart));
         cartUpdateActionPayload.onSuccess && cartUpdateActionPayload.onSuccess(cart);
@@ -30,6 +31,7 @@ function* updateCartSaga({ payload: cartUpdateActionPayload }: ReturnType<typeof
 function* saveCartSaga({ payload: cartSaveActionPayload }: ReturnType<typeof createSaveCartAction>) {
     try {
         const cart: CartResult = yield call(cartApi.save, cartSaveActionPayload.payload);
+        cart.checked = true;
 
         yield put(createSaveCartSuccessAction(cart));
         cartSaveActionPayload.onSuccess && cartSaveActionPayload.onSuccess(cart);

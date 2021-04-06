@@ -2,7 +2,7 @@ import { createReducer, PayloadAction } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { Page } from '../../models/common';
 import { ProductDetailResult, ProductFindPayload, ProductResult } from '../../models/products';
-import { createSaveProductSuccessAction, createUpdateProductSuccessAction, findProductPageAsyncActionCreator, ProductsAction } from './action';
+import { createSaveProductSuccessAction, createUpdateProductSuccessAction, findProductAsyncActionCreator, findProductPageAsyncActionCreator, ProductsAction } from './action';
 import { FIND_PRODUCT_FAILURE, FIND_PRODUCT_PAGE_FAILURE, FIND_PRODUCT_PAGE_REQUEST, FIND_PRODUCT_PAGE_SUCCESS, FIND_PRODUCT_REQUEST, FIND_PRODUCT_SUCCESS, SAVE_PRODUCT_SUCCESS, UPDATE_PRODUCT_SUCCESS } from './actionType';
 
 export interface ProductPageAsync {
@@ -44,40 +44,40 @@ export default createReducer<ProductsState, ProductsAction>(initialState, {
             error: undefined
         }
     }),
-    [FIND_PRODUCT_PAGE_SUCCESS]: (state, action) => ({
+    [FIND_PRODUCT_PAGE_SUCCESS]: (state, { payload: productPage }: ReturnType<typeof findProductPageAsyncActionCreator.success>) => ({
         ...state,
         productPageAsync: {
             ...state.productPageAsync,
-            result: action.payload
+            result: productPage
         } 
     }),
-    [FIND_PRODUCT_PAGE_FAILURE]: (state, action) => ({
+    [FIND_PRODUCT_PAGE_FAILURE]: (state, { payload: error }: ReturnType<typeof findProductPageAsyncActionCreator.failure>) => ({
         ...state,
         productPageAsync: {
             ...state.productPageAsync,
-            error: action.payload
+            error: error
         } 
     }),
-    [FIND_PRODUCT_REQUEST]: (state, action) => ({
+    [FIND_PRODUCT_REQUEST]: (state, { payload: id }: ReturnType<typeof findProductAsyncActionCreator.request>) => ({
         ...state,
         productAsync: {
-            payload: action.payload,
+            payload: id,
             result: undefined,
             error: undefined
         }
     }),
-    [FIND_PRODUCT_SUCCESS]: (state, action) => ({
+    [FIND_PRODUCT_SUCCESS]: (state, { payload: product }: ReturnType<typeof findProductAsyncActionCreator.success>) => ({
         ...state,
         productAsync: {
             ...state.productAsync,
-            result: action.payload
+            result: product
         }
     }),
-    [FIND_PRODUCT_FAILURE]: (state, action) => ({
+    [FIND_PRODUCT_FAILURE]: (state, { payload: error }: ReturnType<typeof findProductAsyncActionCreator.failure>) => ({
         ...state,
         productAsync: {
             ...state.productAsync,
-            error: action.payload
+            error: error
         }
     }),
     [UPDATE_PRODUCT_SUCCESS]: (state, { payload: updatedProduct }: ReturnType<typeof createUpdateProductSuccessAction>) => ({

@@ -8,18 +8,18 @@ import { createFindProductAction, createFindProductPageAction, createSaveProduct
 import { FIND_PRODUCT, FIND_PRODUCT_PAGE, SAVE_PRODUCT, UPDATE_PRODUCT } from './actionType';
 import { ProductsState } from './reducer';
 
-function* findProductPageSaga(action: ReturnType<typeof createFindProductPageAction>) {
+function* findProductPageSaga({ payload: productFindPayload }: ReturnType<typeof createFindProductPageAction>) {
     const productsState: ProductsState = yield select((state: RootState) => state.products);
     
-    if(JSON.stringify(productsState.productPageAsync.payload) === JSON.stringify(action.payload) 
+    if(JSON.stringify(productsState.productPageAsync.payload) === JSON.stringify(productFindPayload) 
         && productsState.productPageAsync.result !== undefined) {
         return;
     }
 
-    yield put(findProductPageAsyncActionCreator.request(action.payload));
+    yield put(findProductPageAsyncActionCreator.request(productFindPayload));
 
     try {
-        const productPage: Page<ProductResult> = yield call(productApi.findAll, action.payload);
+        const productPage: Page<ProductResult> = yield call(productApi.findAll, productFindPayload);
 
         yield put(findProductPageAsyncActionCreator.success(productPage));
     } catch (error) {
@@ -27,17 +27,17 @@ function* findProductPageSaga(action: ReturnType<typeof createFindProductPageAct
     }
 };
 
-function* findProductSaga(action: ReturnType<typeof createFindProductAction>) {
+function* findProductSaga({ payload: id }: ReturnType<typeof createFindProductAction>) {
     const productsState: ProductsState = yield select((state: RootState) => state.products);
 
-    if(productsState.productAsync.payload === action.payload && productsState.productAsync.result !== undefined) {
+    if(productsState.productAsync.payload === id && productsState.productAsync.result !== undefined) {
         return;
     }
 
-    yield put(findProductAsyncActionCreator.request(action.payload));
+    yield put(findProductAsyncActionCreator.request(id));
 
     try {
-        const product: ProductDetailResult = yield call(productApi.findOne, action.payload);
+        const product: ProductDetailResult = yield call(productApi.findOne, id);
 
         yield put(findProductAsyncActionCreator.success(product));
     } catch (error) {

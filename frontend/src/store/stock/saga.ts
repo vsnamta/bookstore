@@ -5,11 +5,11 @@ import { StockFindPayload, StockResult } from '../../models/stocks';
 import { createFindStockPageAction, createSaveStockAction, createSaveStockSuccessAction, findStockPageAsyncActionCreator } from './action';
 import { FIND_STOCK_PAGE, SAVE_STOCK } from './actionType';
 
-function* findStockPageSaga(action: ReturnType<typeof createFindStockPageAction>) {
-    yield put(findStockPageAsyncActionCreator.request(action.payload));
+function* findStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof createFindStockPageAction>) {
+    yield put(findStockPageAsyncActionCreator.request(stockFindPayload));
 
     try {
-        const stockPage: Page<StockResult> = yield call(stockApi.findAll, action.payload);
+        const stockPage: Page<StockResult> = yield call(stockApi.findAll, stockFindPayload);
 
         yield put(findStockPageAsyncActionCreator.success(stockPage));
     } catch (error) {

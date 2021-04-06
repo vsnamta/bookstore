@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { CategoryResult } from '../../models/categories';
-import { CategoriesAction, createRemoveCategorySuccessAction, createSaveCategorySuccessAction, createUpdateCategorySuccessAction } from './action';
+import { CategoriesAction, createFindCategoryAction, createRemoveCategorySuccessAction, createSaveCategorySuccessAction, createUpdateCategorySuccessAction, findCategoryListAsyncActionCreator } from './action';
 import { FIND_CATEGORY, FIND_CATEGORY_LIST_FAILURE, FIND_CATEGORY_LIST_REQUEST, FIND_CATEGORY_LIST_SUCCESS, REMOVE_CATEGORY_SUCCESS, SAVE_CATEGORY_SUCCESS, UPDATE_CATEGORY_SUCCESS } from './actionType';
 
 export interface CategoryListAsync {
@@ -30,25 +30,25 @@ export default createReducer<CategoriesState, CategoriesAction>(initialState, {
             error: undefined
         }
     }),
-    [FIND_CATEGORY_LIST_SUCCESS]: (state, action) => ({
+    [FIND_CATEGORY_LIST_SUCCESS]: (state, { payload: cartList }: ReturnType<typeof findCategoryListAsyncActionCreator.success>) => ({
         ...state,
         categoryListAsync: {
             ...state.categoryListAsync,
-            result: action.payload
+            result: cartList
         } 
     }),
-    [FIND_CATEGORY_LIST_FAILURE]: (state, action) => ({
+    [FIND_CATEGORY_LIST_FAILURE]: (state, { payload: error }: ReturnType<typeof findCategoryListAsyncActionCreator.failure>) => ({
         ...state,
         categoryListAsync: {
             ...state.categoryListAsync,
-            error: action.payload
+            error: error
         } 
     }),
-    [FIND_CATEGORY]: (state, action) => ({
+    [FIND_CATEGORY]: (state, { payload: id }: ReturnType<typeof createFindCategoryAction>) => ({
         ...state,
         category: (state.categoryListAsync.result as CategoryResult[])
             .flatMap(category => [category, ...category.children])
-            .find(category => category.id === action.payload)
+            .find(category => category.id === id)
     }),
     [UPDATE_CATEGORY_SUCCESS]: (state, { payload: updatedCategory }: ReturnType<typeof createUpdateCategorySuccessAction>) => ({
         categoryListAsync: {
@@ -93,7 +93,6 @@ export default createReducer<CategoriesState, CategoriesAction>(initialState, {
     [REMOVE_CATEGORY_SUCCESS]: (state, { payload: removedId }: ReturnType<typeof createRemoveCategorySuccessAction>) => {
         const categoryList = state.categoryListAsync.result as CategoryResult[];
 
-        //const removedId = action.payload;
         const removedCategory = categoryList
             .flatMap(category => [category, ...category.children])
             .find(category => category.id === removedId) as CategoryResult;

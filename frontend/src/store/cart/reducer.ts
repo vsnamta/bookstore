@@ -1,7 +1,7 @@
 import { createReducer, PayloadAction } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { CartResult } from '../../models/carts';
-import { findCartListAsyncActionCreator, CartsAction, createCheckCartAction, createSaveCartSuccessAction, createUpdateCartSuccessAction, createRemoveCartSuccessAction } from './action';
+import { findCartListAsyncActionCreator, CartsAction, createCheckCartAction, createSaveCartSuccessAction, createUpdateCartSuccessAction, createRemoveCartSuccessAction, createCheckAllCartAction } from './action';
 import { CHECK_ALL_CART, CHECK_CART, FIND_CART_LIST_FAILURE, FIND_CART_LIST_REQUEST, FIND_CART_LIST_SUCCESS, REMOVE_CART_SUCCESS, SAVE_CART_SUCCESS, UPDATE_CART_SUCCESS } from './actionType';
 
 export interface CartListAsync {
@@ -33,17 +33,17 @@ export default createReducer<CartsState, CartsAction>(initialState, {
             result: cartList.map(cart => ({ ...cart, checked: true }))
         } 
     }),
-    [FIND_CART_LIST_FAILURE]: (state, action) => ({
+    [FIND_CART_LIST_FAILURE]: (state, { payload: error }: ReturnType<typeof findCartListAsyncActionCreator.failure>) => ({
         cartListAsync: {
             ...state.cartListAsync,
-            error: action.payload
+            error: error
         } 
     }),
     [UPDATE_CART_SUCCESS]: (state, { payload: updatedCart }: ReturnType<typeof createUpdateCartSuccessAction>) => ({
         cartListAsync: {
             result: (state.cartListAsync.result as CartResult[]).map(cart => 
                 cart.id === updatedCart.id 
-                    ? { ...updatedCart, checked: true } 
+                    ? updatedCart
                     : cart
             ),
             error: undefined
@@ -52,7 +52,7 @@ export default createReducer<CartsState, CartsAction>(initialState, {
     [SAVE_CART_SUCCESS]: (state, { payload: savedCart }: ReturnType<typeof createSaveCartSuccessAction>) => ({
         cartListAsync: {
             result: state.cartListAsync.result 
-                ? state.cartListAsync.result.concat({ ...savedCart, checked: true })
+                ? state.cartListAsync.result.concat(savedCart)
                 : undefined,
             error: undefined
         }  
@@ -63,9 +63,9 @@ export default createReducer<CartsState, CartsAction>(initialState, {
             error: undefined
         }
     }),
-    [CHECK_ALL_CART]: (state, action) => ({
+    [CHECK_ALL_CART]: (state, { payload: checked }: ReturnType<typeof createCheckAllCartAction>) => ({
         cartListAsync: {
-            result: (state.cartListAsync.result as CartResult[]).map(cart => ({ ...cart, checked: action.payload })),
+            result: (state.cartListAsync.result as CartResult[]).map(cart => ({ ...cart, checked: checked })),
             error: undefined
         }
     }),

@@ -6,11 +6,11 @@ import { createLoginAction } from '../auth/action';
 import { createFindMemberAction, createFindMemberPageAction, createSaveMemberAction, createSaveMemberSuccessAction, createUpdateMemberAction, createUpdateMemberSuccessAction, findMemberAsyncActionCreator, findMemberPageAsyncActionCreator } from './action';
 import { FIND_MEMBER, FIND_MEMBER_PAGE, SAVE_MEMBER, UPDATE_MEMBER } from './actionType';
 
-function* findMemberPageSaga(action: ReturnType<typeof createFindMemberPageAction>) {
-    yield put(findMemberPageAsyncActionCreator.request(action.payload));
+function* findMemberPageSaga({ payload: findPayload }: ReturnType<typeof createFindMemberPageAction>) {
+    yield put(findMemberPageAsyncActionCreator.request(findPayload));
 
     try {
-        const memberList: Page<MemberResult> = yield call(memberApi.findAll, action.payload);
+        const memberList: Page<MemberResult> = yield call(memberApi.findAll, findPayload);
 
         yield put(findMemberPageAsyncActionCreator.success(memberList));
     } catch (error) {
@@ -18,11 +18,11 @@ function* findMemberPageSaga(action: ReturnType<typeof createFindMemberPageActio
     }
 };
 
-function* findMemberSaga(action: ReturnType<typeof createFindMemberAction>) {
-    yield put(findMemberAsyncActionCreator.request(action.payload));
+function* findMemberSaga({ payload: id }: ReturnType<typeof createFindMemberAction>) {
+    yield put(findMemberAsyncActionCreator.request(id));
 
     try {
-        const member: MemberDetailResult = yield call(memberApi.findOne, action.payload);
+        const member: MemberDetailResult = yield call(memberApi.findOne, id);
 
         yield put(findMemberAsyncActionCreator.success(member));
     } catch (error) {

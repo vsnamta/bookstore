@@ -6,11 +6,11 @@ import { ReviewResult } from '../../models/reviews';
 import { createFindReviewPageAction, createRemoveReviewAction, createRemoveReviewSuccessAction, createSaveReviewAction, createSaveReviewSuccessAction, createUpdateReviewAction, createUpdateReviewSuccessAction, findReviewPageAsyncActionCreator } from './action';
 import { FIND_REVIEW_PAGE, REMOVE_REVIEW, SAVE_REVIEW, UPDATE_REVIEW } from './actionType';
 
-function* findReviewPageSaga(action: ReturnType<typeof createFindReviewPageAction>) {
-    yield put(findReviewPageAsyncActionCreator.request(action.payload));
+function* findReviewPageSaga({ payload: findPayload }: ReturnType<typeof createFindReviewPageAction>) {
+    yield put(findReviewPageAsyncActionCreator.request(findPayload));
 
     try {
-        const reviewPage: Page<ReviewResult> = yield call(reviewApi.findAll, action.payload);
+        const reviewPage: Page<ReviewResult> = yield call(reviewApi.findAll, findPayload);
 
         yield put(findReviewPageAsyncActionCreator.success(reviewPage));
     } catch (error) {
