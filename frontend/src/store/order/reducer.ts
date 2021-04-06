@@ -2,8 +2,8 @@ import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { FindPayload, Page } from '../../models/common';
 import { OrderDetailResult, OrderResult } from '../../models/orders';
-import { createSaveOrderSuccessAction, createUpdateOrderSuccessAction, findOrderAsyncActionCreator, findOrderPageAsyncActionCreator, OrdersAction } from './action';
-import { FIND_ORDER_FAILURE, FIND_ORDER_PAGE_FAILURE, FIND_ORDER_PAGE_REQUEST, FIND_ORDER_PAGE_SUCCESS, FIND_ORDER_REQUEST, FIND_ORDER_SUCCESS, SAVE_ORDER_SUCCESS, UPDATE_ORDER_SUCCESS } from './actionType';
+import { createSaveOrderAction, createSetOrderAsyncAction, createSetOrderPageAsyncAction, createUpdateOrderAction, OrdersAction } from './action';
+import { SAVE_ORDER, SET_ORDER_ASYNC, SET_ORDER_PAGE_ASYNC, UPDATE_ORDER } from './actionType';
 
 export interface OrderPageAsync {
     payload?: FindPayload;
@@ -36,51 +36,15 @@ const initialState: OrdersState = {
 };
 
 export default createReducer<OrdersState, OrdersAction>(initialState, {
-    [FIND_ORDER_PAGE_REQUEST]: (state, { payload: findPayload }: ReturnType<typeof findOrderPageAsyncActionCreator.request>) => ({
+    [SET_ORDER_PAGE_ASYNC]: (state, { payload: orderPageAsync }: ReturnType<typeof createSetOrderPageAsyncAction>) => ({
         ...state,
-        orderPageAsync: {
-            payload: findPayload,
-            result: undefined,
-            error: undefined
-        }
+        orderPageAsync: orderPageAsync
     }),
-    [FIND_ORDER_PAGE_SUCCESS]: (state, { payload: orderPage }: ReturnType<typeof findOrderPageAsyncActionCreator.success>) => ({
+    [SET_ORDER_ASYNC]: (state, { payload: orderAsync }: ReturnType<typeof createSetOrderAsyncAction>) => ({
         ...state,
-        orderPageAsync: {
-            ...state.orderPageAsync,
-            result: orderPage
-        } 
+        orderAsync: orderAsync
     }),
-    [FIND_ORDER_PAGE_FAILURE]: (state, { payload: error }: ReturnType<typeof findOrderPageAsyncActionCreator.failure>) => ({
-        ...state,
-        orderPageAsync: {
-            ...state.orderPageAsync,
-            error: error
-        } 
-    }),
-    [FIND_ORDER_REQUEST]: (state, { payload: id }: ReturnType<typeof findOrderAsyncActionCreator.request>) => ({
-        ...state,
-        orderAsync: {
-            payload: id,
-            result: undefined,
-            error: undefined
-        }
-    }),
-    [FIND_ORDER_SUCCESS]: (state, { payload: order }: ReturnType<typeof findOrderAsyncActionCreator.success>) => ({
-        ...state,
-        orderAsync: {
-            ...state.orderAsync,
-            result: order
-        }
-    }),
-    [FIND_ORDER_FAILURE]: (state, { payload: error }: ReturnType<typeof findOrderAsyncActionCreator.failure>) => ({
-        ...state,
-        orderAsync: {
-            ...state.orderAsync,
-            error: error
-        }
-    }),
-    [UPDATE_ORDER_SUCCESS]: (state, { payload: updatedOrder }: ReturnType<typeof createUpdateOrderSuccessAction>) => ({
+    [UPDATE_ORDER]: (state, { payload: updatedOrder }: ReturnType<typeof createUpdateOrderAction>) => ({
         orderPageAsync: {
             ...state.orderPageAsync,
             result: {
@@ -98,7 +62,7 @@ export default createReducer<OrdersState, OrdersAction>(initialState, {
             result: updatedOrder
         }
     }),
-    [SAVE_ORDER_SUCCESS]: (state, { payload: savedOrder }: ReturnType<typeof createSaveOrderSuccessAction>) => ({
+    [SAVE_ORDER]: (state, { payload: savedOrder }: ReturnType<typeof createSaveOrderAction>) => ({
         orderPageAsync: initialState.orderPageAsync,
         orderAsync: {
             payload: savedOrder.id,

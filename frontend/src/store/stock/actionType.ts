@@ -1,7 +1,5 @@
 export const FIND_STOCK_PAGE = 'stock/FIND_STOCK_PAGE';
-export const FIND_STOCK_PAGE_REQUEST = 'stock/FIND_STOCK_PAGE_REQUEST';
-export const FIND_STOCK_PAGE_SUCCESS = 'stock/FIND_STOCK_PAGE_SUCCESS';
-export const FIND_STOCK_PAGE_FAILURE = 'stock/FIND_STOCK_PAGE_FAILURE';
+export const SET_STOCK_PAGE_ASYNC = 'stock/SET_STOCK_PAGE_ASYNC';
 
+export const SAVE_STOCK_REQUEST = 'stock/SAVE_STOCK_REQUEST';
 export const SAVE_STOCK = 'stock/SAVE_STOCK';
-export const SAVE_STOCK_SUCCESS = 'stock/SAVE_STOCK_SUCCESS';

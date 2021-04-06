@@ -1,8 +1,8 @@
-import { ActionType, createAction, createAsyncAction } from 'typesafe-actions';
+import { ActionType, createAction } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
-import { Page } from '../../models/common';
-import { ProductDetailResult, ProductFindPayload, ProductResult, ProductSaveOrUpdatePayload } from '../../models/products';
-import { FIND_PRODUCT, FIND_PRODUCT_FAILURE, FIND_PRODUCT_PAGE, FIND_PRODUCT_PAGE_FAILURE, FIND_PRODUCT_PAGE_REQUEST, FIND_PRODUCT_PAGE_SUCCESS, FIND_PRODUCT_REQUEST, FIND_PRODUCT_SUCCESS, SAVE_PRODUCT, SAVE_PRODUCT_SUCCESS, UPDATE_PRODUCT, UPDATE_PRODUCT_SUCCESS } from './actionType';
+import { ProductDetailResult, ProductFindPayload, ProductSaveOrUpdatePayload } from '../../models/products';
+import { FIND_PRODUCT, FIND_PRODUCT_PAGE, SAVE_PRODUCT, SAVE_PRODUCT_REQUEST, SET_PRODUCT_ASYNC, SET_PRODUCT_PAGE_ASYNC, UPDATE_PRODUCT, UPDATE_PRODUCT_REQUEST } from './actionType';
+import { ProductAsync, ProductPageAsync } from './reducer';
 
 export interface ProductUpdateActionPayload { 
     id: number, 
@@ -20,22 +20,22 @@ export interface ProductSaveActionPayload {
 }
 
 export const createFindProductPageAction = createAction(FIND_PRODUCT_PAGE)<ProductFindPayload>();
-export const findProductPageAsyncActionCreator = createAsyncAction(FIND_PRODUCT_PAGE_REQUEST, FIND_PRODUCT_PAGE_SUCCESS, FIND_PRODUCT_PAGE_FAILURE)<ProductFindPayload, Page<ProductResult>, ApiError>();
+export const createSetProductPageAsyncAction = createAction(SET_PRODUCT_PAGE_ASYNC)<ProductPageAsync>();
 
 export const createFindProductAction = createAction(FIND_PRODUCT)<number>();
-export const findProductAsyncActionCreator = createAsyncAction(FIND_PRODUCT_REQUEST, FIND_PRODUCT_SUCCESS, FIND_PRODUCT_FAILURE)<number, ProductDetailResult, ApiError>();
+export const createSetProductAsyncAction = createAction(SET_PRODUCT_ASYNC)<ProductAsync>();
 
-export const createUpdateProductAction = createAction(UPDATE_PRODUCT)<ProductUpdateActionPayload>();
-export const createUpdateProductSuccessAction = createAction(UPDATE_PRODUCT_SUCCESS)<ProductDetailResult>();
+export const createUpdateProductRequestAction = createAction(UPDATE_PRODUCT_REQUEST)<ProductUpdateActionPayload>();
+export const createUpdateProductAction = createAction(UPDATE_PRODUCT)<ProductDetailResult>();
 
-export const createSaveProductAction = createAction(SAVE_PRODUCT)<ProductSaveActionPayload>();
-export const createSaveProductSuccessAction = createAction(SAVE_PRODUCT_SUCCESS)<ProductDetailResult>();
+export const createSaveProductRequestAction = createAction(SAVE_PRODUCT_REQUEST)<ProductSaveActionPayload>();
+export const createSaveProductAction = createAction(SAVE_PRODUCT)<ProductDetailResult>();
 
 export const actions = { 
-    createFindProductPageAction, findProductPageAsyncActionCreator,
-    createFindProductAction, findProductAsyncActionCreator,
-    createUpdateProductAction, createUpdateProductSuccessAction, 
-    createSaveProductAction, createSaveProductSuccessAction
+    createFindProductPageAction, createSetProductPageAsyncAction,
+    createFindProductAction, createSetProductAsyncAction,
+    createUpdateProductRequestAction, createUpdateProductAction, 
+    createSaveProductRequestAction, createSaveProductAction
 };
 
 export type ProductsAction = ActionType<typeof actions>;

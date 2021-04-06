@@ -1,8 +1,7 @@
-import { ActionType, createAction, createAsyncAction } from 'typesafe-actions';
+import { ActionType, createAction } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
-import { Page } from '../../models/common';
 import { StockFindPayload, StockResult, StockSavePayload } from '../../models/stocks';
-import { FIND_STOCK_PAGE, FIND_STOCK_PAGE_FAILURE, FIND_STOCK_PAGE_REQUEST, FIND_STOCK_PAGE_SUCCESS, SAVE_STOCK, SAVE_STOCK_SUCCESS } from './actionType';
+import { FIND_STOCK_PAGE, SAVE_STOCK, SAVE_STOCK_REQUEST, SET_STOCK_PAGE_ASYNC } from './actionType';
 import { StockPageAsync } from './reducer';
 
 export interface StockSaveActionPayload { 
@@ -12,14 +11,14 @@ export interface StockSaveActionPayload {
 }
 
 export const createFindStockPageAction = createAction(FIND_STOCK_PAGE)<StockFindPayload>();
-export const findStockPageAsyncActionCreator = createAsyncAction(FIND_STOCK_PAGE_REQUEST, FIND_STOCK_PAGE_SUCCESS, FIND_STOCK_PAGE_FAILURE)<StockFindPayload, Page<StockResult>, ApiError>();
+export const createSetStockPageAsyncAction = createAction(SET_STOCK_PAGE_ASYNC)<StockPageAsync>();
 
-export const createSaveStockAction = createAction(SAVE_STOCK)<StockSaveActionPayload>();
-export const createSaveStockSuccessAction = createAction(SAVE_STOCK_SUCCESS)<StockPageAsync>();
+export const createSaveStockRequestAction = createAction(SAVE_STOCK_REQUEST)<StockSaveActionPayload>();
+export const createSaveStockAction = createAction(SAVE_STOCK)<StockPageAsync>();
 
 export const actions = {
-    createFindStockPageAction, findStockPageAsyncActionCreator,
-    createSaveStockAction, createSaveStockSuccessAction
+    createFindStockPageAction, createSetStockPageAsyncAction,
+    createSaveStockRequestAction, createSaveStockAction
 };
 
 export type StocksAction = ActionType<typeof actions>;

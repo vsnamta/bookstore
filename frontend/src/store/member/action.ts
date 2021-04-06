@@ -1,8 +1,9 @@
-import { ActionType, createAction, createAsyncAction } from 'typesafe-actions';
+import { ActionType, createAction } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
-import { FindPayload, Page } from '../../models/common';
-import { LoginMember, MemberDetailResult, MemberResult, MemberSavePayload, MemberUpdatePayload } from '../../models/members';
-import { FIND_MEMBER, FIND_MEMBER_FAILURE, FIND_MEMBER_PAGE, FIND_MEMBER_PAGE_FAILURE, FIND_MEMBER_PAGE_REQUEST, FIND_MEMBER_PAGE_SUCCESS, FIND_MEMBER_REQUEST, FIND_MEMBER_SUCCESS, SAVE_MEMBER, SAVE_MEMBER_SUCCESS, SET_MY_DATA, UPDATE_MEMBER, UPDATE_MEMBER_SUCCESS } from './actionType';
+import { FindPayload } from '../../models/common';
+import { MemberDetailResult, MemberSavePayload, MemberUpdatePayload } from '../../models/members';
+import { FIND_MEMBER, FIND_MEMBER_PAGE, SAVE_MEMBER, SAVE_MEMBER_REQUEST, SET_MEMBER_ASYNC, SET_MEMBER_PAGE_ASYNC, UPDATE_MEMBER, UPDATE_MEMBER_REQUEST } from './actionType';
+import { MemberAsync, MemberPageAsync } from './reducer';
 
 export interface MemberUpdateActionPayload { 
     id: number, 
@@ -17,26 +18,23 @@ export interface MemberSaveActionPayload {
     onFailure?: (error: ApiError) => void
 }
 
-export const createSetMyDataAction = createAction(SET_MY_DATA)<LoginMember | undefined>();
-
 export const createFindMemberPageAction = createAction(FIND_MEMBER_PAGE)<FindPayload>();
-export const findMemberPageAsyncActionCreator = createAsyncAction(FIND_MEMBER_PAGE_REQUEST, FIND_MEMBER_PAGE_SUCCESS, FIND_MEMBER_PAGE_FAILURE)<FindPayload, Page<MemberResult>, ApiError>();
+export const createSetMemberPageAsyncAction = createAction(SET_MEMBER_PAGE_ASYNC)<MemberPageAsync>();
 
 export const createFindMemberAction = createAction(FIND_MEMBER)<number>();
-export const findMemberAsyncActionCreator = createAsyncAction(FIND_MEMBER_REQUEST, FIND_MEMBER_SUCCESS, FIND_MEMBER_FAILURE)<number, MemberDetailResult, ApiError>();
+export const createSetMemberAsyncAction = createAction(SET_MEMBER_ASYNC)<MemberAsync>();
 
-export const createUpdateMemberAction = createAction(UPDATE_MEMBER)<MemberUpdateActionPayload>();
-export const createUpdateMemberSuccessAction = createAction(UPDATE_MEMBER_SUCCESS)<MemberDetailResult>();
+export const createUpdateMemberRequestAction = createAction(UPDATE_MEMBER_REQUEST)<MemberUpdateActionPayload>();
+export const createUpdateMemberAction = createAction(UPDATE_MEMBER)<MemberDetailResult>();
 
-export const createSaveMemberAction = createAction(SAVE_MEMBER)<MemberSaveActionPayload>();
-export const createSaveMemberSuccessAction = createAction(SAVE_MEMBER_SUCCESS)<MemberDetailResult>();
+export const createSaveMemberRequestAction = createAction(SAVE_MEMBER_REQUEST)<MemberSaveActionPayload>();
+export const createSaveMemberAction = createAction(SAVE_MEMBER)<MemberDetailResult>();
 
-export const actions = { 
-    createSetMyDataAction,
-    createFindMemberPageAction, findMemberPageAsyncActionCreator,
-    createFindMemberAction, findMemberAsyncActionCreator,
-    createUpdateMemberAction, createUpdateMemberSuccessAction,
-    createSaveMemberAction, createSaveMemberSuccessAction
+export const actions = {
+    createFindMemberPageAction, createSetMemberPageAsyncAction,
+    createFindMemberAction, createSetMemberAsyncAction,
+    createUpdateMemberRequestAction, createUpdateMemberAction,
+    createSaveMemberRequestAction, createSaveMemberAction
 };
 
 export type MembersAction = ActionType<typeof actions>;

@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useLocation } from 'react-router-dom';
-import { LoginMember } from '../../models/members';
+import OrderFormTemplate from '../../components/order/OrderFormTemplate';
+import { MyData } from '../../models/auths';
 import { OrderingProduct } from '../../models/orders';
 import { RootState } from '../../store';
 import { createFindMemberAction } from '../../store/member/action';
-import { createSaveOrderAction, OrderSaveActionPayload } from '../../store/order/action';
-import OrderFormTemplate from '../../components/order/OrderFormTemplate';
-import { MyData } from '../../models/auths';
+import { createSaveOrderRequestAction, OrderSaveActionPayload } from '../../store/order/action';
 
 function OrderFormPage() {
     const location = useLocation<{orderingProductList: OrderingProduct[]}>();
@@ -27,7 +26,7 @@ function OrderFormPage() {
     }, []);
 
     const saveOrder = useCallback((payload: OrderSaveActionPayload) => {
-        dispatch(createSaveOrderAction(payload));
+        dispatch(createSaveOrderRequestAction(payload));
     }, []);
     
     return (

@@ -2,8 +2,8 @@ import { call, put, select, takeEvery } from 'redux-saga/effects';
 import { RootState } from '..';
 import discountPolicyApi from '../../apis/discountPolicyApi';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
-import { createFindDiscountPolicyListAction, createSaveDiscountPolicyAction, createSaveDiscountPolicySuccessAction, createUpdateDiscountPolicyAction, createUpdateDiscountPolicySuccessAction, findDiscountPolicyListAsyncActionCreator } from './action';
-import { FIND_DISCOUNT_POLICY_LIST, SAVE_DISCOUNT_POLICY, UPDATE_DISCOUNT_POLICY } from './actionType';
+import { createFindDiscountPolicyListAction, createSaveDiscountPolicyAction, createSaveDiscountPolicyRequestAction, createSetDiscountPolicyListAsyncAction, createUpdateDiscountPolicyAction, createUpdateDiscountPolicyRequestAction } from './action';
+import { FIND_DISCOUNT_POLICY_LIST, SAVE_DISCOUNT_POLICY_REQUEST, UPDATE_DISCOUNT_POLICY_REQUEST } from './actionType';
 import { DiscountPoliciesState } from './reducer';
 
 function* findDiscountPolicyListSaga(action: ReturnType<typeof createFindDiscountPolicyListAction>) {
@@ -12,34 +12,38 @@ function* findDiscountPolicyListSaga(action: ReturnType<typeof createFindDiscoun
     if(discountPoliciesState.discountPolicyListAsync.result !== undefined) {
         return;
     }
-    
-    yield put(findDiscountPolicyListAsyncActionCreator.request());
 
     try {
         const discountPolicyList: DiscountPolicyResult[] = yield call(discountPolicyApi.findAll);
 
-        yield put(findDiscountPolicyListAsyncActionCreator.success(discountPolicyList));
+        yield put(createSetDiscountPolicyListAsyncAction({
+            result: discountPolicyList,
+            error: undefined
+        }));
     } catch (error) {
-        yield put(findDiscountPolicyListAsyncActionCreator.failure(error));
+        yield put(createSetDiscountPolicyListAsyncAction({
+            result: undefined,
+            error: error
+        }));
     }
 };
 
-function* updateDiscountPolicySaga({ payload: discountPolicyUpdateActionPayload }: ReturnType<typeof createUpdateDiscountPolicyAction>) {
+function* updateDiscountPolicyRequestSaga({ payload: discountPolicyUpdateActionPayload }: ReturnType<typeof createUpdateDiscountPolicyRequestAction>) {
     try {
         const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.update, discountPolicyUpdateActionPayload.id, discountPolicyUpdateActionPayload.payload);
 
-        yield put(createUpdateDiscountPolicySuccessAction(discountPolicy));
+        yield put(createUpdateDiscountPolicyAction(discountPolicy));
         discountPolicyUpdateActionPayload.onSuccess && discountPolicyUpdateActionPayload.onSuccess(discountPolicy);
     } catch (error) {
         discountPolicyUpdateActionPayload.onFailure && discountPolicyUpdateActionPayload.onFailure(error);
     }
 };
 
-function* saveDiscountPolicySaga({ payload: discountPolicySaveActionPayload }: ReturnType<typeof createSaveDiscountPolicyAction>) {
+function* saveDiscountPolicyRequestSaga({ payload: discountPolicySaveActionPayload }: ReturnType<typeof createSaveDiscountPolicyRequestAction>) {
     try {
         const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.save, discountPolicySaveActionPayload.payload);
 
-        yield put(createSaveDiscountPolicySuccessAction(discountPolicy));
+        yield put(createSaveDiscountPolicyAction(discountPolicy));
         discountPolicySaveActionPayload.onSuccess && discountPolicySaveActionPayload.onSuccess(discountPolicy);
     } catch (error) {
         discountPolicySaveActionPayload.onFailure && discountPolicySaveActionPayload.onFailure(error);
@@ -48,6 +52,6 @@ function* saveDiscountPolicySaga({ payload: discountPolicySaveActionPayload }: R
 
 export default function* discountPoliciesSaga() {
     yield takeEvery(FIND_DISCOUNT_POLICY_LIST, findDiscountPolicyListSaga);
-    yield takeEvery(UPDATE_DISCOUNT_POLICY, updateDiscountPolicySaga);
-    yield takeEvery(SAVE_DISCOUNT_POLICY, saveDiscountPolicySaga);
+    yield takeEvery(UPDATE_DISCOUNT_POLICY_REQUEST, updateDiscountPolicyRequestSaga);
+    yield takeEvery(SAVE_DISCOUNT_POLICY_REQUEST, saveDiscountPolicyRequestSaga);
 }

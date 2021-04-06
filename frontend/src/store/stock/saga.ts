@@ -3,8 +3,8 @@ import { RootState } from '..';
 import stockApi from '../../apis/stockApi';
 import { Page } from '../../models/common';
 import { StockFindPayload, StockResult } from '../../models/stocks';
-import { createFindStockPageAction, createSaveStockAction, createSaveStockSuccessAction, findStockPageAsyncActionCreator } from './action';
-import { FIND_STOCK_PAGE, SAVE_STOCK } from './actionType';
+import { createFindStockPageAction, createSaveStockAction, createSaveStockRequestAction, createSetStockPageAsyncAction } from './action';
+import { FIND_STOCK_PAGE, SAVE_STOCK_REQUEST } from './actionType';
 import { StocksState } from './reducer';
 
 function* findStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof createFindStockPageAction>) {
@@ -14,19 +14,25 @@ function* findStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof cre
         && stocksState.stockPageAsync.result !== undefined) {
         return;
     }
-    
-    yield put(findStockPageAsyncActionCreator.request(stockFindPayload));
 
     try {
         const stockPage: Page<StockResult> = yield call(stockApi.findAll, stockFindPayload);
 
-        yield put(findStockPageAsyncActionCreator.success(stockPage));
+        yield put(createSetStockPageAsyncAction({
+            payload: stockFindPayload,
+            result: stockPage,
+            error: undefined
+        }));
     } catch (error) {
-        yield put(findStockPageAsyncActionCreator.failure(error));
+        yield put(createSetStockPageAsyncAction({
+            payload: stockFindPayload,
+            result: undefined,
+            error: error
+        }));
     }
 };
 
-function* saveStockSaga({ payload: stockSaveActionPayload }: ReturnType<typeof createSaveStockAction>) {
+function* saveStockRequestSaga({ payload: stockSaveActionPayload }: ReturnType<typeof createSaveStockRequestAction>) {
     try {
         const stock: StockResult = yield call(stockApi.save, stockSaveActionPayload.payload);
 
@@ -37,7 +43,7 @@ function* saveStockSaga({ payload: stockSaveActionPayload }: ReturnType<typeof c
 
         const stockPage: Page<StockResult> = yield call(stockApi.findAll, stockFindPayload);
 
-        yield put(createSaveStockSuccessAction({
+        yield put(createSaveStockAction({
             payload: stockFindPayload,
             result: stockPage,
             error: undefined
@@ -50,5 +56,5 @@ function* saveStockSaga({ payload: stockSaveActionPayload }: ReturnType<typeof c
 
 export default function* stocksSaga() {
     yield takeEvery(FIND_STOCK_PAGE, findStockPageSaga);
-    yield takeEvery(SAVE_STOCK, saveStockSaga);
+    yield takeEvery(SAVE_STOCK_REQUEST, saveStockRequestSaga);
 }

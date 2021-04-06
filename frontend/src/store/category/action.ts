@@ -1,7 +1,8 @@
-import { ActionType, createAction, createAsyncAction } from 'typesafe-actions';
+import { ActionType, createAction } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { CategoryResult, CategorySaveOrUpdatePayload } from '../../models/categories';
-import { FIND_CATEGORY, FIND_CATEGORY_LIST, FIND_CATEGORY_LIST_FAILURE, FIND_CATEGORY_LIST_REQUEST, FIND_CATEGORY_LIST_SUCCESS, REMOVE_CATEGORY, REMOVE_CATEGORY_SUCCESS, SAVE_CATEGORY, SAVE_CATEGORY_SUCCESS, UPDATE_CATEGORY, UPDATE_CATEGORY_SUCCESS } from './actionType';
+import { FIND_CATEGORY, FIND_CATEGORY_LIST, REMOVE_CATEGORY, REMOVE_CATEGORY_REQUEST, SAVE_CATEGORY, SAVE_CATEGORY_REQUEST, SET_CATEGORY_LIST_ASYNC, UPDATE_CATEGORY, UPDATE_CATEGORY_REQUEST } from './actionType';
+import { CategoryListAsync } from './reducer';
 
 export interface CategoryUpdateActionPayload { 
     id: number, 
@@ -23,25 +24,25 @@ export interface CategoryRemoveActionPayload {
 }
 
 export const createFindCategoryListAction = createAction(FIND_CATEGORY_LIST)<void>();
-export const findCategoryListAsyncActionCreator = createAsyncAction(FIND_CATEGORY_LIST_REQUEST, FIND_CATEGORY_LIST_SUCCESS, FIND_CATEGORY_LIST_FAILURE)<void, CategoryResult[], ApiError>();
+export const createSetCategoryListAsyncAction = createAction(SET_CATEGORY_LIST_ASYNC)<CategoryListAsync>();
 
 export const createFindCategoryAction = createAction(FIND_CATEGORY)<number>();
 
-export const createUpdateCategoryAction = createAction(UPDATE_CATEGORY)<CategoryUpdateActionPayload>();
-export const createUpdateCategorySuccessAction = createAction(UPDATE_CATEGORY_SUCCESS)<CategoryResult>();
+export const createUpdateCategoryRequestAction = createAction(UPDATE_CATEGORY_REQUEST)<CategoryUpdateActionPayload>();
+export const createUpdateCategoryAction = createAction(UPDATE_CATEGORY)<CategoryResult>();
 
-export const createSaveCategoryAction = createAction(SAVE_CATEGORY)<CategorySaveActionPayload>();
-export const createSaveCategorySuccessAction = createAction(SAVE_CATEGORY_SUCCESS)<CategoryResult>();
+export const createSaveCategoryRequestAction = createAction(SAVE_CATEGORY_REQUEST)<CategorySaveActionPayload>();
+export const createSaveCategoryAction = createAction(SAVE_CATEGORY)<CategoryResult>();
 
-export const createRemoveCategoryAction = createAction(REMOVE_CATEGORY)<CategoryRemoveActionPayload>();
-export const createRemoveCategorySuccessAction = createAction(REMOVE_CATEGORY_SUCCESS)<number>();
+export const createRemoveCategoryRequestAction = createAction(REMOVE_CATEGORY_REQUEST)<CategoryRemoveActionPayload>();
+export const createRemoveCategoryAction = createAction(REMOVE_CATEGORY)<number>();
 
 export const actions = { 
-    createFindCategoryListAction, findCategoryListAsyncActionCreator,
+    createFindCategoryListAction, createSetCategoryListAsyncAction,
     createFindCategoryAction,
-    createUpdateCategoryAction, createUpdateCategorySuccessAction, 
-    createSaveCategoryAction, createSaveCategorySuccessAction,
-    createRemoveCategoryAction, createRemoveCategorySuccessAction
+    createUpdateCategoryRequestAction, createUpdateCategoryAction, 
+    createSaveCategoryRequestAction, createSaveCategoryAction,
+    createRemoveCategoryRequestAction, createRemoveCategoryAction
 };
 
 export type CategoriesAction = ActionType<typeof actions>;

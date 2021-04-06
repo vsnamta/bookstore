@@ -1,17 +1,11 @@
-export const SET_MY_DATA = 'member/SET_MY_DATA';
-
 export const FIND_MEMBER_PAGE = 'member/FIND_MEMBER_PAGE';
-export const FIND_MEMBER_PAGE_REQUEST = 'member/FIND_MEMBER_PAGE_REQUEST';
-export const FIND_MEMBER_PAGE_SUCCESS = 'member/FIND_MEMBER_PAGE_SUCCESS';
-export const FIND_MEMBER_PAGE_FAILURE = 'member/FIND_MEMBER_PAGE_FAILURE';
+export const SET_MEMBER_PAGE_ASYNC = 'member/SET_MEMBER_PAGE_ASYNC';
 
 export const FIND_MEMBER = 'member/FIND_MEMBER';
-export const FIND_MEMBER_REQUEST = 'member/FIND_MEMBER_REQUEST';
-export const FIND_MEMBER_SUCCESS = 'member/FIND_MEMBER_SUCCESS';
-export const FIND_MEMBER_FAILURE = 'member/FIND_MEMBER_FAILURE';
+export const SET_MEMBER_ASYNC = 'member/SET_MEMBER_ASYNC';
 
+export const SAVE_MEMBER_REQUEST = 'member/SAVE_MEMBER_REQUEST';
 export const SAVE_MEMBER = 'member/SAVE_MEMBER';
-export const SAVE_MEMBER_SUCCESS = 'member/SAVE_MEMBER_SUCCESS';
 
+export const UPDATE_MEMBER_REQUEST = 'member/UPDATE_MEMBER_REQUEST';
 export const UPDATE_MEMBER = 'member/UPDATE_MEMBER';
-export const UPDATE_MEMBER_SUCCESS = 'member/UPDATE_MEMBER_SUCCESS';

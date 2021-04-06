@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import ProductUpdateTemplate from '../../components/product/ProductUpdateTemplate';
 import { RootState } from '../../store';
 import { createFindCategoryListAction } from '../../store/category/action';
 import { createFindDiscountPolicyListAction } from '../../store/discountPolicy/action';
-import { createFindProductAction, createUpdateProductAction, ProductUpdateActionPayload } from '../../store/product/action';
-import ProductUpdateTemplate from '../../components/product/ProductUpdateTemplate';
+import { createFindProductAction, createUpdateProductRequestAction, ProductUpdateActionPayload } from '../../store/product/action';
 
 function ProductUpdatePage() {
     const { id } = useParams<{id: string}>();
@@ -22,7 +22,7 @@ function ProductUpdatePage() {
     }, []);
 
     const updateProduct = useCallback((payload: ProductUpdateActionPayload) => {
-        dispatch(createUpdateProductAction(payload));
+        dispatch(createUpdateProductRequestAction(payload));
     }, []);
 
     return (

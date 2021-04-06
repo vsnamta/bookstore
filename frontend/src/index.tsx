@@ -8,10 +8,8 @@ import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 import App from './App';
-import { LoginMember } from './models/members';
 import rootReducer, { rootSaga } from './store';
 import { createFindCategoryListAction } from './store/category/action';
-import { createSetMyDataAction } from './store/member/action';
 import { createReloadMyDataAction } from './store/auth/action';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -24,12 +22,6 @@ const store = createStore(
 sagaMiddleware.run(rootSaga);
 
 function initalizeStore() {
-    // const tmpMyData = localStorage.getItem("tempMyData");
-
-    // if (tmpMyData !== null) {
-    //     store.dispatch(createSetMyDataAction(JSON.parse(tempMyData) as LoginMember));
-    // }
-
     store.dispatch(createReloadMyDataAction());
     store.dispatch(createFindCategoryListAction());
 }

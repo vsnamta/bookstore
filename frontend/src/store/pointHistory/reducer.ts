@@ -2,8 +2,8 @@ import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { Page } from '../../models/common';
 import { PointHistoryFindPayload, PointHistoryResult } from '../../models/pointHistories';
-import { findPointHistoryPageAsyncActionCreator, PointHistoriesAction } from './action';
-import { FIND_POINT_HISTORY_PAGE_FAILURE, FIND_POINT_HISTORY_PAGE_REQUEST, FIND_POINT_HISTORY_PAGE_SUCCESS } from './actionType';
+import { createSetPointHistoryPageAsyncAction, PointHistoriesAction } from './action';
+import { SET_POINT_HISTORY_PAGE_ASYNC } from './actionType';
 
 export interface PointHistoryPageAsync {
     payload?: PointHistoryFindPayload;
@@ -24,26 +24,7 @@ const initialState: PointHistoriesState = {
 };
 
 export default createReducer<PointHistoriesState, PointHistoriesAction>(initialState, {
-    [FIND_POINT_HISTORY_PAGE_REQUEST]: (state, { payload: pointHistoryFindPayload }: ReturnType<typeof findPointHistoryPageAsyncActionCreator.request>) => ({
-        ...state,
-        pointHistoryPageAsync: {
-            payload: pointHistoryFindPayload,
-            result: undefined,
-            error: undefined
-        }
+    [SET_POINT_HISTORY_PAGE_ASYNC]: (state, { payload: pointHistoryPageAsync }: ReturnType<typeof createSetPointHistoryPageAsyncAction>) => ({
+        pointHistoryPageAsync: pointHistoryPageAsync
     }),
-    [FIND_POINT_HISTORY_PAGE_SUCCESS]: (state, { payload: pointHistoryPage }: ReturnType<typeof findPointHistoryPageAsyncActionCreator.success>) => ({
-        ...state,
-        pointHistoryPageAsync: {
-            ...state.pointHistoryPageAsync,
-            result: pointHistoryPage
-        } 
-    }),
-    [FIND_POINT_HISTORY_PAGE_FAILURE]: (state, { payload: error }: ReturnType<typeof findPointHistoryPageAsyncActionCreator.failure>) => ({
-        ...state,
-        pointHistoryPageAsync: {
-            ...state.pointHistoryPageAsync,
-            error: error
-        } 
-    })
 });

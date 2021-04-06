@@ -3,8 +3,8 @@ import { RootState } from '..';
 import reviewApi from '../../apis/reviewApi';
 import { FindPayload, Page } from '../../models/common';
 import { ReviewResult } from '../../models/reviews';
-import { createFindReviewPageAction, createRemoveReviewAction, createRemoveReviewSuccessAction, createSaveReviewAction, createSaveReviewSuccessAction, createUpdateReviewAction, createUpdateReviewSuccessAction, findReviewPageAsyncActionCreator } from './action';
-import { FIND_REVIEW_PAGE, REMOVE_REVIEW, SAVE_REVIEW, UPDATE_REVIEW } from './actionType';
+import { createFindReviewPageAction, createRemoveReviewAction, createRemoveReviewRequestAction, createSaveReviewAction, createSaveReviewRequestAction, createSetReviewPageAsyncAction, createUpdateReviewAction, createUpdateReviewRequestAction } from './action';
+import { FIND_REVIEW_PAGE, REMOVE_REVIEW_REQUEST, SAVE_REVIEW_REQUEST, UPDATE_REVIEW_REQUEST } from './actionType';
 import { ReviewsState } from './reducer';
 
 function* findReviewPageSaga({ payload: findPayload }: ReturnType<typeof createFindReviewPageAction>) {
@@ -14,30 +14,36 @@ function* findReviewPageSaga({ payload: findPayload }: ReturnType<typeof createF
         && reviewsState.reviewPageAsync.result !== undefined) {
         return;
     }
-    
-    yield put(findReviewPageAsyncActionCreator.request(findPayload));
 
     try {
         const reviewPage: Page<ReviewResult> = yield call(reviewApi.findAll, findPayload);
 
-        yield put(findReviewPageAsyncActionCreator.success(reviewPage));
+        yield put(createSetReviewPageAsyncAction({
+            payload: findPayload,
+            result: reviewPage,
+            error: undefined
+        }));
     } catch (error) {
-        yield put(findReviewPageAsyncActionCreator.failure(error));
+        yield put(createSetReviewPageAsyncAction({
+            payload: findPayload,
+            result: undefined,
+            error: error
+        }));
     }
 };
 
-function* updateReviewSaga({ payload: reviewUpdateActionPayload }: ReturnType<typeof createUpdateReviewAction>) {
+function* updateReviewRequestSaga({ payload: reviewUpdateActionPayload }: ReturnType<typeof createUpdateReviewRequestAction>) {
     try {
         const review: ReviewResult = yield call(reviewApi.update, reviewUpdateActionPayload.id, reviewUpdateActionPayload.payload);
 
-        yield put(createUpdateReviewSuccessAction(review));
+        yield put(createUpdateReviewAction(review));
         reviewUpdateActionPayload.onSuccess && reviewUpdateActionPayload.onSuccess(review);
     } catch (error) {
         reviewUpdateActionPayload.onFailure && reviewUpdateActionPayload.onFailure(error);
     }
 };
 
-function* saveReviewSaga({ payload: reviewSaveActionPayload }: ReturnType<typeof createSaveReviewAction>) {
+function* saveReviewRequestSaga({ payload: reviewSaveActionPayload }: ReturnType<typeof createSaveReviewRequestAction>) {
     try {
         const review: ReviewResult = yield call(reviewApi.save, reviewSaveActionPayload.payload);
 
@@ -51,7 +57,7 @@ function* saveReviewSaga({ payload: reviewSaveActionPayload }: ReturnType<typeof
 
         const reviewPage: Page<ReviewResult> = yield put(createFindReviewPageAction(findPayload));
 
-        yield put(createSaveReviewSuccessAction({
+        yield put(createSaveReviewAction({
             reviewPageAsync: {
                 payload: findPayload,
                 result: reviewPage,
@@ -65,7 +71,7 @@ function* saveReviewSaga({ payload: reviewSaveActionPayload }: ReturnType<typeof
     }
 };
 
-function* removeReviewSaga({ payload: reviewRemoveActionPayload }: ReturnType<typeof createRemoveReviewAction>) {
+function* removeReviewRequestSaga({ payload: reviewRemoveActionPayload }: ReturnType<typeof createRemoveReviewRequestAction>) {
     const findPayload: FindPayload = yield select((state: RootState) => state.reviews.reviewPageAsync.payload);
 
     try {
@@ -73,7 +79,7 @@ function* removeReviewSaga({ payload: reviewRemoveActionPayload }: ReturnType<ty
 
         const reviewPage: Page<ReviewResult> = yield put(createFindReviewPageAction(findPayload));
 
-        yield put(createRemoveReviewSuccessAction({
+        yield put(createRemoveReviewAction({
             reviewPageAsync: {
                 payload: findPayload,
                 result: reviewPage,
@@ -89,7 +95,7 @@ function* removeReviewSaga({ payload: reviewRemoveActionPayload }: ReturnType<ty
 
 export default function* reviewsSaga() {
     yield takeEvery(FIND_REVIEW_PAGE, findReviewPageSaga);
-    yield takeEvery(UPDATE_REVIEW, updateReviewSaga);
-    yield takeEvery(SAVE_REVIEW, saveReviewSaga);
-    yield takeEvery(REMOVE_REVIEW, removeReviewSaga);
+    yield takeEvery(UPDATE_REVIEW_REQUEST, updateReviewRequestSaga);
+    yield takeEvery(SAVE_REVIEW_REQUEST, saveReviewRequestSaga);
+    yield takeEvery(REMOVE_REVIEW_REQUEST, removeReviewRequestSaga);
 }

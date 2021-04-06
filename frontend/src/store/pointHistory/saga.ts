@@ -3,7 +3,7 @@ import { RootState } from '..';
 import PointHistoryApi from '../../apis/pointHistoryApi';
 import { Page } from '../../models/common';
 import { PointHistoryResult } from '../../models/pointHistories';
-import { createFindPointHistoryPageAction, findPointHistoryPageAsyncActionCreator } from './action';
+import { createFindPointHistoryPageAction, createSetPointHistoryPageAsyncAction } from './action';
 import { FIND_POINT_HISTORY_PAGE } from './actionType';
 import { PointHistoriesState } from './reducer';
 
@@ -14,15 +14,21 @@ function* findPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnT
         && pointHistoriesState.pointHistoryPageAsync.result !== undefined) {
         return;
     }
-    
-    yield put(findPointHistoryPageAsyncActionCreator.request(pointHistoryFindPayload));
 
     try {
         const pointHistoryPage: Page<PointHistoryResult> = yield call(PointHistoryApi.findAll, pointHistoryFindPayload);
 
-        yield put(findPointHistoryPageAsyncActionCreator.success(pointHistoryPage));
+        yield put(createSetPointHistoryPageAsyncAction({
+            payload: pointHistoryFindPayload,
+            result: pointHistoryPage,
+            error: undefined
+        }));
     } catch (error) {
-        yield put(findPointHistoryPageAsyncActionCreator.failure(error));
+        yield put(createSetPointHistoryPageAsyncAction({
+            payload: pointHistoryFindPayload,
+            result: undefined,
+            error: error
+        }));
     }
 };
 

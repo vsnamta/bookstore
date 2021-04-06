@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import ProductDetailTemplate from '../../components/product/ProductDetailTemplate';
 import { FindPayload } from '../../models/common';
 import { RootState } from '../../store';
-import { CartSaveActionPayload, createSaveCartAction } from '../../store/cart/action';
+import { CartSaveActionPayload, createSaveCartRequestAction } from '../../store/cart/action';
 import { createFindProductAction } from '../../store/product/action';
-import { createFindReviewPageAction, createSaveReviewAction, ReviewSaveActionPayload } from '../../store/review/action';
-import ProductDetailTemplate from '../../components/product/ProductDetailTemplate';
+import { createFindReviewPageAction, createSaveReviewRequestAction, ReviewSaveActionPayload } from '../../store/review/action';
 
 function ProductDetailPage() {
     const { id } = useParams<{id: string}>();
@@ -25,11 +25,11 @@ function ProductDetailPage() {
     }, []);
 
     const saveCart = useCallback((payload: CartSaveActionPayload) => {
-        dispatch(createSaveCartAction(payload));
+        dispatch(createSaveCartRequestAction(payload));
     }, [loginMember]);
 
     const saveReview = useCallback((payload: ReviewSaveActionPayload) => {
-        dispatch(createSaveReviewAction(payload));
+        dispatch(createSaveReviewRequestAction(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {

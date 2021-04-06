@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FindPayload } from '../../models/common';
-import { LoginMember } from '../../models/members';
-import { RootState } from '../../store';
-import { createFindReviewAction, createFindReviewPageAction, createRemoveReviewAction, createUpdateReviewAction, ReviewRemoveActionPayload, ReviewUpdateActionPayload } from '../../store/review/action';
 import MyReviewTemplate from '../../components/reivew/MyReviewTemplate';
 import { MyData } from '../../models/auths';
+import { FindPayload } from '../../models/common';
+import { RootState } from '../../store';
+import { createFindReviewAction, createFindReviewPageAction, createRemoveReviewRequestAction, createUpdateReviewRequestAction, ReviewRemoveActionPayload, ReviewUpdateActionPayload } from '../../store/review/action';
 
 function MyReviewPage() {
     const dispatch = useDispatch();
@@ -27,11 +26,11 @@ function MyReviewPage() {
     }, []);
 
     const updateReview = useCallback((payload: ReviewUpdateActionPayload) => {
-        dispatch(createUpdateReviewAction(payload));
+        dispatch(createUpdateReviewRequestAction(payload));
     }, []);
 
     const removeReview = useCallback((payload: ReviewRemoveActionPayload) => {
-        dispatch(createRemoveReviewAction(payload));
+        dispatch(createRemoveReviewRequestAction(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {

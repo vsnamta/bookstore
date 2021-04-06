@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { createFindDiscountPolicyAction, createFindDiscountPolicyListAction, createSaveDiscountPolicyAction, createUpdateDiscountPolicyAction, DiscountPolicySaveActionPayload, DiscountPolicyUpdateActionPayload } from '../../store/discountPolicy/action';
 import DiscountPolicyManagementTemplate from '../../components/discountPolicy/DiscountPolicyManagementTemplate';
+import { RootState } from '../../store';
+import { createFindDiscountPolicyAction, createFindDiscountPolicyListAction, createSaveDiscountPolicyRequestAction, createUpdateDiscountPolicyRequestAction, DiscountPolicySaveActionPayload, DiscountPolicyUpdateActionPayload } from '../../store/discountPolicy/action';
 
 function DiscountPolicyManagementPage() {
     const dispatch = useDispatch();
@@ -17,11 +17,11 @@ function DiscountPolicyManagementPage() {
     }, []);
 
     const saveDiscountPolicy = useCallback((payload: DiscountPolicySaveActionPayload) => {
-        dispatch(createSaveDiscountPolicyAction(payload));
+        dispatch(createSaveDiscountPolicyRequestAction(payload));
     }, []);
 
     const updateDiscountPolicy = useCallback((payload: DiscountPolicyUpdateActionPayload) => {
-        dispatch(createUpdateDiscountPolicyAction(payload));
+        dispatch(createUpdateDiscountPolicyRequestAction(payload));
     }, []);
 
     return (

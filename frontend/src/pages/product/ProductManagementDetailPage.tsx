@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import ProductManagementDetailTemplate from '../../components/product/ProductManagementDetailTemplate';
+import { ProductFindPayload } from '../../models/products';
 import { StockFindPayload } from '../../models/stocks';
 import { RootState } from '../../store';
 import { createFindProductAction } from '../../store/product/action';
-import { createFindStockPageAction, createSaveStockAction, StockSaveActionPayload } from '../../store/stock/action';
-import ProductManagementDetailTemplate from '../../components/product/ProductManagementDetailTemplate';
-import { ProductFindPayload } from '../../models/products';
+import { createFindStockPageAction, createSaveStockRequestAction, StockSaveActionPayload } from '../../store/stock/action';
 
 function ProductManagementDetailPage() {
     const { id } = useParams<{id: string}>();
@@ -24,7 +24,7 @@ function ProductManagementDetailPage() {
     }, []);
 
     const saveStock = useCallback((payload: StockSaveActionPayload) => {
-        dispatch(createSaveStockAction(payload));
+        dispatch(createSaveStockRequestAction(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {

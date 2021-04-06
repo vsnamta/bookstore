@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import OrderManagementTemplate from '../../components/order/OrderManagementTemplate';
 import { FindPayload, SearchCriteria } from '../../models/common';
 import { RootState } from '../../store';
-import { createFindOrderAction, createFindOrderPageAction, createUpdateOrderAction, OrderUpdateActionPayload } from '../../store/order/action';
-import OrderManagementTemplate from '../../components/order/OrderManagementTemplate';
+import { createFindOrderAction, createFindOrderPageAction, createUpdateOrderRequestAction, OrderUpdateActionPayload } from '../../store/order/action';
 
 function OrderManagementPage() {
     const dispatch = useDispatch();
@@ -20,7 +20,7 @@ function OrderManagementPage() {
     }, []);
 
     const updateOrder = useCallback((payload: OrderUpdateActionPayload) => {
-        dispatch(createUpdateOrderAction(payload));
+        dispatch(createUpdateOrderRequestAction(payload));
     }, []);
 
     const onUpdateSearchCriteria = useCallback((searchCriteria: SearchCriteria) => {

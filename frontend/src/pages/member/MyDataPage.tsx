@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LoginMember } from '../../models/members';
-import { RootState } from '../../store';
-import { createFindMemberAction, createUpdateMemberAction, MemberUpdateActionPayload } from '../../store/member/action';
 import MemberUpdateTemplate from '../../components/member/MemberUpdateTemplate';
 import { MyData } from '../../models/auths';
+import { RootState } from '../../store';
+import { createFindMemberAction, createUpdateMemberRequestAction, MemberUpdateActionPayload } from '../../store/member/action';
 
 function MyDataPage() {
     const dispatch = useDispatch();
@@ -16,7 +15,7 @@ function MyDataPage() {
     }, []);
 
     const updateMember = useCallback((payload: MemberUpdateActionPayload) => {
-        dispatch(createUpdateMemberAction(payload));
+        dispatch(createUpdateMemberRequestAction(payload));
     }, []);
     
     return (

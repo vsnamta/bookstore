@@ -1,9 +1,9 @@
-import { createReducer, PayloadAction } from 'typesafe-actions';
+import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { Page } from '../../models/common';
 import { ProductDetailResult, ProductFindPayload, ProductResult } from '../../models/products';
-import { createSaveProductSuccessAction, createUpdateProductSuccessAction, findProductAsyncActionCreator, findProductPageAsyncActionCreator, ProductsAction } from './action';
-import { FIND_PRODUCT_FAILURE, FIND_PRODUCT_PAGE_FAILURE, FIND_PRODUCT_PAGE_REQUEST, FIND_PRODUCT_PAGE_SUCCESS, FIND_PRODUCT_REQUEST, FIND_PRODUCT_SUCCESS, SAVE_PRODUCT_SUCCESS, UPDATE_PRODUCT_SUCCESS } from './actionType';
+import { createSaveProductAction, createSetProductAsyncAction, createSetProductPageAsyncAction, createUpdateProductAction, ProductsAction } from './action';
+import { SAVE_PRODUCT, SET_PRODUCT_ASYNC, SET_PRODUCT_PAGE_ASYNC, UPDATE_PRODUCT } from './actionType';
 
 export interface ProductPageAsync {
     payload?: ProductFindPayload;
@@ -36,51 +36,15 @@ const initialState: ProductsState = {
 };
 
 export default createReducer<ProductsState, ProductsAction>(initialState, {
-    [FIND_PRODUCT_PAGE_REQUEST]: (state, { payload: productFindPayload }: ReturnType<typeof findProductPageAsyncActionCreator.request>) => ({
+    [SET_PRODUCT_PAGE_ASYNC]: (state, { payload: productPageAsync }: ReturnType<typeof createSetProductPageAsyncAction>) => ({
         ...state,
-        productPageAsync: {
-            payload: productFindPayload,
-            result: undefined,
-            error: undefined
-        }
+        productPageAsync: productPageAsync
     }),
-    [FIND_PRODUCT_PAGE_SUCCESS]: (state, { payload: productPage }: ReturnType<typeof findProductPageAsyncActionCreator.success>) => ({
+    [SET_PRODUCT_ASYNC]: (state, { payload: productAsync }: ReturnType<typeof createSetProductAsyncAction>) => ({
         ...state,
-        productPageAsync: {
-            ...state.productPageAsync,
-            result: productPage
-        } 
+        productAsync: productAsync
     }),
-    [FIND_PRODUCT_PAGE_FAILURE]: (state, { payload: error }: ReturnType<typeof findProductPageAsyncActionCreator.failure>) => ({
-        ...state,
-        productPageAsync: {
-            ...state.productPageAsync,
-            error: error
-        } 
-    }),
-    [FIND_PRODUCT_REQUEST]: (state, { payload: id }: ReturnType<typeof findProductAsyncActionCreator.request>) => ({
-        ...state,
-        productAsync: {
-            payload: id,
-            result: undefined,
-            error: undefined
-        }
-    }),
-    [FIND_PRODUCT_SUCCESS]: (state, { payload: product }: ReturnType<typeof findProductAsyncActionCreator.success>) => ({
-        ...state,
-        productAsync: {
-            ...state.productAsync,
-            result: product
-        }
-    }),
-    [FIND_PRODUCT_FAILURE]: (state, { payload: error }: ReturnType<typeof findProductAsyncActionCreator.failure>) => ({
-        ...state,
-        productAsync: {
-            ...state.productAsync,
-            error: error
-        }
-    }),
-    [UPDATE_PRODUCT_SUCCESS]: (state, { payload: updatedProduct }: ReturnType<typeof createUpdateProductSuccessAction>) => ({
+    [UPDATE_PRODUCT]: (state, { payload: updatedProduct }: ReturnType<typeof createUpdateProductAction>) => ({
         productPageAsync: {
             ...state.productPageAsync,
             result: {
@@ -98,7 +62,7 @@ export default createReducer<ProductsState, ProductsAction>(initialState, {
             result: updatedProduct
         }
     }),
-    [SAVE_PRODUCT_SUCCESS]: (state, { payload: savedProduct }: ReturnType<typeof createSaveProductSuccessAction>) => ({
+    [SAVE_PRODUCT]: (state, { payload: savedProduct }: ReturnType<typeof createSaveProductAction>) => ({
         productPageAsync: initialState.productPageAsync,
         productAsync: {
             payload: savedProduct.id,

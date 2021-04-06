@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { CategoryRemoveActionPayload, CategorySaveActionPayload, CategoryUpdateActionPayload, createFindCategoryAction, createFindCategoryListAction, createRemoveCategoryAction, createSaveCategoryAction, createUpdateCategoryAction } from '../../store/category/action';
 import CategoryManagementTemplate from '../../components/category/CategoryManagementTemplate';
+import { RootState } from '../../store';
+import { CategoryRemoveActionPayload, CategorySaveActionPayload, CategoryUpdateActionPayload, createFindCategoryAction, createFindCategoryListAction, createRemoveCategoryRequestAction, createSaveCategoryRequestAction, createUpdateCategoryRequestAction } from '../../store/category/action';
 
 function CategoryManagementPage() {
     const dispatch = useDispatch();
@@ -17,15 +17,15 @@ function CategoryManagementPage() {
     }, []);
 
     const saveCategory = useCallback((payload: CategorySaveActionPayload) => {
-        dispatch(createSaveCategoryAction(payload));
+        dispatch(createSaveCategoryRequestAction(payload));
     }, []);
 
     const updateCategory = useCallback((payload: CategoryUpdateActionPayload) => {
-        dispatch(createUpdateCategoryAction(payload));
+        dispatch(createUpdateCategoryRequestAction(payload));
     }, []);
 
     const removeCategory = useCallback((payload: CategoryRemoveActionPayload) => {
-        dispatch(createRemoveCategoryAction(payload));
+        dispatch(createRemoveCategoryRequestAction(payload));
     }, []);
     
     return (

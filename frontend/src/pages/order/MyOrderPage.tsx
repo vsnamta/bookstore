@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FindPayload } from '../../models/common';
-import { LoginMember } from '../../models/members';
-import { RootState } from '../../store';
-import { createFindOrderAction, createFindOrderPageAction, createUpdateOrderAction, OrderUpdateActionPayload } from '../../store/order/action';
 import MyOrderTemplate from '../../components/order/MyOrderTemplate';
 import { MyData } from '../../models/auths';
+import { FindPayload } from '../../models/common';
+import { RootState } from '../../store';
+import { createFindOrderAction, createFindOrderPageAction, createUpdateOrderRequestAction, OrderUpdateActionPayload } from '../../store/order/action';
 
 function MyOrderPage() {
     const dispatch = useDispatch();
@@ -27,7 +26,7 @@ function MyOrderPage() {
     }, []);
 
     const updateOrder = useCallback((payload: OrderUpdateActionPayload) => {
-        dispatch(createUpdateOrderAction(payload));
+        dispatch(createUpdateOrderRequestAction(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {

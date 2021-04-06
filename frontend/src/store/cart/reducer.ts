@@ -1,8 +1,8 @@
 import { createReducer, PayloadAction } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { CartFindPayload, CartResult } from '../../models/carts';
-import { findCartListAsyncActionCreator, CartsAction, createCheckCartAction, createSaveCartSuccessAction, createUpdateCartSuccessAction, createRemoveCartSuccessAction, createCheckAllCartAction } from './action';
-import { CHECK_ALL_CART, CHECK_CART, FIND_CART_LIST_FAILURE, FIND_CART_LIST_REQUEST, FIND_CART_LIST_SUCCESS, REMOVE_CART_SUCCESS, SAVE_CART_SUCCESS, UPDATE_CART_SUCCESS } from './actionType';
+import { CartsAction, createCheckCartAction, createCheckAllCartAction, createSetCartListAsyncAction, createUpdateCartAction, createSaveCartAction, createRemoveCartAction } from './action';
+import { CHECK_ALL_CART, CHECK_CART, REMOVE_CART, SAVE_CART, SET_CART_LIST_ASYNC, UPDATE_CART } from './actionType';
 
 export interface CartListAsync {
     payload?: CartFindPayload;
@@ -23,26 +23,10 @@ const initialState: CartsState = {
 };
 
 export default createReducer<CartsState, CartsAction>(initialState, {
-    [FIND_CART_LIST_REQUEST]: (state, action) => ({
-        cartListAsync: {
-            payload: action.payload,
-            result: undefined,
-            error: undefined
-        }
+    [SET_CART_LIST_ASYNC]: (state, { payload: cartListAsync }: ReturnType<typeof createSetCartListAsyncAction>) => ({
+        cartListAsync: cartListAsync 
     }),
-    [FIND_CART_LIST_SUCCESS]: (state, { payload: cartList }: ReturnType<typeof findCartListAsyncActionCreator.success>) => ({
-        cartListAsync: {
-            ...state.cartListAsync,
-            result: cartList.map(cart => ({ ...cart, checked: true }))
-        } 
-    }),
-    [FIND_CART_LIST_FAILURE]: (state, { payload: error }: ReturnType<typeof findCartListAsyncActionCreator.failure>) => ({
-        cartListAsync: {
-            ...state.cartListAsync,
-            error: error
-        } 
-    }),
-    [UPDATE_CART_SUCCESS]: (state, { payload: updatedCart }: ReturnType<typeof createUpdateCartSuccessAction>) => ({
+    [UPDATE_CART]: (state, { payload: updatedCart }: ReturnType<typeof createUpdateCartAction>) => ({
         cartListAsync: {
             result: (state.cartListAsync.result as CartResult[]).map(cart => 
                 cart.id === updatedCart.id 
@@ -52,7 +36,7 @@ export default createReducer<CartsState, CartsAction>(initialState, {
             error: undefined
         }
     }),
-    [SAVE_CART_SUCCESS]: (state, { payload: savedCart }: ReturnType<typeof createSaveCartSuccessAction>) => ({
+    [SAVE_CART]: (state, { payload: savedCart }: ReturnType<typeof createSaveCartAction>) => ({
         cartListAsync: {
             result: state.cartListAsync.result 
                 ? state.cartListAsync.result.concat(savedCart)
@@ -60,7 +44,7 @@ export default createReducer<CartsState, CartsAction>(initialState, {
             error: undefined
         }  
     }),
-    [REMOVE_CART_SUCCESS]: (state, { payload: removedIds }: ReturnType<typeof createRemoveCartSuccessAction>) => ({
+    [REMOVE_CART]: (state, { payload: removedIds }: ReturnType<typeof createRemoveCartAction>) => ({
         cartListAsync: {
             result: (state.cartListAsync.result as CartResult[]).filter(cart => !removedIds.includes(cart.id)),
             error: undefined

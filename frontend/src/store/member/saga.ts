@@ -3,8 +3,8 @@ import { RootState } from '..';
 import memberApi from '../../apis/memberApi';
 import { Page } from '../../models/common';
 import { MemberDetailResult, MemberResult } from '../../models/members';
-import { createFindMemberAction, createFindMemberPageAction, createSaveMemberAction, createSaveMemberSuccessAction, createUpdateMemberAction, createUpdateMemberSuccessAction, findMemberAsyncActionCreator, findMemberPageAsyncActionCreator } from './action';
-import { FIND_MEMBER, FIND_MEMBER_PAGE, SAVE_MEMBER, UPDATE_MEMBER } from './actionType';
+import { createFindMemberAction, createFindMemberPageAction, createSaveMemberAction, createSaveMemberRequestAction, createSetMemberAsyncAction, createSetMemberPageAsyncAction, createUpdateMemberAction, createUpdateMemberRequestAction } from './action';
+import { FIND_MEMBER, FIND_MEMBER_PAGE, SAVE_MEMBER_REQUEST, UPDATE_MEMBER_REQUEST } from './actionType';
 import { MembersState } from './reducer';
 
 function* findMemberPageSaga({ payload: findPayload }: ReturnType<typeof createFindMemberPageAction>) {
@@ -14,15 +14,21 @@ function* findMemberPageSaga({ payload: findPayload }: ReturnType<typeof createF
         && membersState.memberPageAsync.result !== undefined) {
         return;
     }
-    
-    yield put(findMemberPageAsyncActionCreator.request(findPayload));
 
     try {
         const memberList: Page<MemberResult> = yield call(memberApi.findAll, findPayload);
 
-        yield put(findMemberPageAsyncActionCreator.success(memberList));
+        yield put(createSetMemberPageAsyncAction({
+            payload: findPayload,
+            result: memberList,
+            error: undefined
+        }));
     } catch (error) {
-        yield put(findMemberPageAsyncActionCreator.failure(error));
+        yield put(createSetMemberPageAsyncAction({
+            payload: findPayload,
+            result: undefined,
+            error: error
+        }));
     }
 };
 
@@ -32,34 +38,40 @@ function* findMemberSaga({ payload: id }: ReturnType<typeof createFindMemberActi
     if(membersState.memberAsync.payload === id && membersState.memberAsync.result !== undefined) {
         return;
     }
-    
-    yield put(findMemberAsyncActionCreator.request(id));
 
     try {
         const member: MemberDetailResult = yield call(memberApi.findOne, id);
 
-        yield put(findMemberAsyncActionCreator.success(member));
+        yield put(createSetMemberAsyncAction({
+            payload: id,
+            result: member,
+            error: undefined
+        }));
     } catch (error) {
-        yield put(findMemberAsyncActionCreator.failure(error));
+        yield put(createSetMemberAsyncAction({
+            payload: id,
+            result: undefined,
+            error: error
+        }));
     }
 };
 
-function* updateMemberSaga({ payload: memberUpdateActionPayload }: ReturnType<typeof createUpdateMemberAction>) {
+function* updateMemberRequestSaga({ payload: memberUpdateActionPayload }: ReturnType<typeof createUpdateMemberRequestAction>) {
     try {
         const member: MemberDetailResult = yield call(memberApi.update, memberUpdateActionPayload.id, memberUpdateActionPayload.payload);
 
-        yield put(createUpdateMemberSuccessAction(member));
+        yield put(createUpdateMemberAction(member));
         memberUpdateActionPayload.onSuccess && memberUpdateActionPayload.onSuccess(member);
     } catch (error) {
         memberUpdateActionPayload.onFailure && memberUpdateActionPayload.onFailure(error);
     }
 };
 
-function* saveMemberSaga({ payload: memberSaveActionPayload }: ReturnType<typeof createSaveMemberAction>) {
+function* saveMemberRequestSaga({ payload: memberSaveActionPayload }: ReturnType<typeof createSaveMemberRequestAction>) {
     try {
         const member: MemberDetailResult = yield call(memberApi.save, memberSaveActionPayload.payload);
 
-        yield put(createSaveMemberSuccessAction(member));
+        yield put(createSaveMemberAction(member));
 
         memberSaveActionPayload.onSuccess && memberSaveActionPayload.onSuccess(member);
     } catch (error) {
@@ -70,6 +82,6 @@ function* saveMemberSaga({ payload: memberSaveActionPayload }: ReturnType<typeof
 export default function* membersSaga() {
     yield takeEvery(FIND_MEMBER_PAGE, findMemberPageSaga);
     yield takeEvery(FIND_MEMBER, findMemberSaga);
-    yield takeEvery(UPDATE_MEMBER, updateMemberSaga);
-    yield takeEvery(SAVE_MEMBER, saveMemberSaga);
+    yield takeEvery(UPDATE_MEMBER_REQUEST, updateMemberRequestSaga);
+    yield takeEvery(SAVE_MEMBER_REQUEST, saveMemberRequestSaga);
 }

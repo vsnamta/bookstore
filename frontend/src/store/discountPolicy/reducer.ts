@@ -1,8 +1,8 @@
 import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
-import { createFindDiscountPolicyAction, createSaveDiscountPolicySuccessAction, createUpdateDiscountPolicySuccessAction, DiscountPoliciesAction, findDiscountPolicyListAsyncActionCreator } from './action';
-import { FIND_DISCOUNT_POLICY, FIND_DISCOUNT_POLICY_LIST_FAILURE, FIND_DISCOUNT_POLICY_LIST_REQUEST, FIND_DISCOUNT_POLICY_LIST_SUCCESS, SAVE_DISCOUNT_POLICY_SUCCESS, UPDATE_DISCOUNT_POLICY_SUCCESS } from './actionType';
+import { createFindDiscountPolicyAction, createSaveDiscountPolicyAction, createSetDiscountPolicyListAsyncAction, createUpdateDiscountPolicyAction, DiscountPoliciesAction } from './action';
+import { FIND_DISCOUNT_POLICY, SAVE_DISCOUNT_POLICY, SET_DISCOUNT_POLICY_LIST_ASYNC, UPDATE_DISCOUNT_POLICY } from './actionType';
 
 export interface DiscountPolicyListAsync {
     result?: DiscountPolicyResult[];
@@ -23,33 +23,16 @@ const initialState: DiscountPoliciesState = {
 };
 
 export default createReducer<DiscountPoliciesState, DiscountPoliciesAction>(initialState, {
-    [FIND_DISCOUNT_POLICY_LIST_REQUEST]: (state, action) => ({
-        ...state,
-        discountPolicyListAsync: {
-            result: undefined,
-            error: undefined
-        }
-    }),
-    [FIND_DISCOUNT_POLICY_LIST_SUCCESS]: (state, { payload: discountPolicies }: ReturnType<typeof findDiscountPolicyListAsyncActionCreator.success>) => ({
-        ...state,
-        discountPolicyListAsync: {
-            ...state.discountPolicyListAsync,
-            result: discountPolicies
-        } 
-    }),
-    [FIND_DISCOUNT_POLICY_LIST_FAILURE]: (state, { payload: error }: ReturnType<typeof findDiscountPolicyListAsyncActionCreator.failure>) => ({
-        ...state,
-        discountPolicyListAsync: {
-            ...state.discountPolicyListAsync,
-            error: error
-        } 
+    [SET_DISCOUNT_POLICY_LIST_ASYNC]: (state, { payload: discountPolicyListAsync }: ReturnType<typeof createSetDiscountPolicyListAsyncAction>) => ({
+        discountPolicyListAsync: discountPolicyListAsync,
+        discountPolicy: undefined
     }),
     [FIND_DISCOUNT_POLICY]: (state, { payload: id }: ReturnType<typeof createFindDiscountPolicyAction>) => ({
         ...state,
         discountPolicy: (state.discountPolicyListAsync.result as DiscountPolicyResult[])
             .find(discountPolicy => discountPolicy.id === id)
     }),
-    [UPDATE_DISCOUNT_POLICY_SUCCESS]: (state, { payload: updatedDiscountPolicy }: ReturnType<typeof createUpdateDiscountPolicySuccessAction>) => ({
+    [UPDATE_DISCOUNT_POLICY]: (state, { payload: updatedDiscountPolicy }: ReturnType<typeof createUpdateDiscountPolicyAction>) => ({
         discountPolicyListAsync: {
             result: (state.discountPolicyListAsync.result as DiscountPolicyResult[]).map(discountPolicy => 
                 discountPolicy.id === updatedDiscountPolicy.id 
@@ -60,7 +43,7 @@ export default createReducer<DiscountPoliciesState, DiscountPoliciesAction>(init
         },
         discountPolicy: updatedDiscountPolicy
     }),
-    [SAVE_DISCOUNT_POLICY_SUCCESS]: (state, { payload: savedDiscountPolicy }: ReturnType<typeof createSaveDiscountPolicySuccessAction>) => ({
+    [SAVE_DISCOUNT_POLICY]: (state, { payload: savedDiscountPolicy }: ReturnType<typeof createSaveDiscountPolicyAction>) => ({
         discountPolicyListAsync: {
             result: (state.discountPolicyListAsync.result as DiscountPolicyResult[]).concat(savedDiscountPolicy),
             error: undefined
