@@ -45,41 +45,41 @@ function* findProductSaga(action: ReturnType<typeof createFindProductAction>) {
     }
 };
 
-function* updateProductSaga(action: ReturnType<typeof createUpdateProductAction>) {
+function* updateProductSaga({ payload: productUpdateActionPayload }: ReturnType<typeof createUpdateProductAction>) {
     try {
         let product: ProductDetailResult;
 
-        if(action.payload.file) {
-            const originalFileName = action.payload.payload.imageFileName;
+        if(productUpdateActionPayload.file) {
+            const originalFileName = productUpdateActionPayload.payload.imageFileName;
             
-            const newFileName: string = yield call(fileApi.save, action.payload.file);
-            action.payload.payload.imageFileName = newFileName;
+            const newFileName: string = yield call(fileApi.save, productUpdateActionPayload.file);
+            productUpdateActionPayload.payload.imageFileName = newFileName;
 
-            product = yield call(productApi.update, action.payload.id, action.payload.payload);
+            product = yield call(productApi.update, productUpdateActionPayload.id, productUpdateActionPayload.payload);
 
             yield call(fileApi.remove, originalFileName);
         } else {
-            product = yield call(productApi.update, action.payload.id, action.payload.payload);
+            product = yield call(productApi.update, productUpdateActionPayload.id, productUpdateActionPayload.payload);
         }
 
         yield put(createUpdateProductSuccessAction(product));
-        action.payload.onSuccess && action.payload.onSuccess(product);
+        productUpdateActionPayload.onSuccess && productUpdateActionPayload.onSuccess(product);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        productUpdateActionPayload.onFailure && productUpdateActionPayload.onFailure(error);
     }
 };
 
-function* saveProductSaga(action: ReturnType<typeof createSaveProductAction>) {
+function* saveProductSaga({ payload: productSaveActionPayload }: ReturnType<typeof createSaveProductAction>) {
     try {
-        const fileName: string = yield call(fileApi.save, action.payload.file);
-        action.payload.payload.imageFileName = fileName;
+        const fileName: string = yield call(fileApi.save, productSaveActionPayload.file);
+        productSaveActionPayload.payload.imageFileName = fileName;
 
-        const product: ProductDetailResult = yield call(productApi.save, action.payload.payload);
+        const product: ProductDetailResult = yield call(productApi.save, productSaveActionPayload.payload);
 
         yield put(createSaveProductSuccessAction(product));
-        action.payload.onSuccess && action.payload.onSuccess(product);
+        productSaveActionPayload.onSuccess && productSaveActionPayload.onSuccess(product);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        productSaveActionPayload.onFailure && productSaveActionPayload.onFailure(error);
     }
 };
 

@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { FindPayload, Page } from '../../models/common';
 import { ReviewResult } from '../../models/reviews';
-import { ReviewsAction } from './action';
+import { createUpdateReviewSuccessAction, ReviewsAction } from './action';
 import { FIND_REVIEW, FIND_REVIEW_PAGE_FAILURE, FIND_REVIEW_PAGE_REQUEST, FIND_REVIEW_PAGE_SUCCESS, REMOVE_REVIEW_SUCCESS, SAVE_REVIEW_SUCCESS, UPDATE_REVIEW_SUCCESS } from './actionType';
 
 export interface ReviewPageAsync {
@@ -53,21 +53,21 @@ export default createReducer<ReviewsState, ReviewsAction>(initialState, {
         review: (state.reviewPageAsync.result as Page<ReviewResult>).list
             .find(review => review.id === action.payload)
     }),
-    [UPDATE_REVIEW_SUCCESS]: (state, action) => ({
+    [UPDATE_REVIEW_SUCCESS]: (state, { payload: updatedReview }: ReturnType<typeof createUpdateReviewSuccessAction>) => ({
         reviewPageAsync: {
             ...state.reviewPageAsync,
             result: {
                 ...state.reviewPageAsync.result as Page<ReviewResult>,
                 list: (state.reviewPageAsync.result as Page<ReviewResult>).list
                     .map(review => 
-                        review.id === action.payload.id
-                            ? action.payload 
+                        review.id === updatedReview.id
+                            ? updatedReview 
                             : review
                     )
             }
         },
-        review: action.payload
+        review: updatedReview
     }),
-    [SAVE_REVIEW_SUCCESS]: (state, action) => state,
-    [REMOVE_REVIEW_SUCCESS]: (state, action) => state
+    [SAVE_REVIEW_SUCCESS]: (state, action) => action.payload,
+    [REMOVE_REVIEW_SUCCESS]: (state, action) => action.payload
 });

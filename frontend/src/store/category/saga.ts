@@ -16,36 +16,36 @@ function* findCategoryListSaga(action: ReturnType<typeof createFindCategoryListA
     }
 };
 
-function* updateCategorySaga(action: ReturnType<typeof createUpdateCategoryAction>) {
+function* updateCategorySaga({ payload: categoryUpdateActionPayload }: ReturnType<typeof createUpdateCategoryAction>) {
     try {
-        const category: CategoryResult = yield call(categoryApi.update, action.payload.id, action.payload.payload);
+        const category: CategoryResult = yield call(categoryApi.update, categoryUpdateActionPayload.id, categoryUpdateActionPayload.payload);
 
         yield put(createUpdateCategorySuccessAction(category));
-        action.payload.onSuccess && action.payload.onSuccess(category);
+        categoryUpdateActionPayload.onSuccess && categoryUpdateActionPayload.onSuccess(category);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        categoryUpdateActionPayload.onFailure && categoryUpdateActionPayload.onFailure(error);
     }
 };
 
-function* saveCategorySaga(action: ReturnType<typeof createSaveCategoryAction>) {
+function* saveCategorySaga({ payload: categorySaveActionPayload }: ReturnType<typeof createSaveCategoryAction>) {
     try {
-        const category: CategoryResult = yield call(categoryApi.save, action.payload.payload);
+        const category: CategoryResult = yield call(categoryApi.save, categorySaveActionPayload.payload);
 
         yield put(createSaveCategorySuccessAction(category));
-        action.payload.onSuccess && action.payload.onSuccess(category);
+        categorySaveActionPayload.onSuccess && categorySaveActionPayload.onSuccess(category);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        categorySaveActionPayload.onFailure && categorySaveActionPayload.onFailure(error);
     }
 };
 
-function* removeCategorySaga(action: ReturnType<typeof createRemoveCategoryAction>) {
+function* removeCategorySaga({ payload: categoryRemoveActionPayload }: ReturnType<typeof createRemoveCategoryAction>) {
     try {
-        yield call(categoryApi.remove, action.payload.id);
+        yield call(categoryApi.remove, categoryRemoveActionPayload.id);
 
-        yield put(createRemoveCategorySuccessAction(action.payload.id));
-        action.payload.onSuccess && action.payload.onSuccess();
+        yield put(createRemoveCategorySuccessAction(categoryRemoveActionPayload.id));
+        categoryRemoveActionPayload.onSuccess && categoryRemoveActionPayload.onSuccess();
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        categoryRemoveActionPayload.onFailure && categoryRemoveActionPayload.onFailure(error);
     }
 };
 

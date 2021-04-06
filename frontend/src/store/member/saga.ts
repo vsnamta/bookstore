@@ -30,26 +30,26 @@ function* findMemberSaga(action: ReturnType<typeof createFindMemberAction>) {
     }
 };
 
-function* updateMemberSaga(action: ReturnType<typeof createUpdateMemberAction>) {
+function* updateMemberSaga({ payload: memberUpdateActionPayload }: ReturnType<typeof createUpdateMemberAction>) {
     try {
-        const member: MemberDetailResult = yield call(memberApi.update, action.payload.id, action.payload.payload);
+        const member: MemberDetailResult = yield call(memberApi.update, memberUpdateActionPayload.id, memberUpdateActionPayload.payload);
 
         yield put(createUpdateMemberSuccessAction(member));
-        action.payload.onSuccess && action.payload.onSuccess(member);
+        memberUpdateActionPayload.onSuccess && memberUpdateActionPayload.onSuccess(member);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        memberUpdateActionPayload.onFailure && memberUpdateActionPayload.onFailure(error);
     }
 };
 
-function* saveMemberSaga(action: ReturnType<typeof createSaveMemberAction>) {
+function* saveMemberSaga({ payload: memberSaveActionPayload }: ReturnType<typeof createSaveMemberAction>) {
     try {
-        const member: MemberDetailResult = yield call(memberApi.save, action.payload.payload);
+        const member: MemberDetailResult = yield call(memberApi.save, memberSaveActionPayload.payload);
 
         yield put(createSaveMemberSuccessAction(member));
 
-        action.payload.onSuccess && action.payload.onSuccess(member);
+        memberSaveActionPayload.onSuccess && memberSaveActionPayload.onSuccess(member);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        memberSaveActionPayload.onFailure && memberSaveActionPayload.onFailure(error);
     }
 };
 

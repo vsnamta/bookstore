@@ -16,36 +16,36 @@ function* findCartListSaga(action: ReturnType<typeof createFindCartListAction>) 
     }
 };
 
-function* updateCartSaga(action: ReturnType<typeof createUpdateCartAction>) {
+function* updateCartSaga({ payload: cartUpdateActionPayload }: ReturnType<typeof createUpdateCartAction>) {
     try {
-        const cart: CartResult = yield call(cartApi.update, action.payload.id, action.payload.payload);
+        const cart: CartResult = yield call(cartApi.update, cartUpdateActionPayload.id, cartUpdateActionPayload.payload);
 
         yield put(createUpdateCartSuccessAction(cart));
-        action.payload.onSuccess && action.payload.onSuccess(cart);
+        cartUpdateActionPayload.onSuccess && cartUpdateActionPayload.onSuccess(cart);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        cartUpdateActionPayload.onFailure && cartUpdateActionPayload.onFailure(error);
     }
 };
 
-function* saveCartSaga(action: ReturnType<typeof createSaveCartAction>) {
+function* saveCartSaga({ payload: cartSaveActionPayload }: ReturnType<typeof createSaveCartAction>) {
     try {
-        const cart: CartResult = yield call(cartApi.save, action.payload.payload);
+        const cart: CartResult = yield call(cartApi.save, cartSaveActionPayload.payload);
 
         yield put(createSaveCartSuccessAction(cart));
-        action.payload.onSuccess && action.payload.onSuccess(cart);
+        cartSaveActionPayload.onSuccess && cartSaveActionPayload.onSuccess(cart);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        cartSaveActionPayload.onFailure && cartSaveActionPayload.onFailure(error);
     }
 };
 
-function* removeCartSaga(action: ReturnType<typeof createRemoveCartAction>) {
+function* removeCartSaga({ payload: cartRemoveActionPayload }: ReturnType<typeof createRemoveCartAction>) {
     try {
-        yield call(cartApi.remove, action.payload.ids);
+        yield call(cartApi.remove, cartRemoveActionPayload.ids);
 
-        yield put(createRemoveCartSuccessAction(action.payload.ids));
-        action.payload.onSuccess && action.payload.onSuccess();
+        yield put(createRemoveCartSuccessAction(cartRemoveActionPayload.ids));
+        cartRemoveActionPayload.onSuccess && cartRemoveActionPayload.onSuccess();
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        cartRemoveActionPayload.onFailure && cartRemoveActionPayload.onFailure(error);
     }
 };
 

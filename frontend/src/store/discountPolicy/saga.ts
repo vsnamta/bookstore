@@ -16,25 +16,25 @@ function* findDiscountPolicyListSaga(action: ReturnType<typeof createFindDiscoun
     }
 };
 
-function* updateDiscountPolicySaga(action: ReturnType<typeof createUpdateDiscountPolicyAction>) {
+function* updateDiscountPolicySaga({ payload: discountPolicyUpdateActionPayload }: ReturnType<typeof createUpdateDiscountPolicyAction>) {
     try {
-        const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.update, action.payload.id, action.payload.payload);
+        const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.update, discountPolicyUpdateActionPayload.id, discountPolicyUpdateActionPayload.payload);
 
         yield put(createUpdateDiscountPolicySuccessAction(discountPolicy));
-        action.payload.onSuccess && action.payload.onSuccess(discountPolicy);
+        discountPolicyUpdateActionPayload.onSuccess && discountPolicyUpdateActionPayload.onSuccess(discountPolicy);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        discountPolicyUpdateActionPayload.onFailure && discountPolicyUpdateActionPayload.onFailure(error);
     }
 };
 
-function* saveDiscountPolicySaga(action: ReturnType<typeof createSaveDiscountPolicyAction>) {
+function* saveDiscountPolicySaga({ payload: discountPolicySaveActionPayload }: ReturnType<typeof createSaveDiscountPolicyAction>) {
     try {
-        const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.save, action.payload.payload);
+        const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.save, discountPolicySaveActionPayload.payload);
 
         yield put(createSaveDiscountPolicySuccessAction(discountPolicy));
-        action.payload.onSuccess && action.payload.onSuccess(discountPolicy);
+        discountPolicySaveActionPayload.onSuccess && discountPolicySaveActionPayload.onSuccess(discountPolicy);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        discountPolicySaveActionPayload.onFailure && discountPolicySaveActionPayload.onFailure(error);
     }
 };
 

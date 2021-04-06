@@ -4,30 +4,30 @@ import { MyData } from '../../models/auths';
 import { createLoginAction, createLogoutAction, createReloadMyDataAction, createSetMyDataAction } from './action';
 import { LOGIN, LOGOUT, RELOAD_MY_DATA } from './actionType';
 
-function* loginSaga(action: ReturnType<typeof createLoginAction>) {
+function* loginSaga({ payload: loginActionPayload }: ReturnType<typeof createLoginAction>) {
     try {
-        yield call(authApi.login, action.payload.payload);
+        yield call(authApi.login, loginActionPayload.payload);
 
         const myData: MyData = yield call(authApi.findMyData);
         yield put(createSetMyDataAction(myData));
         localStorage.setItem("tempMyData", JSON.stringify(myData as MyData));
 
-        action.payload.onSuccess && action.payload.onSuccess();
+        loginActionPayload.onSuccess && loginActionPayload.onSuccess();
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        loginActionPayload.onFailure && loginActionPayload.onFailure(error);
     }
 };
 
-function* logoutSaga(action: ReturnType<typeof createLogoutAction>) {
+function* logoutSaga({ payload: logoutActionPayload }: ReturnType<typeof createLogoutAction>) {
     try {
         yield call(authApi.logout);
 
         yield put(createSetMyDataAction(undefined));
         localStorage.removeItem("tempMyData");
 
-        action.payload.onSuccess && action.payload.onSuccess();
+        logoutActionPayload.onSuccess && logoutActionPayload.onSuccess();
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        logoutActionPayload.onFailure && logoutActionPayload.onFailure(error);
     }
 };
 

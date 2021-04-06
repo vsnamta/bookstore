@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { FindPayload, Page } from '../../models/common';
 import { OrderDetailResult, OrderResult } from '../../models/orders';
-import { OrdersAction } from './action';
+import { createSaveOrderSuccessAction, createUpdateOrderSuccessAction, OrdersAction } from './action';
 import { FIND_ORDER_FAILURE, FIND_ORDER_PAGE_FAILURE, FIND_ORDER_PAGE_REQUEST, FIND_ORDER_PAGE_SUCCESS, FIND_ORDER_REQUEST, FIND_ORDER_SUCCESS, SAVE_ORDER_SUCCESS, UPDATE_ORDER_SUCCESS } from './actionType';
 
 export interface OrderPageAsync {
@@ -80,29 +80,29 @@ export default createReducer<OrdersState, OrdersAction>(initialState, {
             error: action.payload
         }
     }),
-    [UPDATE_ORDER_SUCCESS]: (state, action) => ({
+    [UPDATE_ORDER_SUCCESS]: (state, { payload: updatedOrder }: ReturnType<typeof createUpdateOrderSuccessAction>) => ({
         orderPageAsync: {
             ...state.orderPageAsync,
             result: {
                 ...state.orderPageAsync.result as Page<OrderResult>,
                 list: (state.orderPageAsync.result as Page<OrderResult>).list
                     .map(order => 
-                        order.id === action.payload.id
-                            ? { ...order, statusName: action.payload.statusName } 
+                        order.id === updatedOrder.id
+                            ? { ...order, statusName: updatedOrder.statusName } 
                             : order
                     )
             }
         },
         orderAsync: {
             ...state.orderAsync,
-            result: action.payload
+            result: updatedOrder
         }
     }),
-    [SAVE_ORDER_SUCCESS]: (state, action) => ({
+    [SAVE_ORDER_SUCCESS]: (state, { payload: savedOrder }: ReturnType<typeof createSaveOrderSuccessAction>) => ({
         orderPageAsync: initialState.orderPageAsync,
         orderAsync: {
-            payload: action.payload.id,
-            result: action.payload,
+            payload: savedOrder.id,
+            result: savedOrder,
             error: undefined
         }
     })

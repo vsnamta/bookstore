@@ -29,25 +29,25 @@ function* findOrderSaga(action: ReturnType<typeof createFindOrderAction>) {
     }
 };
 
-function* updateOrderSaga(action: ReturnType<typeof createUpdateOrderAction>) {
+function* updateOrderSaga({ payload: orderUpdateActionPayload }: ReturnType<typeof createUpdateOrderAction>) {
     try {
-        const order: OrderDetailResult = yield call(orderApi.update, action.payload.id, action.payload.payload);
+        const order: OrderDetailResult = yield call(orderApi.update, orderUpdateActionPayload.id, orderUpdateActionPayload.payload);
 
         yield put(createUpdateOrderSuccessAction(order));
-        action.payload.onSuccess && action.payload.onSuccess(order);
+        orderUpdateActionPayload.onSuccess && orderUpdateActionPayload.onSuccess(order);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        orderUpdateActionPayload.onFailure && orderUpdateActionPayload.onFailure(error);
     }
 };
 
-function* saveOrderSaga(action: ReturnType<typeof createSaveOrderAction>) {
+function* saveOrderSaga({ payload: orderSaveActionPayload }: ReturnType<typeof createSaveOrderAction>) {
     try {
-        const order: OrderDetailResult = yield call(orderApi.save, action.payload.payload);
+        const order: OrderDetailResult = yield call(orderApi.save, orderSaveActionPayload.payload);
 
         yield put(createSaveOrderSuccessAction(order));
-        action.payload.onSuccess && action.payload.onSuccess(order);
+        orderSaveActionPayload.onSuccess && orderSaveActionPayload.onSuccess(order);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        orderSaveActionPayload.onFailure && orderSaveActionPayload.onFailure(error);
     }
 };
 

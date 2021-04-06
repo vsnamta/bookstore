@@ -5,7 +5,6 @@ import { FindPayload, Page } from '../../models/common';
 import { ReviewResult } from '../../models/reviews';
 import { createFindReviewPageAction, createRemoveReviewAction, createRemoveReviewSuccessAction, createSaveReviewAction, createSaveReviewSuccessAction, createUpdateReviewAction, createUpdateReviewSuccessAction, findReviewPageAsyncActionCreator } from './action';
 import { FIND_REVIEW_PAGE, REMOVE_REVIEW, SAVE_REVIEW, UPDATE_REVIEW } from './actionType';
-import { ReviewsState } from './reducer';
 
 function* findReviewPageSaga(action: ReturnType<typeof createFindReviewPageAction>) {
     yield put(findReviewPageAsyncActionCreator.request(action.payload));
@@ -19,25 +18,25 @@ function* findReviewPageSaga(action: ReturnType<typeof createFindReviewPageActio
     }
 };
 
-function* updateReviewSaga(action: ReturnType<typeof createUpdateReviewAction>) {
+function* updateReviewSaga({ payload: reviewUpdateActionPayload }: ReturnType<typeof createUpdateReviewAction>) {
     try {
-        const review: ReviewResult = yield call(reviewApi.update, action.payload.id, action.payload.payload);
+        const review: ReviewResult = yield call(reviewApi.update, reviewUpdateActionPayload.id, reviewUpdateActionPayload.payload);
 
         yield put(createUpdateReviewSuccessAction(review));
-        action.payload.onSuccess && action.payload.onSuccess(review);
+        reviewUpdateActionPayload.onSuccess && reviewUpdateActionPayload.onSuccess(review);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        reviewUpdateActionPayload.onFailure && reviewUpdateActionPayload.onFailure(error);
     }
 };
 
-function* saveReviewSaga(action: ReturnType<typeof createSaveReviewAction>) {
+function* saveReviewSaga({ payload: reviewSaveActionPayload }: ReturnType<typeof createSaveReviewAction>) {
     try {
-        const review: ReviewResult = yield call(reviewApi.save, action.payload.payload);
+        const review: ReviewResult = yield call(reviewApi.save, reviewSaveActionPayload.payload);
 
         const findPayload: FindPayload = {
             searchCriteria: {
                 column: "productId",
-                keyword: action.payload.payload.productId + ""
+                keyword: reviewSaveActionPayload.payload.productId + ""
             },
             pageCriteria: { page: 1, size: 10 }
         };
@@ -52,17 +51,17 @@ function* saveReviewSaga(action: ReturnType<typeof createSaveReviewAction>) {
             },
             review: review
         }));
-        action.payload.onSuccess && action.payload.onSuccess(review);
+        reviewSaveActionPayload.onSuccess && reviewSaveActionPayload.onSuccess(review);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        reviewSaveActionPayload.onFailure && reviewSaveActionPayload.onFailure(error);
     }
 };
 
-function* removeReviewSaga(action: ReturnType<typeof createRemoveReviewAction>) {
+function* removeReviewSaga({ payload: reviewRemoveActionPayload }: ReturnType<typeof createRemoveReviewAction>) {
     const findPayload: FindPayload = yield select((state: RootState) => state.reviews.reviewPageAsync.payload);
 
     try {
-        yield call(reviewApi.remove, action.payload.id);
+        yield call(reviewApi.remove, reviewRemoveActionPayload.id);
 
         const reviewPage: Page<ReviewResult> = yield put(createFindReviewPageAction(findPayload));
 
@@ -74,9 +73,9 @@ function* removeReviewSaga(action: ReturnType<typeof createRemoveReviewAction>) 
             },
             review: undefined
         }));
-        action.payload.onSuccess && action.payload.onSuccess();
+        reviewRemoveActionPayload.onSuccess && reviewRemoveActionPayload.onSuccess();
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        reviewRemoveActionPayload.onFailure && reviewRemoveActionPayload.onFailure(error);
     }
 };
 

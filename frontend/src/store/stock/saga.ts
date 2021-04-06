@@ -17,12 +17,12 @@ function* findStockPageSaga(action: ReturnType<typeof createFindStockPageAction>
     }
 };
 
-function* saveStockSaga(action: ReturnType<typeof createSaveStockAction>) {
+function* saveStockSaga({ payload: stockSaveActionPayload }: ReturnType<typeof createSaveStockAction>) {
     try {
-        const stock: StockResult = yield call(stockApi.save, action.payload.payload);
+        const stock: StockResult = yield call(stockApi.save, stockSaveActionPayload.payload);
 
         const stockFindPayload: StockFindPayload = {
-            productId: action.payload.payload.productId,
+            productId: stockSaveActionPayload.payload.productId,
             pageCriteria: { page: 1, size: 10 }
         };
 
@@ -33,9 +33,9 @@ function* saveStockSaga(action: ReturnType<typeof createSaveStockAction>) {
             result: stockPage,
             error: undefined
         }));  
-        action.payload.onSuccess && action.payload.onSuccess(stock);
+        stockSaveActionPayload.onSuccess && stockSaveActionPayload.onSuccess(stock);
     } catch (error) {
-        action.payload.onFailure && action.payload.onFailure(error);
+        stockSaveActionPayload.onFailure && stockSaveActionPayload.onFailure(error);
     }
 };
 
