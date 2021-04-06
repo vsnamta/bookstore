@@ -18,13 +18,11 @@ export interface MemberAsync {
 }
 
 export interface MembersState {
-    loginMember?: LoginMember;
     memberPageAsync: MemberPageAsync;
     memberAsync: MemberAsync;
 }
 
 const initialState: MembersState = {
-    loginMember: undefined,
     memberPageAsync: {
         payload : undefined,
         result: undefined,
@@ -38,10 +36,6 @@ const initialState: MembersState = {
 };
 
 export default createReducer<MembersState, MembersAction>(initialState, {
-    // [SET_MY_DATA]: (state, action) => ({
-    //     ...state,
-    //     loginMember: action.payload
-    // }),
     [FIND_MEMBER_PAGE_REQUEST]: (state, { payload: findPayload }: ReturnType<typeof findMemberPageAsyncActionCreator.request>) => ({
         ...state,
         memberPageAsync: {
@@ -86,11 +80,24 @@ export default createReducer<MembersState, MembersAction>(initialState, {
             error: error
         }
     }),
-    [UPDATE_MEMBER_SUCCESS]: (state, { payload: member }: ReturnType<typeof createUpdateMemberSuccessAction>) => ({
-        ...state,
+    [UPDATE_MEMBER_SUCCESS]: (state, { payload: updatedMember }: ReturnType<typeof createUpdateMemberSuccessAction>) => ({
+        memberPageAsync: JSON.stringify(state.memberPageAsync) === JSON.stringify(initialState.memberPageAsync)
+        ? initialState.memberPageAsync
+        : {
+            ...state.memberPageAsync,
+            result: {
+                ...state.memberPageAsync.result as Page<MemberResult>,
+                list: (state.memberPageAsync.result as Page<MemberResult>).list
+                    .map(member => 
+                        member.id === updatedMember.id
+                            ? updatedMember
+                            : member
+                    )
+            }
+        },
         memberAsync: {
             ...state.memberAsync,
-            result: member
+            result: updatedMember
         }
     }),
     [SAVE_MEMBER_SUCCESS]: (state, { payload: savedMember }: ReturnType<typeof createSaveMemberSuccessAction>) => ({

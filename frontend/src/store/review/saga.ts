@@ -5,8 +5,16 @@ import { FindPayload, Page } from '../../models/common';
 import { ReviewResult } from '../../models/reviews';
 import { createFindReviewPageAction, createRemoveReviewAction, createRemoveReviewSuccessAction, createSaveReviewAction, createSaveReviewSuccessAction, createUpdateReviewAction, createUpdateReviewSuccessAction, findReviewPageAsyncActionCreator } from './action';
 import { FIND_REVIEW_PAGE, REMOVE_REVIEW, SAVE_REVIEW, UPDATE_REVIEW } from './actionType';
+import { ReviewsState } from './reducer';
 
 function* findReviewPageSaga({ payload: findPayload }: ReturnType<typeof createFindReviewPageAction>) {
+    const reviewsState: ReviewsState = yield select((state: RootState) => state.reviews);
+    
+    if(JSON.stringify(reviewsState.reviewPageAsync.payload) === JSON.stringify(findPayload) 
+        && reviewsState.reviewPageAsync.result !== undefined) {
+        return;
+    }
+    
     yield put(findReviewPageAsyncActionCreator.request(findPayload));
 
     try {

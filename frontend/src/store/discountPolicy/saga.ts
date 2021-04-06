@@ -1,10 +1,18 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { RootState } from '..';
 import discountPolicyApi from '../../apis/discountPolicyApi';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
 import { createFindDiscountPolicyListAction, createSaveDiscountPolicyAction, createSaveDiscountPolicySuccessAction, createUpdateDiscountPolicyAction, createUpdateDiscountPolicySuccessAction, findDiscountPolicyListAsyncActionCreator } from './action';
 import { FIND_DISCOUNT_POLICY_LIST, SAVE_DISCOUNT_POLICY, UPDATE_DISCOUNT_POLICY } from './actionType';
+import { DiscountPoliciesState } from './reducer';
 
 function* findDiscountPolicyListSaga(action: ReturnType<typeof createFindDiscountPolicyListAction>) {
+    const discountPoliciesState: DiscountPoliciesState = yield select((state: RootState) => state.discountPolcies);
+    
+    if(discountPoliciesState.discountPolicyListAsync.result !== undefined) {
+        return;
+    }
+    
     yield put(findDiscountPolicyListAsyncActionCreator.request());
 
     try {

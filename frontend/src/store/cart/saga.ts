@@ -1,11 +1,20 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { RootState } from '..';
 import cartApi from '../../apis/cartApi';
 import { CartResult } from '../../models/carts';
 import { createFindCartListAction, findCartListAsyncActionCreator, createRemoveCartAction, createRemoveCartSuccessAction, createSaveCartAction, createSaveCartSuccessAction, createUpdateCartAction, createUpdateCartSuccessAction } from './action';
 import { FIND_CART_LIST, REMOVE_CART, SAVE_CART, UPDATE_CART } from './actionType';
+import { CartsState } from './reducer';
 
 function* findCartListSaga({ payload: cartFindPayload }: ReturnType<typeof createFindCartListAction>) {
-    yield put(findCartListAsyncActionCreator.request());
+    const cartsState: CartsState = yield select((state: RootState) => state.carts);
+    
+    if(cartsState.cartListAsync.payload?.memberId === cartFindPayload.memberId
+        && cartsState.cartListAsync.result !== undefined) {
+        return;
+    }
+    
+    yield put(findCartListAsyncActionCreator.request(cartFindPayload));
 
     try {
         const cartList: CartResult[] = yield call(cartApi.findAll, cartFindPayload);

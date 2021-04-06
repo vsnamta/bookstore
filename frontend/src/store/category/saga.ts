@@ -1,10 +1,18 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { RootState } from '..';
 import categoryApi from '../../apis/categoryApi';
 import { CategoryResult } from '../../models/categories';
 import { createFindCategoryListAction, createRemoveCategoryAction, createRemoveCategorySuccessAction, createSaveCategoryAction, createSaveCategorySuccessAction, createUpdateCategoryAction, createUpdateCategorySuccessAction, findCategoryListAsyncActionCreator } from './action';
 import { FIND_CATEGORY_LIST, REMOVE_CATEGORY, SAVE_CATEGORY, UPDATE_CATEGORY } from './actionType';
+import { CategoriesState } from './reducer';
 
 function* findCategoryListSaga(action: ReturnType<typeof createFindCategoryListAction>) {
+    const categoriesState: CategoriesState = yield select((state: RootState) => state.categories);
+    
+    if(categoriesState.categoryListAsync.result !== undefined) {
+        return;
+    }
+
     yield put(findCategoryListAsyncActionCreator.request());
 
     try {

@@ -1,11 +1,20 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { RootState } from '..';
 import orderApi from '../../apis/orderApi';
 import { Page } from '../../models/common';
 import { OrderDetailResult, OrderResult } from '../../models/orders';
 import { createFindOrderAction, createFindOrderPageAction, createSaveOrderAction, createSaveOrderSuccessAction, createUpdateOrderAction, createUpdateOrderSuccessAction, findOrderAsyncActionCreator, findOrderPageAsyncActionCreator } from './action';
 import { FIND_ORDER, FIND_ORDER_PAGE, SAVE_ORDER, UPDATE_ORDER } from './actionType';
+import { OrdersState } from './reducer';
 
 function* findOrderPageSaga({ payload: findPayload }: ReturnType<typeof createFindOrderPageAction>) {
+    const ordersState: OrdersState = yield select((state: RootState) => state.orders);
+    
+    if(JSON.stringify(ordersState.orderPageAsync.payload) === JSON.stringify(findPayload) 
+        && ordersState.orderPageAsync.result !== undefined) {
+        return;
+    }
+    
     yield put(findOrderPageAsyncActionCreator.request(findPayload));
 
     try {
@@ -18,6 +27,12 @@ function* findOrderPageSaga({ payload: findPayload }: ReturnType<typeof createFi
 };
 
 function* findOrderSaga({ payload: id }: ReturnType<typeof createFindOrderAction>) {
+    const ordersState: OrdersState = yield select((state: RootState) => state.orders);
+    
+    if(ordersState.orderAsync.payload === id && ordersState.orderAsync.result !== undefined) {
+        return;
+    }
+    
     yield put(findOrderAsyncActionCreator.request(id));
 
     try {

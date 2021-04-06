@@ -28,7 +28,7 @@ export interface CartCheckActionPayload {
 }
 
 export const createFindCartListAction = createAction(FIND_CART_LIST)<CartFindPayload>();
-export const findCartListAsyncActionCreator = createAsyncAction(FIND_CART_LIST_REQUEST, FIND_CART_LIST_SUCCESS, FIND_CART_LIST_FAILURE)<void, CartResult[], ApiError>();
+export const findCartListAsyncActionCreator = createAsyncAction(FIND_CART_LIST_REQUEST, FIND_CART_LIST_SUCCESS, FIND_CART_LIST_FAILURE)<CartFindPayload, CartResult[], ApiError>();
 
 export const createUpdateCartAction = createAction(UPDATE_CART)<CartUpdateActionPayload>();
 export const createUpdateCartSuccessAction = createAction(UPDATE_CART_SUCCESS)<CartResult>();

@@ -1,11 +1,20 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { RootState } from '..';
 import stockApi from '../../apis/stockApi';
 import { Page } from '../../models/common';
 import { StockFindPayload, StockResult } from '../../models/stocks';
 import { createFindStockPageAction, createSaveStockAction, createSaveStockSuccessAction, findStockPageAsyncActionCreator } from './action';
 import { FIND_STOCK_PAGE, SAVE_STOCK } from './actionType';
+import { StocksState } from './reducer';
 
 function* findStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof createFindStockPageAction>) {
+    const stocksState: StocksState = yield select((state: RootState) => state.products);
+    
+    if(JSON.stringify(stocksState.stockPageAsync.payload) === JSON.stringify(stockFindPayload) 
+        && stocksState.stockPageAsync.result !== undefined) {
+        return;
+    }
+    
     yield put(findStockPageAsyncActionCreator.request(stockFindPayload));
 
     try {

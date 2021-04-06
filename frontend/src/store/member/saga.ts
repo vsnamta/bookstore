@@ -1,12 +1,20 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { RootState } from '..';
 import memberApi from '../../apis/memberApi';
 import { Page } from '../../models/common';
 import { MemberDetailResult, MemberResult } from '../../models/members';
-import { createLoginAction } from '../auth/action';
 import { createFindMemberAction, createFindMemberPageAction, createSaveMemberAction, createSaveMemberSuccessAction, createUpdateMemberAction, createUpdateMemberSuccessAction, findMemberAsyncActionCreator, findMemberPageAsyncActionCreator } from './action';
 import { FIND_MEMBER, FIND_MEMBER_PAGE, SAVE_MEMBER, UPDATE_MEMBER } from './actionType';
+import { MembersState } from './reducer';
 
 function* findMemberPageSaga({ payload: findPayload }: ReturnType<typeof createFindMemberPageAction>) {
+    const membersState: MembersState = yield select((state: RootState) => state.members);
+    
+    if(JSON.stringify(membersState.memberPageAsync.payload) === JSON.stringify(findPayload) 
+        && membersState.memberPageAsync.result !== undefined) {
+        return;
+    }
+    
     yield put(findMemberPageAsyncActionCreator.request(findPayload));
 
     try {
@@ -19,6 +27,12 @@ function* findMemberPageSaga({ payload: findPayload }: ReturnType<typeof createF
 };
 
 function* findMemberSaga({ payload: id }: ReturnType<typeof createFindMemberAction>) {
+    const membersState: MembersState = yield select((state: RootState) => state.members);
+    
+    if(membersState.memberAsync.payload === id && membersState.memberAsync.result !== undefined) {
+        return;
+    }
+    
     yield put(findMemberAsyncActionCreator.request(id));
 
     try {

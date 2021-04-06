@@ -1,10 +1,11 @@
 import { createReducer, PayloadAction } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
-import { CartResult } from '../../models/carts';
+import { CartFindPayload, CartResult } from '../../models/carts';
 import { findCartListAsyncActionCreator, CartsAction, createCheckCartAction, createSaveCartSuccessAction, createUpdateCartSuccessAction, createRemoveCartSuccessAction, createCheckAllCartAction } from './action';
 import { CHECK_ALL_CART, CHECK_CART, FIND_CART_LIST_FAILURE, FIND_CART_LIST_REQUEST, FIND_CART_LIST_SUCCESS, REMOVE_CART_SUCCESS, SAVE_CART_SUCCESS, UPDATE_CART_SUCCESS } from './actionType';
 
 export interface CartListAsync {
+    payload?: CartFindPayload;
     result?: CartResult[];
     error?: ApiError;
 }
@@ -15,6 +16,7 @@ export interface CartsState {
 
 const initialState: CartsState = {
     cartListAsync: {
+        payload: undefined,
         result: undefined,
         error: undefined
     }
@@ -23,6 +25,7 @@ const initialState: CartsState = {
 export default createReducer<CartsState, CartsAction>(initialState, {
     [FIND_CART_LIST_REQUEST]: (state, action) => ({
         cartListAsync: {
+            payload: action.payload,
             result: undefined,
             error: undefined
         }
