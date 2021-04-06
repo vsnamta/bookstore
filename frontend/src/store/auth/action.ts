@@ -14,19 +14,19 @@ export interface LogoutActionPayload {
     onFailure?: (error: ApiError) => void
 }
 
+export const createMyDataSetAction = createAction(SET_MY_DATA)<MyData | undefined>();
+
 export const createLoginAction = createAction(LOGIN)<LoginActionPayload>();
 
 export const createLogoutAction = createAction(LOGOUT)<LogoutActionPayload>();
 
-export const createReloadMyDataAction = createAction(RELOAD_MY_DATA)<void>();
+export const createMyDataReloadAction = createAction(RELOAD_MY_DATA)<void>();
 
-export const createSetMyDataAction = createAction(SET_MY_DATA)<MyData | undefined>();
-
-export const actions = { 
+export const actions = {
+    createMyDataReloadAction, 
     createLoginAction,
     createLogoutAction,
-    createReloadMyDataAction,
-    createSetMyDataAction,
+    createMyDataSetAction,
 };
 
 export type AuthsAction = ActionType<typeof actions>;

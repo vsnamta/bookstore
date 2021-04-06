@@ -2,9 +2,9 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductSaveTemplate from '../../components/product/ProductSaveTemplate';
 import { RootState } from '../../store';
-import { createFindCategoryListAction } from '../../store/category/action';
-import { createFindDiscountPolicyListAction } from '../../store/discountPolicy/action';
-import { createSaveProductRequestAction, ProductSaveActionPayload } from '../../store/product/action';
+import { createCategoryListFindAction } from '../../store/category/action';
+import { createDiscountPolicyListFindAction } from '../../store/discountPolicy/action';
+import { createProductSaveRequestAction, ProductSaveRequestActionPayload } from '../../store/product/action';
 
 function ProductSavePage() {
     const dispatch = useDispatch();
@@ -12,12 +12,12 @@ function ProductSavePage() {
     const categoryListAsync = useSelector((state: RootState) => state.categories.categoryListAsync);
 
     useEffect(() => {
-        dispatch(createFindDiscountPolicyListAction());
-        dispatch(createFindCategoryListAction());
+        dispatch(createDiscountPolicyListFindAction());
+        dispatch(createCategoryListFindAction());
     }, []);
 
-    const saveProduct = useCallback((payload: ProductSaveActionPayload) => {
-        dispatch(createSaveProductRequestAction(payload));
+    const saveProduct = useCallback((payload: ProductSaveRequestActionPayload) => {
+        dispatch(createProductSaveRequestAction(payload));
     }, []);
 
     return (

@@ -2,13 +2,13 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { CategoryResult, CategorySaveOrUpdatePayload } from '../../models/categories';
-import { CategoryUpdateActionPayload } from '../../store/category/action';
+import { CategoryUpdateRequestActionPayload } from '../../store/category/action';
 
 interface CategoryUpdateModalProps {
     category?: CategoryResult;
     categoryList?: CategoryResult[];
     isOpen: boolean;
-    onUpdateCategory: (payload: CategoryUpdateActionPayload) => void;
+    onUpdateCategory: (payload: CategoryUpdateRequestActionPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 

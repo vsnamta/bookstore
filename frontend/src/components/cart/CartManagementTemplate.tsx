@@ -2,13 +2,13 @@ import React from 'react';
 import CartManagement from './CartManagement';
 import Layout from '../common/Layout';
 import ErrorDetail from '../general/ErrorDetail';
-import { CartRemoveActionPayload, CartUpdateActionPayload } from '../../store/cart/action';
+import { CartRemoveRequestActionPayload, CartUpdateRequestActionPayload } from '../../store/cart/action';
 import { CartListAsync } from '../../store/cart/reducer';
 
 interface CartManagementTemplateProps {
     cartListAsync: CartListAsync;
-    updateCart: (payload: CartUpdateActionPayload) => void;
-    removeCart: (payload: CartRemoveActionPayload) => void;
+    updateCart: (payload: CartUpdateRequestActionPayload) => void;
+    removeCart: (payload: CartRemoveRequestActionPayload) => void;
     checkAllCart: (checked: boolean) => void;
     checkCart: (id: number, checked: boolean) => void;
 }

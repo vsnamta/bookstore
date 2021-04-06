@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CartManagementTemplate from '../../components/cart/CartManagementTemplate';
 import { MyData } from '../../models/auths';
 import { RootState } from '../../store';
-import { CartRemoveActionPayload, CartUpdateActionPayload, createCheckAllCartAction, createCheckCartAction, createFindCartListAction, createRemoveCartRequestAction, createUpdateCartRequestAction } from '../../store/cart/action';
+import { CartRemoveRequestActionPayload, CartUpdateRequestActionPayload, createCartCheckAllAction, createCartCheckAction, createCartListFindAction, createCartRemoveRequestAction, createCartUpdateRequestAction } from '../../store/cart/action';
 
 function CartManagementPage() {
     const dispatch = useDispatch();
@@ -11,23 +11,23 @@ function CartManagementPage() {
     const cartListAsync = useSelector((state: RootState) => state.carts.cartListAsync);
 
     useEffect(() => {
-        dispatch(createFindCartListAction({ memberId: loginMember.id }));
+        dispatch(createCartListFindAction({ memberId: loginMember.id }));
     }, []);
 
-    const updateCart = useCallback((payload: CartUpdateActionPayload) => {
-        dispatch(createUpdateCartRequestAction(payload));
+    const updateCart = useCallback((payload: CartUpdateRequestActionPayload) => {
+        dispatch(createCartUpdateRequestAction(payload));
     }, []);
 
-    const removeCart = useCallback((payload: CartRemoveActionPayload) => {
-        dispatch(createRemoveCartRequestAction(payload));
+    const removeCart = useCallback((payload: CartRemoveRequestActionPayload) => {
+        dispatch(createCartRemoveRequestAction(payload));
     }, []);
 
     const checkAllCart = useCallback((checked: boolean) => {
-        dispatch(createCheckAllCartAction(checked));
+        dispatch(createCartCheckAllAction(checked));
     }, []);
 
     const checkCart = useCallback((id: number, checked: boolean) => {
-        dispatch(createCheckCartAction({
+        dispatch(createCartCheckAction({
             id: id,
             checked: checked
         }));

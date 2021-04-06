@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 import { OrderResult, OrderUpdatePayload } from '../../models/orders';
-import { OrderUpdateActionPayload } from '../../store/order/action';
+import { OrderUpdateRequestActionPayload } from '../../store/order/action';
 
 interface OrderListProps {
     orderList?: OrderResult[];
     onSelectOrder: (id: number) => void;
-    onUpdateOrder: (payload: OrderUpdateActionPayload) => void;
+    onUpdateOrder: (payload: OrderUpdateRequestActionPayload) => void;
 }
 
 function OrderList({ orderList, onSelectOrder, onUpdateOrder }: OrderListProps) {

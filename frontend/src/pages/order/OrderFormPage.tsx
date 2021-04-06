@@ -5,8 +5,8 @@ import OrderFormTemplate from '../../components/order/OrderFormTemplate';
 import { MyData } from '../../models/auths';
 import { OrderingProduct } from '../../models/orders';
 import { RootState } from '../../store';
-import { createFindMemberAction } from '../../store/member/action';
-import { createSaveOrderRequestAction, OrderSaveActionPayload } from '../../store/order/action';
+import { createMemberFindAction } from '../../store/member/action';
+import { createOrderSaveRequestAction, OrderSaveRequestActionPayload } from '../../store/order/action';
 
 function OrderFormPage() {
     const location = useLocation<{orderingProductList: OrderingProduct[]}>();
@@ -22,11 +22,11 @@ function OrderFormPage() {
     const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
 
     useEffect(() => {
-        dispatch(createFindMemberAction(loginMember.id));
+        dispatch(createMemberFindAction(loginMember.id));
     }, []);
 
-    const saveOrder = useCallback((payload: OrderSaveActionPayload) => {
-        dispatch(createSaveOrderRequestAction(payload));
+    const saveOrder = useCallback((payload: OrderSaveRequestActionPayload) => {
+        dispatch(createOrderSaveRequestAction(payload));
     }, []);
     
     return (

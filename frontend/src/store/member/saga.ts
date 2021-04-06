@@ -3,11 +3,11 @@ import { RootState } from '..';
 import memberApi from '../../apis/memberApi';
 import { Page } from '../../models/common';
 import { MemberDetailResult, MemberResult } from '../../models/members';
-import { createFindMemberAction, createFindMemberPageAction, createSaveMemberAction, createSaveMemberRequestAction, createSetMemberAsyncAction, createSetMemberPageAsyncAction, createUpdateMemberAction, createUpdateMemberRequestAction } from './action';
+import { createMemberFindAction, createMemberPageFindAction, createSaveMemberAction, createMemberSaveRequestAction, createMemberAsyncSetAction, createMemberPageAsyncSetAction, createUpdateMemberAction, createMemberUpdateRequestAction } from './action';
 import { FIND_MEMBER, FIND_MEMBER_PAGE, SAVE_MEMBER_REQUEST, UPDATE_MEMBER_REQUEST } from './actionType';
 import { MembersState } from './reducer';
 
-function* findMemberPageSaga({ payload: findPayload }: ReturnType<typeof createFindMemberPageAction>) {
+function* findMemberPageSaga({ payload: findPayload }: ReturnType<typeof createMemberPageFindAction>) {
     const membersState: MembersState = yield select((state: RootState) => state.members);
     
     if(JSON.stringify(membersState.memberPageAsync.payload) === JSON.stringify(findPayload) 
@@ -18,13 +18,13 @@ function* findMemberPageSaga({ payload: findPayload }: ReturnType<typeof createF
     try {
         const memberList: Page<MemberResult> = yield call(memberApi.findAll, findPayload);
 
-        yield put(createSetMemberPageAsyncAction({
+        yield put(createMemberPageAsyncSetAction({
             payload: findPayload,
             result: memberList,
             error: undefined
         }));
     } catch (error) {
-        yield put(createSetMemberPageAsyncAction({
+        yield put(createMemberPageAsyncSetAction({
             payload: findPayload,
             result: undefined,
             error: error
@@ -32,7 +32,7 @@ function* findMemberPageSaga({ payload: findPayload }: ReturnType<typeof createF
     }
 };
 
-function* findMemberSaga({ payload: id }: ReturnType<typeof createFindMemberAction>) {
+function* findMemberSaga({ payload: id }: ReturnType<typeof createMemberFindAction>) {
     const membersState: MembersState = yield select((state: RootState) => state.members);
     
     if(membersState.memberAsync.payload === id && membersState.memberAsync.result !== undefined) {
@@ -42,13 +42,13 @@ function* findMemberSaga({ payload: id }: ReturnType<typeof createFindMemberActi
     try {
         const member: MemberDetailResult = yield call(memberApi.findOne, id);
 
-        yield put(createSetMemberAsyncAction({
+        yield put(createMemberAsyncSetAction({
             payload: id,
             result: member,
             error: undefined
         }));
     } catch (error) {
-        yield put(createSetMemberAsyncAction({
+        yield put(createMemberAsyncSetAction({
             payload: id,
             result: undefined,
             error: error
@@ -56,26 +56,26 @@ function* findMemberSaga({ payload: id }: ReturnType<typeof createFindMemberActi
     }
 };
 
-function* updateMemberRequestSaga({ payload: memberUpdateActionPayload }: ReturnType<typeof createUpdateMemberRequestAction>) {
+function* updateMemberRequestSaga({ payload: memberUpdateRequestActionPayload }: ReturnType<typeof createMemberUpdateRequestAction>) {
     try {
-        const member: MemberDetailResult = yield call(memberApi.update, memberUpdateActionPayload.id, memberUpdateActionPayload.payload);
+        const member: MemberDetailResult = yield call(memberApi.update, memberUpdateRequestActionPayload.id, memberUpdateRequestActionPayload.payload);
 
         yield put(createUpdateMemberAction(member));
-        memberUpdateActionPayload.onSuccess && memberUpdateActionPayload.onSuccess(member);
+        memberUpdateRequestActionPayload.onSuccess && memberUpdateRequestActionPayload.onSuccess(member);
     } catch (error) {
-        memberUpdateActionPayload.onFailure && memberUpdateActionPayload.onFailure(error);
+        memberUpdateRequestActionPayload.onFailure && memberUpdateRequestActionPayload.onFailure(error);
     }
 };
 
-function* saveMemberRequestSaga({ payload: memberSaveActionPayload }: ReturnType<typeof createSaveMemberRequestAction>) {
+function* saveMemberRequestSaga({ payload: memberSaveRequestActionPayload }: ReturnType<typeof createMemberSaveRequestAction>) {
     try {
-        const member: MemberDetailResult = yield call(memberApi.save, memberSaveActionPayload.payload);
+        const member: MemberDetailResult = yield call(memberApi.save, memberSaveRequestActionPayload.payload);
 
         yield put(createSaveMemberAction(member));
 
-        memberSaveActionPayload.onSuccess && memberSaveActionPayload.onSuccess(member);
+        memberSaveRequestActionPayload.onSuccess && memberSaveRequestActionPayload.onSuccess(member);
     } catch (error) {
-        memberSaveActionPayload.onFailure && memberSaveActionPayload.onFailure(error);
+        memberSaveRequestActionPayload.onFailure && memberSaveRequestActionPayload.onFailure(error);
     }
 };
 

@@ -4,7 +4,7 @@ import MyReviewTemplate from '../../components/reivew/MyReviewTemplate';
 import { MyData } from '../../models/auths';
 import { FindPayload } from '../../models/common';
 import { RootState } from '../../store';
-import { createFindReviewAction, createFindReviewPageAction, createRemoveReviewRequestAction, createUpdateReviewRequestAction, ReviewRemoveActionPayload, ReviewUpdateActionPayload } from '../../store/review/action';
+import { createReviewFindAction, createReviewPageFindAction, createReviewRemoveRequestAction, createReviewUpdateRequestAction, ReviewRemoveRequestActionPayload, ReviewUpdateRequestActionPayload } from '../../store/review/action';
 
 function MyReviewPage() {
     const dispatch = useDispatch();
@@ -12,7 +12,7 @@ function MyReviewPage() {
     const { reviewPageAsync, review } = useSelector((state: RootState) => state.reviews);
 
     useEffect(() => {
-        dispatch(createFindReviewPageAction({
+        dispatch(createReviewPageFindAction({
             searchCriteria: { 
                 column: "memberId", 
                 keyword: loginMember.id + "" 
@@ -22,19 +22,19 @@ function MyReviewPage() {
     }, []);
 
     const selectReview = useCallback((id: number) => {
-        dispatch(createFindReviewAction(id));
+        dispatch(createReviewFindAction(id));
     }, []);
 
-    const updateReview = useCallback((payload: ReviewUpdateActionPayload) => {
-        dispatch(createUpdateReviewRequestAction(payload));
+    const updateReview = useCallback((payload: ReviewUpdateRequestActionPayload) => {
+        dispatch(createReviewUpdateRequestAction(payload));
     }, []);
 
-    const removeReview = useCallback((payload: ReviewRemoveActionPayload) => {
-        dispatch(createRemoveReviewRequestAction(payload));
+    const removeReview = useCallback((payload: ReviewRemoveRequestActionPayload) => {
+        dispatch(createReviewRemoveRequestAction(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(createFindReviewPageAction({
+        dispatch(createReviewPageFindAction({
             ...reviewPageAsync.payload as FindPayload,
             pageCriteria: {
                 ...(reviewPageAsync.payload as FindPayload).pageCriteria, 

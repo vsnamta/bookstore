@@ -2,12 +2,12 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { CategoryResult, CategorySaveOrUpdatePayload } from '../../models/categories';
-import { CategorySaveActionPayload } from '../../store/category/action';
+import { CategorySaveRequestActionPayload } from '../../store/category/action';
 
 interface CategorySaveModalProps {
     categoryList?: CategoryResult[];
     isOpen: boolean;
-    onSaveCategory: (payload: CategorySaveActionPayload) => void;
+    onSaveCategory: (payload: CategorySaveRequestActionPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 

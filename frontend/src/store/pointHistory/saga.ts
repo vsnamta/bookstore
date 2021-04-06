@@ -3,11 +3,11 @@ import { RootState } from '..';
 import PointHistoryApi from '../../apis/pointHistoryApi';
 import { Page } from '../../models/common';
 import { PointHistoryResult } from '../../models/pointHistories';
-import { createFindPointHistoryPageAction, createSetPointHistoryPageAsyncAction } from './action';
+import { createPointHistoryPageFindAction, createPointHistoryPageAsyncSetAction } from './action';
 import { FIND_POINT_HISTORY_PAGE } from './actionType';
 import { PointHistoriesState } from './reducer';
 
-function* findPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnType<typeof createFindPointHistoryPageAction>) {
+function* findPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnType<typeof createPointHistoryPageFindAction>) {
     const pointHistoriesState: PointHistoriesState = yield select((state: RootState) => state.pointHistories);
     
     if(JSON.stringify(pointHistoriesState.pointHistoryPageAsync.payload) === JSON.stringify(pointHistoryFindPayload) 
@@ -18,13 +18,13 @@ function* findPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnT
     try {
         const pointHistoryPage: Page<PointHistoryResult> = yield call(PointHistoryApi.findAll, pointHistoryFindPayload);
 
-        yield put(createSetPointHistoryPageAsyncAction({
+        yield put(createPointHistoryPageAsyncSetAction({
             payload: pointHistoryFindPayload,
             result: pointHistoryPage,
             error: undefined
         }));
     } catch (error) {
-        yield put(createSetPointHistoryPageAsyncAction({
+        yield put(createPointHistoryPageAsyncSetAction({
             payload: pointHistoryFindPayload,
             result: undefined,
             error: error

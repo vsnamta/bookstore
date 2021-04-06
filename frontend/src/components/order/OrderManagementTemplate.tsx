@@ -10,14 +10,14 @@ import { ApiError } from '../../error/ApiError';
 import useModal from '../../hooks/useModal';
 import { FindPayload, Page, SearchCriteria } from '../../models/common';
 import { OrderDetailResult, OrderResult } from '../../models/orders';
-import { OrderUpdateActionPayload } from '../../store/order/action';
+import { OrderUpdateRequestActionPayload } from '../../store/order/action';
 import { OrderAsync, OrderPageAsync } from '../../store/order/reducer';
 
 interface OrderManagementTemplateProps {
     orderPageAsync: OrderPageAsync;
     orderAsync: OrderAsync;
     selectOrder: (id: number) => void;
-    updateOrder: (payload: OrderUpdateActionPayload) => void;
+    updateOrder: (payload: OrderUpdateRequestActionPayload) => void;
     onUpdateSearchCriteria: (searchCriteria: SearchCriteria) => void;
     onPageChange: (selectedItem: {
         selected: number;

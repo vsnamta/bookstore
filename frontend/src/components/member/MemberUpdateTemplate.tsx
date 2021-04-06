@@ -3,12 +3,12 @@ import Layout from '../common/Layout';
 import MyPageLayout from '../common/MyPageLayout';
 import ErrorDetail from '../general/ErrorDetail';
 import MemberUpdateForm from './MemberUpdateForm';
-import { MemberUpdateActionPayload } from '../../store/member/action';
+import { MemberUpdateRequestActionPayload } from '../../store/member/action';
 import { MemberAsync } from '../../store/member/reducer';
 
 interface MemberUpdateTemplateProps {
     memberAsync: MemberAsync;
-    updateMember: (payload: MemberUpdateActionPayload) => void;
+    updateMember: (payload: MemberUpdateRequestActionPayload) => void;
 }
 
 function MemberUpdateTemplate({ memberAsync, updateMember }: MemberUpdateTemplateProps) {

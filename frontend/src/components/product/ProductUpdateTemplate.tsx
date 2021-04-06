@@ -4,14 +4,14 @@ import ErrorDetail from '../general/ErrorDetail';
 import ProductUpdateForm from './ProductUpdateForm';
 import { CategoryListAsync } from '../../store/category/reducer';
 import { DiscountPolicyListAsync } from '../../store/discountPolicy/reducer';
-import { ProductUpdateActionPayload } from '../../store/product/action';
+import { ProductUpdateRequestActionPayload } from '../../store/product/action';
 import { ProductAsync } from '../../store/product/reducer';
 
 interface ProductUpdateTemplateProps {
     productAsync: ProductAsync;
     discountPolicyListAsync: DiscountPolicyListAsync;
     categoryListAsync: CategoryListAsync;
-    updateProduct: (payload: ProductUpdateActionPayload) => void;
+    updateProduct: (payload: ProductUpdateRequestActionPayload) => void;
 }
 
 function ProductUpdateTemplate({ productAsync, discountPolicyListAsync, categoryListAsync, updateProduct }: ProductUpdateTemplateProps) {

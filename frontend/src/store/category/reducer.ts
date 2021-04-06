@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { CategoryResult } from '../../models/categories';
-import { CategoriesAction, createFindCategoryAction, createRemoveCategoryAction, createSaveCategoryAction, createSetCategoryListAsyncAction, createUpdateCategoryAction } from './action';
+import { CategoriesAction, createCategoryFindAction, createCategoryRemoveAction, createCategorySaveAction, createCategoryListAsyncSetAction, createCategoryUpdateAction } from './action';
 import { FIND_CATEGORY, REMOVE_CATEGORY, SAVE_CATEGORY, SET_CATEGORY_LIST_ASYNC, UPDATE_CATEGORY } from './actionType';
 
 export interface CategoryListAsync {
@@ -23,17 +23,17 @@ const initialState: CategoriesState = {
 };
 
 export default createReducer<CategoriesState, CategoriesAction>(initialState, {
-    [SET_CATEGORY_LIST_ASYNC]: (state, { payload: categoryListAsync }: ReturnType<typeof createSetCategoryListAsyncAction>) => ({
+    [SET_CATEGORY_LIST_ASYNC]: (state, { payload: categoryListAsync }: ReturnType<typeof createCategoryListAsyncSetAction>) => ({
         categoryListAsync: categoryListAsync,
         category: undefined
     }),
-    [FIND_CATEGORY]: (state, { payload: id }: ReturnType<typeof createFindCategoryAction>) => ({
+    [FIND_CATEGORY]: (state, { payload: id }: ReturnType<typeof createCategoryFindAction>) => ({
         ...state,
         category: (state.categoryListAsync.result as CategoryResult[])
             .flatMap(category => [category, ...category.children])
             .find(category => category.id === id)
     }),
-    [UPDATE_CATEGORY]: (state, { payload: updatedCategory }: ReturnType<typeof createUpdateCategoryAction>) => ({
+    [UPDATE_CATEGORY]: (state, { payload: updatedCategory }: ReturnType<typeof createCategoryUpdateAction>) => ({
         categoryListAsync: {
             result: !updatedCategory.parentId 
                 ? (state.categoryListAsync.result as CategoryResult[]).map(category => 
@@ -57,7 +57,7 @@ export default createReducer<CategoriesState, CategoriesAction>(initialState, {
         },
         category: updatedCategory
     }),
-    [SAVE_CATEGORY]: (state, { payload: savedCategory }: ReturnType<typeof createSaveCategoryAction>) => ({
+    [SAVE_CATEGORY]: (state, { payload: savedCategory }: ReturnType<typeof createCategorySaveAction>) => ({
         categoryListAsync: {
             result: !savedCategory.parentId 
                 ? (state.categoryListAsync.result as CategoryResult[]).concat(savedCategory)
@@ -73,7 +73,7 @@ export default createReducer<CategoriesState, CategoriesAction>(initialState, {
         },
         category: savedCategory
     }),
-    [REMOVE_CATEGORY]: (state, { payload: removedId }: ReturnType<typeof createRemoveCategoryAction>) => {
+    [REMOVE_CATEGORY]: (state, { payload: removedId }: ReturnType<typeof createCategoryRemoveAction>) => {
         const categoryList = state.categoryListAsync.result as CategoryResult[];
 
         const removedCategory = categoryList

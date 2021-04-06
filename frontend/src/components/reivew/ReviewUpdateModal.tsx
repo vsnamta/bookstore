@@ -2,12 +2,12 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { ReviewResult, ReviewUpdatePayload } from '../../models/reviews';
-import { ReviewUpdateActionPayload } from '../../store/review/action';
+import { ReviewUpdateRequestActionPayload } from '../../store/review/action';
 
 interface ReviewUpdateModalProps {
     review?: ReviewResult;
     isOpen: boolean;
-    onUpdateReview: (payload: ReviewUpdateActionPayload) => void;
+    onUpdateReview: (payload: ReviewUpdateRequestActionPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState } from '../../store';
-import { createFindOrderAction } from '../../store/order/action';
+import { createOrderFindAction } from '../../store/order/action';
 import OrderDetailTemplate from '../../components/order/OrderDetailTemplate';
 
 function OrderDetailPage() {
@@ -12,7 +12,7 @@ function OrderDetailPage() {
     const orderAsync = useSelector((state: RootState) => state.orders.orderAsync);
 
     useEffect(() => {
-        dispatch(createFindOrderAction(Number.parseInt(id)));
+        dispatch(createOrderFindAction(Number.parseInt(id)));
     }, []);
 
     return (

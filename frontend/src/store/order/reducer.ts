@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { FindPayload, Page } from '../../models/common';
 import { OrderDetailResult, OrderResult } from '../../models/orders';
-import { createSaveOrderAction, createSetOrderAsyncAction, createSetOrderPageAsyncAction, createUpdateOrderAction, OrdersAction } from './action';
+import { createOrderSaveAction, createOrderAsyncSetAction, createOrderPageAsyncSetAction, createOrderUpdateAction, OrdersAction } from './action';
 import { SAVE_ORDER, SET_ORDER_ASYNC, SET_ORDER_PAGE_ASYNC, UPDATE_ORDER } from './actionType';
 
 export interface OrderPageAsync {
@@ -36,15 +36,15 @@ const initialState: OrdersState = {
 };
 
 export default createReducer<OrdersState, OrdersAction>(initialState, {
-    [SET_ORDER_PAGE_ASYNC]: (state, { payload: orderPageAsync }: ReturnType<typeof createSetOrderPageAsyncAction>) => ({
+    [SET_ORDER_PAGE_ASYNC]: (state, { payload: orderPageAsync }: ReturnType<typeof createOrderPageAsyncSetAction>) => ({
         ...state,
         orderPageAsync: orderPageAsync
     }),
-    [SET_ORDER_ASYNC]: (state, { payload: orderAsync }: ReturnType<typeof createSetOrderAsyncAction>) => ({
+    [SET_ORDER_ASYNC]: (state, { payload: orderAsync }: ReturnType<typeof createOrderAsyncSetAction>) => ({
         ...state,
         orderAsync: orderAsync
     }),
-    [UPDATE_ORDER]: (state, { payload: updatedOrder }: ReturnType<typeof createUpdateOrderAction>) => ({
+    [UPDATE_ORDER]: (state, { payload: updatedOrder }: ReturnType<typeof createOrderUpdateAction>) => ({
         orderPageAsync: {
             ...state.orderPageAsync,
             result: {
@@ -62,7 +62,7 @@ export default createReducer<OrdersState, OrdersAction>(initialState, {
             result: updatedOrder
         }
     }),
-    [SAVE_ORDER]: (state, { payload: savedOrder }: ReturnType<typeof createSaveOrderAction>) => ({
+    [SAVE_ORDER]: (state, { payload: savedOrder }: ReturnType<typeof createOrderSaveAction>) => ({
         orderPageAsync: initialState.orderPageAsync,
         orderAsync: {
             payload: savedOrder.id,

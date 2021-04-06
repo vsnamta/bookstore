@@ -3,13 +3,13 @@ import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { ProductDetailResult } from '../../models/products';
 import { ReviewSavePayload } from '../../models/reviews';
-import { ReviewSaveActionPayload } from '../../store/review/action';
+import { ReviewSaveRequestActionPayload } from '../../store/review/action';
 
 interface ReviewSaveModalProps {
     product?: ProductDetailResult;
     isOpen: boolean;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
-    onSaveReview: (payload: ReviewSaveActionPayload) => void
+    onSaveReview: (payload: ReviewSaveRequestActionPayload) => void
 }
 
 function ReviewSaveModal({ product, isOpen, onRequestClose, onSaveReview }: ReviewSaveModalProps) {

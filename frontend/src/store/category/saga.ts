@@ -2,11 +2,11 @@ import { call, put, select, takeEvery } from 'redux-saga/effects';
 import { RootState } from '..';
 import categoryApi from '../../apis/categoryApi';
 import { CategoryResult } from '../../models/categories';
-import { createFindCategoryListAction, createRemoveCategoryAction, createRemoveCategoryRequestAction, createSaveCategoryAction, createSaveCategoryRequestAction, createSetCategoryListAsyncAction, createUpdateCategoryAction, createUpdateCategoryRequestAction } from './action';
+import { createCategoryListFindAction, createCategoryRemoveAction, createCategoryRemoveRequestAction, createCategorySaveAction, createCategorySaveRequestAction, createCategoryListAsyncSetAction, createCategoryUpdateAction, createCategoryUpdateRequestAction } from './action';
 import { FIND_CATEGORY_LIST, REMOVE_CATEGORY_REQUEST, SAVE_CATEGORY_REQUEST, UPDATE_CATEGORY_REQUEST } from './actionType';
 import { CategoriesState } from './reducer';
 
-function* findCategoryListSaga(action: ReturnType<typeof createFindCategoryListAction>) {
+function* findCategoryListSaga(action: ReturnType<typeof createCategoryListFindAction>) {
     const categoriesState: CategoriesState = yield select((state: RootState) => state.categories);
     
     if(categoriesState.categoryListAsync.result !== undefined) {
@@ -16,48 +16,48 @@ function* findCategoryListSaga(action: ReturnType<typeof createFindCategoryListA
     try {
         const categoryList: CategoryResult[] = yield call(categoryApi.findAll);
 
-        yield put(createSetCategoryListAsyncAction({
+        yield put(createCategoryListAsyncSetAction({
             result: categoryList,
             error: undefined
         }));
     } catch (error) {
-        yield put(createSetCategoryListAsyncAction({
+        yield put(createCategoryListAsyncSetAction({
             result: undefined,
             error: error
         }));
     }
 };
 
-function* updateCategoryRequestSaga({ payload: categoryUpdateActionPayload }: ReturnType<typeof createUpdateCategoryRequestAction>) {
+function* updateCategoryRequestSaga({ payload: categoryUpdateRequestActionPayload }: ReturnType<typeof createCategoryUpdateRequestAction>) {
     try {
-        const category: CategoryResult = yield call(categoryApi.update, categoryUpdateActionPayload.id, categoryUpdateActionPayload.payload);
+        const category: CategoryResult = yield call(categoryApi.update, categoryUpdateRequestActionPayload.id, categoryUpdateRequestActionPayload.payload);
 
-        yield put(createUpdateCategoryAction(category));
-        categoryUpdateActionPayload.onSuccess && categoryUpdateActionPayload.onSuccess(category);
+        yield put(createCategoryUpdateAction(category));
+        categoryUpdateRequestActionPayload.onSuccess && categoryUpdateRequestActionPayload.onSuccess(category);
     } catch (error) {
-        categoryUpdateActionPayload.onFailure && categoryUpdateActionPayload.onFailure(error);
+        categoryUpdateRequestActionPayload.onFailure && categoryUpdateRequestActionPayload.onFailure(error);
     }
 };
 
-function* saveCategoryRequestSaga({ payload: categorySaveActionPayload }: ReturnType<typeof createSaveCategoryRequestAction>) {
+function* saveCategoryRequestSaga({ payload: categorySaveRequestActionPayload }: ReturnType<typeof createCategorySaveRequestAction>) {
     try {
-        const category: CategoryResult = yield call(categoryApi.save, categorySaveActionPayload.payload);
+        const category: CategoryResult = yield call(categoryApi.save, categorySaveRequestActionPayload.payload);
 
-        yield put(createSaveCategoryAction(category));
-        categorySaveActionPayload.onSuccess && categorySaveActionPayload.onSuccess(category);
+        yield put(createCategorySaveAction(category));
+        categorySaveRequestActionPayload.onSuccess && categorySaveRequestActionPayload.onSuccess(category);
     } catch (error) {
-        categorySaveActionPayload.onFailure && categorySaveActionPayload.onFailure(error);
+        categorySaveRequestActionPayload.onFailure && categorySaveRequestActionPayload.onFailure(error);
     }
 };
 
-function* removeCategoryRequestSaga({ payload: categoryRemoveActionPayload }: ReturnType<typeof createRemoveCategoryRequestAction>) {
+function* removeCategoryRequestSaga({ payload: categoryRemoveRequestActionPayload }: ReturnType<typeof createCategoryRemoveRequestAction>) {
     try {
-        yield call(categoryApi.remove, categoryRemoveActionPayload.id);
+        yield call(categoryApi.remove, categoryRemoveRequestActionPayload.id);
 
-        yield put(createRemoveCategoryAction(categoryRemoveActionPayload.id));
-        categoryRemoveActionPayload.onSuccess && categoryRemoveActionPayload.onSuccess();
+        yield put(createCategoryRemoveAction(categoryRemoveRequestActionPayload.id));
+        categoryRemoveRequestActionPayload.onSuccess && categoryRemoveRequestActionPayload.onSuccess();
     } catch (error) {
-        categoryRemoveActionPayload.onFailure && categoryRemoveActionPayload.onFailure(error);
+        categoryRemoveRequestActionPayload.onFailure && categoryRemoveRequestActionPayload.onFailure(error);
     }
 };
 

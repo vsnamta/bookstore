@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { SearchCriteria } from '../../models/common';
 import { ProductFindPayload } from '../../models/products';
 import { RootState } from '../../store';
-import { createFindProductPageAction } from '../../store/product/action';
+import { createProductPageFindAction } from '../../store/product/action';
 import ProductManagementTemplate from '../../components/product/ProductManagementTemplate';
 
 function ProductManagementPage() {
@@ -19,7 +19,7 @@ function ProductManagementPage() {
     const productPageAsync = useSelector((state: RootState) => state.products.productPageAsync);
 
     useEffect(() => {
-        dispatch(createFindProductPageAction({
+        dispatch(createProductPageFindAction({
             categoryId: categoryId? Number.parseInt(categoryId as string): undefined,
             searchCriteria: searchCriteria
                 ? {
@@ -35,14 +35,14 @@ function ProductManagementPage() {
     }, []);
 
     const onUpdateSearchCriteria = useCallback((searchCriteria: SearchCriteria) => {
-        dispatch(createFindProductPageAction({
+        dispatch(createProductPageFindAction({
             searchCriteria: searchCriteria,
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(createFindProductPageAction({
+        dispatch(createProductPageFindAction({
             ...productPageAsync.payload as ProductFindPayload,
             pageCriteria: {
                 ...(productPageAsync.payload as ProductFindPayload).pageCriteria, 

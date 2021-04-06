@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { Page } from '../../models/common';
 import { StockFindPayload, StockResult } from '../../models/stocks';
-import { createSaveStockAction, createSetStockPageAsyncAction, StocksAction } from './action';
+import { createStockSaveAction, createStockPageAsyncSetAction, StocksAction } from './action';
 import { SAVE_STOCK, SET_STOCK_PAGE_ASYNC } from './actionType';
 
 export interface StockPageAsync {
@@ -24,10 +24,10 @@ const initialState: StocksState = {
 };
 
 export default createReducer<StocksState, StocksAction>(initialState, {
-    [SET_STOCK_PAGE_ASYNC]: (state, { payload: stockPageAsync }: ReturnType<typeof createSetStockPageAsyncAction>) => ({
+    [SET_STOCK_PAGE_ASYNC]: (state, { payload: stockPageAsync }: ReturnType<typeof createStockPageAsyncSetAction>) => ({
         stockPageAsync: stockPageAsync
     }),
-    [SAVE_STOCK]: (state, { payload: stockPage }: ReturnType<typeof createSaveStockAction>) => ({
+    [SAVE_STOCK]: (state, { payload: stockPage }: ReturnType<typeof createStockSaveAction>) => ({
         stockPageAsync: stockPage
     })
 });

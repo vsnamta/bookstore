@@ -2,7 +2,7 @@ import { createReducer, PayloadAction } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { FindPayload, Page } from '../../models/common';
 import { MemberDetailResult, MemberResult } from '../../models/members';
-import { createSaveMemberAction, createSetMemberAsyncAction, createSetMemberPageAsyncAction, createUpdateMemberAction, MembersAction } from './action';
+import { createSaveMemberAction, createMemberAsyncSetAction, createMemberPageAsyncSetAction, createUpdateMemberAction, MembersAction } from './action';
 import { SAVE_MEMBER, SET_MEMBER_ASYNC, SET_MEMBER_PAGE_ASYNC, UPDATE_MEMBER } from './actionType';
 
 export interface MemberPageAsync {
@@ -36,11 +36,11 @@ const initialState: MembersState = {
 };
 
 export default createReducer<MembersState, MembersAction>(initialState, {
-    [SET_MEMBER_PAGE_ASYNC]: (state, { payload: memberPageAsync }: ReturnType<typeof createSetMemberPageAsyncAction>) => ({
+    [SET_MEMBER_PAGE_ASYNC]: (state, { payload: memberPageAsync }: ReturnType<typeof createMemberPageAsyncSetAction>) => ({
         ...state,
         memberPageAsync: memberPageAsync, 
     }),
-    [SET_MEMBER_ASYNC]: (state, { payload: memberAsync }: ReturnType<typeof createSetMemberAsyncAction>) => ({
+    [SET_MEMBER_ASYNC]: (state, { payload: memberAsync }: ReturnType<typeof createMemberAsyncSetAction>) => ({
         ...state,
         memberAsync: memberAsync, 
     }),

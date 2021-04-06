@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import { MemberDetailResult } from '../../models/members';
 import { OrderingProduct, OrderSavePayload } from '../../models/orders';
-import { OrderSaveActionPayload } from '../../store/order/action';
+import { OrderSaveRequestActionPayload } from '../../store/order/action';
 
 const calcTotalPrice = (orderingProductList: OrderingProduct[]) : number => {
     return orderingProductList
@@ -14,7 +14,7 @@ const calcTotalPrice = (orderingProductList: OrderingProduct[]) : number => {
 interface OrderFormProps {
     member?: MemberDetailResult;
     orderingProductList: OrderingProduct[];
-    onSaveOrder: (payload: OrderSaveActionPayload) => void;
+    onSaveOrder: (payload: OrderSaveRequestActionPayload) => void;
 }
 
 function OrderForm({ member, orderingProductList, onSaveOrder }: OrderFormProps) {

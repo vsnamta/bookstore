@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions';
 import { ApiError } from '../../error/ApiError';
 import { Page } from '../../models/common';
 import { ProductDetailResult, ProductFindPayload, ProductResult } from '../../models/products';
-import { createSaveProductAction, createSetProductAsyncAction, createSetProductPageAsyncAction, createUpdateProductAction, ProductsAction } from './action';
+import { createProductSaveAction, createProductAsyncSetAction, createProductPageAsyncSetAction, createProductUpdateAction, ProductsAction } from './action';
 import { SAVE_PRODUCT, SET_PRODUCT_ASYNC, SET_PRODUCT_PAGE_ASYNC, UPDATE_PRODUCT } from './actionType';
 
 export interface ProductPageAsync {
@@ -36,15 +36,15 @@ const initialState: ProductsState = {
 };
 
 export default createReducer<ProductsState, ProductsAction>(initialState, {
-    [SET_PRODUCT_PAGE_ASYNC]: (state, { payload: productPageAsync }: ReturnType<typeof createSetProductPageAsyncAction>) => ({
+    [SET_PRODUCT_PAGE_ASYNC]: (state, { payload: productPageAsync }: ReturnType<typeof createProductPageAsyncSetAction>) => ({
         ...state,
         productPageAsync: productPageAsync
     }),
-    [SET_PRODUCT_ASYNC]: (state, { payload: productAsync }: ReturnType<typeof createSetProductAsyncAction>) => ({
+    [SET_PRODUCT_ASYNC]: (state, { payload: productAsync }: ReturnType<typeof createProductAsyncSetAction>) => ({
         ...state,
         productAsync: productAsync
     }),
-    [UPDATE_PRODUCT]: (state, { payload: updatedProduct }: ReturnType<typeof createUpdateProductAction>) => ({
+    [UPDATE_PRODUCT]: (state, { payload: updatedProduct }: ReturnType<typeof createProductUpdateAction>) => ({
         productPageAsync: {
             ...state.productPageAsync,
             result: {
@@ -62,7 +62,7 @@ export default createReducer<ProductsState, ProductsAction>(initialState, {
             result: updatedProduct
         }
     }),
-    [SAVE_PRODUCT]: (state, { payload: savedProduct }: ReturnType<typeof createSaveProductAction>) => ({
+    [SAVE_PRODUCT]: (state, { payload: savedProduct }: ReturnType<typeof createProductSaveAction>) => ({
         productPageAsync: initialState.productPageAsync,
         productAsync: {
             payload: savedProduct.id,

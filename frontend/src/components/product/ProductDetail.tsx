@@ -6,12 +6,12 @@ import { faChevronUp, faChevronDown, faStar } from "@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Link, useHistory } from 'react-router-dom';
 import { LoginMember } from '../../models/members';
-import { CartSaveActionPayload } from '../../store/cart/action';
+import { CartSaveRequestActionPayload } from '../../store/cart/action';
 
 interface ProductDetailProps {
     product?: ProductDetailResult;
 	loginMember?: LoginMember;
-    onSaveCart: (payload: CartSaveActionPayload) => void;
+    onSaveCart: (payload: CartSaveRequestActionPayload) => void;
 }
 
 function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps) {

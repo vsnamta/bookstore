@@ -4,12 +4,12 @@ import { useHistory } from 'react-router';
 import { CategoryResult } from '../../models/categories';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
 import { ProductSaveOrUpdatePayload } from '../../models/products';
-import { ProductSaveActionPayload } from '../../store/product/action';
+import { ProductSaveRequestActionPayload } from '../../store/product/action';
 
 interface ProductSaveFormProps {
     discountPolicyList?: DiscountPolicyResult[]; 
     categoryList?: CategoryResult[];
-    onSaveProduct: (payload: ProductSaveActionPayload) => void;
+    onSaveProduct: (payload: ProductSaveRequestActionPayload) => void;
 }
 
 function ProductSaveForm({ discountPolicyList, categoryList, onSaveProduct }: ProductSaveFormProps) {

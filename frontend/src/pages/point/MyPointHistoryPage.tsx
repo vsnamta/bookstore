@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoginMember } from '../../models/members';
 import { PointHistoryFindPayload } from '../../models/pointHistories';
 import { RootState } from '../../store';
-import { createFindPointHistoryPageAction } from '../../store/pointHistory/action';
+import { createPointHistoryPageFindAction } from '../../store/pointHistory/action';
 import MyPointHistoryTemplate from '../../components/pointHistory/MyPointHistoryTemplate';
 import { MyData } from '../../models/auths';
 
@@ -13,14 +13,14 @@ function MyPointHistoryPage() {
     const pointHistoryPageAsync = useSelector((state: RootState) => state.pointHistories.pointHistoryPageAsync);
 
     useEffect(() => {
-        dispatch(createFindPointHistoryPageAction({
+        dispatch(createPointHistoryPageFindAction({
             memberId: loginMember.id,
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(createFindPointHistoryPageAction({
+        dispatch(createPointHistoryPageFindAction({
             ...pointHistoryPageAsync.payload as PointHistoryFindPayload,
             pageCriteria: {
                 ...(pointHistoryPageAsync.payload as PointHistoryFindPayload).pageCriteria, 

@@ -4,7 +4,7 @@ import MyOrderTemplate from '../../components/order/MyOrderTemplate';
 import { MyData } from '../../models/auths';
 import { FindPayload } from '../../models/common';
 import { RootState } from '../../store';
-import { createFindOrderAction, createFindOrderPageAction, createUpdateOrderRequestAction, OrderUpdateActionPayload } from '../../store/order/action';
+import { createOrderFindAction, createOrderPageFindAction, createOrderUpdateRequestAction, OrderUpdateRequestActionPayload } from '../../store/order/action';
 
 function MyOrderPage() {
     const dispatch = useDispatch();
@@ -12,7 +12,7 @@ function MyOrderPage() {
     const { orderPageAsync, orderAsync } = useSelector((state: RootState) => state.orders);
 
     useEffect(() => {
-        dispatch(createFindOrderPageAction({
+        dispatch(createOrderPageFindAction({
             searchCriteria: { 
                 column: "memberId", 
                 keyword: loginMember.id + ""
@@ -22,15 +22,15 @@ function MyOrderPage() {
     }, []);
 
     const selectOrder = useCallback((id: number) => {
-        dispatch(createFindOrderAction(id));
+        dispatch(createOrderFindAction(id));
     }, []);
 
-    const updateOrder = useCallback((payload: OrderUpdateActionPayload) => {
-        dispatch(createUpdateOrderRequestAction(payload));
+    const updateOrder = useCallback((payload: OrderUpdateRequestActionPayload) => {
+        dispatch(createOrderUpdateRequestAction(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(createFindOrderPageAction({
+        dispatch(createOrderPageFindAction({
             ...orderPageAsync.payload as FindPayload,
             pageCriteria: {
                 ...(orderPageAsync.payload as FindPayload).pageCriteria, 

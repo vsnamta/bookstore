@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { MemberDetailResult, MemberUpdatePayload } from '../../models/members';
-import { MemberUpdateActionPayload } from '../../store/member/action';
+import { MemberUpdateRequestActionPayload } from '../../store/member/action';
 
 interface MemberUpdateFormProps {
     member?: MemberDetailResult;
-    onUpdateMember: (payload: MemberUpdateActionPayload) => void;
+    onUpdateMember: (payload: MemberUpdateRequestActionPayload) => void;
 }
 
 function MemberUpdateForm({ member, onUpdateMember }: MemberUpdateFormProps) {    

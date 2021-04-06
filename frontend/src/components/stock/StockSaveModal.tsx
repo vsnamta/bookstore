@@ -3,12 +3,12 @@ import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { ProductDetailResult } from '../../models/products';
 import { StockSavePayload } from '../../models/stocks';
-import { StockSaveActionPayload } from '../../store/stock/action';
+import { StockSaveRequestActionPayload } from '../../store/stock/action';
 
 interface StockSaveModalProps {
     product?: ProductDetailResult;
     isOpen: boolean;
-    onSaveStock: (payload: StockSaveActionPayload) => void;
+    onSaveStock: (payload: StockSaveRequestActionPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 

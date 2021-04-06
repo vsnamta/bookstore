@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useMemo } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { CartResult, CartUpdatePayload } from '../../models/carts';
-import { CartRemoveActionPayload, CartUpdateActionPayload } from "../../store/cart/action";
+import { CartRemoveRequestActionPayload, CartUpdateRequestActionPayload } from "../../store/cart/action";
 
 const calcTotalPriceAndAllChecked = (cartList: CartResult[]) : [ number, boolean ] => {
     const checkedCartList = cartList.filter(cart => cart.checked === true);
@@ -22,8 +22,8 @@ const calcTotalPriceAndAllChecked = (cartList: CartResult[]) : [ number, boolean
 
 interface CartManagementProps {
     cartList?: CartResult[];
-    onUpdateCart: (payload: CartUpdateActionPayload) => void;
-    onRemoveCart: (payload: CartRemoveActionPayload) => void;
+    onUpdateCart: (payload: CartUpdateRequestActionPayload) => void;
+    onRemoveCart: (payload: CartRemoveRequestActionPayload) => void;
     onCheckAllCart: (checked: boolean) => void;
     onCheckCart: (id: number, checked: boolean) => void;
 }

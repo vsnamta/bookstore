@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { CategoryResult } from '../../models/categories';
-import { CategoryRemoveActionPayload } from '../../store/category/action';
+import { CategoryRemoveRequestActionPayload } from '../../store/category/action';
 
 const convertFlatCategoryList = (categoryList: CategoryResult[]) => {
     return categoryList.flatMap(category => [category, ...category.children]);
@@ -9,7 +9,7 @@ const convertFlatCategoryList = (categoryList: CategoryResult[]) => {
 interface CategoryListProps {
     categoryList?: CategoryResult[];
     onSelectCategory: (id: number) => void;
-    onRemoveCategory: (payload: CategoryRemoveActionPayload) => void;
+    onRemoveCategory: (payload: CategoryRemoveRequestActionPayload) => void;
 }
 
 function CategoryList({ categoryList, onSelectCategory, onRemoveCategory }: CategoryListProps) {

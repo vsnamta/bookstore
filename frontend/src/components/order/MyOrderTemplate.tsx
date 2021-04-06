@@ -9,14 +9,14 @@ import { ApiError } from '../../error/ApiError';
 import useModal from '../../hooks/useModal';
 import { FindPayload, Page } from '../../models/common';
 import { OrderDetailResult, OrderResult } from '../../models/orders';
-import { OrderUpdateActionPayload } from '../../store/order/action';
+import { OrderUpdateRequestActionPayload } from '../../store/order/action';
 import { OrderAsync, OrderPageAsync } from '../../store/order/reducer';
 
 interface MyOrderTemplateProps {
     orderPageAsync: OrderPageAsync;
     orderAsync: OrderAsync;
     selectOrder: (id: number) => void;
-    updateOrder: (payload: OrderUpdateActionPayload) => void;
+    updateOrder: (payload: OrderUpdateRequestActionPayload) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;

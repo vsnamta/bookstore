@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ReviewResult } from '../../models/reviews';
-import { ReviewRemoveActionPayload } from '../../store/review/action';
+import { ReviewRemoveRequestActionPayload } from '../../store/review/action';
 
 interface MyReviewListProps {
     reviewList?: ReviewResult[];
     onSelectReview: (id: number) => void;
-    onRemoveReview: (payload: ReviewRemoveActionPayload) => void;
+    onRemoveReview: (payload: ReviewRemoveRequestActionPayload) => void;
 }
 
 function MyReviewList({ reviewList, onSelectReview, onRemoveReview }: MyReviewListProps) {

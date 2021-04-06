@@ -8,15 +8,15 @@ import ErrorDetail from '../general/ErrorDetail';
 import Title from '../general/Title';
 import useModal from '../../hooks/useModal';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
-import { DiscountPolicySaveActionPayload, DiscountPolicyUpdateActionPayload } from '../../store/discountPolicy/action';
+import { DiscountPolicySaveRequestActionPayload, DiscountPolicyUpdateRequestActionPayload } from '../../store/discountPolicy/action';
 import { DiscountPolicyListAsync } from '../../store/discountPolicy/reducer';
 
 interface DiscountPolicyManagementTemplateProps {
     discountPolicyListAsync: DiscountPolicyListAsync;
     discountPolicy?: DiscountPolicyResult;
     selectDiscountPolicy: (id: number) => void;
-    updateDiscountPolicy: (payload: DiscountPolicyUpdateActionPayload) => void;
-    saveDiscountPolicy: (payload: DiscountPolicySaveActionPayload) => void;
+    updateDiscountPolicy: (payload: DiscountPolicyUpdateRequestActionPayload) => void;
+    saveDiscountPolicy: (payload: DiscountPolicySaveRequestActionPayload) => void;
 }
 
 function DiscountPolicyManagementTemplate({ 
@@ -30,7 +30,7 @@ function DiscountPolicyManagementTemplate({
         openUpdateModal();
     }, []);
 
-    const onSaveDiscountPolicy = useCallback((payload: DiscountPolicySaveActionPayload) => {
+    const onSaveDiscountPolicy = useCallback((payload: DiscountPolicySaveRequestActionPayload) => {
         saveDiscountPolicy({
             payload: payload.payload,
             onSuccess: discountPolicy => {

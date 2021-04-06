@@ -10,17 +10,17 @@ import ReviewManagementBar from '../reivew/ReviewManagementBar';
 import ReviewSaveModal from '../reivew/ReviewSaveModal';
 import useModal from '../../hooks/useModal';
 import { LoginMember } from '../../models/members';
-import { CartSaveActionPayload } from '../../store/cart/action';
+import { CartSaveRequestActionPayload } from '../../store/cart/action';
 import { ProductAsync } from '../../store/product/reducer';
-import { ReviewSaveActionPayload } from '../../store/review/action';
+import { ReviewSaveRequestActionPayload } from '../../store/review/action';
 import { ReviewPageAsync } from '../../store/review/reducer';
 
 interface ProductDetailTemplateProps {
     productAsync: ProductAsync;
     reviewPageAsync: ReviewPageAsync;
     loginMember?: LoginMember;
-    saveCart: (payload: CartSaveActionPayload) => void;
-    saveReview: (payload: ReviewSaveActionPayload) => void;
+    saveCart: (payload: CartSaveRequestActionPayload) => void;
+    saveReview: (payload: ReviewSaveRequestActionPayload) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;
@@ -43,7 +43,7 @@ function ProductDetailTemplate({
         openSaveModal();
     }, [loginMember]);
 
-    const onSaveReview = useCallback((payload: ReviewSaveActionPayload) => {
+    const onSaveReview = useCallback((payload: ReviewSaveRequestActionPayload) => {
         saveReview({
             payload: payload.payload,
             onSuccess: review => {

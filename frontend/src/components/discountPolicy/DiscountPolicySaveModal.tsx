@@ -2,11 +2,11 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 import { DiscountPolicySaveOrUpdatePayload } from '../../models/discountPolicies';
-import { DiscountPolicySaveActionPayload } from '../../store/discountPolicy/action';
+import { DiscountPolicySaveRequestActionPayload } from '../../store/discountPolicy/action';
 
 interface DiscountPolicySaveModalProps {
     isOpen: boolean;
-    onSaveDiscountPolicy: (payload: DiscountPolicySaveActionPayload) => void
+    onSaveDiscountPolicy: (payload: DiscountPolicySaveRequestActionPayload) => void
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 

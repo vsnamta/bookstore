@@ -3,11 +3,11 @@ import { RootState } from '..';
 import stockApi from '../../apis/stockApi';
 import { Page } from '../../models/common';
 import { StockFindPayload, StockResult } from '../../models/stocks';
-import { createFindStockPageAction, createSaveStockAction, createSaveStockRequestAction, createSetStockPageAsyncAction } from './action';
+import { createStockPageFindAction, createStockSaveAction, createStockSaveRequestAction, createStockPageAsyncSetAction } from './action';
 import { FIND_STOCK_PAGE, SAVE_STOCK_REQUEST } from './actionType';
 import { StocksState } from './reducer';
 
-function* findStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof createFindStockPageAction>) {
+function* findStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof createStockPageFindAction>) {
     const stocksState: StocksState = yield select((state: RootState) => state.products);
     
     if(JSON.stringify(stocksState.stockPageAsync.payload) === JSON.stringify(stockFindPayload) 
@@ -18,13 +18,13 @@ function* findStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof cre
     try {
         const stockPage: Page<StockResult> = yield call(stockApi.findAll, stockFindPayload);
 
-        yield put(createSetStockPageAsyncAction({
+        yield put(createStockPageAsyncSetAction({
             payload: stockFindPayload,
             result: stockPage,
             error: undefined
         }));
     } catch (error) {
-        yield put(createSetStockPageAsyncAction({
+        yield put(createStockPageAsyncSetAction({
             payload: stockFindPayload,
             result: undefined,
             error: error
@@ -32,25 +32,25 @@ function* findStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof cre
     }
 };
 
-function* saveStockRequestSaga({ payload: stockSaveActionPayload }: ReturnType<typeof createSaveStockRequestAction>) {
+function* saveStockRequestSaga({ payload: stockSaveRequestActionPayload }: ReturnType<typeof createStockSaveRequestAction>) {
     try {
-        const stock: StockResult = yield call(stockApi.save, stockSaveActionPayload.payload);
+        const stock: StockResult = yield call(stockApi.save, stockSaveRequestActionPayload.payload);
 
         const stockFindPayload: StockFindPayload = {
-            productId: stockSaveActionPayload.payload.productId,
+            productId: stockSaveRequestActionPayload.payload.productId,
             pageCriteria: { page: 1, size: 10 }
         };
 
         const stockPage: Page<StockResult> = yield call(stockApi.findAll, stockFindPayload);
 
-        yield put(createSaveStockAction({
+        yield put(createStockSaveAction({
             payload: stockFindPayload,
             result: stockPage,
             error: undefined
         }));  
-        stockSaveActionPayload.onSuccess && stockSaveActionPayload.onSuccess(stock);
+        stockSaveRequestActionPayload.onSuccess && stockSaveRequestActionPayload.onSuccess(stock);
     } catch (error) {
-        stockSaveActionPayload.onFailure && stockSaveActionPayload.onFailure(error);
+        stockSaveRequestActionPayload.onFailure && stockSaveRequestActionPayload.onFailure(error);
     }
 };
 

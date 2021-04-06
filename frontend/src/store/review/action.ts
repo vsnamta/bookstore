@@ -5,45 +5,45 @@ import { ReviewResult, ReviewSavePayload, ReviewUpdatePayload } from '../../mode
 import { FIND_REVIEW, FIND_REVIEW_PAGE, REMOVE_REVIEW, REMOVE_REVIEW_REQUEST, SAVE_REVIEW, SAVE_REVIEW_REQUEST, SET_REVIEW_PAGE_ASYNC, UPDATE_REVIEW, UPDATE_REVIEW_REQUEST } from './actionType';
 import { ReviewPageAsync, ReviewsState } from './reducer';
 
-export interface ReviewUpdateActionPayload { 
+export interface ReviewUpdateRequestActionPayload { 
     id: number, 
     payload: ReviewUpdatePayload,
     onSuccess?: (review: ReviewResult) => void, 
     onFailure?: (error: ApiError) => void
 }
 
-export interface ReviewSaveActionPayload { 
+export interface ReviewSaveRequestActionPayload { 
     payload: ReviewSavePayload,
     onSuccess?: (review: ReviewResult) => void, 
     onFailure?: (error: ApiError) => void
 }
 
-export interface ReviewRemoveActionPayload { 
+export interface ReviewRemoveRequestActionPayload { 
     id: number,
     onSuccess?: () => void, 
     onFailure?: (error: ApiError) => void
 }
 
-export const createFindReviewPageAction = createAction(FIND_REVIEW_PAGE)<FindPayload>();
-export const createSetReviewPageAsyncAction = createAction(SET_REVIEW_PAGE_ASYNC)<ReviewPageAsync>();
+export const createReviewPageFindAction = createAction(FIND_REVIEW_PAGE)<FindPayload>();
+export const createReviewPageAsyncSetAction = createAction(SET_REVIEW_PAGE_ASYNC)<ReviewPageAsync>();
 
-export const createFindReviewAction = createAction(FIND_REVIEW)<number>();
+export const createReviewFindAction = createAction(FIND_REVIEW)<number>();
 
-export const createUpdateReviewRequestAction = createAction(UPDATE_REVIEW_REQUEST)<ReviewUpdateActionPayload>();
-export const createUpdateReviewAction = createAction(UPDATE_REVIEW)<ReviewResult>();
+export const createReviewUpdateRequestAction = createAction(UPDATE_REVIEW_REQUEST)<ReviewUpdateRequestActionPayload>();
+export const createReviewUpdateAction = createAction(UPDATE_REVIEW)<ReviewResult>();
 
-export const createSaveReviewRequestAction = createAction(SAVE_REVIEW_REQUEST)<ReviewSaveActionPayload>();
-export const createSaveReviewAction = createAction(SAVE_REVIEW)<ReviewsState>();
+export const createReviewSaveRequestAction = createAction(SAVE_REVIEW_REQUEST)<ReviewSaveRequestActionPayload>();
+export const createReviewSaveAction = createAction(SAVE_REVIEW)<ReviewsState>();
 
-export const createRemoveReviewRequestAction = createAction(REMOVE_REVIEW_REQUEST)<ReviewRemoveActionPayload>();
-export const createRemoveReviewAction = createAction(REMOVE_REVIEW)<ReviewsState>();
+export const createReviewRemoveRequestAction = createAction(REMOVE_REVIEW_REQUEST)<ReviewRemoveRequestActionPayload>();
+export const createReviewRemoveAction = createAction(REMOVE_REVIEW)<ReviewsState>();
 
 export const actions = {
-    createFindReviewPageAction, createSetReviewPageAsyncAction,
-    createFindReviewAction,
-    createUpdateReviewRequestAction, createUpdateReviewAction,
-    createSaveReviewRequestAction, createSaveReviewAction,
-    createRemoveReviewRequestAction, createRemoveReviewAction
+    createReviewPageFindAction, createReviewPageAsyncSetAction,
+    createReviewFindAction,
+    createReviewUpdateRequestAction, createReviewUpdateAction,
+    createReviewSaveRequestAction, createReviewSaveAction,
+    createReviewRemoveRequestAction, createReviewRemoveAction
 };
 
 export type ReviewsAction = ActionType<typeof actions>;

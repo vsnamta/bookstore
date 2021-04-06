@@ -7,15 +7,15 @@ import MyReviewList from './MyReviewList';
 import ReviewUpdateModal from './ReviewUpdateModal';
 import useModal from '../../hooks/useModal';
 import { ReviewResult } from '../../models/reviews';
-import { ReviewRemoveActionPayload, ReviewUpdateActionPayload } from '../../store/review/action';
+import { ReviewRemoveRequestActionPayload, ReviewUpdateRequestActionPayload } from '../../store/review/action';
 import { ReviewPageAsync } from '../../store/review/reducer';
 
 interface MyReviewTemplateProps {
     reviewPageAsync: ReviewPageAsync;
     review?: ReviewResult;
     selectReview: (id: number) => void;
-    removeReview: (payload: ReviewRemoveActionPayload) => void;
-    updateReview: (payload: ReviewUpdateActionPayload) => void;
+    removeReview: (payload: ReviewRemoveRequestActionPayload) => void;
+    updateReview: (payload: ReviewUpdateRequestActionPayload) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;

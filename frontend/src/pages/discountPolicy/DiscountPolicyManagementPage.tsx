@@ -2,26 +2,26 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DiscountPolicyManagementTemplate from '../../components/discountPolicy/DiscountPolicyManagementTemplate';
 import { RootState } from '../../store';
-import { createFindDiscountPolicyAction, createFindDiscountPolicyListAction, createSaveDiscountPolicyRequestAction, createUpdateDiscountPolicyRequestAction, DiscountPolicySaveActionPayload, DiscountPolicyUpdateActionPayload } from '../../store/discountPolicy/action';
+import { createDiscountPolicyFindAction, createDiscountPolicyListFindAction, createDiscountPolicySaveRequestAction, createDiscountPolicyUpdateRequestAction, DiscountPolicySaveRequestActionPayload, DiscountPolicyUpdateRequestActionPayload } from '../../store/discountPolicy/action';
 
 function DiscountPolicyManagementPage() {
     const dispatch = useDispatch();
     const { discountPolicyListAsync, discountPolicy } = useSelector((state: RootState) => state.discountPolcies);
 
     useEffect(() => {
-        dispatch(createFindDiscountPolicyListAction());
+        dispatch(createDiscountPolicyListFindAction());
     }, []);
 
     const selectDiscountPolicy = useCallback((id: number) => {
-        dispatch(createFindDiscountPolicyAction(id));
+        dispatch(createDiscountPolicyFindAction(id));
     }, []);
 
-    const saveDiscountPolicy = useCallback((payload: DiscountPolicySaveActionPayload) => {
-        dispatch(createSaveDiscountPolicyRequestAction(payload));
+    const saveDiscountPolicy = useCallback((payload: DiscountPolicySaveRequestActionPayload) => {
+        dispatch(createDiscountPolicySaveRequestAction(payload));
     }, []);
 
-    const updateDiscountPolicy = useCallback((payload: DiscountPolicyUpdateActionPayload) => {
-        dispatch(createUpdateDiscountPolicyRequestAction(payload));
+    const updateDiscountPolicy = useCallback((payload: DiscountPolicyUpdateRequestActionPayload) => {
+        dispatch(createDiscountPolicyUpdateRequestAction(payload));
     }, []);
 
     return (

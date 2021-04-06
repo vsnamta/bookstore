@@ -4,13 +4,13 @@ import { useHistory } from 'react-router';
 import { CategoryResult } from '../../models/categories';
 import { DiscountPolicyResult } from '../../models/discountPolicies';
 import { ProductDetailResult, ProductSaveOrUpdatePayload } from '../../models/products';
-import { ProductUpdateActionPayload } from '../../store/product/action';
+import { ProductUpdateRequestActionPayload } from '../../store/product/action';
 
 interface ProductUpdateFormProps {
 	product?: ProductDetailResult;
     discountPolicyList?: DiscountPolicyResult[]; 
     categoryList?: CategoryResult[];
-    onUpdateProduct: (payload: ProductUpdateActionPayload) => void;
+    onUpdateProduct: (payload: ProductUpdateRequestActionPayload) => void;
 }
 
 function ProductUpdateForm({ product, discountPolicyList, categoryList, onUpdateProduct }: ProductUpdateFormProps) {

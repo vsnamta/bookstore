@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ProductUpdateTemplate from '../../components/product/ProductUpdateTemplate';
 import { RootState } from '../../store';
-import { createFindCategoryListAction } from '../../store/category/action';
-import { createFindDiscountPolicyListAction } from '../../store/discountPolicy/action';
-import { createFindProductAction, createUpdateProductRequestAction, ProductUpdateActionPayload } from '../../store/product/action';
+import { createCategoryListFindAction } from '../../store/category/action';
+import { createDiscountPolicyListFindAction } from '../../store/discountPolicy/action';
+import { createProductFindAction, createProductUpdateRequestAction, ProductUpdateRequestActionPayload } from '../../store/product/action';
 
 function ProductUpdatePage() {
     const { id } = useParams<{id: string}>();
@@ -16,13 +16,13 @@ function ProductUpdatePage() {
     const categoryListAsync = useSelector((state: RootState) => state.categories.categoryListAsync);
 
     useEffect(() => {
-        dispatch(createFindProductAction(Number.parseInt(id)));
-        dispatch(createFindDiscountPolicyListAction());
-        dispatch(createFindCategoryListAction());
+        dispatch(createProductFindAction(Number.parseInt(id)));
+        dispatch(createDiscountPolicyListFindAction());
+        dispatch(createCategoryListFindAction());
     }, []);
 
-    const updateProduct = useCallback((payload: ProductUpdateActionPayload) => {
-        dispatch(createUpdateProductRequestAction(payload));
+    const updateProduct = useCallback((payload: ProductUpdateRequestActionPayload) => {
+        dispatch(createProductUpdateRequestAction(payload));
     }, []);
 
     return (

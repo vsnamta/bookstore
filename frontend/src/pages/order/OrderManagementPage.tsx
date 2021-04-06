@@ -3,35 +3,35 @@ import { useDispatch, useSelector } from 'react-redux';
 import OrderManagementTemplate from '../../components/order/OrderManagementTemplate';
 import { FindPayload, SearchCriteria } from '../../models/common';
 import { RootState } from '../../store';
-import { createFindOrderAction, createFindOrderPageAction, createUpdateOrderRequestAction, OrderUpdateActionPayload } from '../../store/order/action';
+import { createOrderFindAction, createOrderPageFindAction, createOrderUpdateRequestAction, OrderUpdateRequestActionPayload } from '../../store/order/action';
 
 function OrderManagementPage() {
     const dispatch = useDispatch();
     const { orderPageAsync, orderAsync } = useSelector((state: RootState) => state.orders);
 
     useEffect(() => {
-        dispatch(createFindOrderPageAction({
+        dispatch(createOrderPageFindAction({
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const selectOrder = useCallback((id: number) => {
-        dispatch(createFindOrderAction(id));
+        dispatch(createOrderFindAction(id));
     }, []);
 
-    const updateOrder = useCallback((payload: OrderUpdateActionPayload) => {
-        dispatch(createUpdateOrderRequestAction(payload));
+    const updateOrder = useCallback((payload: OrderUpdateRequestActionPayload) => {
+        dispatch(createOrderUpdateRequestAction(payload));
     }, []);
 
     const onUpdateSearchCriteria = useCallback((searchCriteria: SearchCriteria) => {
-        dispatch(createFindOrderPageAction({
+        dispatch(createOrderPageFindAction({
             searchCriteria: searchCriteria,
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(createFindOrderPageAction({
+        dispatch(createOrderPageFindAction({
             ...orderPageAsync.payload as FindPayload,
             pageCriteria: {
                 ...(orderPageAsync.payload as FindPayload).pageCriteria, 

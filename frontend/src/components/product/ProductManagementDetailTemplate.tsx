@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import useModal from '../../hooks/useModal';
 import { ProductFindPayload } from '../../models/products';
 import { ProductAsync } from '../../store/product/reducer';
-import { StockSaveActionPayload } from '../../store/stock/action';
+import { StockSaveRequestActionPayload } from '../../store/stock/action';
 import { StockPageAsync } from '../../store/stock/reducer';
 import AdminLayout from '../common/AdminLayout';
 import ErrorDetail from '../general/ErrorDetail';
@@ -19,7 +19,7 @@ interface ProductManagementDetailTemplateProps {
     productAsync: ProductAsync;
     productFindPayload: ProductFindPayload;
     stockPageAsync: StockPageAsync;
-    saveStock: (payload: StockSaveActionPayload) => void;
+    saveStock: (payload: StockSaveRequestActionPayload) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;
@@ -35,7 +35,7 @@ function ProductManagementDetailTemplate({ productAsync, productFindPayload, sto
         history.push(`/admin/product/list?${queryString}`);
     }, [productFindPayload]);
 
-    const onSaveStock = useCallback((payload: StockSaveActionPayload) => {
+    const onSaveStock = useCallback((payload: StockSaveRequestActionPayload) => {
         saveStock({
             payload: payload.payload,
             onSuccess: stock => {

@@ -4,12 +4,12 @@ import ErrorDetail from '../general/ErrorDetail';
 import ProductSaveForm from './ProductSaveForm';
 import { CategoryListAsync } from '../../store/category/reducer';
 import { DiscountPolicyListAsync } from '../../store/discountPolicy/reducer';
-import { ProductSaveActionPayload } from '../../store/product/action';
+import { ProductSaveRequestActionPayload } from '../../store/product/action';
 
 interface ProductSaveTemplateProps {
     discountPolicyListAsync: DiscountPolicyListAsync;
     categoryListAsync: CategoryListAsync;
-    saveProduct: (payload: ProductSaveActionPayload) => void;
+    saveProduct: (payload: ProductSaveRequestActionPayload) => void;
 }
 
 function ProductSaveTemplate({ discountPolicyListAsync, categoryListAsync, saveProduct }: ProductSaveTemplateProps) {

@@ -4,35 +4,35 @@ import { DiscountPolicyResult, DiscountPolicySaveOrUpdatePayload } from '../../m
 import { FIND_DISCOUNT_POLICY, FIND_DISCOUNT_POLICY_LIST, SAVE_DISCOUNT_POLICY, SAVE_DISCOUNT_POLICY_REQUEST, SET_DISCOUNT_POLICY_LIST_ASYNC, UPDATE_DISCOUNT_POLICY, UPDATE_DISCOUNT_POLICY_REQUEST } from './actionType';
 import { DiscountPolicyListAsync } from './reducer';
 
-export interface DiscountPolicyUpdateActionPayload { 
+export interface DiscountPolicyUpdateRequestActionPayload { 
     id: number, 
     payload: DiscountPolicySaveOrUpdatePayload,
     onSuccess?: (discountPolicy: DiscountPolicyResult) => void, 
     onFailure?: (error: ApiError) => void
 }
 
-export interface DiscountPolicySaveActionPayload { 
+export interface DiscountPolicySaveRequestActionPayload { 
     payload: DiscountPolicySaveOrUpdatePayload,
     onSuccess?: (discountPolicy: DiscountPolicyResult) => void, 
     onFailure?: (error: ApiError) => void
 }
 
-export const createFindDiscountPolicyListAction = createAction(FIND_DISCOUNT_POLICY_LIST)<void>();
-export const createSetDiscountPolicyListAsyncAction = createAction(SET_DISCOUNT_POLICY_LIST_ASYNC)<DiscountPolicyListAsync>();
+export const createDiscountPolicyListFindAction = createAction(FIND_DISCOUNT_POLICY_LIST)<void>();
+export const createDiscountPolicyListAsyncSetAction = createAction(SET_DISCOUNT_POLICY_LIST_ASYNC)<DiscountPolicyListAsync>();
 
-export const createFindDiscountPolicyAction = createAction(FIND_DISCOUNT_POLICY)<number>();
+export const createDiscountPolicyFindAction = createAction(FIND_DISCOUNT_POLICY)<number>();
 
-export const createUpdateDiscountPolicyRequestAction = createAction(UPDATE_DISCOUNT_POLICY_REQUEST)<DiscountPolicyUpdateActionPayload>();
-export const createUpdateDiscountPolicyAction = createAction(UPDATE_DISCOUNT_POLICY)<DiscountPolicyResult>();
+export const createDiscountPolicyUpdateRequestAction = createAction(UPDATE_DISCOUNT_POLICY_REQUEST)<DiscountPolicyUpdateRequestActionPayload>();
+export const createDiscountPolicyUpdateAction = createAction(UPDATE_DISCOUNT_POLICY)<DiscountPolicyResult>();
 
-export const createSaveDiscountPolicyRequestAction = createAction(SAVE_DISCOUNT_POLICY_REQUEST)<DiscountPolicySaveActionPayload>();
-export const createSaveDiscountPolicyAction = createAction(SAVE_DISCOUNT_POLICY)<DiscountPolicyResult>();
+export const createDiscountPolicySaveRequestAction = createAction(SAVE_DISCOUNT_POLICY_REQUEST)<DiscountPolicySaveRequestActionPayload>();
+export const createDiscountPolicySaveAction = createAction(SAVE_DISCOUNT_POLICY)<DiscountPolicyResult>();
 
 export const actions = { 
-    createFindDiscountPolicyListAction, createSetDiscountPolicyListAsyncAction,
-    createFindDiscountPolicyAction,
-    createUpdateDiscountPolicyRequestAction, createUpdateDiscountPolicyAction, 
-    createSaveDiscountPolicyRequestAction, createSaveDiscountPolicyAction
+    createDiscountPolicyListFindAction, createDiscountPolicyListAsyncSetAction,
+    createDiscountPolicyFindAction,
+    createDiscountPolicyUpdateRequestAction, createDiscountPolicyUpdateAction, 
+    createDiscountPolicySaveRequestAction, createDiscountPolicySaveAction
 };
 
 export type DiscountPoliciesAction = ActionType<typeof actions>;
