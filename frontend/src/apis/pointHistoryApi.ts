@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, Page } from '../models/common';
-import { PointHistoryFindPayload, PointHistoryResult } from '../models/pointHistories';
+import { PointHistoryFindPayload, PointHistoryResult } from '../models/pointHistory';
 import apiClient from './apiClient';
 import apiErrorParser from '../utills/apiErrorParser';
 

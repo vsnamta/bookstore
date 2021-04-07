@@ -7,17 +7,17 @@ import AdminLayout from '../common/AdminLayout';
 import ErrorDetail from '../general/ErrorDetail';
 import Title from '../general/Title';
 import useModal from '../../hooks/useModal';
-import { CategoryResult } from '../../models/categories';
-import { CategoryRemoveRequestActionPayload, CategorySaveRequestActionPayload, CategoryUpdateRequestActionPayload } from '../../store/category/action';
-import { CategoryListAsync } from '../../store/category/reducer';
+import { CategoryResult } from '../../models/category';
+import { CategoryRemoveAsyncPayload, CategorySaveAsyncPayload, CategoryUpdateAsyncPayload } from '../../models/category/store';
+import { CategoryListAsync } from '../../models/category/store';
 
 interface CategoryManagementTemplateProps {
     categoryListAsync: CategoryListAsync;
     category?: CategoryResult;
     selectCategory: (id: number) => void;
-    removeCategory: (payload: CategoryRemoveRequestActionPayload) => void;
-    updateCategory: (payload: CategoryUpdateRequestActionPayload) => void;
-    saveCategory: (payload: CategorySaveRequestActionPayload) => void;
+    removeCategory: (payload: CategoryRemoveAsyncPayload) => void;
+    updateCategory: (payload: CategoryUpdateAsyncPayload) => void;
+    saveCategory: (payload: CategorySaveAsyncPayload) => void;
 }
 
 function CategoryManagementTemplate({ 
@@ -37,7 +37,7 @@ function CategoryManagementTemplate({
         openUpdateModal();
     }, []);
 
-    const onSaveCategory = useCallback((payload: CategorySaveRequestActionPayload) => {
+    const onSaveCategory = useCallback((payload: CategorySaveAsyncPayload) => {
         saveCategory({
             payload: payload.payload,
             onSuccess: category => {

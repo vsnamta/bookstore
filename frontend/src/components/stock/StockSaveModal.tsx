@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
-import { ProductDetailResult } from '../../models/products';
-import { StockSavePayload } from '../../models/stocks';
-import { StockSaveRequestActionPayload } from '../../store/stock/action';
+import { ProductDetailResult } from '../../models/product';
+import { StockSavePayload } from '../../models/stock';
+import { StockSaveAsyncPayload } from '../../models/stock/store';
 
 interface StockSaveModalProps {
     product?: ProductDetailResult;
     isOpen: boolean;
-    onSaveStock: (payload: StockSaveRequestActionPayload) => void;
+    onSaveStock: (payload: StockSaveAsyncPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 

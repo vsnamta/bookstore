@@ -2,11 +2,12 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ProductManagementDetailTemplate from '../../components/product/ProductManagementDetailTemplate';
-import { ProductFindPayload } from '../../models/products';
-import { StockFindPayload } from '../../models/stocks';
+import { ProductFindPayload } from '../../models/product';
+import { StockFindPayload } from '../../models/stock';
+import { StockSaveAsyncPayload } from '../../models/stock/store';
 import { RootState } from '../../store';
-import { createProductFindAction } from '../../store/product/action';
-import { createStockPageFindAction, createStockSaveRequestAction, StockSaveRequestActionPayload } from '../../store/stock/action';
+import { actions as productActions } from '../../store/product';
+import { actions as stockActions } from '../../store/stock';
 
 function ProductManagementDetailPage() {
     const { id } = useParams<{id: string}>();
@@ -16,19 +17,19 @@ function ProductManagementDetailPage() {
     const stockPageAsync = useSelector((state: RootState) => state.stocks.stockPageAsync);
 
     useEffect(() => {
-        dispatch(createProductFindAction(Number.parseInt(id)));
-        dispatch(createStockPageFindAction({
+        dispatch(productActions.fetchProduct(Number.parseInt(id)));
+        dispatch(stockActions.fetchStockPage({
             productId: Number.parseInt(id),
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
-    const saveStock = useCallback((payload: StockSaveRequestActionPayload) => {
-        dispatch(createStockSaveRequestAction(payload));
+    const saveStock = useCallback((payload: StockSaveAsyncPayload) => {
+        dispatch(stockActions.saveStockAsync(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(createStockPageFindAction({
+        dispatch(stockActions.fetchStockPage({
             ...stockPageAsync.payload as StockFindPayload,
             pageCriteria: {
                 ...(stockPageAsync.payload as StockFindPayload).pageCriteria, 

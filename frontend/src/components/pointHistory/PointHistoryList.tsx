@@ -1,5 +1,5 @@
 import React from 'react';
-import { PointHistoryResult } from '../../models/pointHistories';
+import { PointHistoryResult } from '../../models/pointHistory';
 
 interface PointHistoryListProps {
     pointhistoryList?: PointHistoryResult[];

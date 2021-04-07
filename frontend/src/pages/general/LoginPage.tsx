@@ -1,13 +1,14 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import LoginTemplate from '../../components/general/LoginTemplate';
-import { createLoginAction, LoginActionPayload } from '../../store/auth/action';
+import { LoginAsyncPayload } from '../../models/auth/store';
+import { actions } from '../../store/auth';
 
 function LoginPage() {
     const dispatch = useDispatch();
 
-    const login = useCallback((payload: LoginActionPayload) => {
-        dispatch(createLoginAction(payload));
+    const login = useCallback((payload: LoginAsyncPayload) => {
+        dispatch(actions.loginAsync(payload));
     }, []);
 
     return (

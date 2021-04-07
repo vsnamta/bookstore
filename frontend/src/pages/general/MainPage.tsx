@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { createProductPageFindAction } from '../../store/product/action';
+import { actions } from '../../store/product';
 import MainTemplate from '../../components/general/MainTemplate';
 
 function MainPage() {
@@ -9,7 +9,7 @@ function MainPage() {
     const productPageAsync = useSelector((state: RootState) => state.products.productPageAsync);
 
     useEffect(() => {
-        dispatch(createProductPageFindAction({
+        dispatch(actions.fetchProductPage({
             pageCriteria: {
                 page: 1,
                 size: 8,

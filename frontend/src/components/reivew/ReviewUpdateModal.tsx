@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
-import { ReviewResult, ReviewUpdatePayload } from '../../models/reviews';
-import { ReviewUpdateRequestActionPayload } from '../../store/review/action';
+import { ReviewResult, ReviewUpdatePayload } from '../../models/review';
+import { ReviewUpdateAsyncPayload } from '../../models/review/store';
 
 interface ReviewUpdateModalProps {
     review?: ReviewResult;
     isOpen: boolean;
-    onUpdateReview: (payload: ReviewUpdateRequestActionPayload) => void;
+    onUpdateReview: (payload: ReviewUpdateAsyncPayload) => void;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
 }
 

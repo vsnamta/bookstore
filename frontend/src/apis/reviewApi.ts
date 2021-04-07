@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, FindPayload, Page } from '../models/common';
-import { ReviewResult, ReviewSavePayload, ReviewUpdatePayload } from '../models/reviews';
+import { ReviewResult, ReviewSavePayload, ReviewUpdatePayload } from '../models/review';
 import apiClient from './apiClient';
 import apiErrorParser from '../utills/apiErrorParser';
 

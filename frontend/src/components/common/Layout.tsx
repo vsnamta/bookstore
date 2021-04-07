@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { LogoutAsyncPayload } from '../../models/auth/store';
 import { RootState } from '../../store';
-import { createLogoutAction, LogoutActionPayload } from '../../store/auth/action';
+import { actions } from '../../store/auth';
 import Footer from '../general/Footer';
 import Header from '../general/Header';
 
@@ -19,8 +20,8 @@ function Layout({ children }: LayoutProps) {
     const loginMember = useSelector((state: RootState) => state.auths.myData);
     const categoryList = useSelector((state: RootState) => state.categories.categoryListAsync.result);
 
-    const logout = useCallback((payload: LogoutActionPayload) => {
-        dispatch(createLogoutAction(payload));
+    const logout = useCallback((payload: LogoutAsyncPayload) => {
+        dispatch(actions.logoutAsync(payload));
     }, []);
 
     return (

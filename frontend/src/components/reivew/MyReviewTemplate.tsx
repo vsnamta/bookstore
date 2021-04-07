@@ -6,16 +6,16 @@ import Pagination from '../general/Pagination';
 import MyReviewList from './MyReviewList';
 import ReviewUpdateModal from './ReviewUpdateModal';
 import useModal from '../../hooks/useModal';
-import { ReviewResult } from '../../models/reviews';
-import { ReviewRemoveRequestActionPayload, ReviewUpdateRequestActionPayload } from '../../store/review/action';
-import { ReviewPageAsync } from '../../store/review/reducer';
+import { ReviewResult } from '../../models/review';
+import { ReviewRemoveAsyncPayload, ReviewUpdateAsyncPayload } from '../../models/review/store';
+import { ReviewPageAsync } from '../../models/review/store';
 
 interface MyReviewTemplateProps {
     reviewPageAsync: ReviewPageAsync;
     review?: ReviewResult;
     selectReview: (id: number) => void;
-    removeReview: (payload: ReviewRemoveRequestActionPayload) => void;
-    updateReview: (payload: ReviewUpdateRequestActionPayload) => void;
+    removeReview: (payload: ReviewRemoveAsyncPayload) => void;
+    updateReview: (payload: ReviewUpdateAsyncPayload) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;

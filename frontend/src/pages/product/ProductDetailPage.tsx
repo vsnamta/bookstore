@@ -2,11 +2,13 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ProductDetailTemplate from '../../components/product/ProductDetailTemplate';
+import { CartSaveAsyncPayload } from '../../models/cart/store';
 import { FindPayload } from '../../models/common';
+import { ReviewSaveAsyncPayload } from '../../models/review/store';
 import { RootState } from '../../store';
-import { CartSaveRequestActionPayload, createCartSaveRequestAction } from '../../store/cart/action';
-import { createProductFindAction } from '../../store/product/action';
-import { createReviewPageFindAction, createReviewSaveRequestAction, ReviewSaveRequestActionPayload } from '../../store/review/action';
+import { actions as cartActions } from '../../store/cart';
+import { actions as productActions } from '../../store/product';
+import { actions as reviewActions } from '../../store/review';
 
 function ProductDetailPage() {
     const { id } = useParams<{id: string}>();
@@ -17,23 +19,23 @@ function ProductDetailPage() {
     const reviewPageAsync = useSelector((state: RootState) => state.reviews.reviewPageAsync);
 
     useEffect(() => {
-        dispatch(createProductFindAction(Number.parseInt(id)));
-        dispatch(createReviewPageFindAction({
+        dispatch(productActions.fetchProduct(Number.parseInt(id)));
+        dispatch(reviewActions.fetchReviewPage({
             searchCriteria: { column: "productId", keyword: id },
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
-    const saveCart = useCallback((payload: CartSaveRequestActionPayload) => {
-        dispatch(createCartSaveRequestAction(payload));
+    const saveCart = useCallback((payload: CartSaveAsyncPayload) => {
+        dispatch(cartActions.saveCartAsync(payload));
     }, [loginMember]);
 
-    const saveReview = useCallback((payload: ReviewSaveRequestActionPayload) => {
-        dispatch(createReviewSaveRequestAction(payload));
+    const saveReview = useCallback((payload: ReviewSaveAsyncPayload) => {
+        dispatch(reviewActions.saveReviewAsync(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(createReviewPageFindAction({
+        dispatch(reviewActions.fetchReviewPage({
             ...reviewPageAsync.payload as FindPayload,
             pageCriteria: {
                 ...(reviewPageAsync.payload as FindPayload).pageCriteria, 

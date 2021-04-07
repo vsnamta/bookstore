@@ -1,7 +1,7 @@
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-import { ReviewResult } from '../../models/reviews';
+import { ReviewResult } from '../../models/review';
 
 interface ReviewListProps {
     reviewList?: ReviewResult[];

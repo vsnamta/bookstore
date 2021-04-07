@@ -1,13 +1,13 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { actions, types } from '.';
 import { RootState } from '..';
 import orderApi from '../../apis/orderApi';
-import { Page } from '../../models/common';
-import { OrderDetailResult, OrderResult } from '../../models/orders';
-import { createOrderFindAction, createOrderPageFindAction, createOrderSaveAction, createOrderSaveRequestAction, createOrderAsyncSetAction, createOrderPageAsyncSetAction, createOrderUpdateAction, createOrderUpdateRequestAction } from './action';
-import { FIND_ORDER, FIND_ORDER_PAGE, SAVE_ORDER_REQUEST, UPDATE_ORDER_REQUEST } from './actionType';
-import { OrdersState } from './reducer';
+import { MyData } from '../../models/auth';
+import { FindPayload, Page } from '../../models/common';
+import { OrderDetailResult, OrderResult } from '../../models/order';
+import { OrdersState } from '../../models/order/store';
 
-function* findOrderPageSaga({ payload: findPayload }: ReturnType<typeof createOrderPageFindAction>) {
+function* fetchOrderPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchOrderPage>) {
     const ordersState: OrdersState = yield select((state: RootState) => state.orders);
     
     if(JSON.stringify(ordersState.orderPageAsync.payload) === JSON.stringify(findPayload) 
@@ -18,13 +18,13 @@ function* findOrderPageSaga({ payload: findPayload }: ReturnType<typeof createOr
     try {
         const orderPage: Page<OrderResult> = yield call(orderApi.findAll, findPayload);
 
-        yield put(createOrderPageAsyncSetAction({
+        yield put(actions.setOrderPageAsync({
             payload: findPayload,
             result: orderPage,
             error: undefined
         }));
     } catch (error) {
-        yield put(createOrderPageAsyncSetAction({
+        yield put(actions.setOrderPageAsync({
             payload: findPayload,
             result: undefined,
             error: error
@@ -32,7 +32,7 @@ function* findOrderPageSaga({ payload: findPayload }: ReturnType<typeof createOr
     }
 };
 
-function* findOrderSaga({ payload: id }: ReturnType<typeof createOrderFindAction>) {
+function* fetchOrderSaga({ payload: id }: ReturnType<typeof actions.fetchOrder>) {
     const ordersState: OrdersState = yield select((state: RootState) => state.orders);
     
     if(ordersState.orderAsync.payload === id && ordersState.orderAsync.result !== undefined) {
@@ -42,13 +42,13 @@ function* findOrderSaga({ payload: id }: ReturnType<typeof createOrderFindAction
     try {
         const order: OrderDetailResult = yield call(orderApi.findOne, id);
 
-        yield put(createOrderAsyncSetAction({
+        yield put(actions.setOrderAsync({
             payload: id,
             result: order,
             error: undefined
         }));
     } catch (error) {
-        yield put(createOrderAsyncSetAction({
+        yield put(actions.setOrderAsync({
             payload: id,
             result: undefined,
             error: error
@@ -56,31 +56,51 @@ function* findOrderSaga({ payload: id }: ReturnType<typeof createOrderFindAction
     }
 };
 
-function* updateOrderRequestSaga({ payload: orderUpdateRequestActionPayload }: ReturnType<typeof createOrderUpdateRequestAction>) {
+function* updateOrderAsyncSaga({ payload: orderUpdateAsyncPayload }: ReturnType<typeof actions.updateOrderAsync>) {
     try {
-        const order: OrderDetailResult = yield call(orderApi.update, orderUpdateRequestActionPayload.id, orderUpdateRequestActionPayload.payload);
+        const order: OrderDetailResult = yield call(orderApi.update, orderUpdateAsyncPayload.id, orderUpdateAsyncPayload.payload);
 
-        yield put(createOrderUpdateAction(order));
-        orderUpdateRequestActionPayload.onSuccess && orderUpdateRequestActionPayload.onSuccess(order);
+        yield put(actions.updateOrder(order));
+        orderUpdateAsyncPayload.onSuccess && orderUpdateAsyncPayload.onSuccess(order);
     } catch (error) {
-        orderUpdateRequestActionPayload.onFailure && orderUpdateRequestActionPayload.onFailure(error);
+        orderUpdateAsyncPayload.onFailure && orderUpdateAsyncPayload.onFailure(error);
     }
 };
 
-function* saveOrderRequestSaga({ payload: orderSaveRequestActionPayload }: ReturnType<typeof createOrderSaveRequestAction>) {
+function* saveOrderAsyncSaga({ payload: orderSaveAsyncPayload }: ReturnType<typeof actions.saveOrderAsync>) {
     try {
-        const order: OrderDetailResult = yield call(orderApi.save, orderSaveRequestActionPayload.payload);
+        const order: OrderDetailResult = yield call(orderApi.save, orderSaveAsyncPayload.payload);
 
-        yield put(createOrderSaveAction(order));
-        orderSaveRequestActionPayload.onSuccess && orderSaveRequestActionPayload.onSuccess(order);
+        const myData: MyData = yield select((state: RootState) => state.auths.myData);
+
+        const findPayload: FindPayload = {
+            searchCriteria: { keyword: "memberId", column: myData.id + "" },
+            pageCriteria: { page: 1, size: 10 }
+        };
+
+        const orderPage: Page<OrderResult> = yield call(orderApi.findAll, findPayload);
+
+        yield put(actions.setOrdersState({
+            orderPageAsync: {
+                payload: findPayload,
+                result: orderPage,
+                error: undefined
+            },
+            orderAsync: {
+                payload: order.id,
+                result: order,
+                error: undefined
+            }
+        }));
+        orderSaveAsyncPayload.onSuccess && orderSaveAsyncPayload.onSuccess(order);
     } catch (error) {
-        orderSaveRequestActionPayload.onFailure && orderSaveRequestActionPayload.onFailure(error);
+        orderSaveAsyncPayload.onFailure && orderSaveAsyncPayload.onFailure(error);
     }
 };
 
 export default function* ordersSaga() {
-    yield takeEvery(FIND_ORDER_PAGE, findOrderPageSaga);
-    yield takeEvery(FIND_ORDER, findOrderSaga);
-    yield takeEvery(UPDATE_ORDER_REQUEST, updateOrderRequestSaga);
-    yield takeEvery(SAVE_ORDER_REQUEST, saveOrderRequestSaga);
+    yield takeEvery(types.FETCH_ORDER_PAGE, fetchOrderPageSaga);
+    yield takeEvery(types.FIND_ORDER, fetchOrderSaga);
+    yield takeEvery(types.UPDATE_ORDER_ASYNC, updateOrderAsyncSaga);
+    yield takeEvery(types.SAVE_ORDER_ASYNC, saveOrderAsyncSaga);
 }

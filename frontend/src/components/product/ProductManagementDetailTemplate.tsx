@@ -2,10 +2,10 @@ import qs from 'qs';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router';
 import useModal from '../../hooks/useModal';
-import { ProductFindPayload } from '../../models/products';
-import { ProductAsync } from '../../store/product/reducer';
-import { StockSaveRequestActionPayload } from '../../store/stock/action';
-import { StockPageAsync } from '../../store/stock/reducer';
+import { ProductFindPayload } from '../../models/product';
+import { ProductAsync } from '../../models/product/store';
+import { StockPageAsync } from '../../models/stock/store';
+import { StockSaveAsyncPayload } from '../../models/stock/store';
 import AdminLayout from '../common/AdminLayout';
 import ErrorDetail from '../general/ErrorDetail';
 import Pagination from '../general/Pagination';
@@ -19,7 +19,7 @@ interface ProductManagementDetailTemplateProps {
     productAsync: ProductAsync;
     productFindPayload: ProductFindPayload;
     stockPageAsync: StockPageAsync;
-    saveStock: (payload: StockSaveRequestActionPayload) => void;
+    saveStock: (payload: StockSaveAsyncPayload) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;
@@ -35,7 +35,7 @@ function ProductManagementDetailTemplate({ productAsync, productFindPayload, sto
         history.push(`/admin/product/list?${queryString}`);
     }, [productFindPayload]);
 
-    const onSaveStock = useCallback((payload: StockSaveRequestActionPayload) => {
+    const onSaveStock = useCallback((payload: StockSaveAsyncPayload) => {
         saveStock({
             payload: payload.payload,
             onSuccess: stock => {

@@ -8,15 +8,15 @@ import OrderList from './OrderList';
 import { ApiError } from '../../error/ApiError';
 import useModal from '../../hooks/useModal';
 import { FindPayload, Page } from '../../models/common';
-import { OrderDetailResult, OrderResult } from '../../models/orders';
-import { OrderUpdateRequestActionPayload } from '../../store/order/action';
-import { OrderAsync, OrderPageAsync } from '../../store/order/reducer';
+import { OrderDetailResult, OrderResult } from '../../models/order';
+import { OrderUpdateAsyncPayload } from '../../models/order/store';
+import { OrderAsync, OrderPageAsync } from '../../models/order/store';
 
 interface MyOrderTemplateProps {
     orderPageAsync: OrderPageAsync;
     orderAsync: OrderAsync;
     selectOrder: (id: number) => void;
-    updateOrder: (payload: OrderUpdateRequestActionPayload) => void;
+    updateOrder: (payload: OrderUpdateAsyncPayload) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;

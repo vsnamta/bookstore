@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemberResult } from '../../models/members';
+import { MemberResult } from '../../models/member';
 
 interface MemberListProps {
     memberList?: MemberResult[];

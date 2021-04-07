@@ -5,15 +5,15 @@ import React, { useCallback, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Logo from '../../assets/image/logo.png';
 import useSearchForm from "../../hooks/useSearchForm";
-import { CategoryResult } from '../../models/categories';
+import { CategoryResult } from '../../models/category';
 import { SearchCriteria } from '../../models/common';
-import { LoginMember } from '../../models/members';
-import { LogoutActionPayload } from "../../store/auth/action";
+import { LoginMember } from '../../models/member';
+import { LogoutAsyncPayload } from "../../models/auth/store";
 
 interface HeaderProps {
     loginMember?: LoginMember;
     categoryList?: CategoryResult[];
-    onLogout: (payload: LogoutActionPayload) => void;
+    onLogout: (payload: LogoutAsyncPayload) => void;
 }
 
 function Header({ loginMember, categoryList, onLogout }: HeaderProps) {

@@ -6,7 +6,7 @@ import Title from '../general/Title';
 import AdminProductList from './AdminProductList';
 import ProductManagementBar from './ProductManagementBar';
 import { SearchCriteria } from '../../models/common';
-import { ProductPageAsync } from '../../store/product/reducer';
+import { ProductPageAsync } from '../../models/product/store';
 
 interface ProductManagementTemplateProps {
     productPageAsync: ProductPageAsync;

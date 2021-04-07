@@ -2,13 +2,13 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ReviewResult } from '../../models/reviews';
-import { ReviewRemoveRequestActionPayload } from '../../store/review/action';
+import { ReviewResult } from '../../models/review';
+import { ReviewRemoveAsyncPayload } from '../../models/review/store';
 
 interface MyReviewListProps {
     reviewList?: ReviewResult[];
     onSelectReview: (id: number) => void;
-    onRemoveReview: (payload: ReviewRemoveRequestActionPayload) => void;
+    onRemoveReview: (payload: ReviewRemoveAsyncPayload) => void;
 }
 
 function MyReviewList({ reviewList, onSelectReview, onRemoveReview }: MyReviewListProps) {

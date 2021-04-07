@@ -1,14 +1,13 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { actions, types } from '.';
 import { RootState } from '..';
 import fileApi from '../../apis/fileApi';
 import productApi from '../../apis/productApi';
 import { Page } from '../../models/common';
-import { ProductDetailResult, ProductResult } from '../../models/products';
-import { createProductFindAction, createProductPageFindAction, createProductSaveAction, createProductSaveRequestAction, createProductAsyncSetAction, createProductPageAsyncSetAction, createProductUpdateAction, createProductUpdateRequestAction } from './action';
-import { FIND_PRODUCT, FIND_PRODUCT_PAGE, SAVE_PRODUCT_REQUEST, UPDATE_PRODUCT_REQUEST } from './actionType';
-import { ProductsState } from './reducer';
+import { ProductDetailResult, ProductFindPayload, ProductResult } from '../../models/product';
+import { ProductsState } from '../../models/product/store';
 
-function* findProductPageSaga({ payload: productFindPayload }: ReturnType<typeof createProductPageFindAction>) {
+function* findProductPageSaga({ payload: productFindPayload }: ReturnType<typeof actions.fetchProductPage>) {
     const productsState: ProductsState = yield select((state: RootState) => state.products);
     
     if(JSON.stringify(productsState.productPageAsync.payload) === JSON.stringify(productFindPayload) 
@@ -19,13 +18,13 @@ function* findProductPageSaga({ payload: productFindPayload }: ReturnType<typeof
     try {
         const productPage: Page<ProductResult> = yield call(productApi.findAll, productFindPayload);
 
-        yield put(createProductPageAsyncSetAction({
+        yield put(actions.setProductPageAsync({
             payload: productFindPayload,
             result: productPage,
             error: undefined
         }));
     } catch (error) {
-        yield put(createProductPageAsyncSetAction({
+        yield put(actions.setProductPageAsync({
             payload: productFindPayload,
             result: undefined,
             error: error
@@ -33,7 +32,7 @@ function* findProductPageSaga({ payload: productFindPayload }: ReturnType<typeof
     }
 };
 
-function* findProductSaga({ payload: id }: ReturnType<typeof createProductFindAction>) {
+function* findProductSaga({ payload: id }: ReturnType<typeof actions.fetchProduct>) {
     const productsState: ProductsState = yield select((state: RootState) => state.products);
 
     if(productsState.productAsync.payload === id && productsState.productAsync.result !== undefined) {
@@ -43,13 +42,13 @@ function* findProductSaga({ payload: id }: ReturnType<typeof createProductFindAc
     try {
         const product: ProductDetailResult = yield call(productApi.findOne, id);
 
-        yield put(createProductAsyncSetAction({
+        yield put(actions.setProductAsync({
             payload: id,
             result: product,
             error: undefined
         }));
     } catch (error) {
-        yield put(createProductAsyncSetAction({
+        yield put(actions.setProductAsync({
             payload: id,
             result: undefined,
             error: error
@@ -57,47 +56,61 @@ function* findProductSaga({ payload: id }: ReturnType<typeof createProductFindAc
     }
 };
 
-function* updateProductRequestSaga({ payload: productUpdateRequestActionPayload }: ReturnType<typeof createProductUpdateRequestAction>) {
+function* updateProductAsyncSaga({ payload: productUpdateAsyncPayload }: ReturnType<typeof actions.updateProductAsync>) {
     try {
         let product: ProductDetailResult;
 
-        if(productUpdateRequestActionPayload.file) {
-            const originalFileName = productUpdateRequestActionPayload.payload.imageFileName;
+        if(productUpdateAsyncPayload.file) {
+            const originalFileName = productUpdateAsyncPayload.payload.imageFileName;
             
-            const newFileName: string = yield call(fileApi.save, productUpdateRequestActionPayload.file);
-            productUpdateRequestActionPayload.payload.imageFileName = newFileName;
+            const newFileName: string = yield call(fileApi.save, productUpdateAsyncPayload.file);
+            productUpdateAsyncPayload.payload.imageFileName = newFileName;
 
-            product = yield call(productApi.update, productUpdateRequestActionPayload.id, productUpdateRequestActionPayload.payload);
+            product = yield call(productApi.update, productUpdateAsyncPayload.id, productUpdateAsyncPayload.payload);
 
             yield call(fileApi.remove, originalFileName);
         } else {
-            product = yield call(productApi.update, productUpdateRequestActionPayload.id, productUpdateRequestActionPayload.payload);
+            product = yield call(productApi.update, productUpdateAsyncPayload.id, productUpdateAsyncPayload.payload);
         }
 
-        yield put(createProductUpdateAction(product));
-        productUpdateRequestActionPayload.onSuccess && productUpdateRequestActionPayload.onSuccess(product);
+        yield put(actions.updateProduct(product));
+        productUpdateAsyncPayload.onSuccess && productUpdateAsyncPayload.onSuccess(product);
     } catch (error) {
-        productUpdateRequestActionPayload.onFailure && productUpdateRequestActionPayload.onFailure(error);
+        productUpdateAsyncPayload.onFailure && productUpdateAsyncPayload.onFailure(error);
     }
 };
 
-function* saveProductRequestSaga({ payload: productSaveRequestActionPayload }: ReturnType<typeof createProductSaveRequestAction>) {
+function* saveProductAsyncSaga({ payload: productSaveAsyncPayload }: ReturnType<typeof actions.saveProductAsync>) {
     try {
-        const fileName: string = yield call(fileApi.save, productSaveRequestActionPayload.file);
-        productSaveRequestActionPayload.payload.imageFileName = fileName;
+        const fileName: string = yield call(fileApi.save, productSaveAsyncPayload.file);
+        productSaveAsyncPayload.payload.imageFileName = fileName;
+        const product: ProductDetailResult = yield call(productApi.save, productSaveAsyncPayload.payload);
 
-        const product: ProductDetailResult = yield call(productApi.save, productSaveRequestActionPayload.payload);
+        const productFindPayload: ProductFindPayload = { pageCriteria: { page: 1, size: 10 } }
+        const productPage: Page<ProductResult> = yield call(productApi.findAll, productFindPayload);
 
-        yield put(createProductSaveAction(product));
-        productSaveRequestActionPayload.onSuccess && productSaveRequestActionPayload.onSuccess(product);
+        yield put(actions.setProductsState({
+            productPageAsync: {
+                payload: productFindPayload,
+                result: productPage,
+                error: undefined
+            },
+            productAsync: {
+                payload: product.id,
+                result: product,
+                error: undefined
+            }
+        }));
+
+        productSaveAsyncPayload.onSuccess && productSaveAsyncPayload.onSuccess(product);
     } catch (error) {
-        productSaveRequestActionPayload.onFailure && productSaveRequestActionPayload.onFailure(error);
+        productSaveAsyncPayload.onFailure && productSaveAsyncPayload.onFailure(error);
     }
 };
 
 export default function* productsSaga() {
-    yield takeEvery(FIND_PRODUCT_PAGE, findProductPageSaga);
-    yield takeEvery(FIND_PRODUCT, findProductSaga);
-    yield takeEvery(UPDATE_PRODUCT_REQUEST, updateProductRequestSaga);
-    yield takeEvery(SAVE_PRODUCT_REQUEST, saveProductRequestSaga);
+    yield takeEvery(types.FETCH_PRODUCT_PAGE, findProductPageSaga);
+    yield takeEvery(types.FETCH_PRODUCT, findProductSaga);
+    yield takeEvery(types.UPDATE_PRODUCT_ASYNC, updateProductAsyncSaga);
+    yield takeEvery(types.SAVE_PRODUCT_ASYNC, saveProductAsyncSaga);
 }

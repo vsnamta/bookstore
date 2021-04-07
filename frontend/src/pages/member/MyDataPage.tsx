@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import MemberUpdateTemplate from '../../components/member/MemberUpdateTemplate';
-import { MyData } from '../../models/auths';
+import { MyData } from '../../models/auth';
+import { MemberUpdateAsyncPayload } from '../../models/member/store';
 import { RootState } from '../../store';
-import { createMemberFindAction, createMemberUpdateRequestAction, MemberUpdateRequestActionPayload } from '../../store/member/action';
+import { actions } from '../../store/member';
 
 function MyDataPage() {
     const dispatch = useDispatch();
@@ -11,11 +12,11 @@ function MyDataPage() {
     const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
 
     useEffect(() => {
-        dispatch(createMemberFindAction(loginMember.id));
+        dispatch(actions.fetchMember(loginMember.id));
     }, []);
 
-    const updateMember = useCallback((payload: MemberUpdateRequestActionPayload) => {
-        dispatch(createMemberUpdateRequestAction(payload));
+    const updateMember = useCallback((payload: MemberUpdateAsyncPayload) => {
+        dispatch(actions.updateMemberAsync(payload));
     }, []);
     
     return (

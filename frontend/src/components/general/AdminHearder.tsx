@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Logo from '../../assets/image/logo.png';
-import { LogoutActionPayload } from '../../store/auth/action';
+import { LogoutAsyncPayload } from '../../models/auth/store';
 
 interface AdminHeaderProps {
-    onLogout: (payload: LogoutActionPayload) => void;
+    onLogout: (payload: LogoutAsyncPayload) => void;
 }
 
 function AdminHeader({ onLogout }: AdminHeaderProps) {

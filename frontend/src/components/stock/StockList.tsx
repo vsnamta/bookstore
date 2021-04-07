@@ -1,5 +1,5 @@
 import React from 'react';
-import { StockResult } from '../../models/stocks';
+import { StockResult } from '../../models/stock';
 
 interface StockListProps {
     stockList?: StockResult[];

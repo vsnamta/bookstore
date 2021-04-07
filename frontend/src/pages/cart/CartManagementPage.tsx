@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CartManagementTemplate from '../../components/cart/CartManagementTemplate';
-import { MyData } from '../../models/auths';
+import { MyData } from '../../models/auth';
+import { CartCheckPayload, CartRemoveAsyncPayload, CartUpdateAsyncPayload } from '../../models/cart/store';
 import { RootState } from '../../store';
-import { CartRemoveRequestActionPayload, CartUpdateRequestActionPayload, createCartCheckAllAction, createCartCheckAction, createCartListFindAction, createCartRemoveRequestAction, createCartUpdateRequestAction } from '../../store/cart/action';
+import { actions } from '../../store/cart';
 
 function CartManagementPage() {
     const dispatch = useDispatch();
@@ -11,26 +12,23 @@ function CartManagementPage() {
     const cartListAsync = useSelector((state: RootState) => state.carts.cartListAsync);
 
     useEffect(() => {
-        dispatch(createCartListFindAction({ memberId: loginMember.id }));
+        dispatch(actions.fetchCartList({ memberId: loginMember.id }));
     }, []);
 
-    const updateCart = useCallback((payload: CartUpdateRequestActionPayload) => {
-        dispatch(createCartUpdateRequestAction(payload));
+    const updateCart = useCallback((payload: CartUpdateAsyncPayload) => {
+        dispatch(actions.updateCartAsync(payload));
     }, []);
 
-    const removeCart = useCallback((payload: CartRemoveRequestActionPayload) => {
-        dispatch(createCartRemoveRequestAction(payload));
+    const removeCart = useCallback((payload: CartRemoveAsyncPayload) => {
+        dispatch(actions.removeCartAsync(payload));
     }, []);
 
     const checkAllCart = useCallback((checked: boolean) => {
-        dispatch(createCartCheckAllAction(checked));
+        dispatch(actions.checkAllCart(checked));
     }, []);
 
-    const checkCart = useCallback((id: number, checked: boolean) => {
-        dispatch(createCartCheckAction({
-            id: id,
-            checked: checked
-        }));
+    const checkCart = useCallback((payload: CartCheckPayload) => {
+        dispatch(actions.checkCart(payload));
     }, []);
     
     return (

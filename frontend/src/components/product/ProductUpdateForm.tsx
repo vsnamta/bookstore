@@ -1,16 +1,16 @@
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
-import { CategoryResult } from '../../models/categories';
-import { DiscountPolicyResult } from '../../models/discountPolicies';
-import { ProductDetailResult, ProductSaveOrUpdatePayload } from '../../models/products';
-import { ProductUpdateRequestActionPayload } from '../../store/product/action';
+import { CategoryResult } from '../../models/category';
+import { DiscountPolicyResult } from '../../models/discountPolicy';
+import { ProductDetailResult, ProductSaveOrUpdatePayload } from '../../models/product';
+import { ProductUpdateAsyncPayload } from '../../models/product/store';
 
 interface ProductUpdateFormProps {
 	product?: ProductDetailResult;
     discountPolicyList?: DiscountPolicyResult[]; 
     categoryList?: CategoryResult[];
-    onUpdateProduct: (payload: ProductUpdateRequestActionPayload) => void;
+    onUpdateProduct: (payload: ProductUpdateAsyncPayload) => void;
 }
 
 function ProductUpdateForm({ product, discountPolicyList, categoryList, onUpdateProduct }: ProductUpdateFormProps) {

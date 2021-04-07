@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import MyOrderTemplate from '../../components/order/MyOrderTemplate';
-import { MyData } from '../../models/auths';
+import { MyData } from '../../models/auth';
 import { FindPayload } from '../../models/common';
+import { OrderUpdateAsyncPayload } from '../../models/order/store';
 import { RootState } from '../../store';
-import { createOrderFindAction, createOrderPageFindAction, createOrderUpdateRequestAction, OrderUpdateRequestActionPayload } from '../../store/order/action';
+import { actions } from '../../store/order';
 
 function MyOrderPage() {
     const dispatch = useDispatch();
@@ -12,25 +13,22 @@ function MyOrderPage() {
     const { orderPageAsync, orderAsync } = useSelector((state: RootState) => state.orders);
 
     useEffect(() => {
-        dispatch(createOrderPageFindAction({
-            searchCriteria: { 
-                column: "memberId", 
-                keyword: loginMember.id + ""
-             },
+        dispatch(actions.fetchOrderPage({
+            searchCriteria: { column: "memberId", keyword: loginMember.id + "" },
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const selectOrder = useCallback((id: number) => {
-        dispatch(createOrderFindAction(id));
+        dispatch(actions.fetchOrder(id));
     }, []);
 
-    const updateOrder = useCallback((payload: OrderUpdateRequestActionPayload) => {
-        dispatch(createOrderUpdateRequestAction(payload));
+    const updateOrder = useCallback((payload: OrderUpdateAsyncPayload) => {
+        dispatch(actions.updateOrderAsync(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(createOrderPageFindAction({
+        dispatch(actions.fetchOrderPage({
             ...orderPageAsync.payload as FindPayload,
             pageCriteria: {
                 ...(orderPageAsync.payload as FindPayload).pageCriteria, 

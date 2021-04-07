@@ -9,18 +9,18 @@ import ReviewList from '../reivew/ReviewList';
 import ReviewManagementBar from '../reivew/ReviewManagementBar';
 import ReviewSaveModal from '../reivew/ReviewSaveModal';
 import useModal from '../../hooks/useModal';
-import { LoginMember } from '../../models/members';
-import { CartSaveRequestActionPayload } from '../../store/cart/action';
-import { ProductAsync } from '../../store/product/reducer';
-import { ReviewSaveRequestActionPayload } from '../../store/review/action';
-import { ReviewPageAsync } from '../../store/review/reducer';
+import { LoginMember } from '../../models/member';
+import { CartSaveAsyncPayload } from '../../models/cart/store';
+import { ReviewSaveAsyncPayload } from '../../models/review/store';
+import { ProductAsync } from '../../models/product/store';
+import { ReviewPageAsync } from '../../models/review/store';
 
 interface ProductDetailTemplateProps {
     productAsync: ProductAsync;
     reviewPageAsync: ReviewPageAsync;
     loginMember?: LoginMember;
-    saveCart: (payload: CartSaveRequestActionPayload) => void;
-    saveReview: (payload: ReviewSaveRequestActionPayload) => void;
+    saveCart: (payload: CartSaveAsyncPayload) => void;
+    saveReview: (payload: ReviewSaveAsyncPayload) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;
@@ -43,7 +43,7 @@ function ProductDetailTemplate({
         openSaveModal();
     }, [loginMember]);
 
-    const onSaveReview = useCallback((payload: ReviewSaveRequestActionPayload) => {
+    const onSaveReview = useCallback((payload: ReviewSaveAsyncPayload) => {
         saveReview({
             payload: payload.payload,
             onSuccess: review => {

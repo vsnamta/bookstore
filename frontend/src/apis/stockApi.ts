@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, Page } from '../models/common';
-import { StockFindPayload, StockResult, StockSavePayload } from '../models/stocks';
+import { StockFindPayload, StockResult, StockSavePayload } from '../models/stock';
 import apiClient from './apiClient';
 import apiErrorParser from '../utills/apiErrorParser';
 

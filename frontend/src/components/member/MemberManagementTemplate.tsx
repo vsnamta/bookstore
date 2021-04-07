@@ -6,7 +6,7 @@ import Title from '../general/Title';
 import MemberList from './MemberList';
 import MemberManagementBar from './MemberManagementBar';
 import { SearchCriteria } from '../../models/common';
-import { MemberPageAsync } from '../../store/member/reducer';
+import { MemberPageAsync } from '../../models/member/store';
 
 interface MemberManagementTemplateProps {
     memberPageAsync: MemberPageAsync;

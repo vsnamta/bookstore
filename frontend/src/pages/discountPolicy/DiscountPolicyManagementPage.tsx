@@ -1,27 +1,28 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DiscountPolicyManagementTemplate from '../../components/discountPolicy/DiscountPolicyManagementTemplate';
+import { DiscountPolicySaveAsyncPayload, DiscountPolicyUpdateAsyncPayload } from '../../models/discountPolicy/store';
 import { RootState } from '../../store';
-import { createDiscountPolicyFindAction, createDiscountPolicyListFindAction, createDiscountPolicySaveRequestAction, createDiscountPolicyUpdateRequestAction, DiscountPolicySaveRequestActionPayload, DiscountPolicyUpdateRequestActionPayload } from '../../store/discountPolicy/action';
+import { actions } from '../../store/discountPolicy';
 
 function DiscountPolicyManagementPage() {
     const dispatch = useDispatch();
     const { discountPolicyListAsync, discountPolicy } = useSelector((state: RootState) => state.discountPolcies);
 
     useEffect(() => {
-        dispatch(createDiscountPolicyListFindAction());
+        dispatch(actions.fetchDiscountPolicyList());
     }, []);
 
     const selectDiscountPolicy = useCallback((id: number) => {
-        dispatch(createDiscountPolicyFindAction(id));
+        dispatch(actions.selectDiscountPolicy(id));
     }, []);
 
-    const saveDiscountPolicy = useCallback((payload: DiscountPolicySaveRequestActionPayload) => {
-        dispatch(createDiscountPolicySaveRequestAction(payload));
+    const saveDiscountPolicy = useCallback((payload: DiscountPolicySaveAsyncPayload) => {
+        dispatch(actions.saveDiscountPolicyAsync(payload));
     }, []);
 
-    const updateDiscountPolicy = useCallback((payload: DiscountPolicyUpdateRequestActionPayload) => {
-        dispatch(createDiscountPolicyUpdateRequestAction(payload));
+    const updateDiscountPolicy = useCallback((payload: DiscountPolicyUpdateAsyncPayload) => {
+        dispatch(actions.updateDiscountPolicyAsync(payload));
     }, []);
 
     return (

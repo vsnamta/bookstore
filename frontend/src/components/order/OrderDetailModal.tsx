@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactModal from 'react-modal';
-import { OrderDetailResult } from '../../models/orders';
+import { OrderDetailResult } from '../../models/order';
 import OrderDetail from './OrderDetail';
 
 interface OrderDetailModalProps {

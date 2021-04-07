@@ -1,54 +1,53 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
+import { actions, types } from '.';
 import authApi from '../../apis/authApi';
-import { MyData } from '../../models/auths';
-import { createLoginAction, createLogoutAction, createMyDataReloadAction, createMyDataSetAction } from './action';
-import { LOGIN, LOGOUT, RELOAD_MY_DATA } from './actionType';
+import { MyData } from '../../models/auth';
 
-function* reloadMyDataSaga(action: ReturnType<typeof createMyDataReloadAction>) {
+function* fetchMyDataSaga(action: ReturnType<typeof actions.fetchMyData>) {
     try {
         const tempMyData = localStorage.getItem("tempMyData");
 
         if (tempMyData !== null) {
-            yield put(createMyDataSetAction(JSON.parse(tempMyData) as MyData));
+            yield put(actions.setMyData(JSON.parse(tempMyData) as MyData));
         }
 
         const myData: MyData | string = yield call(authApi.findMyData);
 
-        yield put(createMyDataSetAction(myData === "" ? undefined : myData as MyData));
+        yield put(actions.setMyData(myData === "" ? undefined : myData as MyData));
     } catch (error) {
         
     }
 };
 
-function* loginSaga({ payload: loginActionPayload }: ReturnType<typeof createLoginAction>) {
+function* loginAsyncSaga({ payload: loginAsyncPayload }: ReturnType<typeof actions.loginAsync>) {
     try {
-        yield call(authApi.login, loginActionPayload.payload);
+        yield call(authApi.login, loginAsyncPayload.payload);
 
         const myData: MyData = yield call(authApi.findMyData);
-        yield put(createMyDataSetAction(myData));
+        yield put(actions.setMyData(myData));
         localStorage.setItem("tempMyData", JSON.stringify(myData as MyData));
 
-        loginActionPayload.onSuccess && loginActionPayload.onSuccess();
+        loginAsyncPayload.onSuccess && loginAsyncPayload.onSuccess();
     } catch (error) {
-        loginActionPayload.onFailure && loginActionPayload.onFailure(error);
+        loginAsyncPayload.onFailure && loginAsyncPayload.onFailure(error);
     }
 };
 
-function* logoutSaga({ payload: logoutActionPayload }: ReturnType<typeof createLogoutAction>) {
+function* logoutAsyncSaga({ payload: logoutAsyncPayload }: ReturnType<typeof actions.logoutAsync>) {
     try {
         yield call(authApi.logout);
 
-        yield put(createMyDataSetAction(undefined));
+        yield put(actions.setMyData(undefined));
         localStorage.removeItem("tempMyData");
 
-        logoutActionPayload.onSuccess && logoutActionPayload.onSuccess();
+        logoutAsyncPayload.onSuccess && logoutAsyncPayload.onSuccess();
     } catch (error) {
-        logoutActionPayload.onFailure && logoutActionPayload.onFailure(error);
+        logoutAsyncPayload.onFailure && logoutAsyncPayload.onFailure(error);
     }
 };
 
 export default function* authsSaga() {
-    yield takeEvery(LOGIN, loginSaga);
-    yield takeEvery(LOGOUT, logoutSaga);
-    yield takeEvery(RELOAD_MY_DATA, reloadMyDataSaga);
+    yield takeEvery(types.FETCH_MY_DATA, fetchMyDataSaga);
+    yield takeEvery(types.LOGIN_ASYNC, loginAsyncSaga);
+    yield takeEvery(types.LOGOUT_ASYNC, logoutAsyncSaga);
 }

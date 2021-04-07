@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import qs from 'qs';
-import { CartFindPayload, CartResult, CartSavePayload, CartUpdatePayload } from '../models/carts';
+import { CartFindPayload, CartResult, CartSavePayload, CartUpdatePayload } from '../models/cart';
 import { ErrorResult } from '../models/common';
 import apiClient from './apiClient';
 import apiErrorParser from '../utills/apiErrorParser';

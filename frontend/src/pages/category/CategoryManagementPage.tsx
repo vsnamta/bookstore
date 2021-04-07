@@ -1,31 +1,32 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CategoryManagementTemplate from '../../components/category/CategoryManagementTemplate';
+import { CategoryRemoveAsyncPayload, CategorySaveAsyncPayload, CategoryUpdateAsyncPayload } from '../../models/category/store';
 import { RootState } from '../../store';
-import { CategoryRemoveRequestActionPayload, CategorySaveRequestActionPayload, CategoryUpdateRequestActionPayload, createCategoryFindAction, createCategoryListFindAction, createCategoryRemoveRequestAction, createCategorySaveRequestAction, createCategoryUpdateRequestAction } from '../../store/category/action';
+import { actions } from '../../store/category';
 
 function CategoryManagementPage() {
     const dispatch = useDispatch();
     const { categoryListAsync, category } = useSelector((state: RootState) => state.categories);
 
     useEffect(() => {
-        dispatch(createCategoryListFindAction());
+        dispatch(actions.fetchCategoryList());
     }, []);
 
     const selectCategory = useCallback((id: number) => {
-        dispatch(createCategoryFindAction(id));
+        dispatch(actions.selectCategory(id));
     }, []);
 
-    const saveCategory = useCallback((payload: CategorySaveRequestActionPayload) => {
-        dispatch(createCategorySaveRequestAction(payload));
+    const saveCategory = useCallback((payload: CategorySaveAsyncPayload) => {
+        dispatch(actions.saveCategoryAsync(payload));
     }, []);
 
-    const updateCategory = useCallback((payload: CategoryUpdateRequestActionPayload) => {
-        dispatch(createCategoryUpdateRequestAction(payload));
+    const updateCategory = useCallback((payload: CategoryUpdateAsyncPayload) => {
+        dispatch(actions.updateCategoryAsync(payload));
     }, []);
 
-    const removeCategory = useCallback((payload: CategoryRemoveRequestActionPayload) => {
-        dispatch(createCategoryRemoveRequestAction(payload));
+    const removeCategory = useCallback((payload: CategoryRemoveAsyncPayload) => {
+        dispatch(actions.removeCategoryAsync(payload));
     }, []);
     
     return (

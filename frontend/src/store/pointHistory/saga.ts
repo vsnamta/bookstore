@@ -1,13 +1,12 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { actions, types } from '.';
 import { RootState } from '..';
 import PointHistoryApi from '../../apis/pointHistoryApi';
 import { Page } from '../../models/common';
-import { PointHistoryResult } from '../../models/pointHistories';
-import { createPointHistoryPageFindAction, createPointHistoryPageAsyncSetAction } from './action';
-import { FIND_POINT_HISTORY_PAGE } from './actionType';
-import { PointHistoriesState } from './reducer';
+import { PointHistoryResult } from '../../models/pointHistory';
+import { PointHistoriesState } from '../../models/pointHistory/store';
 
-function* findPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnType<typeof createPointHistoryPageFindAction>) {
+function* findPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnType<typeof actions.fetchPointHistoryPage>) {
     const pointHistoriesState: PointHistoriesState = yield select((state: RootState) => state.pointHistories);
     
     if(JSON.stringify(pointHistoriesState.pointHistoryPageAsync.payload) === JSON.stringify(pointHistoryFindPayload) 
@@ -18,13 +17,13 @@ function* findPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnT
     try {
         const pointHistoryPage: Page<PointHistoryResult> = yield call(PointHistoryApi.findAll, pointHistoryFindPayload);
 
-        yield put(createPointHistoryPageAsyncSetAction({
+        yield put(actions.setPointHistoryPageAsync({
             payload: pointHistoryFindPayload,
             result: pointHistoryPage,
             error: undefined
         }));
     } catch (error) {
-        yield put(createPointHistoryPageAsyncSetAction({
+        yield put(actions.setPointHistoryPageAsync({
             payload: pointHistoryFindPayload,
             result: undefined,
             error: error
@@ -33,5 +32,5 @@ function* findPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnT
 };
 
 export default function* pointHistoriesSaga() {
-    yield takeEvery(FIND_POINT_HISTORY_PAGE, findPointHistoryPageSaga);
+    yield takeEvery(types.FETCH_POINT_HISTORY_PAGE, findPointHistoryPageSaga);
 }

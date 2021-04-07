@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, FindPayload, Page } from '../models/common';
-import { OrderDetailResult, OrderResult, OrderSavePayload, OrderUpdatePayload } from '../models/orders';
+import { OrderDetailResult, OrderResult, OrderSavePayload, OrderUpdatePayload } from '../models/order';
 import apiClient from './apiClient';
 import apiErrorParser from '../utills/apiErrorParser';
 

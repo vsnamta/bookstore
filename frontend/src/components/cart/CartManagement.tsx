@@ -2,8 +2,8 @@ import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useMemo } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { CartResult, CartUpdatePayload } from '../../models/carts';
-import { CartRemoveRequestActionPayload, CartUpdateRequestActionPayload } from "../../store/cart/action";
+import { CartResult } from '../../models/cart';
+import { CartCheckPayload, CartRemoveAsyncPayload, CartUpdateAsyncPayload } from "../../models/cart/store";
 
 const calcTotalPriceAndAllChecked = (cartList: CartResult[]) : [ number, boolean ] => {
     const checkedCartList = cartList.filter(cart => cart.checked === true);
@@ -22,10 +22,10 @@ const calcTotalPriceAndAllChecked = (cartList: CartResult[]) : [ number, boolean
 
 interface CartManagementProps {
     cartList?: CartResult[];
-    onUpdateCart: (payload: CartUpdateRequestActionPayload) => void;
-    onRemoveCart: (payload: CartRemoveRequestActionPayload) => void;
+    onUpdateCart: (payload: CartUpdateAsyncPayload) => void;
+    onRemoveCart: (payload: CartRemoveAsyncPayload) => void;
     onCheckAllCart: (checked: boolean) => void;
-    onCheckCart: (id: number, checked: boolean) => void;
+    onCheckCart: (payload: CartCheckPayload) => void;
 }
 
 function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, onCheckCart }: CartManagementProps) {    
@@ -79,7 +79,10 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
     }, []);
 
     const onChangeCheck = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        onCheckCart(parseInt(event.currentTarget.value), event.currentTarget.checked);
+        onCheckCart({
+            id: parseInt(event.currentTarget.value), 
+            checked: event.currentTarget.checked
+        });
     }, []);
 
     const onRemove = useCallback(() => {

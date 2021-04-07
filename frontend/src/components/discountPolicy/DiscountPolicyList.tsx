@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { DiscountPolicyResult } from '../../models/discountPolicies';
+import { DiscountPolicyResult } from '../../models/discountPolicy';
 
 interface DiscountPolicyListProps {
     discountPolicyList?: DiscountPolicyResult[];

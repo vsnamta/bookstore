@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { LoginPayload, MyData } from '../models/auths';
+import { LoginPayload, MyData } from '../models/auth';
 import { ErrorResult } from '../models/common';
 import apiErrorParser from '../utills/apiErrorParser';
 import apiClient from './apiClient';

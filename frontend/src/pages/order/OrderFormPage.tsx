@@ -2,11 +2,12 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useLocation } from 'react-router-dom';
 import OrderFormTemplate from '../../components/order/OrderFormTemplate';
-import { MyData } from '../../models/auths';
-import { OrderingProduct } from '../../models/orders';
+import { MyData } from '../../models/auth';
+import { OrderingProduct } from '../../models/order';
+import { OrderSaveAsyncPayload } from '../../models/order/store';
 import { RootState } from '../../store';
-import { createMemberFindAction } from '../../store/member/action';
-import { createOrderSaveRequestAction, OrderSaveRequestActionPayload } from '../../store/order/action';
+import { actions as memberActions } from '../../store/member';
+import { actions as orderActions } from '../../store/order';
 
 function OrderFormPage() {
     const location = useLocation<{orderingProductList: OrderingProduct[]}>();
@@ -22,11 +23,11 @@ function OrderFormPage() {
     const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
 
     useEffect(() => {
-        dispatch(createMemberFindAction(loginMember.id));
+        dispatch(memberActions.fetchMember(loginMember.id));
     }, []);
 
-    const saveOrder = useCallback((payload: OrderSaveRequestActionPayload) => {
-        dispatch(createOrderSaveRequestAction(payload));
+    const saveOrder = useCallback((payload: OrderSaveAsyncPayload) => {
+        dispatch(orderActions.saveOrderAsync(payload));
     }, []);
     
     return (

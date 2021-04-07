@@ -2,10 +2,11 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ProductUpdateTemplate from '../../components/product/ProductUpdateTemplate';
+import { ProductUpdateAsyncPayload } from '../../models/product/store';
 import { RootState } from '../../store';
-import { createCategoryListFindAction } from '../../store/category/action';
-import { createDiscountPolicyListFindAction } from '../../store/discountPolicy/action';
-import { createProductFindAction, createProductUpdateRequestAction, ProductUpdateRequestActionPayload } from '../../store/product/action';
+import { actions as categoryActions } from '../../store/category';
+import { actions as discountPolicyActions } from '../../store/discountPolicy';
+import { actions as productActions } from '../../store/product';
 
 function ProductUpdatePage() {
     const { id } = useParams<{id: string}>();
@@ -16,13 +17,13 @@ function ProductUpdatePage() {
     const categoryListAsync = useSelector((state: RootState) => state.categories.categoryListAsync);
 
     useEffect(() => {
-        dispatch(createProductFindAction(Number.parseInt(id)));
-        dispatch(createDiscountPolicyListFindAction());
-        dispatch(createCategoryListFindAction());
+        dispatch(productActions.fetchProduct(Number.parseInt(id)));
+        dispatch(discountPolicyActions.fetchDiscountPolicyList());
+        dispatch(categoryActions.fetchCategoryList());
     }, []);
 
-    const updateProduct = useCallback((payload: ProductUpdateRequestActionPayload) => {
-        dispatch(createProductUpdateRequestAction(payload));
+    const updateProduct = useCallback((payload: ProductUpdateAsyncPayload) => {
+        dispatch(productActions.updateProductAsync(payload));
     }, []);
 
     return (

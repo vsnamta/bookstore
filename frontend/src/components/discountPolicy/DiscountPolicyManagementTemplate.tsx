@@ -7,16 +7,16 @@ import DiscountPolicyUpdateModal from './DiscountPolicyUpdateModal';
 import ErrorDetail from '../general/ErrorDetail';
 import Title from '../general/Title';
 import useModal from '../../hooks/useModal';
-import { DiscountPolicyResult } from '../../models/discountPolicies';
-import { DiscountPolicySaveRequestActionPayload, DiscountPolicyUpdateRequestActionPayload } from '../../store/discountPolicy/action';
-import { DiscountPolicyListAsync } from '../../store/discountPolicy/reducer';
+import { DiscountPolicyResult } from '../../models/discountPolicy';
+import { DiscountPolicySaveAsyncPayload, DiscountPolicyUpdateAsyncPayload } from '../../models/discountPolicy/store';
+import { DiscountPolicyListAsync } from '../../models/discountPolicy/store';
 
 interface DiscountPolicyManagementTemplateProps {
     discountPolicyListAsync: DiscountPolicyListAsync;
     discountPolicy?: DiscountPolicyResult;
     selectDiscountPolicy: (id: number) => void;
-    updateDiscountPolicy: (payload: DiscountPolicyUpdateRequestActionPayload) => void;
-    saveDiscountPolicy: (payload: DiscountPolicySaveRequestActionPayload) => void;
+    updateDiscountPolicy: (payload: DiscountPolicyUpdateAsyncPayload) => void;
+    saveDiscountPolicy: (payload: DiscountPolicySaveAsyncPayload) => void;
 }
 
 function DiscountPolicyManagementTemplate({ 
@@ -30,7 +30,7 @@ function DiscountPolicyManagementTemplate({
         openUpdateModal();
     }, []);
 
-    const onSaveDiscountPolicy = useCallback((payload: DiscountPolicySaveRequestActionPayload) => {
+    const onSaveDiscountPolicy = useCallback((payload: DiscountPolicySaveAsyncPayload) => {
         saveDiscountPolicy({
             payload: payload.payload,
             onSuccess: discountPolicy => {

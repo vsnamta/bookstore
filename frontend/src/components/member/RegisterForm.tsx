@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
-import { MemberSavePayload } from '../../models/members';
-import { MemberSaveRequestActionPayload } from '../../store/member/action';
+import { MemberSavePayload } from '../../models/member';
+import { MemberSaveAsyncPayload } from '../../models/member/store';
 
 interface RegisterFormProps {
-    onSaveMember: (payload: MemberSaveRequestActionPayload) => void
+    onSaveMember: (payload: MemberSaveAsyncPayload) => void
 }
 
 function RegisterForm({ onSaveMember }: RegisterFormProps) {

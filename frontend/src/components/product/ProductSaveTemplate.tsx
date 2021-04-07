@@ -2,14 +2,14 @@ import React from 'react';
 import AdminLayout from '../common/AdminLayout';
 import ErrorDetail from '../general/ErrorDetail';
 import ProductSaveForm from './ProductSaveForm';
-import { CategoryListAsync } from '../../store/category/reducer';
-import { DiscountPolicyListAsync } from '../../store/discountPolicy/reducer';
-import { ProductSaveRequestActionPayload } from '../../store/product/action';
+import { ProductSaveAsyncPayload } from '../../models/product/store';
+import { CategoryListAsync } from '../../models/category/store';
+import { DiscountPolicyListAsync } from '../../models/discountPolicy/store';
 
 interface ProductSaveTemplateProps {
     discountPolicyListAsync: DiscountPolicyListAsync;
     categoryListAsync: CategoryListAsync;
-    saveProduct: (payload: ProductSaveRequestActionPayload) => void;
+    saveProduct: (payload: ProductSaveAsyncPayload) => void;
 }
 
 function ProductSaveTemplate({ discountPolicyListAsync, categoryListAsync, saveProduct }: ProductSaveTemplateProps) {

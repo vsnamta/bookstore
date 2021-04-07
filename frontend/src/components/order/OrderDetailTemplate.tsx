@@ -1,8 +1,8 @@
 import React from 'react';
+import { OrderAsync } from '../../models/order/store';
 import Layout from '../common/Layout';
 import ErrorDetail from '../general/ErrorDetail';
 import OrderDetail from './OrderDetail';
-import { OrderAsync } from '../../store/order/reducer';
 
 interface OrderDetailTemplateProps {
     orderAsync: OrderAsync;

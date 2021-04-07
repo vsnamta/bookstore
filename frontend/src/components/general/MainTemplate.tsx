@@ -4,7 +4,7 @@ import Banner from './Banner';
 import ErrorDetail from './ErrorDetail';
 import Title from './Title';
 import BestProductList from '../product/BestProductList';
-import { ProductPageAsync } from '../../store/product/reducer';
+import { ProductPageAsync } from '../../models/product/store';
 
 interface MainTemplateProps {
     productPageAsync: ProductPageAsync;

@@ -1,10 +1,10 @@
 import React from 'react';
 import RegisterForm from './RegisterForm';
 import Layout from '../common/Layout';
-import { MemberSaveRequestActionPayload } from '../../store/member/action';
+import { MemberSaveAsyncPayload } from '../../models/member/store';
 
 interface RegisterTemplateProps {
-    saveMember: (payload: MemberSaveRequestActionPayload) => void;
+    saveMember: (payload: MemberSaveAsyncPayload) => void;
 }
 
 function RegisterTemplate({ saveMember }: RegisterTemplateProps) {

@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import MyReviewTemplate from '../../components/reivew/MyReviewTemplate';
-import { MyData } from '../../models/auths';
+import { MyData } from '../../models/auth';
 import { FindPayload } from '../../models/common';
+import { ReviewRemoveAsyncPayload, ReviewUpdateAsyncPayload } from '../../models/review/store';
 import { RootState } from '../../store';
-import { createReviewFindAction, createReviewPageFindAction, createReviewRemoveRequestAction, createReviewUpdateRequestAction, ReviewRemoveRequestActionPayload, ReviewUpdateRequestActionPayload } from '../../store/review/action';
+import { actions } from '../../store/review';
 
 function MyReviewPage() {
     const dispatch = useDispatch();
@@ -12,7 +13,7 @@ function MyReviewPage() {
     const { reviewPageAsync, review } = useSelector((state: RootState) => state.reviews);
 
     useEffect(() => {
-        dispatch(createReviewPageFindAction({
+        dispatch(actions.fetchReviewPage({
             searchCriteria: { 
                 column: "memberId", 
                 keyword: loginMember.id + "" 
@@ -22,19 +23,19 @@ function MyReviewPage() {
     }, []);
 
     const selectReview = useCallback((id: number) => {
-        dispatch(createReviewFindAction(id));
+        dispatch(actions.selectReview(id));
     }, []);
 
-    const updateReview = useCallback((payload: ReviewUpdateRequestActionPayload) => {
-        dispatch(createReviewUpdateRequestAction(payload));
+    const updateReview = useCallback((payload: ReviewUpdateAsyncPayload) => {
+        dispatch(actions.updateReviewAsync(payload));
     }, []);
 
-    const removeReview = useCallback((payload: ReviewRemoveRequestActionPayload) => {
-        dispatch(createReviewRemoveRequestAction(payload));
+    const removeReview = useCallback((payload: ReviewRemoveAsyncPayload) => {
+        dispatch(actions.removeReviewAsync(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(createReviewPageFindAction({
+        dispatch(actions.fetchReviewPage({
             ...reviewPageAsync.payload as FindPayload,
             pageCriteria: {
                 ...(reviewPageAsync.payload as FindPayload).pageCriteria, 

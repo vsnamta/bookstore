@@ -1,24 +1,24 @@
 import { all } from "@redux-saga/core/effects";
 import { combineReducers } from "redux";
-import auths from "./auth/reducer";
+import auths from "./auth";
 import authsSaga from "./auth/saga";
-import carts from "./cart/reducer";
+import carts from "./cart";
 import cartsSaga from "./cart/saga";
-import categories from "./category/reducer";
+import categories from "./category";
 import categoriesSaga from "./category/saga";
-import discountPolcies from "./discountPolicy/reducer";
+import discountPolcies from "./discountPolicy";
 import discountPoliciesSaga from "./discountPolicy/saga";
-import members from "./member/reducer";
+import members from "./member";
 import membersSaga from "./member/saga";
-import orders from "./order/reducer";
+import orders from "./order";
 import ordersSaga from "./order/saga";
-import pointHistories from "./pointHistory/reducer";
+import pointHistories from "./pointHistory";
 import pointHistoriesSaga from "./pointHistory/saga";
-import products from "./product/reducer";
+import products from "./product";
 import productsSaga from "./product/saga";
-import reviews from "./review/reducer";
+import reviews from "./review";
 import reviewsSaga from "./review/saga";
-import stocks from "./stock/reducer";
+import stocks from "./stock";
 import stocksSaga from "./stock/saga";
 
 const rootReducer = combineReducers({

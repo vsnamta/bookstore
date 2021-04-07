@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
-import { MemberDetailResult } from '../../models/members';
-import { OrderingProduct, OrderSavePayload } from '../../models/orders';
-import { OrderSaveRequestActionPayload } from '../../store/order/action';
+import { MemberDetailResult } from '../../models/member';
+import { OrderingProduct, OrderSavePayload } from '../../models/order';
+import { OrderSaveAsyncPayload } from '../../models/order/store';
 
 const calcTotalPrice = (orderingProductList: OrderingProduct[]) : number => {
     return orderingProductList
@@ -14,7 +14,7 @@ const calcTotalPrice = (orderingProductList: OrderingProduct[]) : number => {
 interface OrderFormProps {
     member?: MemberDetailResult;
     orderingProductList: OrderingProduct[];
-    onSaveOrder: (payload: OrderSaveRequestActionPayload) => void;
+    onSaveOrder: (payload: OrderSaveAsyncPayload) => void;
 }
 
 function OrderForm({ member, orderingProductList, onSaveOrder }: OrderFormProps) {

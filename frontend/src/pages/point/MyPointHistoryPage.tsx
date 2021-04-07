@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LoginMember } from '../../models/members';
-import { PointHistoryFindPayload } from '../../models/pointHistories';
-import { RootState } from '../../store';
-import { createPointHistoryPageFindAction } from '../../store/pointHistory/action';
 import MyPointHistoryTemplate from '../../components/pointHistory/MyPointHistoryTemplate';
-import { MyData } from '../../models/auths';
+import { MyData } from '../../models/auth';
+import { PointHistoryFindPayload } from '../../models/pointHistory';
+import { RootState } from '../../store';
+import { actions } from '../../store/pointHistory';
 
 function MyPointHistoryPage() {
     const dispatch = useDispatch();
@@ -13,14 +12,14 @@ function MyPointHistoryPage() {
     const pointHistoryPageAsync = useSelector((state: RootState) => state.pointHistories.pointHistoryPageAsync);
 
     useEffect(() => {
-        dispatch(createPointHistoryPageFindAction({
+        dispatch(actions.fetchPointHistoryPage({
             memberId: loginMember.id,
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(createPointHistoryPageFindAction({
+        dispatch(actions.fetchPointHistoryPage({
             ...pointHistoryPageAsync.payload as PointHistoryFindPayload,
             pageCriteria: {
                 ...(pointHistoryPageAsync.payload as PointHistoryFindPayload).pageCriteria, 

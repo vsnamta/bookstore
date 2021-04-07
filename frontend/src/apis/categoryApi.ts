@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { CategoryResult, CategorySaveOrUpdatePayload } from '../models/categories';
+import { CategoryResult, CategorySaveOrUpdatePayload } from '../models/category';
 import { ErrorResult } from '../models/common';
 import apiClient from './apiClient';
 import apiErrorParser from '../utills/apiErrorParser';

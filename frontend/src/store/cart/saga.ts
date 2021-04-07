@@ -1,12 +1,11 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { actions, types } from '.';
 import { RootState } from '..';
 import cartApi from '../../apis/cartApi';
-import { CartResult } from '../../models/carts';
-import { createCartListFindAction, createCartRemoveAction, createCartRemoveRequestAction, createCartSaveAction, createCartSaveRequestAction, createCartListAsyncSetAction, createCartUpdateAction, createCartUpdateRequestAction } from './action';
-import { FIND_CART_LIST, REMOVE_CART, REMOVE_CART_REQUEST, SAVE_CART, SAVE_CART_REQUEST, UPDATE_CART, UPDATE_CART_REQUEST } from './actionType';
-import { CartsState } from './reducer';
+import { CartResult } from '../../models/cart';
+import { CartsState } from '../../models/cart/store';
 
-function* findCartListSaga({ payload: cartFindPayload }: ReturnType<typeof createCartListFindAction>) {
+function* findCartListSaga({ payload: cartFindPayload }: ReturnType<typeof actions.fetchCartList>) {
     const cartsState: CartsState = yield select((state: RootState) => state.carts);
     
     if(cartsState.cartListAsync.payload?.memberId === cartFindPayload.memberId
@@ -17,56 +16,56 @@ function* findCartListSaga({ payload: cartFindPayload }: ReturnType<typeof creat
     try {
         const cartList: CartResult[] = yield call(cartApi.findAll, cartFindPayload);
 
-        yield put(createCartListAsyncSetAction({
+        yield put(actions.setCartListAsync({
             result: cartList.map(cart => ({ ...cart, checked: true })),
             error: undefined
         }));
     } catch (error) {
-        yield put(createCartListAsyncSetAction({
+        yield put(actions.setCartListAsync({
             result: undefined,
             error: error
         }));
     }
 };
 
-function* updateCartRequestSaga({ payload: cartUpdateRequestActionPayload }: ReturnType<typeof createCartUpdateRequestAction>) {
+function* updateCartAsyncSaga({ payload: cartUpdateAsyncPayload }: ReturnType<typeof actions.updateCartAsync>) {
     try {
-        const cart: CartResult = yield call(cartApi.update, cartUpdateRequestActionPayload.id, cartUpdateRequestActionPayload.payload);
+        const cart: CartResult = yield call(cartApi.update, cartUpdateAsyncPayload.id, cartUpdateAsyncPayload.payload);
         cart.checked = true;
 
-        yield put(createCartUpdateAction(cart));
-        cartUpdateRequestActionPayload.onSuccess && cartUpdateRequestActionPayload.onSuccess(cart);
+        yield put(actions.updateCart(cart));
+        cartUpdateAsyncPayload.onSuccess && cartUpdateAsyncPayload.onSuccess(cart);
     } catch (error) {
-        cartUpdateRequestActionPayload.onFailure && cartUpdateRequestActionPayload.onFailure(error);
+        cartUpdateAsyncPayload.onFailure && cartUpdateAsyncPayload.onFailure(error);
     }
 };
 
-function* saveCartRequestSaga({ payload: cartSaveRequestActionPayload }: ReturnType<typeof createCartSaveRequestAction>) {
+function* saveCartAsyncSaga({ payload: cartSaveAsyncPayload }: ReturnType<typeof actions.saveCartAsync>) {
     try {
-        const cart: CartResult = yield call(cartApi.save, cartSaveRequestActionPayload.payload);
+        const cart: CartResult = yield call(cartApi.save, cartSaveAsyncPayload.payload);
         cart.checked = true;
 
-        yield put(createCartSaveAction(cart));
-        cartSaveRequestActionPayload.onSuccess && cartSaveRequestActionPayload.onSuccess(cart);
+        yield put(actions.saveCart(cart));
+        cartSaveAsyncPayload.onSuccess && cartSaveAsyncPayload.onSuccess(cart);
     } catch (error) {
-        cartSaveRequestActionPayload.onFailure && cartSaveRequestActionPayload.onFailure(error);
+        cartSaveAsyncPayload.onFailure && cartSaveAsyncPayload.onFailure(error);
     }
 };
 
-function* removeCartRequestSaga({ payload: cartRemoveRequestActionPayload }: ReturnType<typeof createCartRemoveRequestAction>) {
+function* removeCartAsyncSaga({ payload: cartRemoveAsyncPayload }: ReturnType<typeof actions.removeCartAsync>) {
     try {
-        yield call(cartApi.remove, cartRemoveRequestActionPayload.ids);
+        yield call(cartApi.remove, cartRemoveAsyncPayload.ids);
 
-        yield put(createCartRemoveAction(cartRemoveRequestActionPayload.ids));
-        cartRemoveRequestActionPayload.onSuccess && cartRemoveRequestActionPayload.onSuccess();
+        yield put(actions.removeCart(cartRemoveAsyncPayload.ids));
+        cartRemoveAsyncPayload.onSuccess && cartRemoveAsyncPayload.onSuccess();
     } catch (error) {
-        cartRemoveRequestActionPayload.onFailure && cartRemoveRequestActionPayload.onFailure(error);
+        cartRemoveAsyncPayload.onFailure && cartRemoveAsyncPayload.onFailure(error);
     }
 };
 
 export default function* cartsSaga() {
-    yield takeEvery(FIND_CART_LIST, findCartListSaga);
-    yield takeEvery(UPDATE_CART_REQUEST, updateCartRequestSaga);
-    yield takeEvery(SAVE_CART_REQUEST, saveCartRequestSaga);
-    yield takeEvery(REMOVE_CART_REQUEST, removeCartRequestSaga);
+    yield takeEvery(types.FETCH_CART_LIST, findCartListSaga);
+    yield takeEvery(types.UPDATE_CART_ASYNC, updateCartAsyncSaga);
+    yield takeEvery(types.SAVE_CART_ASYNC, saveCartAsyncSaga);
+    yield takeEvery(types.REMOVE_CART_ASYNC, removeCartAsyncSaga);
 }

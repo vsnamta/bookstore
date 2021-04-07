@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { ErrorResult } from '../models/common';
-import { DiscountPolicyResult, DiscountPolicySaveOrUpdatePayload } from '../models/discountPolicies';
+import { DiscountPolicyResult, DiscountPolicySaveOrUpdatePayload } from '../models/discountPolicy';
 import apiClient from './apiClient';
 import apiErrorParser from '../utills/apiErrorParser';
 

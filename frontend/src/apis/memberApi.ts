@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, FindPayload, Page } from '../models/common';
-import { LoginMember, MemberDetailResult, MemberResult, MemberSavePayload, MemberUpdatePayload } from '../models/members';
+import { LoginMember, MemberDetailResult, MemberResult, MemberSavePayload, MemberUpdatePayload } from '../models/member';
 import apiClient from './apiClient';
 import apiErrorParser from '../utills/apiErrorParser';
 

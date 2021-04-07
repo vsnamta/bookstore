@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router';
-import { ProductDetailResult } from '../../models/products';
+import { ProductDetailResult } from '../../models/product';
 
 interface AdminProductDetailProps {
     product?: ProductDetailResult;

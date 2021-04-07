@@ -1,15 +1,15 @@
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
-import { ProductDetailResult } from '../../models/products';
-import { ReviewSavePayload } from '../../models/reviews';
-import { ReviewSaveRequestActionPayload } from '../../store/review/action';
+import { ProductDetailResult } from '../../models/product';
+import { ReviewSavePayload } from '../../models/review';
+import { ReviewSaveAsyncPayload } from '../../models/review/store';
 
 interface ReviewSaveModalProps {
     product?: ProductDetailResult;
     isOpen: boolean;
     onRequestClose: (event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>) => void;
-    onSaveReview: (payload: ReviewSaveRequestActionPayload) => void
+    onSaveReview: (payload: ReviewSaveAsyncPayload) => void
 }
 
 function ReviewSaveModal({ product, isOpen, onRequestClose, onSaveReview }: ReviewSaveModalProps) {

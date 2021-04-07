@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
-import { LoginPayload } from '../../models/auths';
-import { LoginActionPayload } from '../../store/auth/action';
+import { LoginPayload } from '../../models/auth';
+import { LoginAsyncPayload } from '../../models/auth/store';
 
 interface LoginFormProps {
-    onLogin: (payload: LoginActionPayload) => void
+    onLogin: (payload: LoginAsyncPayload) => void
 } 
 
 function LoginForm({ onLogin }: LoginFormProps) {

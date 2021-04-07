@@ -1,10 +1,10 @@
 import React from 'react';
-import { LoginActionPayload } from '../../store/auth/action';
+import { LoginAsyncPayload } from '../../models/auth/store';
 import Layout from '../common/Layout';
 import LoginForm from './LoginForm';
 
 interface RegisterTemplateProps {
-    login: (payload: LoginActionPayload) => void;
+    login: (payload: LoginAsyncPayload) => void;
 }
 
 function LoginTemplate({ login }: RegisterTemplateProps) {

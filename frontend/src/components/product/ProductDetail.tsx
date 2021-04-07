@@ -1,17 +1,15 @@
+import { faChevronDown, faChevronUp, faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useState } from 'react';
-import { CartSavePayload } from '../../models/carts';
-import { OrderingProduct } from '../../models/orders';
-import { ProductDetailResult } from '../../models/products';
-import { faChevronUp, faChevronDown, faStar } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Link, useHistory } from 'react-router-dom';
-import { LoginMember } from '../../models/members';
-import { CartSaveRequestActionPayload } from '../../store/cart/action';
+import { LoginMember } from '../../models/member';
+import { ProductDetailResult } from '../../models/product';
+import { CartSaveAsyncPayload } from '../../models/cart/store';
 
 interface ProductDetailProps {
     product?: ProductDetailResult;
 	loginMember?: LoginMember;
-    onSaveCart: (payload: CartSaveRequestActionPayload) => void;
+    onSaveCart: (payload: CartSaveAsyncPayload) => void;
 }
 
 function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps) {

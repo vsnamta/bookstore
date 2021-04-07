@@ -1,10 +1,10 @@
 import React from 'react';
+import { PointHistoryPageAsync } from '../../models/pointHistory/store';
 import Layout from '../common/Layout';
 import MyPageLayout from '../common/MyPageLayout';
 import ErrorDetail from '../general/ErrorDetail';
 import Pagination from '../general/Pagination';
 import PointHistoryList from './PointHistoryList';
-import { PointHistoryPageAsync } from '../../store/pointHistory/reducer';
 
 interface MyPointHistoryTemplateProps {
     pointHistoryPageAsync: PointHistoryPageAsync;
