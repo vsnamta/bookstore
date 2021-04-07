@@ -1,9 +1,9 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { actions, types } from '.';
 import { RootState } from '..';
 import stockApi from '../../apis/stockApi';
 import { Page } from '../../models/common';
 import { StockFindPayload, StockResult } from '../../models/stock';
-import { types, actions } from '.';
 import { StocksState } from '../../models/stock/store';
 
 function* findStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof actions.fetchStockPage>) {

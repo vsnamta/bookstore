@@ -3,30 +3,30 @@ import { useDispatch, useSelector } from 'react-redux';
 import CategoryManagementTemplate from '../../components/category/CategoryManagementTemplate';
 import { CategoryRemoveAsyncPayload, CategorySaveAsyncPayload, CategoryUpdateAsyncPayload } from '../../models/category/store';
 import { RootState } from '../../store';
-import { actions } from '../../store/category';
+import { rootActions } from '../../store';
 
 function CategoryManagementPage() {
     const dispatch = useDispatch();
     const { categoryListAsync, category } = useSelector((state: RootState) => state.categories);
 
     useEffect(() => {
-        dispatch(actions.fetchCategoryList());
+        dispatch(rootActions.fetchCategoryList());
     }, []);
 
     const selectCategory = useCallback((id: number) => {
-        dispatch(actions.selectCategory(id));
+        dispatch(rootActions.selectCategory(id));
     }, []);
 
     const saveCategory = useCallback((payload: CategorySaveAsyncPayload) => {
-        dispatch(actions.saveCategoryAsync(payload));
+        dispatch(rootActions.saveCategoryAsync(payload));
     }, []);
 
     const updateCategory = useCallback((payload: CategoryUpdateAsyncPayload) => {
-        dispatch(actions.updateCategoryAsync(payload));
+        dispatch(rootActions.updateCategoryAsync(payload));
     }, []);
 
     const removeCategory = useCallback((payload: CategoryRemoveAsyncPayload) => {
-        dispatch(actions.removeCategoryAsync(payload));
+        dispatch(rootActions.removeCategoryAsync(payload));
     }, []);
     
     return (

@@ -3,8 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { ProductFindPayload } from '../../models/product';
-import { RootState } from '../../store';
-import { actions } from '../../store/product';
+import { RootState, rootActions } from '../../store';
 import ProductListTemplate from '../../components/product/ProductListTemplate';
 
 function ProductListPage() {  
@@ -18,7 +17,7 @@ function ProductListPage() {
     const productPageAsync = useSelector((state: RootState) => state.products.productPageAsync);
 
     useEffect(() => {
-        dispatch(actions.fetchProductPage({
+        dispatch(rootActions.fetchProductPage({
             categoryId: categoryId? Number.parseInt(categoryId as string): undefined,
             searchCriteria: searchCriteria
                 ? {
@@ -34,7 +33,7 @@ function ProductListPage() {
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(actions.fetchProductPage({
+        dispatch(rootActions.fetchProductPage({
             ...productPageAsync.payload as ProductFindPayload,
             pageCriteria: {
                 ...(productPageAsync.payload as ProductFindPayload).pageCriteria, 
@@ -44,7 +43,7 @@ function ProductListPage() {
     }, [productPageAsync.payload]);
 
     const onSortChange = useCallback((sortCriteria: { sortColumn: string, sortDirection: string }) => {
-        dispatch(actions.fetchProductPage({
+        dispatch(rootActions.fetchProductPage({
             ...productPageAsync.payload as ProductFindPayload,
             pageCriteria: {
                 ...(productPageAsync.payload as ProductFindPayload).pageCriteria, 

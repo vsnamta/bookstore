@@ -4,7 +4,7 @@ import CartManagementTemplate from '../../components/cart/CartManagementTemplate
 import { MyData } from '../../models/auth';
 import { CartCheckPayload, CartRemoveAsyncPayload, CartUpdateAsyncPayload } from '../../models/cart/store';
 import { RootState } from '../../store';
-import { actions } from '../../store/cart';
+import { rootActions } from '../../store';
 
 function CartManagementPage() {
     const dispatch = useDispatch();
@@ -12,23 +12,23 @@ function CartManagementPage() {
     const cartListAsync = useSelector((state: RootState) => state.carts.cartListAsync);
 
     useEffect(() => {
-        dispatch(actions.fetchCartList({ memberId: loginMember.id }));
+        dispatch(rootActions.fetchCartList({ memberId: loginMember.id }));
     }, []);
 
     const updateCart = useCallback((payload: CartUpdateAsyncPayload) => {
-        dispatch(actions.updateCartAsync(payload));
+        dispatch(rootActions.updateCartAsync(payload));
     }, []);
 
     const removeCart = useCallback((payload: CartRemoveAsyncPayload) => {
-        dispatch(actions.removeCartAsync(payload));
+        dispatch(rootActions.removeCartAsync(payload));
     }, []);
 
     const checkAllCart = useCallback((checked: boolean) => {
-        dispatch(actions.checkAllCart(checked));
+        dispatch(rootActions.checkAllCart(checked));
     }, []);
 
     const checkCart = useCallback((payload: CartCheckPayload) => {
-        dispatch(actions.checkCart(payload));
+        dispatch(rootActions.checkCart(payload));
     }, []);
     
     return (

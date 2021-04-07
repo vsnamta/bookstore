@@ -4,8 +4,7 @@ import MyReviewTemplate from '../../components/reivew/MyReviewTemplate';
 import { MyData } from '../../models/auth';
 import { FindPayload } from '../../models/common';
 import { ReviewRemoveAsyncPayload, ReviewUpdateAsyncPayload } from '../../models/review/store';
-import { RootState } from '../../store';
-import { actions } from '../../store/review';
+import { RootState, rootActions } from '../../store';
 
 function MyReviewPage() {
     const dispatch = useDispatch();
@@ -13,7 +12,7 @@ function MyReviewPage() {
     const { reviewPageAsync, review } = useSelector((state: RootState) => state.reviews);
 
     useEffect(() => {
-        dispatch(actions.fetchReviewPage({
+        dispatch(rootActions.fetchReviewPage({
             searchCriteria: { 
                 column: "memberId", 
                 keyword: loginMember.id + "" 
@@ -23,19 +22,19 @@ function MyReviewPage() {
     }, []);
 
     const selectReview = useCallback((id: number) => {
-        dispatch(actions.selectReview(id));
+        dispatch(rootActions.selectReview(id));
     }, []);
 
     const updateReview = useCallback((payload: ReviewUpdateAsyncPayload) => {
-        dispatch(actions.updateReviewAsync(payload));
+        dispatch(rootActions.updateReviewAsync(payload));
     }, []);
 
     const removeReview = useCallback((payload: ReviewRemoveAsyncPayload) => {
-        dispatch(actions.removeReviewAsync(payload));
+        dispatch(rootActions.removeReviewAsync(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(actions.fetchReviewPage({
+        dispatch(rootActions.fetchReviewPage({
             ...reviewPageAsync.payload as FindPayload,
             pageCriteria: {
                 ...(reviewPageAsync.payload as FindPayload).pageCriteria, 

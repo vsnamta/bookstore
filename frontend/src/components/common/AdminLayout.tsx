@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { LogoutAsyncPayload } from '../../models/auth/store';
-import { actions } from '../../store/auth';
+import { rootActions } from '../../store';
 import AdminHeader from '../general/AdminHearder';
 
 interface AdminLayoutProps {
@@ -12,7 +12,7 @@ function AdminLayout({ children }: AdminLayoutProps) {
     const dispatch = useDispatch();
 
     const logout = useCallback((payload: LogoutAsyncPayload) => {
-        dispatch(actions.logoutAsync(payload));
+        dispatch(rootActions.logoutAsync(payload));
     }, []);
 
     return (

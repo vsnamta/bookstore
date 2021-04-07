@@ -1,9 +1,9 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { actions, types } from '.';
 import { RootState } from '..';
 import discountPolicyApi from '../../apis/discountPolicyApi';
 import { DiscountPolicyResult } from '../../models/discountPolicy';
 import { DiscountPoliciesState } from '../../models/discountPolicy/store';
-import { types, actions } from '.';
 
 function* fetchDiscountPolicyListSaga(action: ReturnType<typeof actions.fetchDiscountPolicyList>) {
     const discountPoliciesState: DiscountPoliciesState = yield select((state: RootState) => state.discountPolcies);

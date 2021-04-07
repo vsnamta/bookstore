@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FindPayload, SearchCriteria } from '../../models/common';
-import { RootState } from '../../store';
-import { actions } from '../../store/member';
+import { RootState, rootActions } from '../../store';
 import MemberManagementTemplate from '../../components/member/MemberManagementTemplate';
 
 function MemberManagementPage() {
@@ -10,20 +9,20 @@ function MemberManagementPage() {
     const memberPageAsync = useSelector((state: RootState) => state.members.memberPageAsync);
 
     useEffect(() => {
-        dispatch(actions.fetchMemberPage({
+        dispatch(rootActions.fetchMemberPage({
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const onUpdateSearchCriteria = useCallback((searchCriteria: SearchCriteria) => {
-        dispatch(actions.fetchMemberPage({
+        dispatch(rootActions.fetchMemberPage({
             searchCriteria: searchCriteria,
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(actions.fetchMemberPage({
+        dispatch(rootActions.fetchMemberPage({
             ...memberPageAsync.payload as FindPayload,
             pageCriteria: {
                 ...(memberPageAsync.payload as FindPayload).pageCriteria, 

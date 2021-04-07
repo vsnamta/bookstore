@@ -8,9 +8,7 @@ import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 import App from './App';
-import rootReducer, { rootSaga } from './store';
-import { actions as categoryActions } from './store/category';
-import { actions as authActions } from './store/auth';
+import rootReducer, { rootActions, rootSaga } from './store';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -22,8 +20,8 @@ const store = createStore(
 sagaMiddleware.run(rootSaga);
 
 function initalizeStore() {
-    store.dispatch(authActions.fetchMyData());
-    store.dispatch(categoryActions.fetchCategoryList());
+    store.dispatch(rootActions.fetchMyData());
+    store.dispatch(rootActions.fetchCategoryList());
 }
 
 initalizeStore();    

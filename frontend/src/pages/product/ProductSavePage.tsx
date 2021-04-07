@@ -2,10 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductSaveTemplate from '../../components/product/ProductSaveTemplate';
 import { ProductSaveAsyncPayload } from '../../models/product/store';
-import { RootState } from '../../store';
-import { actions as categoryActions } from '../../store/category';
-import { actions as discountPolicyActions } from '../../store/discountPolicy';
-import { actions as productActions } from '../../store/product';
+import { RootState, rootActions } from '../../store';
 
 function ProductSavePage() {
     const dispatch = useDispatch();
@@ -13,12 +10,12 @@ function ProductSavePage() {
     const categoryListAsync = useSelector((state: RootState) => state.categories.categoryListAsync);
 
     useEffect(() => {
-        dispatch(discountPolicyActions.fetchDiscountPolicyList());
-        dispatch(categoryActions.fetchCategoryList());
+        dispatch(rootActions.fetchDiscountPolicyList());
+        dispatch(rootActions.fetchCategoryList());
     }, []);
 
     const saveProduct = useCallback((payload: ProductSaveAsyncPayload) => {
-        dispatch(productActions.saveProductAsync(payload));
+        dispatch(rootActions.saveProductAsync(payload));
     }, []);
 
     return (

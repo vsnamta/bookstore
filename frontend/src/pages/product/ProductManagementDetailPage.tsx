@@ -5,9 +5,7 @@ import ProductManagementDetailTemplate from '../../components/product/ProductMan
 import { ProductFindPayload } from '../../models/product';
 import { StockFindPayload } from '../../models/stock';
 import { StockSaveAsyncPayload } from '../../models/stock/store';
-import { RootState } from '../../store';
-import { actions as productActions } from '../../store/product';
-import { actions as stockActions } from '../../store/stock';
+import { RootState, rootActions } from '../../store';
 
 function ProductManagementDetailPage() {
     const { id } = useParams<{id: string}>();
@@ -17,19 +15,19 @@ function ProductManagementDetailPage() {
     const stockPageAsync = useSelector((state: RootState) => state.stocks.stockPageAsync);
 
     useEffect(() => {
-        dispatch(productActions.fetchProduct(Number.parseInt(id)));
-        dispatch(stockActions.fetchStockPage({
+        dispatch(rootActions.fetchProduct(Number.parseInt(id)));
+        dispatch(rootActions.fetchStockPage({
             productId: Number.parseInt(id),
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const saveStock = useCallback((payload: StockSaveAsyncPayload) => {
-        dispatch(stockActions.saveStockAsync(payload));
+        dispatch(rootActions.saveStockAsync(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(stockActions.fetchStockPage({
+        dispatch(rootActions.fetchStockPage({
             ...stockPageAsync.payload as StockFindPayload,
             pageCriteria: {
                 ...(stockPageAsync.payload as StockFindPayload).pageCriteria, 

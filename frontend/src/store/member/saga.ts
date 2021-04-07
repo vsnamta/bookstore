@@ -1,11 +1,10 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { actions, types } from '.';
 import { RootState } from '..';
 import memberApi from '../../apis/memberApi';
-import { FindPayload, Page } from '../../models/common';
+import { Page } from '../../models/common';
 import { MemberDetailResult, MemberResult } from '../../models/member';
-import { types, actions } from '.';
 import { MembersState } from '../../models/member/store';
-import { MyData } from '../../models/auth';
 
 function* fetchMemberPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchMemberPage>) {
     const membersState: MembersState = yield select((state: RootState) => state.members);

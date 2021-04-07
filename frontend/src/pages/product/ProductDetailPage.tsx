@@ -5,10 +5,7 @@ import ProductDetailTemplate from '../../components/product/ProductDetailTemplat
 import { CartSaveAsyncPayload } from '../../models/cart/store';
 import { FindPayload } from '../../models/common';
 import { ReviewSaveAsyncPayload } from '../../models/review/store';
-import { RootState } from '../../store';
-import { actions as cartActions } from '../../store/cart';
-import { actions as productActions } from '../../store/product';
-import { actions as reviewActions } from '../../store/review';
+import { RootState, rootActions } from '../../store';
 
 function ProductDetailPage() {
     const { id } = useParams<{id: string}>();
@@ -19,23 +16,23 @@ function ProductDetailPage() {
     const reviewPageAsync = useSelector((state: RootState) => state.reviews.reviewPageAsync);
 
     useEffect(() => {
-        dispatch(productActions.fetchProduct(Number.parseInt(id)));
-        dispatch(reviewActions.fetchReviewPage({
+        dispatch(rootActions.fetchProduct(Number.parseInt(id)));
+        dispatch(rootActions.fetchReviewPage({
             searchCriteria: { column: "productId", keyword: id },
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);
 
     const saveCart = useCallback((payload: CartSaveAsyncPayload) => {
-        dispatch(cartActions.saveCartAsync(payload));
+        dispatch(rootActions.saveCartAsync(payload));
     }, [loginMember]);
 
     const saveReview = useCallback((payload: ReviewSaveAsyncPayload) => {
-        dispatch(reviewActions.saveReviewAsync(payload));
+        dispatch(rootActions.saveReviewAsync(payload));
     }, []);
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
-        dispatch(reviewActions.fetchReviewPage({
+        dispatch(rootActions.fetchReviewPage({
             ...reviewPageAsync.payload as FindPayload,
             pageCriteria: {
                 ...(reviewPageAsync.payload as FindPayload).pageCriteria, 
