@@ -18,14 +18,14 @@ export interface CategoryUpdateAsyncPayload {
     onFailure?: (error: ApiError) => void
 }
 
-export interface CategorySaveAsyncPayload { 
-    payload: CategorySaveOrUpdatePayload,
-    onSuccess?: (category: CategoryResult) => void, 
-    onFailure?: (error: ApiError) => void
-}
-
 export interface CategoryRemoveAsyncPayload { 
     id: number,
     onSuccess?: () => void, 
+    onFailure?: (error: ApiError) => void
+}
+
+export interface CategorySaveAsyncPayload { 
+    payload: CategorySaveOrUpdatePayload,
+    onSuccess?: (category: CategoryResult) => void, 
     onFailure?: (error: ApiError) => void
 }

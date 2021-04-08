@@ -4,25 +4,25 @@ import { ProductDetailResult, ProductFindPayload, ProductResult } from '../../mo
 import { ProductAsync, ProductPageAsync, ProductSaveAsyncPayload, ProductsState, ProductUpdateAsyncPayload } from '../../models/product/store';
 
 export const types = {
-    SET_PRODUCTS_STATE: 'product/SET_PRODUCTS_STATE' as const,
     FETCH_PRODUCT_PAGE: 'product/FETCH_PRODUCT_PAGE' as const,
     SET_PRODUCT_PAGE_ASYNC: 'product/SET_PRODUCT_PAGE_ASYNC' as const,
     FETCH_PRODUCT: 'product/FETCH_PRODUCT' as const,
     SET_PRODUCT_ASYNC: 'product/SET_PRODUCT_ASYNC' as const,
     UPDATE_PRODUCT_ASYNC: 'product/UPDATE_PRODUCT_ASYNC' as const,
     UPDATE_PRODUCT: 'product/UPDATE_PRODUCT' as const,
-    SAVE_PRODUCT_ASYNC: 'product/SAVE_PRODUCT_ASYNC' as const
+    SAVE_PRODUCT_ASYNC: 'product/SAVE_PRODUCT_ASYNC' as const,
+    SET_PRODUCTS_STATE: 'product/SET_PRODUCTS_STATE' as const
 };
 
 export const actions = {
-    setProductsState: createAction(types.SET_PRODUCTS_STATE)<ProductsState>(), 
     fetchProductPage: createAction(types.FETCH_PRODUCT_PAGE)<ProductFindPayload>(), 
     setProductPageAsync: createAction(types.SET_PRODUCT_PAGE_ASYNC)<ProductPageAsync>(),
     fetchProduct: createAction(types.FETCH_PRODUCT)<number>(), 
     setProductAsync: createAction(types.SET_PRODUCT_ASYNC)<ProductAsync>(),
     updateProductAsync: createAction(types.UPDATE_PRODUCT_ASYNC)<ProductUpdateAsyncPayload>(), 
     updateProduct: createAction(types.UPDATE_PRODUCT)<ProductDetailResult>(), 
-    saveProductAsync: createAction(types.SAVE_PRODUCT_ASYNC)<ProductSaveAsyncPayload>()
+    saveProductAsync: createAction(types.SAVE_PRODUCT_ASYNC)<ProductSaveAsyncPayload>(),
+    setProductsState: createAction(types.SET_PRODUCTS_STATE)<ProductsState>(), 
 };
 
 const initialState: ProductsState = {
@@ -39,9 +39,6 @@ const initialState: ProductsState = {
 };
 
 const reducer = createReducer<ProductsState, ActionType<typeof actions>>(initialState, {
-    [types.SET_PRODUCTS_STATE]: (state, { payload: productsState }: ReturnType<typeof actions.setProductsState>) => (
-        productsState
-    ),
     [types.SET_PRODUCT_PAGE_ASYNC]: (state, { payload: productPageAsync }: ReturnType<typeof actions.setProductPageAsync>) => ({
         ...state,
         productPageAsync: productPageAsync
@@ -67,7 +64,10 @@ const reducer = createReducer<ProductsState, ActionType<typeof actions>>(initial
             ...state.productAsync,
             result: updatedProduct
         }
-    })
+    }),
+    [types.SET_PRODUCTS_STATE]: (state, { payload: productsState }: ReturnType<typeof actions.setProductsState>) => (
+        productsState
+    )
 });
 
 export default reducer;

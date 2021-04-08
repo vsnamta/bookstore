@@ -1,26 +1,26 @@
 import { ActionType, createAction, createReducer } from 'typesafe-actions';
 import { FindPayload, Page } from '../../models/common';
 import { ReviewResult } from '../../models/review';
-import { ReviewPageAsync, ReviewRemoveAsyncPayload, ReviewSaveAsyncPayload, ReviewsState, ReviewUpdateAsyncPayload } from '../../models/review/store';
+import { ReviewRemoveAsyncPayload, ReviewSaveAsyncPayload, ReviewsState, ReviewUpdateAsyncPayload } from '../../models/review/store';
 
 export const types ={
-    SET_REVIEWS_STATE: 'review/SET_REVIEWS_STATE' as const,
     FETCH_REVIEW_PAGE: 'review/FETCH_REVIEW_PAGE' as const,
+    SET_REVIEWS_STATE: 'review/SET_REVIEWS_STATE' as const,
     SELECT_REVIEW: 'review/SELECT_REVIEW' as const,
     UPDATE_REVIEW_ASYNC: 'review/UPDATE_REVIEW_ASYNC' as const,
     UPDATE_REVIEW: 'review/UPDATE_REVIEW' as const,
-    SAVE_REVIEW_ASYNC: 'review/SAVE_REVIEW_ASYNC' as const,
-    REMOVE_REVIEW_ASYNC: 'review/REMOVE_REVIEW_ASYNC' as const
+    REMOVE_REVIEW_ASYNC: 'review/REMOVE_REVIEW_ASYNC' as const,
+    SAVE_REVIEW_ASYNC: 'review/SAVE_REVIEW_ASYNC' as const
 };
 
 export const actions = {
-    setReviewsState: createAction(types.SET_REVIEWS_STATE)<ReviewsState>(),
     fetchReviewPage: createAction(types.FETCH_REVIEW_PAGE)<FindPayload>(), 
+    setReviewsState: createAction(types.SET_REVIEWS_STATE)<ReviewsState>(),
     selectReview: createAction(types.SELECT_REVIEW)<number>(),
     updateReviewAsync: createAction(types.UPDATE_REVIEW_ASYNC)<ReviewUpdateAsyncPayload>(), 
     updateReview: createAction(types.UPDATE_REVIEW)<ReviewResult>(),
-    saveReviewAsync: createAction(types.SAVE_REVIEW_ASYNC)<ReviewSaveAsyncPayload>(), 
-    removeReviewAsync: createAction(types.REMOVE_REVIEW_ASYNC)<ReviewRemoveAsyncPayload>(), 
+    removeReviewAsync: createAction(types.REMOVE_REVIEW_ASYNC)<ReviewRemoveAsyncPayload>(),
+    saveReviewAsync: createAction(types.SAVE_REVIEW_ASYNC)<ReviewSaveAsyncPayload>() 
 };
 
 const initialState: ReviewsState = {

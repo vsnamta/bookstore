@@ -5,7 +5,7 @@ import cartApi from '../../apis/cartApi';
 import { CartResult } from '../../models/cart';
 import { CartsState } from '../../models/cart/store';
 
-function* findCartListSaga({ payload: cartFindPayload }: ReturnType<typeof actions.fetchCartList>) {
+function* fetchCartListSaga({ payload: cartFindPayload }: ReturnType<typeof actions.fetchCartList>) {
     const cartsState: CartsState = yield select((state: RootState) => state.carts);
     
     if(cartsState.cartListAsync.payload?.memberId === cartFindPayload.memberId
@@ -40,6 +40,17 @@ function* updateCartAsyncSaga({ payload: cartUpdateAsyncPayload }: ReturnType<ty
     }
 };
 
+function* removeCartAsyncSaga({ payload: cartRemoveAsyncPayload }: ReturnType<typeof actions.removeCartAsync>) {
+    try {
+        yield call(cartApi.remove, cartRemoveAsyncPayload.ids);
+
+        yield put(actions.removeCart(cartRemoveAsyncPayload.ids));
+        cartRemoveAsyncPayload.onSuccess && cartRemoveAsyncPayload.onSuccess();
+    } catch (error) {
+        cartRemoveAsyncPayload.onFailure && cartRemoveAsyncPayload.onFailure(error);
+    }
+};
+
 function* saveCartAsyncSaga({ payload: cartSaveAsyncPayload }: ReturnType<typeof actions.saveCartAsync>) {
     try {
         const cart: CartResult = yield call(cartApi.save, cartSaveAsyncPayload.payload);
@@ -52,20 +63,9 @@ function* saveCartAsyncSaga({ payload: cartSaveAsyncPayload }: ReturnType<typeof
     }
 };
 
-function* removeCartAsyncSaga({ payload: cartRemoveAsyncPayload }: ReturnType<typeof actions.removeCartAsync>) {
-    try {
-        yield call(cartApi.remove, cartRemoveAsyncPayload.ids);
-
-        yield put(actions.removeCart(cartRemoveAsyncPayload.ids));
-        cartRemoveAsyncPayload.onSuccess && cartRemoveAsyncPayload.onSuccess();
-    } catch (error) {
-        cartRemoveAsyncPayload.onFailure && cartRemoveAsyncPayload.onFailure(error);
-    }
-};
-
 export default function* cartsSaga() {
-    yield takeEvery(types.FETCH_CART_LIST, findCartListSaga);
+    yield takeEvery(types.FETCH_CART_LIST, fetchCartListSaga);
     yield takeEvery(types.UPDATE_CART_ASYNC, updateCartAsyncSaga);
-    yield takeEvery(types.SAVE_CART_ASYNC, saveCartAsyncSaga);
     yield takeEvery(types.REMOVE_CART_ASYNC, removeCartAsyncSaga);
+    yield takeEvery(types.SAVE_CART_ASYNC, saveCartAsyncSaga);
 }

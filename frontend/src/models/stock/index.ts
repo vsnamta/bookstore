@@ -1,10 +1,11 @@
 import { PageCriteria } from "../common";
 
-export interface StockSavePayload {
-    productId: number;
+export interface StockResult {
+    id: number;
     quantity: number;
     contents: string;
-    status: string;
+    statusName: string;
+    createdDate: string;
 }
 
 export interface StockFindPayload {
@@ -12,10 +13,9 @@ export interface StockFindPayload {
     pageCriteria: PageCriteria;
 }
 
-export interface StockResult {
-    id: number;
+export interface StockSavePayload {
+    productId: number;
     quantity: number;
     contents: string;
-    statusName: string;
-    createdDate: string;
+    status: string;
 }

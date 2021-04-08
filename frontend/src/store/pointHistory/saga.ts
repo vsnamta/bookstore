@@ -6,7 +6,7 @@ import { Page } from '../../models/common';
 import { PointHistoryResult } from '../../models/pointHistory';
 import { PointHistoriesState } from '../../models/pointHistory/store';
 
-function* findPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnType<typeof actions.fetchPointHistoryPage>) {
+function* fetchPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnType<typeof actions.fetchPointHistoryPage>) {
     const pointHistoriesState: PointHistoriesState = yield select((state: RootState) => state.pointHistories);
     
     if(JSON.stringify(pointHistoriesState.pointHistoryPageAsync.payload) === JSON.stringify(pointHistoryFindPayload) 
@@ -32,5 +32,5 @@ function* findPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnT
 };
 
 export default function* pointHistoriesSaga() {
-    yield takeEvery(types.FETCH_POINT_HISTORY_PAGE, findPointHistoryPageSaga);
+    yield takeEvery(types.FETCH_POINT_HISTORY_PAGE, fetchPointHistoryPageSaga);
 }

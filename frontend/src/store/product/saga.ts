@@ -7,7 +7,7 @@ import { Page } from '../../models/common';
 import { ProductDetailResult, ProductFindPayload, ProductResult } from '../../models/product';
 import { ProductsState } from '../../models/product/store';
 
-function* findProductPageSaga({ payload: productFindPayload }: ReturnType<typeof actions.fetchProductPage>) {
+function* fetchProductPageSaga({ payload: productFindPayload }: ReturnType<typeof actions.fetchProductPage>) {
     const productsState: ProductsState = yield select((state: RootState) => state.products);
     
     if(JSON.stringify(productsState.productPageAsync.payload) === JSON.stringify(productFindPayload) 
@@ -109,7 +109,7 @@ function* saveProductAsyncSaga({ payload: productSaveAsyncPayload }: ReturnType<
 };
 
 export default function* productsSaga() {
-    yield takeEvery(types.FETCH_PRODUCT_PAGE, findProductPageSaga);
+    yield takeEvery(types.FETCH_PRODUCT_PAGE, fetchProductPageSaga);
     yield takeEvery(types.FETCH_PRODUCT, findProductSaga);
     yield takeEvery(types.UPDATE_PRODUCT_ASYNC, updateProductAsyncSaga);
     yield takeEvery(types.SAVE_PRODUCT_ASYNC, saveProductAsyncSaga);

@@ -6,7 +6,7 @@ import { FindPayload, Page } from '../../models/common';
 import { ReviewResult } from '../../models/review';
 import { ReviewsState } from '../../models/review/store';
 
-function* findReviewPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchReviewPage>) {
+function* fetchReviewPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchReviewPage>) {
     const reviewsState: ReviewsState = yield select((state: RootState) => state.reviews);
     
     if(JSON.stringify(reviewsState.reviewPageAsync.payload) === JSON.stringify(findPayload) 
@@ -48,6 +48,27 @@ function* updateReviewAsyncSaga({ payload: reviewUpdateAsyncPayload }: ReturnTyp
     }
 };
 
+function* removeReviewAsyncSaga({ payload: reviewRemoveAsyncPayload }: ReturnType<typeof actions.removeReviewAsync>) {
+    try {
+        yield call(reviewApi.remove, reviewRemoveAsyncPayload.id);
+
+        const findPayload: FindPayload = yield select((state: RootState) => state.reviews.reviewPageAsync.payload);
+        const reviewPage: Page<ReviewResult> = yield put(actions.fetchReviewPage(findPayload));
+
+        yield put(actions.setReviewsState({
+            reviewPageAsync: {
+                payload: findPayload,
+                result: reviewPage,
+                error: undefined
+            },
+            review: undefined
+        }));
+        reviewRemoveAsyncPayload.onSuccess && reviewRemoveAsyncPayload.onSuccess();
+    } catch (error) {
+        reviewRemoveAsyncPayload.onFailure && reviewRemoveAsyncPayload.onFailure(error);
+    }
+};
+
 function* saveReviewAsyncSaga({ payload: reviewSaveAsyncPayload }: ReturnType<typeof actions.saveReviewAsync>) {
     try {
         const review: ReviewResult = yield call(reviewApi.save, reviewSaveAsyncPayload.payload);
@@ -77,30 +98,9 @@ function* saveReviewAsyncSaga({ payload: reviewSaveAsyncPayload }: ReturnType<ty
     }
 };
 
-function* removeReviewAsyncSaga({ payload: reviewRemoveAsyncPayload }: ReturnType<typeof actions.removeReviewAsync>) {
-    try {
-        yield call(reviewApi.remove, reviewRemoveAsyncPayload.id);
-
-        const findPayload: FindPayload = yield select((state: RootState) => state.reviews.reviewPageAsync.payload);
-        const reviewPage: Page<ReviewResult> = yield put(actions.fetchReviewPage(findPayload));
-
-        yield put(actions.setReviewsState({
-            reviewPageAsync: {
-                payload: findPayload,
-                result: reviewPage,
-                error: undefined
-            },
-            review: undefined
-        }));
-        reviewRemoveAsyncPayload.onSuccess && reviewRemoveAsyncPayload.onSuccess();
-    } catch (error) {
-        reviewRemoveAsyncPayload.onFailure && reviewRemoveAsyncPayload.onFailure(error);
-    }
-};
-
 export default function* reviewsSaga() {
-    yield takeEvery(types.FETCH_REVIEW_PAGE, findReviewPageSaga);
+    yield takeEvery(types.FETCH_REVIEW_PAGE, fetchReviewPageSaga);
     yield takeEvery(types.UPDATE_REVIEW_ASYNC, updateReviewAsyncSaga);
-    yield takeEvery(types.SAVE_REVIEW_ASYNC, saveReviewAsyncSaga);
     yield takeEvery(types.REMOVE_REVIEW_ASYNC, removeReviewAsyncSaga);
+    yield takeEvery(types.SAVE_REVIEW_ASYNC, saveReviewAsyncSaga);
 }

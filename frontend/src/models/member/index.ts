@@ -1,24 +1,3 @@
-export interface MemberSavePayload {
-    id: string;
-    password: string;
-    passwordConfirm: string;
-    name: string;
-    phoneNumber: string;
-    zipCode: string;
-    address1: string;
-    address2: string;
-}
-
-export interface MemberUpdatePayload {
-    currentPassword: string;
-    password: string;
-    passwordConfirm: string;
-    phoneNumber: string;
-    zipCode: string;
-    address1: string;
-    address2: string;
-}
-
 export interface MemberResult {
     id: number;
     name: string;
@@ -39,8 +18,23 @@ export interface MemberDetailResult {
     createdDate: string;
 }  
 
-export interface LoginMember {
-    id: number;
+export interface MemberUpdatePayload {
+    currentPassword: string;
+    password: string;
+    passwordConfirm: string;
+    phoneNumber: string;
+    zipCode: string;
+    address1: string;
+    address2: string;
+}
+
+export interface MemberSavePayload {
+    id: string;
+    password: string;
+    passwordConfirm: string;
     name: string;
-    role: string;
+    phoneNumber: string;
+    zipCode: string;
+    address1: string;
+    address2: string;
 }

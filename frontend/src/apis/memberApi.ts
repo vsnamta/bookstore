@@ -1,9 +1,10 @@
 import { AxiosError } from 'axios';
 import qs from 'qs';
 import { ErrorResult, FindPayload, Page } from '../models/common';
-import { LoginMember, MemberDetailResult, MemberResult, MemberSavePayload, MemberUpdatePayload } from '../models/member';
+import { MemberDetailResult, MemberResult, MemberSavePayload, MemberUpdatePayload } from '../models/member';
 import apiClient from './apiClient';
 import apiErrorParser from '../utills/apiErrorParser';
+import { MyData } from '../models/auth';
 
 const memberApi = {
     save(payload: MemberSavePayload): Promise<MemberDetailResult> {
@@ -24,9 +25,9 @@ const memberApi = {
             });
         });
     },
-    findMyData(): Promise<LoginMember | string> {
+    findMyData(): Promise<MyData | string> {
         return new Promise((resolve, reject) => {
-            apiClient.get<LoginMember | string>('/api/members/me').then(({ data }) => {
+            apiClient.get<MyData | string>('/api/members/me').then(({ data }) => {
                 resolve(data);
             }).catch((error: AxiosError<ErrorResult>) => {
                 reject(apiErrorParser.parse(error));

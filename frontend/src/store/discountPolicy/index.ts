@@ -3,8 +3,8 @@ import { DiscountPolicyResult } from '../../models/discountPolicy';
 import { DiscountPoliciesState, DiscountPolicyListAsync, DiscountPolicySaveAsyncPayload, DiscountPolicyUpdateAsyncPayload } from '../../models/discountPolicy/store';
 
 export const types = {
-    SET_DISCOUNT_POLICIES_STATE: 'discountPolicy/SET_DISCOUNT_POLICIES_STATE' as const,
     FETCH_DISCOUNT_POLICY_LIST: 'discountPolicy/FETCH_DISCOUNT_POLICY_LIST' as const,
+    SET_DISCOUNT_POLICIES_STATE: 'discountPolicy/SET_DISCOUNT_POLICIES_STATE' as const,
     SELECT_DISCOUNT_POLICY: 'discountPolicy/SELECT_DISCOUNT_POLICY' as const,
     UPDATE_DISCOUNT_POLICY_ASYNC: 'discountPolicy/UPDATE_DISCOUNT_POLICY_ASYNC' as const,
     UPDATE_DISCOUNT_POLICY: 'discountPolicy/UPDATE_DISCOUNT_POLICY' as const,
@@ -13,8 +13,8 @@ export const types = {
 };
 
 export const actions = { 
-    setDiscountPoliciesState: createAction(types.SET_DISCOUNT_POLICIES_STATE)<DiscountPoliciesState>(),
     fetchDiscountPolicyList: createAction(types.FETCH_DISCOUNT_POLICY_LIST)<void>(), 
+    setDiscountPoliciesState: createAction(types.SET_DISCOUNT_POLICIES_STATE)<DiscountPoliciesState>(),
     selectDiscountPolicy: createAction(types.SELECT_DISCOUNT_POLICY)<number>(),
     updateDiscountPolicyAsync: createAction(types.UPDATE_DISCOUNT_POLICY_ASYNC)<DiscountPolicyUpdateAsyncPayload>(), 
     updateDiscountPolicy: createAction(types.UPDATE_DISCOUNT_POLICY)<DiscountPolicyResult>(), 

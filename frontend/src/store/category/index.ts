@@ -1,29 +1,29 @@
 import { ActionType, createAction, createReducer } from 'typesafe-actions';
 import { CategoryResult } from '../../models/category';
-import { CategoriesState, CategoryListAsync, CategoryRemoveAsyncPayload, CategorySaveAsyncPayload, CategoryUpdateAsyncPayload } from '../../models/category/store';
+import { CategoriesState, CategoryRemoveAsyncPayload, CategorySaveAsyncPayload, CategoryUpdateAsyncPayload } from '../../models/category/store';
 
 export const types = {
-    SET_CATEGORIES_STATE: 'category/SET_CATEGORIES_STATE' as const,
     FETCH_CATEGORY_LIST: 'category/FETCH_CATEGORY_LIST' as const,
+    SET_CATEGORIES_STATE: 'category/SET_CATEGORIES_STATE' as const,
     SELECT_CATEGORY: 'category/SELECT_CATEGORY' as const,
     UPDATE_CATEGORY_ASYNC: 'category/UPDATE_CATEGORY_ASYNC' as const,
     UPDATE_CATEGORY: 'category/UPDATE_CATEGORY' as const,
-    SAVE_CATEGORY_ASYNC: 'category/SAVE_CATEGORY_ASYNC' as const,
-    SAVE_CATEGORY: 'category/SAVE_CATEGORY' as const,
     REMOVE_CATEGORY_ASYNC: 'category/REMOVE_CATEGORY_ASYNC' as const,
-    REMOVE_CATEGORY: 'category/REMOVE_CATEGORY' as const
+    REMOVE_CATEGORY: 'category/REMOVE_CATEGORY' as const,
+    SAVE_CATEGORY_ASYNC: 'category/SAVE_CATEGORY_ASYNC' as const,
+    SAVE_CATEGORY: 'category/SAVE_CATEGORY' as const
 };
 
 export const actions = { 
-    setCategoriesState: createAction(types.SET_CATEGORIES_STATE)<CategoriesState>(),
     fetchCategoryList: createAction(types.FETCH_CATEGORY_LIST)<void>(), 
+    setCategoriesState: createAction(types.SET_CATEGORIES_STATE)<CategoriesState>(),
     selectCategory: createAction(types.SELECT_CATEGORY)<number>(),
     updateCategoryAsync: createAction(types.UPDATE_CATEGORY_ASYNC)<CategoryUpdateAsyncPayload>(), 
     updateCategory: createAction(types.UPDATE_CATEGORY)<CategoryResult>(), 
-    saveCategoryAsync: createAction(types.SAVE_CATEGORY_ASYNC)<CategorySaveAsyncPayload>(), 
-    saveCategory: createAction(types.SAVE_CATEGORY)<CategoryResult>(),
     removeCategoryAsync: createAction(types.REMOVE_CATEGORY_ASYNC)<CategoryRemoveAsyncPayload>(), 
-    removeCategory: createAction(types.REMOVE_CATEGORY)<number>()
+    removeCategory: createAction(types.REMOVE_CATEGORY)<number>(),
+    saveCategoryAsync: createAction(types.SAVE_CATEGORY_ASYNC)<CategorySaveAsyncPayload>(), 
+    saveCategory: createAction(types.SAVE_CATEGORY)<CategoryResult>()
 };
 
 const initialState: CategoriesState = {
@@ -68,22 +68,6 @@ const reducer = createReducer<CategoriesState, ActionType<typeof actions>>(initi
         },
         category: updatedCategory
     }),
-    [types.SAVE_CATEGORY]: (state, { payload: savedCategory }: ReturnType<typeof actions.saveCategory>) => ({
-        categoryListAsync: {
-            // ...state.categoryListAsync,
-            result: !savedCategory.parentId 
-                ? (state.categoryListAsync.result as CategoryResult[]).concat(savedCategory)
-                : (state.categoryListAsync.result as CategoryResult[]).map(category => 
-                    category.id === savedCategory.parentId 
-                        ? {
-                            ...category,
-                            children: category.children.concat(savedCategory)
-                        } 
-                        : category
-                )
-        },
-        category: savedCategory
-    }),
     [types.REMOVE_CATEGORY]: (state, { payload: removedId }: ReturnType<typeof actions.removeCategory>) => {
         const categoryList = state.categoryListAsync.result as CategoryResult[];
 
@@ -107,7 +91,23 @@ const reducer = createReducer<CategoriesState, ActionType<typeof actions>>(initi
             },
             category: undefined
         }
-    }
+    },
+    [types.SAVE_CATEGORY]: (state, { payload: savedCategory }: ReturnType<typeof actions.saveCategory>) => ({
+        categoryListAsync: {
+            // ...state.categoryListAsync,
+            result: !savedCategory.parentId 
+                ? (state.categoryListAsync.result as CategoryResult[]).concat(savedCategory)
+                : (state.categoryListAsync.result as CategoryResult[]).map(category => 
+                    category.id === savedCategory.parentId 
+                        ? {
+                            ...category,
+                            children: category.children.concat(savedCategory)
+                        } 
+                        : category
+                )
+        },
+        category: savedCategory
+    })
 });
 
 export default reducer;

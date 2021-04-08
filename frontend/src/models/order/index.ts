@@ -1,24 +1,3 @@
-export interface OrderSavePayload {
-    orderProducts: OrderProduct[];
-    usedPoint: number;
-    receiverName: string;
-    receiverPhoneNumber: string;
-    deliveryZipCode: string;
-    deliveryAddress1: string;
-    deliveryAddress2: string;
-    deliveryMessage: string;
-}
-
-interface OrderProduct {
-    cartId?: number;
-    productId: number;
-    quantity: number;
-}
-
-export interface OrderUpdatePayload {
-    status: string;
-}
-
 export interface OrderResult {
     id: number;
     memberName: string;
@@ -59,6 +38,27 @@ interface OrderLineResult {
 interface OrderStatusHistoryResult {
     statusName: string;
     createdDate: string;
+}
+
+export interface OrderUpdatePayload {
+    status: string;
+}
+
+export interface OrderSavePayload {
+    orderProducts: OrderProduct[];
+    usedPoint: number;
+    receiverName: string;
+    receiverPhoneNumber: string;
+    deliveryZipCode: string;
+    deliveryAddress1: string;
+    deliveryAddress2: string;
+    deliveryMessage: string;
+}
+
+interface OrderProduct {
+    cartId?: number;
+    productId: number;
+    quantity: number;
 }
 
 export interface OrderingProduct {

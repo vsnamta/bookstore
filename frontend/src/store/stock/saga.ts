@@ -6,7 +6,7 @@ import { Page } from '../../models/common';
 import { StockFindPayload, StockResult } from '../../models/stock';
 import { StocksState } from '../../models/stock/store';
 
-function* findStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof actions.fetchStockPage>) {
+function* fetchStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof actions.fetchStockPage>) {
     const stocksState: StocksState = yield select((state: RootState) => state.products);
     
     if(JSON.stringify(stocksState.stockPageAsync.payload) === JSON.stringify(stockFindPayload) 
@@ -54,6 +54,6 @@ function* saveStockAsyncSaga({ payload: stockSaveAsyncPayload }: ReturnType<type
 };
 
 export default function* stocksSaga() {
-    yield takeEvery(types.FETCH_STOCK_PAGE, findStockPageSaga);
+    yield takeEvery(types.FETCH_STOCK_PAGE, fetchStockPageSaga);
     yield takeEvery(types.SAVE_STOCK_ASYNC, saveStockAsyncSaga);
 }

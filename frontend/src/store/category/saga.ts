@@ -5,7 +5,7 @@ import categoryApi from '../../apis/categoryApi';
 import { CategoryResult } from '../../models/category';
 import { CategoriesState } from '../../models/category/store';
 
-function* findCategoryListSaga(action: ReturnType<typeof actions.fetchCategoryList>) {
+function* fetchCategoryListSaga(action: ReturnType<typeof actions.fetchCategoryList>) {
     const categoriesState: CategoriesState = yield select((state: RootState) => state.categories);
     
     if(categoriesState.categoryListAsync.result !== undefined) {
@@ -44,17 +44,6 @@ function* updateCategoryAsyncSaga({ payload: categoryUpdateAsyncPayload }: Retur
     }
 };
 
-function* saveCategoryAsyncSaga({ payload: categorySaveAsyncPayload }: ReturnType<typeof actions.saveCategoryAsync>) {
-    try {
-        const category: CategoryResult = yield call(categoryApi.save, categorySaveAsyncPayload.payload);
-
-        yield put(actions.saveCategory(category));
-        categorySaveAsyncPayload.onSuccess && categorySaveAsyncPayload.onSuccess(category);
-    } catch (error) {
-        categorySaveAsyncPayload.onFailure && categorySaveAsyncPayload.onFailure(error);
-    }
-};
-
 function* removeCategoryAsyncSaga({ payload: categoryRemoveAsyncPayload }: ReturnType<typeof actions.removeCategoryAsync>) {
     try {
         yield call(categoryApi.remove, categoryRemoveAsyncPayload.id);
@@ -66,9 +55,20 @@ function* removeCategoryAsyncSaga({ payload: categoryRemoveAsyncPayload }: Retur
     }
 };
 
+function* saveCategoryAsyncSaga({ payload: categorySaveAsyncPayload }: ReturnType<typeof actions.saveCategoryAsync>) {
+    try {
+        const category: CategoryResult = yield call(categoryApi.save, categorySaveAsyncPayload.payload);
+
+        yield put(actions.saveCategory(category));
+        categorySaveAsyncPayload.onSuccess && categorySaveAsyncPayload.onSuccess(category);
+    } catch (error) {
+        categorySaveAsyncPayload.onFailure && categorySaveAsyncPayload.onFailure(error);
+    }
+};
+
 export default function* categoriesSaga() {
-    yield takeEvery(types.FETCH_CATEGORY_LIST, findCategoryListSaga);
+    yield takeEvery(types.FETCH_CATEGORY_LIST, fetchCategoryListSaga);
     yield takeEvery(types.UPDATE_CATEGORY_ASYNC, updateCategoryAsyncSaga);
-    yield takeEvery(types.SAVE_CATEGORY_ASYNC, saveCategoryAsyncSaga);
     yield takeEvery(types.REMOVE_CATEGORY_ASYNC, removeCategoryAsyncSaga);
+    yield takeEvery(types.SAVE_CATEGORY_ASYNC, saveCategoryAsyncSaga);
 }

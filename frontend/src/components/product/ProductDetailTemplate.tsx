@@ -9,7 +9,7 @@ import ReviewList from '../reivew/ReviewList';
 import ReviewManagementBar from '../reivew/ReviewManagementBar';
 import ReviewSaveModal from '../reivew/ReviewSaveModal';
 import useModal from '../../hooks/useModal';
-import { LoginMember } from '../../models/member';
+import { MyData } from '../../models/auth';
 import { CartSaveAsyncPayload } from '../../models/cart/store';
 import { ReviewSaveAsyncPayload } from '../../models/review/store';
 import { ProductAsync } from '../../models/product/store';
@@ -18,7 +18,7 @@ import { ReviewPageAsync } from '../../models/review/store';
 interface ProductDetailTemplateProps {
     productAsync: ProductAsync;
     reviewPageAsync: ReviewPageAsync;
-    loginMember?: LoginMember;
+    loginMember?: MyData;
     saveCart: (payload: CartSaveAsyncPayload) => void;
     saveReview: (payload: ReviewSaveAsyncPayload) => void;
     onPageChange: (selectedItem: {

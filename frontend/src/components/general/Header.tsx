@@ -7,11 +7,11 @@ import Logo from '../../assets/image/logo.png';
 import useSearchForm from "../../hooks/useSearchForm";
 import { CategoryResult } from '../../models/category';
 import { SearchCriteria } from '../../models/common';
-import { LoginMember } from '../../models/member';
+import { MyData } from '../../models/auth';
 import { LogoutAsyncPayload } from "../../models/auth/store";
 
 interface HeaderProps {
-    loginMember?: LoginMember;
+    loginMember?: MyData;
     categoryList?: CategoryResult[];
     onLogout: (payload: LogoutAsyncPayload) => void;
 }

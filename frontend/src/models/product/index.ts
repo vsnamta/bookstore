@@ -1,27 +1,5 @@
 import { PageCriteria, SearchCriteria } from "../common";
 
-export interface ProductSaveOrUpdatePayload {
-    discountPolicyId: number;
-    categoryId: number;
-    name: string;
-    author: string;
-    publisher: string;
-    publishedDate: string;
-    totalPage: string;
-    isbn: string;
-    regularPrice: number;
-    imageFileName: string;
-    authorIntroduction: string;
-    bookIntroduction: string;
-    tableOfContents: string;
-}
-
-export interface ProductFindPayload {
-    categoryId?: number;
-    searchCriteria?: SearchCriteria;
-    pageCriteria: PageCriteria;
-}
-
 export interface ProductResult {
     id: number;
     name: string;
@@ -63,4 +41,26 @@ export interface ProductDetailResult {
     discountPolicyName: string;
     discountPercent: number;
     depositPercent: number;
+}
+
+export interface ProductFindPayload {
+    categoryId?: number;
+    searchCriteria?: SearchCriteria;
+    pageCriteria: PageCriteria;
+}
+
+export interface ProductSaveOrUpdatePayload {
+    discountPolicyId: number;
+    categoryId: number;
+    name: string;
+    author: string;
+    publisher: string;
+    publishedDate: string;
+    totalPage: string;
+    isbn: string;
+    regularPrice: number;
+    imageFileName: string;
+    authorIntroduction: string;
+    bookIntroduction: string;
+    tableOfContents: string;
 }

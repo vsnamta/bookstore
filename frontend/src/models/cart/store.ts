@@ -23,14 +23,14 @@ export interface CartUpdateAsyncPayload {
     onFailure?: (error: ApiError) => void
 }
 
-export interface CartSaveAsyncPayload { 
-    payload: CartSavePayload,
-    onSuccess?: (cart: CartResult) => void, 
-    onFailure?: (error: ApiError) => void
-}
-
 export interface CartRemoveAsyncPayload { 
     ids: number[],
     onSuccess?: () => void,
+    onFailure?: (error: ApiError) => void
+}
+
+export interface CartSaveAsyncPayload { 
+    payload: CartSavePayload,
+    onSuccess?: (cart: CartResult) => void, 
     onFailure?: (error: ApiError) => void
 }

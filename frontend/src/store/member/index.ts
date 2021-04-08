@@ -15,14 +15,14 @@ export const types ={
 };
 
 export const actions = {
-    setMembersState: createAction(types.SET_MEMBERS_STATE)<MembersState>(),
     fetchMemberPage: createAction(types.FETCH_MEMBER_PAGE)<FindPayload>(), 
     setMemberPageAsync: createAction(types.SET_MEMBER_PAGE_ASYNC)<MemberPageAsync>(),
     fetchMember: createAction(types.FETCH_MEMBER)<number>(), 
     setMemberAsync: createAction(types.SET_MEMBER_ASYNC)<MemberAsync>(),
     updateMemberAsync: createAction(types.UPDATE_MEMBER_ASYNC)<MemberUpdateAsyncPayload>(), 
     updateMember: createAction(types.UPDATE_MEMBER)<MemberDetailResult>(),
-    saveMemberAsync: createAction(types.SAVE_MEMBER_ASYNC)<MemberSaveAsyncPayload>()
+    saveMemberAsync: createAction(types.SAVE_MEMBER_ASYNC)<MemberSaveAsyncPayload>(),
+    setMembersState: createAction(types.SET_MEMBERS_STATE)<MembersState>()
 };
 
 const initialState: MembersState = {
@@ -39,9 +39,6 @@ const initialState: MembersState = {
 };
 
 const reducer = createReducer<MembersState, ActionType<typeof actions>>(initialState, {
-    [types.SET_MEMBERS_STATE]: (state, { payload: membersState }: ReturnType<typeof actions.setMembersState>) => (
-        membersState
-    ),
     [types.SET_MEMBER_PAGE_ASYNC]: (state, { payload: memberPageAsync }: ReturnType<typeof actions.setMemberPageAsync>) => ({
         ...state,
         memberPageAsync: memberPageAsync, 
@@ -69,7 +66,10 @@ const reducer = createReducer<MembersState, ActionType<typeof actions>>(initialS
             ...state.memberAsync,
             result: updatedMember
         }
-    })
+    }),
+    [types.SET_MEMBERS_STATE]: (state, { payload: membersState }: ReturnType<typeof actions.setMembersState>) => (
+        membersState
+    )
 });
 
 export default reducer;

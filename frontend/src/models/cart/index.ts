@@ -1,16 +1,3 @@
-export interface CartSavePayload {
-    productId: number;
-    quantity: number;
-}
-
-export interface CartUpdatePayload {
-    quantity: number;
-}
-
-export interface CartFindPayload {
-    memberId: number;
-}
-
 export interface CartResult {
     id: number;
     productId: number;
@@ -22,4 +9,17 @@ export interface CartResult {
     depositPercent: number;
     quantity: number;
     checked: boolean;
+}
+
+export interface CartFindPayload {
+    memberId: number;
+}
+
+export interface CartUpdatePayload {
+    quantity: number;
+}
+
+export interface CartSavePayload {
+    productId: number;
+    quantity: number;
 }

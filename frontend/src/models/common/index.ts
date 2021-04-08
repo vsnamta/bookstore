@@ -1,3 +1,18 @@
+export interface Page<T> {
+    list: T[];
+    totalCount: number;
+}
+
+export interface ErrorResult {
+    message: string;
+    fieldErrorResults: FieldErrorResult[];
+}
+
+export interface FieldErrorResult {
+    field: string;
+    message: string;
+}
+
 export interface FindPayload {
     searchCriteria?: SearchCriteria;
     pageCriteria: PageCriteria;
@@ -13,19 +28,4 @@ export interface PageCriteria {
     size: number;
     sortColumn?: string;
     sortDirection?: string;
-}
-
-export interface Page<T> {
-    list: T[];
-    totalCount: number;
-}
-
-export interface ErrorResult {
-    message: string;
-    fieldErrorResults: FieldErrorResult[];
-}
-
-export interface FieldErrorResult {
-    field: string;
-    message: string;
 }

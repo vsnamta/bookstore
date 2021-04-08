@@ -1,14 +1,3 @@
-export interface ReviewSavePayload {
-    productId: number;
-    rating: number;
-    contents: string;
-}
-
-export interface ReviewUpdatePayload {
-    rating: number;
-    contents: string;
-}
-
 export interface ReviewResult {
     id: number;
     memberId: number;
@@ -19,4 +8,15 @@ export interface ReviewResult {
     rating: number;
     contents: string;
     createdDate: string;
+}
+
+export interface ReviewUpdatePayload {
+    rating: number;
+    contents: string;
+}
+
+export interface ReviewSavePayload {
+    productId: number;
+    rating: number;
+    contents: string;
 }

@@ -2,13 +2,13 @@ import { faChevronDown, faChevronUp, faStar } from "@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { LoginMember } from '../../models/member';
+import { MyData } from '../../models/auth';
 import { ProductDetailResult } from '../../models/product';
 import { CartSaveAsyncPayload } from '../../models/cart/store';
 
 interface ProductDetailProps {
     product?: ProductDetailResult;
-	loginMember?: LoginMember;
+	loginMember?: MyData;
     onSaveCart: (payload: CartSaveAsyncPayload) => void;
 }
 

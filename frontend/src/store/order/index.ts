@@ -4,25 +4,25 @@ import { OrderDetailResult, OrderResult } from '../../models/order';
 import { OrderAsync, OrderPageAsync, OrderSaveAsyncPayload, OrdersState, OrderUpdateAsyncPayload } from '../../models/order/store';
 
 export const types ={
-    SET_ORDERS_STATE: 'order/SET_ORDERS_STATE' as const,
     FETCH_ORDER_PAGE: 'order/FETCH_ORDER_PAGE' as const,
     SET_ORDER_PAGE_ASYNC: 'order/SET_ORDER_PAGE_ASYNC' as const,
     FIND_ORDER: 'order/FIND_ORDER' as const,
     SET_ORDER_ASYNC: 'order/SET_ORDER_ASYNC' as const,
     UPDATE_ORDER_ASYNC: 'order/UPDATE_ORDER_ASYNC' as const,
     UPDATE_ORDER: 'order/UPDATE_ORDER' as const,
-    SAVE_ORDER_ASYNC: 'order/SAVE_ORDER_ASYNC' as const
+    SAVE_ORDER_ASYNC: 'order/SAVE_ORDER_ASYNC' as const,
+    SET_ORDERS_STATE: 'order/SET_ORDERS_STATE' as const
 };
 
 export const actions = {
-    setOrdersState: createAction(types.SET_ORDERS_STATE)<OrdersState>(),
     fetchOrderPage: createAction(types.FETCH_ORDER_PAGE)<FindPayload>(), 
     setOrderPageAsync: createAction(types.SET_ORDER_PAGE_ASYNC)<OrderPageAsync>(),
     fetchOrder: createAction(types.FIND_ORDER)<number>(), 
     setOrderAsync: createAction(types.SET_ORDER_ASYNC)<OrderAsync>(),
     updateOrderAsync: createAction(types.UPDATE_ORDER_ASYNC)<OrderUpdateAsyncPayload>(), 
     updateOrder: createAction(types.UPDATE_ORDER)<OrderDetailResult>(),
-    saveOrderAsync: createAction(types.SAVE_ORDER_ASYNC)<OrderSaveAsyncPayload>()
+    saveOrderAsync: createAction(types.SAVE_ORDER_ASYNC)<OrderSaveAsyncPayload>(),
+    setOrdersState: createAction(types.SET_ORDERS_STATE)<OrdersState>(),
 };
 
 const initialState: OrdersState = {
@@ -39,9 +39,6 @@ const initialState: OrdersState = {
 };
 
 const reducer = createReducer<OrdersState, ActionType<typeof actions>>(initialState, {
-    [types.SET_ORDERS_STATE]: (state, { payload: ordersState }: ReturnType<typeof actions.setOrdersState>) => (
-        ordersState
-    ),
     [types.SET_ORDER_PAGE_ASYNC]: (state, { payload: orderPageAsync }: ReturnType<typeof actions.setOrderPageAsync>) => ({
         ...state,
         orderPageAsync: orderPageAsync
@@ -67,7 +64,10 @@ const reducer = createReducer<OrdersState, ActionType<typeof actions>>(initialSt
             ...state.orderAsync,
             result: updatedOrder
         }
-    })
+    }),
+    [types.SET_ORDERS_STATE]: (state, { payload: ordersState }: ReturnType<typeof actions.setOrdersState>) => (
+        ordersState
+    )
 });
 
 export default reducer;
