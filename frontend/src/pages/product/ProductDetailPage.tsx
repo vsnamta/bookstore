@@ -12,8 +12,8 @@ function ProductDetailPage() {
 
     const dispatch = useDispatch();
     const myData = useSelector((state: RootState) => state.auths.myData);
-    const productAsync = useSelector((state: RootState) => state.products.productAsync);
-    const reviewPageAsync = useSelector((state: RootState) => state.reviews.reviewPageAsync);
+    const asyncProduct = useSelector((state: RootState) => state.products.asyncProduct);
+    const asyncReviewPage = useSelector((state: RootState) => state.reviews.asyncReviewPage);
 
     useEffect(() => {
         dispatch(rootActions.fetchProduct(Number.parseInt(id)));
@@ -33,18 +33,18 @@ function ProductDetailPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(rootActions.fetchReviewPage({
-            ...reviewPageAsync.payload as FindPayload,
+            ...asyncReviewPage.payload as FindPayload,
             pageCriteria: {
-                ...(reviewPageAsync.payload as FindPayload).pageCriteria, 
+                ...(asyncReviewPage.payload as FindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [reviewPageAsync.payload]);
+    }, [asyncReviewPage.payload]);
 
     return (
         <ProductDetailTemplate 
-            productAsync={productAsync}
-            reviewPageAsync={reviewPageAsync}
+            asyncProduct={asyncProduct}
+            asyncReviewPage={asyncReviewPage}
             myData={myData}
             saveCart={saveCart}
             saveReview={saveReview}

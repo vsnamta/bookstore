@@ -8,20 +8,20 @@ import { CartsState } from '../../models/cart/store';
 function* fetchCartListSaga({ payload: cartFindPayload }: ReturnType<typeof actions.fetchCartList>) {
     const cartsState: CartsState = yield select((state: RootState) => state.carts);
     
-    if(cartsState.cartListAsync.payload?.memberId === cartFindPayload.memberId
-        && cartsState.cartListAsync.result !== undefined) {
+    if(cartsState.asyncCartList.payload?.memberId === cartFindPayload.memberId
+        && cartsState.asyncCartList.result !== undefined) {
         return;
     }
 
     try {
         const cartList: CartResult[] = yield call(cartApi.findAll, cartFindPayload);
 
-        yield put(actions.setCartListAsync({
+        yield put(actions.setAsyncCartList({
             result: cartList.map(cart => ({ ...cart, checked: true })),
             error: undefined
         }));
     } catch (error) {
-        yield put(actions.setCartListAsync({
+        yield put(actions.setAsyncCartList({
             result: undefined,
             error: error
         }));

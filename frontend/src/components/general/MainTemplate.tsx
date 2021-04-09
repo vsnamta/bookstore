@@ -4,19 +4,19 @@ import Banner from './Banner';
 import ErrorDetail from './ErrorDetail';
 import Title from './Title';
 import BestProductList from '../product/BestProductList';
-import { ProductPageAsync } from '../../models/product/store';
+import { AsyncProductPage } from '../../models/product/store';
 
 interface MainTemplateProps {
-    productPageAsync: ProductPageAsync;
+    asyncProductPage: AsyncProductPage;
 }
 
-function MainTemplate({ productPageAsync }: MainTemplateProps) {    
+function MainTemplate({ asyncProductPage }: MainTemplateProps) {    
     return (
         <Layout>
             <Banner />
             <Title content={"베스트 셀러"} />
-            <BestProductList productList={productPageAsync.result?.list}/>
-            {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
+            <BestProductList productList={asyncProductPage.result?.list}/>
+            {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />}
         </Layout>
     )
 };

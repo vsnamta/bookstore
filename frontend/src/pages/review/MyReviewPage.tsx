@@ -9,7 +9,7 @@ import { RootState, rootActions } from '../../store';
 function MyReviewPage() {
     const dispatch = useDispatch();
     const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
-    const { reviewPageAsync, review } = useSelector((state: RootState) => state.reviews);
+    const { asyncReviewPage, review } = useSelector((state: RootState) => state.reviews);
 
     useEffect(() => {
         dispatch(rootActions.fetchReviewPage({
@@ -35,17 +35,17 @@ function MyReviewPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(rootActions.fetchReviewPage({
-            ...reviewPageAsync.payload as FindPayload,
+            ...asyncReviewPage.payload as FindPayload,
             pageCriteria: {
-                ...(reviewPageAsync.payload as FindPayload).pageCriteria, 
+                ...(asyncReviewPage.payload as FindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [reviewPageAsync.payload]);
+    }, [asyncReviewPage.payload]);
     
     return (
         <MyReviewTemplate 
-            reviewPageAsync={reviewPageAsync}
+            asyncReviewPage={asyncReviewPage}
             review={review}
             selectReview={selectReview}
             removeReview={removeReview}

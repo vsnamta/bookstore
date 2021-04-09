@@ -1,5 +1,5 @@
 import React from 'react';
-import { PointHistoryPageAsync } from '../../models/pointHistory/store';
+import { AsyncPointHistoryPage } from '../../models/pointHistory/store';
 import Layout from '../common/Layout';
 import MyPageLayout from '../common/MyPageLayout';
 import ErrorDetail from '../general/ErrorDetail';
@@ -7,23 +7,23 @@ import Pagination from '../general/Pagination';
 import PointHistoryList from './PointHistoryList';
 
 interface MyPointHistoryTemplateProps {
-    pointHistoryPageAsync: PointHistoryPageAsync;
+    asyncPointHistoryPage: AsyncPointHistoryPage;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;}
 
-function MyPointHistoryTemplate({ pointHistoryPageAsync, onPageChange }: MyPointHistoryTemplateProps) {    
+function MyPointHistoryTemplate({ asyncPointHistoryPage, onPageChange }: MyPointHistoryTemplateProps) {    
     return (
         <Layout>
             <MyPageLayout>
                 <h3>포인트내역</h3>
-                <PointHistoryList pointhistoryList={pointHistoryPageAsync.result?.list} />
+                <PointHistoryList pointhistoryList={asyncPointHistoryPage.result?.list} />
                 <Pagination
-                    page={pointHistoryPageAsync.payload?.pageCriteria.page}  
-                    totalCount={pointHistoryPageAsync.result?.totalCount}
+                    page={asyncPointHistoryPage.payload?.pageCriteria.page}  
+                    totalCount={asyncPointHistoryPage.result?.totalCount}
                     onPageChange={onPageChange}
                 />
-                {pointHistoryPageAsync.error && <ErrorDetail message={pointHistoryPageAsync.error.message} />}
+                {asyncPointHistoryPage.error && <ErrorDetail message={asyncPointHistoryPage.error.message} />}
             </MyPageLayout>                       
         </Layout>
     )

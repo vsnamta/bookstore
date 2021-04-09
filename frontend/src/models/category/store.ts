@@ -2,11 +2,11 @@ import { CategoryResult, CategorySaveOrUpdatePayload } from ".";
 import { ApiError } from "../../error/ApiError";
 
 export interface CategoriesState {
-    categoryListAsync: CategoryListAsync;
+    asyncCategoryList: AsyncCategoryList;
     category?: CategoryResult;
 }
 
-export interface CategoryListAsync {
+export interface AsyncCategoryList {
     result?: CategoryResult[];
     error?: ApiError;
 }

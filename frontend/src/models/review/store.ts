@@ -3,11 +3,11 @@ import { ApiError } from "../../error/ApiError";
 import { FindPayload, Page } from "../common";
 
 export interface ReviewsState {
-    reviewPageAsync: ReviewPageAsync;
+    asyncReviewPage: AsyncReviewPage;
     review?: ReviewResult;
 }
 
-export interface ReviewPageAsync {
+export interface AsyncReviewPage {
     payload?: FindPayload;
     result?: Page<ReviewResult>;
     error?: ApiError; 

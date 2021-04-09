@@ -5,7 +5,7 @@ import MainTemplate from '../../components/general/MainTemplate';
 
 function MainPage() {
     const dispatch = useDispatch();
-    const productPageAsync = useSelector((state: RootState) => state.products.productPageAsync);
+    const asyncProductPage = useSelector((state: RootState) => state.products.asyncProductPage);
 
     useEffect(() => {
         dispatch(rootActions.fetchProductPage({
@@ -19,7 +19,7 @@ function MainPage() {
     }, []);
     
     return (
-        <MainTemplate productPageAsync={productPageAsync} />
+        <MainTemplate asyncProductPage={asyncProductPage} />
     )
 };
 

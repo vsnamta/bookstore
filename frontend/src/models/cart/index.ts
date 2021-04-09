@@ -12,7 +12,7 @@ export interface CartResult {
 }
 
 export interface CartFindPayload {
-    memberId: number;
+    memberId: string;
 }
 
 export interface CartUpdatePayload {

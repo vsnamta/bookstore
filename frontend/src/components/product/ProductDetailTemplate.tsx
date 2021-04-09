@@ -12,12 +12,12 @@ import useModal from '../../hooks/useModal';
 import { MyData } from '../../models/auth';
 import { CartSaveAsyncPayload } from '../../models/cart/store';
 import { ReviewSaveAsyncPayload } from '../../models/review/store';
-import { ProductAsync } from '../../models/product/store';
-import { ReviewPageAsync } from '../../models/review/store';
+import { AsyncProduct } from '../../models/product/store';
+import { AsyncReviewPage } from '../../models/review/store';
 
 interface ProductDetailTemplateProps {
-    productAsync: ProductAsync;
-    reviewPageAsync: ReviewPageAsync;
+    asyncProduct: AsyncProduct;
+    asyncReviewPage: AsyncReviewPage;
     myData?: MyData;
     saveCart: (payload: CartSaveAsyncPayload) => void;
     saveReview: (payload: ReviewSaveAsyncPayload) => void;
@@ -27,7 +27,7 @@ interface ProductDetailTemplateProps {
 }
 
 function ProductDetailTemplate({
-    productAsync, reviewPageAsync, myData, saveCart, saveReview, onPageChange
+    asyncProduct, asyncReviewPage, myData, saveCart, saveReview, onPageChange
 }: ProductDetailTemplateProps) {
     const history = useHistory();
     
@@ -57,25 +57,25 @@ function ProductDetailTemplate({
     return (
         <Layout>
             <ProductDetail 
-                product={productAsync.result}
+                product={asyncProduct.result}
                 myData={myData} 
                 onSaveCart={saveCart} 
             />
-            {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
+            {asyncProduct.error && <ErrorDetail message={asyncProduct.error.message} />}
             <Title content={"리뷰"} />
             <ReviewManagementBar 
                 onOpenSaveModal={onOpenSaveModal}
             /> 
             <ReviewList 
-                reviewList={reviewPageAsync.result?.list}
+                reviewList={asyncReviewPage.result?.list}
             />
             <Pagination
-                page={reviewPageAsync.payload?.pageCriteria.page}  
-                totalCount={reviewPageAsync.result?.totalCount}
+                page={asyncReviewPage.payload?.pageCriteria.page}  
+                totalCount={asyncReviewPage.result?.totalCount}
                 onPageChange={onPageChange}
             />
             <ReviewSaveModal
-                product={productAsync.result} 
+                product={asyncProduct.result} 
                 isOpen={saveModalIsOpen}
                 onRequestClose={closeSaveModal}
                 onSaveReview={onSaveReview}

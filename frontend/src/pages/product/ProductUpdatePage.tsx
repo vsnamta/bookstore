@@ -9,9 +9,9 @@ function ProductUpdatePage() {
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const productAsync = useSelector((state: RootState) => state.products.productAsync);
-    const discountPolicyListAsync = useSelector((state: RootState) => state.discountPolcies.discountPolicyListAsync);
-    const categoryListAsync = useSelector((state: RootState) => state.categories.categoryListAsync);
+    const asyncProduct = useSelector((state: RootState) => state.products.asyncProduct);
+    const asyncDiscountPolicyList = useSelector((state: RootState) => state.discountPolcies.asyncDiscountPolicyList);
+    const asyncCategoryList = useSelector((state: RootState) => state.categories.asyncCategoryList);
 
     useEffect(() => {
         dispatch(rootActions.fetchProduct(Number.parseInt(id)));
@@ -25,9 +25,9 @@ function ProductUpdatePage() {
 
     return (
         <ProductUpdateTemplate
-            productAsync={productAsync} 
-            discountPolicyListAsync={discountPolicyListAsync}
-            categoryListAsync={categoryListAsync}
+            asyncProduct={asyncProduct} 
+            asyncDiscountPolicyList={asyncDiscountPolicyList}
+            asyncCategoryList={asyncCategoryList}
             updateProduct={updateProduct}
         />
     )

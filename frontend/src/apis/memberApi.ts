@@ -16,7 +16,7 @@ const memberApi = {
             });
         });
     },
-    update(id: number, payload: MemberUpdatePayload): Promise<MemberDetailResult> {
+    update(id: string, payload: MemberUpdatePayload): Promise<MemberDetailResult> {
         return new Promise((resolve, reject) => {
             apiClient.put<MemberDetailResult>(`/api/members/${id}`, payload).then(({ data }) => {
                 resolve(data);
@@ -34,7 +34,7 @@ const memberApi = {
             });
         });
     },
-    findOne(id: number): Promise<MemberDetailResult> {
+    findOne(id: string): Promise<MemberDetailResult> {
         return new Promise((resolve, reject) => {
             apiClient.get<MemberDetailResult>(`/api/members/${id}`).then(({ data }) => {
                 resolve(data);

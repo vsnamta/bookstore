@@ -7,7 +7,7 @@ import { rootActions } from '../../store';
 
 function CategoryManagementPage() {
     const dispatch = useDispatch();
-    const { categoryListAsync, category } = useSelector((state: RootState) => state.categories);
+    const { asyncCategoryList, category } = useSelector((state: RootState) => state.categories);
 
     useEffect(() => {
         dispatch(rootActions.fetchCategoryList());
@@ -31,7 +31,7 @@ function CategoryManagementPage() {
     
     return (
         <CategoryManagementTemplate 
-            categoryListAsync={categoryListAsync}
+            asyncCategoryList={asyncCategoryList}
             category={category}
             selectCategory={selectCategory}
             removeCategory={removeCategory}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProductPageAsync } from '../../models/product/store';
+import { AsyncProductPage } from '../../models/product/store';
 import Layout from '../common/Layout';
 import ErrorDetail from '../general/ErrorDetail';
 import Pagination from '../general/Pagination';
@@ -7,7 +7,7 @@ import ProductList from './ProductList';
 import ProductListFilterBar from './ProductListFilterBar';
 
 interface ProductListTemplateProps {
-    productPageAsync: ProductPageAsync;
+    asyncProductPage: AsyncProductPage;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;
@@ -17,20 +17,20 @@ interface ProductListTemplateProps {
     }) => void;
 }
 
-function ProductListTemplate({ productPageAsync, onSortChange, onPageChange }: ProductListTemplateProps) {  
+function ProductListTemplate({ asyncProductPage, onSortChange, onPageChange }: ProductListTemplateProps) {  
     return (
         <Layout>      
             <ProductListFilterBar 
-                totalCount={productPageAsync.result?.totalCount} 
+                totalCount={asyncProductPage.result?.totalCount} 
                 onSortChange={onSortChange} 
             />
-            <ProductList productList={productPageAsync.result?.list} />
+            <ProductList productList={asyncProductPage.result?.list} />
             <Pagination
-                page={productPageAsync.payload?.pageCriteria.page}  
-                totalCount={productPageAsync.result?.totalCount}
+                page={asyncProductPage.payload?.pageCriteria.page}  
+                totalCount={asyncProductPage.result?.totalCount}
                 onPageChange={onPageChange}
             />
-            {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
+            {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />}
         </Layout>
     )
 };

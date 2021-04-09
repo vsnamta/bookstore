@@ -11,8 +11,8 @@ function ProductManagementDetailPage() {
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const { productPageAsync, productAsync } = useSelector((state: RootState) => state.products);
-    const stockPageAsync = useSelector((state: RootState) => state.stocks.stockPageAsync);
+    const { asyncProductPage, asyncProduct } = useSelector((state: RootState) => state.products);
+    const asyncStockPage = useSelector((state: RootState) => state.stocks.asyncStockPage);
 
     useEffect(() => {
         dispatch(rootActions.fetchProduct(Number.parseInt(id)));
@@ -28,19 +28,19 @@ function ProductManagementDetailPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(rootActions.fetchStockPage({
-            ...stockPageAsync.payload as StockFindPayload,
+            ...asyncStockPage.payload as StockFindPayload,
             pageCriteria: {
-                ...(stockPageAsync.payload as StockFindPayload).pageCriteria, 
+                ...(asyncStockPage.payload as StockFindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [stockPageAsync.payload]);
+    }, [asyncStockPage.payload]);
     
     return (
         <ProductManagementDetailTemplate 
-            productAsync={productAsync}
-            productFindPayload={productPageAsync.payload as ProductFindPayload}
-            stockPageAsync={stockPageAsync}
+            asyncProduct={asyncProduct}
+            productFindPayload={asyncProductPage.payload as ProductFindPayload}
+            asyncStockPage={asyncStockPage}
             saveStock={saveStock}
             onPageChange={onPageChange}
         />

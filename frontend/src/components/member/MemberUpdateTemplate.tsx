@@ -4,23 +4,23 @@ import MyPageLayout from '../common/MyPageLayout';
 import ErrorDetail from '../general/ErrorDetail';
 import MemberUpdateForm from './MemberUpdateForm';
 import { MemberUpdateAsyncPayload } from '../../models/member/store';
-import { MemberAsync } from '../../models/member/store';
+import { AsyncMember } from '../../models/member/store';
 
 interface MemberUpdateTemplateProps {
-    memberAsync: MemberAsync;
+    asyncMember: AsyncMember;
     updateMember: (payload: MemberUpdateAsyncPayload) => void;
 }
 
-function MemberUpdateTemplate({ memberAsync, updateMember }: MemberUpdateTemplateProps) {
+function MemberUpdateTemplate({ asyncMember, updateMember }: MemberUpdateTemplateProps) {
     return (
         <Layout>
             <MyPageLayout>
                 <h3>나의 정보</h3>
                 <MemberUpdateForm 
-                    member={memberAsync.result} 
+                    member={asyncMember.result} 
                     onUpdateMember={updateMember} 
                 />
-                {memberAsync.error && <ErrorDetail message={memberAsync.error.message} />}
+                {asyncMember.error && <ErrorDetail message={asyncMember.error.message} />}
             </MyPageLayout>
         </Layout>
     )

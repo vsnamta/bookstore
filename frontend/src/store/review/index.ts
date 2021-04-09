@@ -24,7 +24,7 @@ export const actions = {
 };
 
 const initialState: ReviewsState = {
-    reviewPageAsync: {
+    asyncReviewPage: {
         payload : undefined,
         result: undefined,
         error: undefined
@@ -38,15 +38,15 @@ const reducer = createReducer<ReviewsState, ActionType<typeof actions>>(initialS
     ),
     [types.SELECT_REVIEW]: (state, { payload: id }: ReturnType<typeof actions.selectReview>) => ({
         ...state,
-        review: (state.reviewPageAsync.result as Page<ReviewResult>).list
+        review: (state.asyncReviewPage.result as Page<ReviewResult>).list
             .find(review => review.id === id)
     }),
     [types.UPDATE_REVIEW]: (state, { payload: updatedReview }: ReturnType<typeof actions.updateReview>) => ({
-        reviewPageAsync: {
-            ...state.reviewPageAsync,
+        asyncReviewPage: {
+            ...state.asyncReviewPage,
             result: {
-                ...state.reviewPageAsync.result as Page<ReviewResult>,
-                list: (state.reviewPageAsync.result as Page<ReviewResult>).list
+                ...state.asyncReviewPage.result as Page<ReviewResult>,
+                list: (state.asyncReviewPage.result as Page<ReviewResult>).list
                     .map(review => 
                         review.id === updatedReview.id
                             ? updatedReview 

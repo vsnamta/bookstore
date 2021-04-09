@@ -9,8 +9,8 @@ import { ReviewsState } from '../../models/review/store';
 function* fetchReviewPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchReviewPage>) {
     const reviewsState: ReviewsState = yield select((state: RootState) => state.reviews);
     
-    if(JSON.stringify(reviewsState.reviewPageAsync.payload) === JSON.stringify(findPayload) 
-        && reviewsState.reviewPageAsync.result !== undefined) {
+    if(JSON.stringify(reviewsState.asyncReviewPage.payload) === JSON.stringify(findPayload) 
+        && reviewsState.asyncReviewPage.result !== undefined) {
         return;
     }
 
@@ -18,7 +18,7 @@ function* fetchReviewPageSaga({ payload: findPayload }: ReturnType<typeof action
         const reviewPage: Page<ReviewResult> = yield call(reviewApi.findAll, findPayload);
 
         yield put(actions.setReviewsState({
-            reviewPageAsync: {
+            asyncReviewPage: {
                 payload: findPayload,
                 result: reviewPage,
                 error: undefined
@@ -27,7 +27,7 @@ function* fetchReviewPageSaga({ payload: findPayload }: ReturnType<typeof action
         }));
     } catch (error) {
         yield put(actions.setReviewsState({
-            reviewPageAsync: {
+            asyncReviewPage: {
                 payload: findPayload,
                 result: undefined,
                 error: error
@@ -52,11 +52,11 @@ function* removeReviewAsyncSaga({ payload: reviewRemoveAsyncPayload }: ReturnTyp
     try {
         yield call(reviewApi.remove, reviewRemoveAsyncPayload.id);
 
-        const findPayload: FindPayload = yield select((state: RootState) => state.reviews.reviewPageAsync.payload);
+        const findPayload: FindPayload = yield select((state: RootState) => state.reviews.asyncReviewPage.payload);
         const reviewPage: Page<ReviewResult> = yield put(actions.fetchReviewPage(findPayload));
 
         yield put(actions.setReviewsState({
-            reviewPageAsync: {
+            asyncReviewPage: {
                 payload: findPayload,
                 result: reviewPage,
                 error: undefined
@@ -84,7 +84,7 @@ function* saveReviewAsyncSaga({ payload: reviewSaveAsyncPayload }: ReturnType<ty
         const reviewPage: Page<ReviewResult> = yield put(actions.fetchReviewPage(findPayload));
 
         yield put(actions.setReviewsState({
-            reviewPageAsync: {
+            asyncReviewPage: {
                 payload: findPayload,
                 result: reviewPage,
                 error: undefined

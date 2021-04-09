@@ -8,7 +8,7 @@ import { RootState, rootActions } from '../../store';
 function MyDataPage() {
     const dispatch = useDispatch();
     const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
-    const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
+    const asyncMember = useSelector((state: RootState) => state.members.asyncMember);
 
     useEffect(() => {
         dispatch(rootActions.fetchMember(myData.id));
@@ -20,7 +20,7 @@ function MyDataPage() {
     
     return (
         <MemberUpdateTemplate 
-            memberAsync={memberAsync}
+            asyncMember={asyncMember}
             updateMember={updateMember}
         />
     )

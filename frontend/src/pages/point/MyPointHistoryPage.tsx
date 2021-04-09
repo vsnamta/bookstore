@@ -8,7 +8,7 @@ import { RootState, rootActions } from '../../store';
 function MyPointHistoryPage() {
     const dispatch = useDispatch();
     const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
-    const pointHistoryPageAsync = useSelector((state: RootState) => state.pointHistories.pointHistoryPageAsync);
+    const asyncPointHistoryPage = useSelector((state: RootState) => state.pointHistories.asyncPointHistoryPage);
 
     useEffect(() => {
         dispatch(rootActions.fetchPointHistoryPage({
@@ -19,17 +19,17 @@ function MyPointHistoryPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(rootActions.fetchPointHistoryPage({
-            ...pointHistoryPageAsync.payload as PointHistoryFindPayload,
+            ...asyncPointHistoryPage.payload as PointHistoryFindPayload,
             pageCriteria: {
-                ...(pointHistoryPageAsync.payload as PointHistoryFindPayload).pageCriteria, 
+                ...(asyncPointHistoryPage.payload as PointHistoryFindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [pointHistoryPageAsync.payload]);
+    }, [asyncPointHistoryPage.payload]);
     
     return (
         <MyPointHistoryTemplate 
-            pointHistoryPageAsync={pointHistoryPageAsync}
+            asyncPointHistoryPage={asyncPointHistoryPage}
             onPageChange={onPageChange}
         />
     )

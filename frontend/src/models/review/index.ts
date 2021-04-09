@@ -1,6 +1,6 @@
 export interface ReviewResult {
     id: number;
-    memberId: number;
+    memberId: string;
     memberName: string;
     productId: number;
     productName: string;

@@ -3,24 +3,24 @@ import { ApiError } from "../../error/ApiError";
 import { FindPayload, Page } from "../common";
 
 export interface MembersState {
-    memberPageAsync: MemberPageAsync;
-    memberAsync: MemberAsync;
+    asyncMemberPage: AsyncMemberPage;
+    asyncMember: AsyncMember;
 }
 
-export interface MemberPageAsync {
+export interface AsyncMemberPage {
     payload?: FindPayload;
     result?: Page<MemberResult>;
     error?: ApiError; 
 }
 
-export interface MemberAsync {
-    payload?: number;
+export interface AsyncMember {
+    payload?: string;
     result?: MemberDetailResult;
     error?: ApiError;
 }
 
 export interface MemberUpdateAsyncPayload { 
-    id: number, 
+    id: string, 
     payload: MemberUpdatePayload,
     onSuccess?: (member: MemberDetailResult) => void, 
     onFailure?: (error: ApiError) => void

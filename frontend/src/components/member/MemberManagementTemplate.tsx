@@ -6,33 +6,33 @@ import Title from '../general/Title';
 import MemberList from './MemberList';
 import MemberManagementBar from './MemberManagementBar';
 import { SearchCriteria } from '../../models/common';
-import { MemberPageAsync } from '../../models/member/store';
+import { AsyncMemberPage } from '../../models/member/store';
 
 interface MemberManagementTemplateProps {
-    memberPageAsync: MemberPageAsync;
+    asyncMemberPage: AsyncMemberPage;
     onUpdateSearchCriteria: (searchCriteria: SearchCriteria) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;
 }
 
-function MemberManagementTemplate({ memberPageAsync, onUpdateSearchCriteria, onPageChange }: MemberManagementTemplateProps) {
+function MemberManagementTemplate({ asyncMemberPage, onUpdateSearchCriteria, onPageChange }: MemberManagementTemplateProps) {
     return (
         <AdminLayout>
             <Title content={"회원 관리"} />
             <MemberManagementBar
-                searchCriteria={memberPageAsync.payload?.searchCriteria} 
+                searchCriteria={asyncMemberPage.payload?.searchCriteria} 
                 onUpdateSearchCriteria={onUpdateSearchCriteria}
             />
             <MemberList 
-                memberList={memberPageAsync.result?.list}
+                memberList={asyncMemberPage.result?.list}
             />
             <Pagination 
-                page={memberPageAsync.payload?.pageCriteria.page} 
-                totalCount={memberPageAsync.result?.totalCount}
+                page={asyncMemberPage.payload?.pageCriteria.page} 
+                totalCount={asyncMemberPage.result?.totalCount}
                 onPageChange={onPageChange}
             />
-            {memberPageAsync.error && <ErrorDetail message={memberPageAsync.error.message} />}
+            {asyncMemberPage.error && <ErrorDetail message={asyncMemberPage.error.message} />}
         </AdminLayout>
     )
 };

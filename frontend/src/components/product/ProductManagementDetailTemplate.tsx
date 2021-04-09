@@ -3,8 +3,8 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router';
 import useModal from '../../hooks/useModal';
 import { ProductFindPayload } from '../../models/product';
-import { ProductAsync } from '../../models/product/store';
-import { StockPageAsync } from '../../models/stock/store';
+import { AsyncProduct } from '../../models/product/store';
+import { AsyncStockPage } from '../../models/stock/store';
 import { StockSaveAsyncPayload } from '../../models/stock/store';
 import AdminLayout from '../common/AdminLayout';
 import ErrorDetail from '../general/ErrorDetail';
@@ -16,16 +16,16 @@ import StockSaveModal from '../stock/StockSaveModal';
 import AdminProductDetail from './AdminProductDetail';
 
 interface ProductManagementDetailTemplateProps {
-    productAsync: ProductAsync;
+    asyncProduct: AsyncProduct;
     productFindPayload: ProductFindPayload;
-    stockPageAsync: StockPageAsync;
+    asyncStockPage: AsyncStockPage;
     saveStock: (payload: StockSaveAsyncPayload) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;
 }
 
-function ProductManagementDetailTemplate({ productAsync, productFindPayload, stockPageAsync, saveStock, onPageChange }: ProductManagementDetailTemplateProps) {
+function ProductManagementDetailTemplate({ asyncProduct, productFindPayload, asyncStockPage, saveStock, onPageChange }: ProductManagementDetailTemplateProps) {
     const history = useHistory();
     
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
@@ -49,22 +49,22 @@ function ProductManagementDetailTemplate({ productAsync, productFindPayload, sto
     return (
         <AdminLayout>
             <AdminProductDetail 
-                product={productAsync.result}
+                product={asyncProduct.result}
                 onMoveList={onMoveList}
             />
-            {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
+            {asyncProduct.error && <ErrorDetail message={asyncProduct.error.message} />}
             <Title content={"재고"} />
             <StockManagementBar 
                 onOpenSaveModal={openSaveModal}
             />
-            <StockList stockList={stockPageAsync.result?.list} />
+            <StockList stockList={asyncStockPage.result?.list} />
             <Pagination
-                page={stockPageAsync.payload?.pageCriteria.page}  
-                totalCount={stockPageAsync.result?.totalCount}
+                page={asyncStockPage.payload?.pageCriteria.page}  
+                totalCount={asyncStockPage.result?.totalCount}
                 onPageChange={onPageChange}
             />
             <StockSaveModal 
-                product={productAsync.result} 
+                product={asyncProduct.result} 
                 isOpen={saveModalIsOpen}
                 onSaveStock={onSaveStock}
                 onRequestClose={closeSaveModal}

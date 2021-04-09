@@ -8,7 +8,7 @@ import { DiscountPoliciesState } from '../../models/discountPolicy/store';
 function* fetchDiscountPolicyListSaga(action: ReturnType<typeof actions.fetchDiscountPolicyList>) {
     const discountPoliciesState: DiscountPoliciesState = yield select((state: RootState) => state.discountPolcies);
     
-    if(discountPoliciesState.discountPolicyListAsync.result !== undefined) {
+    if(discountPoliciesState.asyncDiscountPolicyList.result !== undefined) {
         return;
     }
 
@@ -16,7 +16,7 @@ function* fetchDiscountPolicyListSaga(action: ReturnType<typeof actions.fetchDis
         const discountPolicyList: DiscountPolicyResult[] = yield call(discountPolicyApi.findAll);
 
         yield put(actions.setDiscountPoliciesState({
-            discountPolicyListAsync: {
+            asyncDiscountPolicyList: {
                 result: discountPolicyList,
                 error: undefined
             },
@@ -24,7 +24,7 @@ function* fetchDiscountPolicyListSaga(action: ReturnType<typeof actions.fetchDis
         }));
     } catch (error) {
         yield put(actions.setDiscountPoliciesState({
-            discountPolicyListAsync: {
+            asyncDiscountPolicyList: {
                 result: undefined,
                 error: error
             },

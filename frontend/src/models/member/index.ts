@@ -1,5 +1,5 @@
 export interface MemberResult {
-    id: number;
+    id: string;
     name: string;
     phoneNumber: string;
     roleName: string;
@@ -7,7 +7,7 @@ export interface MemberResult {
 }  
 
 export interface MemberDetailResult {
-    id: number;
+    id: string;
     name: string;
     phoneNumber: string;
     zipCode: string;

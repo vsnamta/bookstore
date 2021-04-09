@@ -7,7 +7,7 @@ import { rootActions } from '../../store';
 
 function DiscountPolicyManagementPage() {
     const dispatch = useDispatch();
-    const { discountPolicyListAsync, discountPolicy } = useSelector((state: RootState) => state.discountPolcies);
+    const { asyncDiscountPolicyList, discountPolicy } = useSelector((state: RootState) => state.discountPolcies);
 
     useEffect(() => {
         dispatch(rootActions.fetchDiscountPolicyList());
@@ -27,7 +27,7 @@ function DiscountPolicyManagementPage() {
 
     return (
         <DiscountPolicyManagementTemplate 
-            discountPolicyListAsync={discountPolicyListAsync}
+            asyncDiscountPolicyList={asyncDiscountPolicyList}
             discountPolicy={discountPolicy}
             selectDiscountPolicy={selectDiscountPolicy}
             updateDiscountPolicy={updateDiscountPolicy}

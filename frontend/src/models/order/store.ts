@@ -3,17 +3,17 @@ import { ApiError } from "../../error/ApiError";
 import { FindPayload, Page } from "../common";
 
 export interface OrdersState {
-    orderPageAsync: OrderPageAsync;
-    orderAsync: OrderAsync;
+    asyncOrderPage: AsyncOrderPage;
+    asyncOrder: AsyncOrder;
 }
 
-export interface OrderPageAsync {
+export interface AsyncOrderPage {
     payload?: FindPayload;
     result?: Page<OrderResult>;
     error?: ApiError; 
 }
 
-export interface OrderAsync {
+export interface AsyncOrder {
     payload?: number;
     result?: OrderDetailResult;
     error?: ApiError;

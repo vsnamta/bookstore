@@ -15,7 +15,7 @@ function ProductManagementPage() {
     });
 
     const dispatch = useDispatch();
-    const productPageAsync = useSelector((state: RootState) => state.products.productPageAsync);
+    const asyncProductPage = useSelector((state: RootState) => state.products.asyncProductPage);
 
     useEffect(() => {
         dispatch(rootActions.fetchProductPage({
@@ -42,17 +42,17 @@ function ProductManagementPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(rootActions.fetchProductPage({
-            ...productPageAsync.payload as ProductFindPayload,
+            ...asyncProductPage.payload as ProductFindPayload,
             pageCriteria: {
-                ...(productPageAsync.payload as ProductFindPayload).pageCriteria, 
+                ...(asyncProductPage.payload as ProductFindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [productPageAsync.payload]);
+    }, [asyncProductPage.payload]);
     
     return (
         <ProductManagementTemplate 
-            productPageAsync={productPageAsync}
+            asyncProductPage={asyncProductPage}
             onUpdateSearchCriteria={onUpdateSearchCriteria}
             onPageChange={onPageChange}
         />

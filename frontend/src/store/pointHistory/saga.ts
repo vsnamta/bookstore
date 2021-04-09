@@ -9,21 +9,21 @@ import { PointHistoriesState } from '../../models/pointHistory/store';
 function* fetchPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnType<typeof actions.fetchPointHistoryPage>) {
     const pointHistoriesState: PointHistoriesState = yield select((state: RootState) => state.pointHistories);
     
-    if(JSON.stringify(pointHistoriesState.pointHistoryPageAsync.payload) === JSON.stringify(pointHistoryFindPayload) 
-        && pointHistoriesState.pointHistoryPageAsync.result !== undefined) {
+    if(JSON.stringify(pointHistoriesState.asyncPointHistoryPage.payload) === JSON.stringify(pointHistoryFindPayload) 
+        && pointHistoriesState.asyncPointHistoryPage.result !== undefined) {
         return;
     }
 
     try {
         const pointHistoryPage: Page<PointHistoryResult> = yield call(PointHistoryApi.findAll, pointHistoryFindPayload);
 
-        yield put(actions.setPointHistoryPageAsync({
+        yield put(actions.setAsyncPointHistoryPage({
             payload: pointHistoryFindPayload,
             result: pointHistoryPage,
             error: undefined
         }));
     } catch (error) {
-        yield put(actions.setPointHistoryPageAsync({
+        yield put(actions.setAsyncPointHistoryPage({
             payload: pointHistoryFindPayload,
             result: undefined,
             error: error

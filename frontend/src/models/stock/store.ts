@@ -3,10 +3,10 @@ import { ApiError } from "../../error/ApiError";
 import { Page } from "../common";
 
 export interface StocksState {
-    stockPageAsync: StockPageAsync;
+    asyncStockPage: AsyncStockPage;
 }
 
-export interface StockPageAsync {
+export interface AsyncStockPage {
     payload?: StockFindPayload;
     result?: Page<StockResult>;
     error?: ApiError; 

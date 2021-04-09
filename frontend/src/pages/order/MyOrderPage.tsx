@@ -9,7 +9,7 @@ import { RootState, rootActions } from '../../store';
 function MyOrderPage() {
     const dispatch = useDispatch();
     const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
-    const { orderPageAsync, orderAsync } = useSelector((state: RootState) => state.orders);
+    const { asyncOrderPage, asyncOrder } = useSelector((state: RootState) => state.orders);
 
     useEffect(() => {
         dispatch(rootActions.fetchOrderPage({
@@ -28,18 +28,18 @@ function MyOrderPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(rootActions.fetchOrderPage({
-            ...orderPageAsync.payload as FindPayload,
+            ...asyncOrderPage.payload as FindPayload,
             pageCriteria: {
-                ...(orderPageAsync.payload as FindPayload).pageCriteria, 
+                ...(asyncOrderPage.payload as FindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [orderPageAsync.payload]);
+    }, [asyncOrderPage.payload]);
 
     return (
         <MyOrderTemplate 
-            orderPageAsync={orderPageAsync}
-            orderAsync={orderAsync}
+            asyncOrderPage={asyncOrderPage}
+            asyncOrder={asyncOrder}
             selectOrder={selectOrder}
             updateOrder={updateOrder}
             onPageChange={onPageChange}

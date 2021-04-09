@@ -4,23 +4,23 @@ import ErrorDetail from '../general/ErrorDetail';
 import OrderForm from './OrderForm';
 import { OrderingProduct } from '../../models/order';
 import { OrderSaveAsyncPayload } from '../../models/order/store';
-import { MemberAsync } from '../../models/member/store';
+import { AsyncMember } from '../../models/member/store';
 
 interface OrderFormTemplateProps {
-    memberAsync: MemberAsync;
+    asyncMember: AsyncMember;
     orderingProductList: OrderingProduct[];
     saveOrder: (payload: OrderSaveAsyncPayload) => void;
 }
 
-function OrderFormTemplate({ memberAsync, orderingProductList, saveOrder }: OrderFormTemplateProps) {
+function OrderFormTemplate({ asyncMember, orderingProductList, saveOrder }: OrderFormTemplateProps) {
     return (
         <Layout>
             <OrderForm 
-                member={memberAsync.result}
+                member={asyncMember.result}
                 orderingProductList={orderingProductList} 
                 onSaveOrder={saveOrder} 
             />
-            {memberAsync.error && <ErrorDetail message={memberAsync.error.message} />}
+            {asyncMember.error && <ErrorDetail message={asyncMember.error.message} />}
         </Layout>
     )
 };

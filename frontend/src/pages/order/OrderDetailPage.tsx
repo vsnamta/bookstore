@@ -8,7 +8,7 @@ function OrderDetailPage() {
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const orderAsync = useSelector((state: RootState) => state.orders.orderAsync);
+    const asyncOrder = useSelector((state: RootState) => state.orders.asyncOrder);
 
     useEffect(() => {
         dispatch(rootActions.fetchOrder(Number.parseInt(id)));
@@ -16,7 +16,7 @@ function OrderDetailPage() {
 
     return (
         <OrderDetailTemplate 
-            orderAsync={orderAsync}
+            asyncOrder={asyncOrder}
         />
     )
 };

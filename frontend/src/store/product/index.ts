@@ -1,13 +1,13 @@
 import { ActionType, createAction, createReducer } from 'typesafe-actions';
 import { Page } from '../../models/common';
 import { ProductDetailResult, ProductFindPayload, ProductResult } from '../../models/product';
-import { ProductAsync, ProductPageAsync, ProductSaveAsyncPayload, ProductsState, ProductUpdateAsyncPayload } from '../../models/product/store';
+import { AsyncProduct, AsyncProductPage, ProductSaveAsyncPayload, ProductsState, ProductUpdateAsyncPayload } from '../../models/product/store';
 
 export const types = {
     FETCH_PRODUCT_PAGE: 'product/FETCH_PRODUCT_PAGE' as const,
-    SET_PRODUCT_PAGE_ASYNC: 'product/SET_PRODUCT_PAGE_ASYNC' as const,
+    SET_ASYNC_PRODUCT_PAGE: 'product/SET_ASYNC_PRODUCT_PAGE' as const,
     FETCH_PRODUCT: 'product/FETCH_PRODUCT' as const,
-    SET_PRODUCT_ASYNC: 'product/SET_PRODUCT_ASYNC' as const,
+    SET_ASYNC_PRODUCT: 'product/SET_ASYNC_PRODUCT' as const,
     UPDATE_PRODUCT_ASYNC: 'product/UPDATE_PRODUCT_ASYNC' as const,
     UPDATE_PRODUCT: 'product/UPDATE_PRODUCT' as const,
     SAVE_PRODUCT_ASYNC: 'product/SAVE_PRODUCT_ASYNC' as const,
@@ -16,9 +16,9 @@ export const types = {
 
 export const actions = {
     fetchProductPage: createAction(types.FETCH_PRODUCT_PAGE)<ProductFindPayload>(), 
-    setProductPageAsync: createAction(types.SET_PRODUCT_PAGE_ASYNC)<ProductPageAsync>(),
+    setAsyncProductPage: createAction(types.SET_ASYNC_PRODUCT_PAGE)<AsyncProductPage>(),
     fetchProduct: createAction(types.FETCH_PRODUCT)<number>(), 
-    setProductAsync: createAction(types.SET_PRODUCT_ASYNC)<ProductAsync>(),
+    setAsyncProduct: createAction(types.SET_ASYNC_PRODUCT)<AsyncProduct>(),
     updateProductAsync: createAction(types.UPDATE_PRODUCT_ASYNC)<ProductUpdateAsyncPayload>(), 
     updateProduct: createAction(types.UPDATE_PRODUCT)<ProductDetailResult>(), 
     saveProductAsync: createAction(types.SAVE_PRODUCT_ASYNC)<ProductSaveAsyncPayload>(),
@@ -26,12 +26,12 @@ export const actions = {
 };
 
 const initialState: ProductsState = {
-    productPageAsync: {
+    asyncProductPage: {
         payload : undefined,
         result: undefined,
         error: undefined
     },
-    productAsync: {
+    asyncProduct: {
         payload: undefined,
         result: undefined,
         error: undefined
@@ -39,20 +39,20 @@ const initialState: ProductsState = {
 };
 
 const reducer = createReducer<ProductsState, ActionType<typeof actions>>(initialState, {
-    [types.SET_PRODUCT_PAGE_ASYNC]: (state, { payload: productPageAsync }: ReturnType<typeof actions.setProductPageAsync>) => ({
+    [types.SET_ASYNC_PRODUCT_PAGE]: (state, { payload: asyncProductPage }: ReturnType<typeof actions.setAsyncProductPage>) => ({
         ...state,
-        productPageAsync: productPageAsync
+        asyncProductPage: asyncProductPage
     }),
-    [types.SET_PRODUCT_ASYNC]: (state, { payload: productAsync }: ReturnType<typeof actions.setProductAsync>) => ({
+    [types.SET_ASYNC_PRODUCT]: (state, { payload: asyncProduct }: ReturnType<typeof actions.setAsyncProduct>) => ({
         ...state,
-        productAsync: productAsync
+        asyncProduct: asyncProduct
     }),
     [types.UPDATE_PRODUCT]: (state, { payload: updatedProduct }: ReturnType<typeof actions.updateProduct>) => ({
-        productPageAsync: {
-            ...state.productPageAsync,
+        asyncProductPage: {
+            ...state.asyncProductPage,
             result: {
-                ...state.productPageAsync.result as Page<ProductResult>,
-                list: (state.productPageAsync.result as Page<ProductResult>).list
+                ...state.asyncProductPage.result as Page<ProductResult>,
+                list: (state.asyncProductPage.result as Page<ProductResult>).list
                     .map(product => 
                         product.id === updatedProduct.id
                             ? updatedProduct
@@ -60,8 +60,8 @@ const reducer = createReducer<ProductsState, ActionType<typeof actions>>(initial
                     )
             }
         },
-        productAsync: {
-            ...state.productAsync,
+        asyncProduct: {
+            ...state.asyncProduct,
             result: updatedProduct
         }
     }),

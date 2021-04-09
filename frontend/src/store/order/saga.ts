@@ -10,21 +10,21 @@ import { OrdersState } from '../../models/order/store';
 function* fetchOrderPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchOrderPage>) {
     const ordersState: OrdersState = yield select((state: RootState) => state.orders);
     
-    if(JSON.stringify(ordersState.orderPageAsync.payload) === JSON.stringify(findPayload) 
-        && ordersState.orderPageAsync.result !== undefined) {
+    if(JSON.stringify(ordersState.asyncOrderPage.payload) === JSON.stringify(findPayload) 
+        && ordersState.asyncOrderPage.result !== undefined) {
         return;
     }
 
     try {
         const orderPage: Page<OrderResult> = yield call(orderApi.findAll, findPayload);
 
-        yield put(actions.setOrderPageAsync({
+        yield put(actions.setAsyncOrderPage({
             payload: findPayload,
             result: orderPage,
             error: undefined
         }));
     } catch (error) {
-        yield put(actions.setOrderPageAsync({
+        yield put(actions.setAsyncOrderPage({
             payload: findPayload,
             result: undefined,
             error: error
@@ -35,20 +35,20 @@ function* fetchOrderPageSaga({ payload: findPayload }: ReturnType<typeof actions
 function* fetchOrderSaga({ payload: id }: ReturnType<typeof actions.fetchOrder>) {
     const ordersState: OrdersState = yield select((state: RootState) => state.orders);
     
-    if(ordersState.orderAsync.payload === id && ordersState.orderAsync.result !== undefined) {
+    if(ordersState.asyncOrder.payload === id && ordersState.asyncOrder.result !== undefined) {
         return;
     }
 
     try {
         const order: OrderDetailResult = yield call(orderApi.findOne, id);
 
-        yield put(actions.setOrderAsync({
+        yield put(actions.setAsyncOrder({
             payload: id,
             result: order,
             error: undefined
         }));
     } catch (error) {
-        yield put(actions.setOrderAsync({
+        yield put(actions.setAsyncOrder({
             payload: id,
             result: undefined,
             error: error
@@ -81,12 +81,12 @@ function* saveOrderAsyncSaga({ payload: orderSaveAsyncPayload }: ReturnType<type
         const orderPage: Page<OrderResult> = yield call(orderApi.findAll, findPayload);
 
         yield put(actions.setOrdersState({
-            orderPageAsync: {
+            asyncOrderPage: {
                 payload: findPayload,
                 result: orderPage,
                 error: undefined
             },
-            orderAsync: {
+            asyncOrder: {
                 payload: order.id,
                 result: order,
                 error: undefined

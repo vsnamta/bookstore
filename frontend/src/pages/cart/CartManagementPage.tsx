@@ -9,7 +9,7 @@ import { rootActions } from '../../store';
 function CartManagementPage() {
     const dispatch = useDispatch();
     const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
-    const cartListAsync = useSelector((state: RootState) => state.carts.cartListAsync);
+    const asyncCartList = useSelector((state: RootState) => state.carts.asyncCartList);
 
     useEffect(() => {
         dispatch(rootActions.fetchCartList({ memberId: myData.id }));
@@ -33,7 +33,7 @@ function CartManagementPage() {
     
     return (
         <CartManagementTemplate 
-            cartListAsync={cartListAsync} 
+            asyncCartList={asyncCartList} 
             updateCart={updateCart} 
             removeCart={removeCart}
             checkAllCart={checkAllCart}

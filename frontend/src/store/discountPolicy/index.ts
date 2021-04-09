@@ -1,6 +1,6 @@
 import { ActionType, createAction, createReducer } from 'typesafe-actions';
 import { DiscountPolicyResult } from '../../models/discountPolicy';
-import { DiscountPoliciesState, DiscountPolicyListAsync, DiscountPolicySaveAsyncPayload, DiscountPolicyUpdateAsyncPayload } from '../../models/discountPolicy/store';
+import { DiscountPoliciesState, DiscountPolicySaveAsyncPayload, DiscountPolicyUpdateAsyncPayload } from '../../models/discountPolicy/store';
 
 export const types = {
     FETCH_DISCOUNT_POLICY_LIST: 'discountPolicy/FETCH_DISCOUNT_POLICY_LIST' as const,
@@ -23,7 +23,7 @@ export const actions = {
 };
 
 const initialState: DiscountPoliciesState = {
-    discountPolicyListAsync: {
+    asyncDiscountPolicyList: {
         result: undefined,
         error: undefined
     },
@@ -36,13 +36,13 @@ const reducer = createReducer<DiscountPoliciesState, ActionType<typeof actions>>
     ),
     [types.SELECT_DISCOUNT_POLICY]: (state, { payload: id }: ReturnType<typeof actions.selectDiscountPolicy>) => ({
         ...state,
-        discountPolicy: (state.discountPolicyListAsync.result as DiscountPolicyResult[])
+        discountPolicy: (state.asyncDiscountPolicyList.result as DiscountPolicyResult[])
             .find(discountPolicy => discountPolicy.id === id)
     }),
     [types.UPDATE_DISCOUNT_POLICY]: (state, { payload: updatedDiscountPolicy }: ReturnType<typeof actions.updateDiscountPolicy>) => ({
-        discountPolicyListAsync: {
-            // ...state.discountPolicyListAsync,
-            result: (state.discountPolicyListAsync.result as DiscountPolicyResult[]).map(discountPolicy => 
+        asyncDiscountPolicyList: {
+            // ...state.asyncDiscountPolicyList,
+            result: (state.asyncDiscountPolicyList.result as DiscountPolicyResult[]).map(discountPolicy => 
                 discountPolicy.id === updatedDiscountPolicy.id 
                     ? updatedDiscountPolicy 
                     : discountPolicy
@@ -51,9 +51,9 @@ const reducer = createReducer<DiscountPoliciesState, ActionType<typeof actions>>
         discountPolicy: updatedDiscountPolicy
     }),
     [types.SAVE_DISCOUNT_POLICY]: (state, { payload: savedDiscountPolicy }: ReturnType<typeof actions.saveDiscountPolicy>) => ({
-        discountPolicyListAsync: {
-            // ...state.discountPolicyListAsync,
-            result: (state.discountPolicyListAsync.result as DiscountPolicyResult[]).concat(savedDiscountPolicy)
+        asyncDiscountPolicyList: {
+            // ...state.asyncDiscountPolicyList,
+            result: (state.asyncDiscountPolicyList.result as DiscountPolicyResult[]).concat(savedDiscountPolicy)
         },
         discountPolicy: savedDiscountPolicy
     })

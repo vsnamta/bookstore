@@ -6,7 +6,7 @@ import MemberManagementTemplate from '../../components/member/MemberManagementTe
 
 function MemberManagementPage() {
     const dispatch = useDispatch();
-    const memberPageAsync = useSelector((state: RootState) => state.members.memberPageAsync);
+    const asyncMemberPage = useSelector((state: RootState) => state.members.asyncMemberPage);
 
     useEffect(() => {
         dispatch(rootActions.fetchMemberPage({
@@ -23,17 +23,17 @@ function MemberManagementPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(rootActions.fetchMemberPage({
-            ...memberPageAsync.payload as FindPayload,
+            ...asyncMemberPage.payload as FindPayload,
             pageCriteria: {
-                ...(memberPageAsync.payload as FindPayload).pageCriteria, 
+                ...(asyncMemberPage.payload as FindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [memberPageAsync.payload]);
+    }, [asyncMemberPage.payload]);
 
     return (
         <MemberManagementTemplate 
-            memberPageAsync={memberPageAsync}
+            asyncMemberPage={asyncMemberPage}
             onUpdateSearchCriteria={onUpdateSearchCriteria}
             onPageChange={onPageChange}
         />

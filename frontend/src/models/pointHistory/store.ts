@@ -3,10 +3,10 @@ import { ApiError } from "../../error/ApiError";
 import { Page } from "../common";
 
 export interface PointHistoriesState {
-    pointHistoryPageAsync: PointHistoryPageAsync;
+    asyncPointHistoryPage: AsyncPointHistoryPage;
 }
 
-export interface PointHistoryPageAsync {
+export interface AsyncPointHistoryPage {
     payload?: PointHistoryFindPayload;
     result?: Page<PointHistoryResult>;
     error?: ApiError; 

@@ -9,6 +9,6 @@ export interface PointHistoryResult {
 }
 
 export interface PointHistoryFindPayload {
-    memberId: number;
+    memberId: string;
     pageCriteria: PageCriteria;
 }

@@ -14,7 +14,7 @@ function ProductListPage() {
     });
 
     const dispatch = useDispatch();
-    const productPageAsync = useSelector((state: RootState) => state.products.productPageAsync);
+    const asyncProductPage = useSelector((state: RootState) => state.products.asyncProductPage);
 
     useEffect(() => {
         dispatch(rootActions.fetchProductPage({
@@ -34,28 +34,28 @@ function ProductListPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(rootActions.fetchProductPage({
-            ...productPageAsync.payload as ProductFindPayload,
+            ...asyncProductPage.payload as ProductFindPayload,
             pageCriteria: {
-                ...(productPageAsync.payload as ProductFindPayload).pageCriteria, 
+                ...(asyncProductPage.payload as ProductFindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [productPageAsync.payload]);
+    }, [asyncProductPage.payload]);
 
     const onSortChange = useCallback((sortCriteria: { sortColumn: string, sortDirection: string }) => {
         dispatch(rootActions.fetchProductPage({
-            ...productPageAsync.payload as ProductFindPayload,
+            ...asyncProductPage.payload as ProductFindPayload,
             pageCriteria: {
-                ...(productPageAsync.payload as ProductFindPayload).pageCriteria, 
+                ...(asyncProductPage.payload as ProductFindPayload).pageCriteria, 
                 sortColumn: sortCriteria.sortColumn,
                 sortDirection: sortCriteria.sortDirection
             }
         }));
-    }, [productPageAsync.payload]);
+    }, [asyncProductPage.payload]);
 
     return (
         <ProductListTemplate 
-            productPageAsync={productPageAsync}
+            asyncProductPage={asyncProductPage}
             onPageChange={onPageChange}
             onSortChange={onSortChange}
         />

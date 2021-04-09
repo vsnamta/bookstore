@@ -9,21 +9,21 @@ import { StocksState } from '../../models/stock/store';
 function* fetchStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof actions.fetchStockPage>) {
     const stocksState: StocksState = yield select((state: RootState) => state.products);
     
-    if(JSON.stringify(stocksState.stockPageAsync.payload) === JSON.stringify(stockFindPayload) 
-        && stocksState.stockPageAsync.result !== undefined) {
+    if(JSON.stringify(stocksState.asyncStockPage.payload) === JSON.stringify(stockFindPayload) 
+        && stocksState.asyncStockPage.result !== undefined) {
         return;
     }
 
     try {
         const stockPage: Page<StockResult> = yield call(stockApi.findAll, stockFindPayload);
 
-        yield put(actions.setStockPageAsync({
+        yield put(actions.setAsyncStockPage({
             payload: stockFindPayload,
             result: stockPage,
             error: undefined
         }));
     } catch (error) {
-        yield put(actions.setStockPageAsync({
+        yield put(actions.setAsyncStockPage({
             payload: stockFindPayload,
             result: undefined,
             error: error
@@ -42,7 +42,7 @@ function* saveStockAsyncSaga({ payload: stockSaveAsyncPayload }: ReturnType<type
 
         const stockPage: Page<StockResult> = yield call(stockApi.findAll, stockFindPayload);
 
-        yield put(actions.setStockPageAsync({
+        yield put(actions.setAsyncStockPage({
             payload: stockFindPayload,
             result: stockPage,
             error: undefined

@@ -10,21 +10,21 @@ import { ProductsState } from '../../models/product/store';
 function* fetchProductPageSaga({ payload: productFindPayload }: ReturnType<typeof actions.fetchProductPage>) {
     const productsState: ProductsState = yield select((state: RootState) => state.products);
     
-    if(JSON.stringify(productsState.productPageAsync.payload) === JSON.stringify(productFindPayload) 
-        && productsState.productPageAsync.result !== undefined) {
+    if(JSON.stringify(productsState.asyncProductPage.payload) === JSON.stringify(productFindPayload) 
+        && productsState.asyncProductPage.result !== undefined) {
         return;
     }
 
     try {
         const productPage: Page<ProductResult> = yield call(productApi.findAll, productFindPayload);
 
-        yield put(actions.setProductPageAsync({
+        yield put(actions.setAsyncProductPage({
             payload: productFindPayload,
             result: productPage,
             error: undefined
         }));
     } catch (error) {
-        yield put(actions.setProductPageAsync({
+        yield put(actions.setAsyncProductPage({
             payload: productFindPayload,
             result: undefined,
             error: error
@@ -35,20 +35,20 @@ function* fetchProductPageSaga({ payload: productFindPayload }: ReturnType<typeo
 function* findProductSaga({ payload: id }: ReturnType<typeof actions.fetchProduct>) {
     const productsState: ProductsState = yield select((state: RootState) => state.products);
 
-    if(productsState.productAsync.payload === id && productsState.productAsync.result !== undefined) {
+    if(productsState.asyncProduct.payload === id && productsState.asyncProduct.result !== undefined) {
         return;
     }
 
     try {
         const product: ProductDetailResult = yield call(productApi.findOne, id);
 
-        yield put(actions.setProductAsync({
+        yield put(actions.setAsyncProduct({
             payload: id,
             result: product,
             error: undefined
         }));
     } catch (error) {
-        yield put(actions.setProductAsync({
+        yield put(actions.setAsyncProduct({
             payload: id,
             result: undefined,
             error: error
@@ -90,12 +90,12 @@ function* saveProductAsyncSaga({ payload: productSaveAsyncPayload }: ReturnType<
         const productPage: Page<ProductResult> = yield call(productApi.findAll, productFindPayload);
 
         yield put(actions.setProductsState({
-            productPageAsync: {
+            asyncProductPage: {
                 payload: productFindPayload,
                 result: productPage,
                 error: undefined
             },
-            productAsync: {
+            asyncProduct: {
                 payload: product.id,
                 result: product,
                 error: undefined

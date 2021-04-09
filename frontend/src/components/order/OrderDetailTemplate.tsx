@@ -1,18 +1,18 @@
 import React from 'react';
-import { OrderAsync } from '../../models/order/store';
+import { AsyncOrder } from '../../models/order/store';
 import Layout from '../common/Layout';
 import ErrorDetail from '../general/ErrorDetail';
 import OrderDetail from './OrderDetail';
 
 interface OrderDetailTemplateProps {
-    orderAsync: OrderAsync;
+    asyncOrder: AsyncOrder;
 }
 
-function OrderDetailTemplate({ orderAsync }: OrderDetailTemplateProps) {
+function OrderDetailTemplate({ asyncOrder }: OrderDetailTemplateProps) {
     return (
         <Layout>
-            <OrderDetail order={orderAsync.result} />
-            {orderAsync.error && <ErrorDetail message={orderAsync.error.message} />}
+            <OrderDetail order={asyncOrder.result} />
+            {asyncOrder.error && <ErrorDetail message={asyncOrder.error.message} />}
         </Layout>
     )
 };

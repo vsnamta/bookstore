@@ -9,10 +9,10 @@ import Title from '../general/Title';
 import useModal from '../../hooks/useModal';
 import { CategoryResult } from '../../models/category';
 import { CategoryRemoveAsyncPayload, CategorySaveAsyncPayload, CategoryUpdateAsyncPayload } from '../../models/category/store';
-import { CategoryListAsync } from '../../models/category/store';
+import { AsyncCategoryList } from '../../models/category/store';
 
 interface CategoryManagementTemplateProps {
-    categoryListAsync: CategoryListAsync;
+    asyncCategoryList: AsyncCategoryList;
     category?: CategoryResult;
     selectCategory: (id: number) => void;
     removeCategory: (payload: CategoryRemoveAsyncPayload) => void;
@@ -21,7 +21,7 @@ interface CategoryManagementTemplateProps {
 }
 
 function CategoryManagementTemplate({ 
-    categoryListAsync, category, selectCategory, removeCategory, updateCategory, saveCategory 
+    asyncCategoryList, category, selectCategory, removeCategory, updateCategory, saveCategory 
 }: CategoryManagementTemplateProps) {
     const [saveCategoryType, setSaveCategoryType] = useState<string>("super");
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
@@ -56,20 +56,20 @@ function CategoryManagementTemplate({
                 onOpenSaveModal={onOpenSaveModal}
             />
             <CategoryList 
-                categoryList={categoryListAsync.result}
+                categoryList={asyncCategoryList.result}
                 onSelectCategory={onSelectCategory}
                 onRemoveCategory={removeCategory}
             />
-            {categoryListAsync.error && <ErrorDetail message={categoryListAsync.error.message} />}
+            {asyncCategoryList.error && <ErrorDetail message={asyncCategoryList.error.message} />}
             <CategorySaveModal 
-                categoryList={saveCategoryType === "super" ? undefined : categoryListAsync.result}
+                categoryList={saveCategoryType === "super" ? undefined : asyncCategoryList.result}
                 isOpen={saveModalIsOpen}
                 onSaveCategory={onSaveCategory}
                 onRequestClose={closeSaveModal}
             />
             <CategoryUpdateModal 
                 category={category}
-                categoryList={!category?.parentId? undefined : categoryListAsync.result}
+                categoryList={!category?.parentId? undefined : asyncCategoryList.result}
                 isOpen={updateModalIsOpen}
                 onUpdateCategory={updateCategory}
                 onRequestClose={closeUpdateModal}

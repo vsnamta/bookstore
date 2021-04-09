@@ -6,33 +6,33 @@ import Title from '../general/Title';
 import AdminProductList from './AdminProductList';
 import ProductManagementBar from './ProductManagementBar';
 import { SearchCriteria } from '../../models/common';
-import { ProductPageAsync } from '../../models/product/store';
+import { AsyncProductPage } from '../../models/product/store';
 
 interface ProductManagementTemplateProps {
-    productPageAsync: ProductPageAsync;
+    asyncProductPage: AsyncProductPage;
     onUpdateSearchCriteria: (searchCriteria: SearchCriteria) => void;
     onPageChange: (selectedItem: {
         selected: number;
     }) => void;
 }
 
-function ProductManagementTemplate({ productPageAsync, onUpdateSearchCriteria, onPageChange }: ProductManagementTemplateProps) {
+function ProductManagementTemplate({ asyncProductPage, onUpdateSearchCriteria, onPageChange }: ProductManagementTemplateProps) {
     return (
         <AdminLayout>
             <Title content={"상품 관리"} />
             <ProductManagementBar
-                searchCriteria={productPageAsync.payload?.searchCriteria}
+                searchCriteria={asyncProductPage.payload?.searchCriteria}
                 onUpdateSearchCriteria={onUpdateSearchCriteria}  
             />
             <AdminProductList 
-                productList={productPageAsync.result?.list} 
+                productList={asyncProductPage.result?.list} 
             />
             <Pagination
-                page={productPageAsync.payload?.pageCriteria.page}  
-                totalCount={productPageAsync.result?.totalCount}
+                page={asyncProductPage.payload?.pageCriteria.page}  
+                totalCount={asyncProductPage.result?.totalCount}
                 onPageChange={onPageChange}
             />
-            {productPageAsync.error && <ErrorDetail message={productPageAsync.error.message} />}
+            {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />}
         </AdminLayout>
     )
 };

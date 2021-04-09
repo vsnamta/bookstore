@@ -8,7 +8,7 @@ import { CategoriesState } from '../../models/category/store';
 function* fetchCategoryListSaga(action: ReturnType<typeof actions.fetchCategoryList>) {
     const categoriesState: CategoriesState = yield select((state: RootState) => state.categories);
     
-    if(categoriesState.categoryListAsync.result !== undefined) {
+    if(categoriesState.asyncCategoryList.result !== undefined) {
         return;
     }
 
@@ -16,7 +16,7 @@ function* fetchCategoryListSaga(action: ReturnType<typeof actions.fetchCategoryL
         const categoryList: CategoryResult[] = yield call(categoryApi.findAll);
 
         yield put(actions.setCategoriesState({
-            categoryListAsync: {
+            asyncCategoryList: {
                 result: categoryList,
                 error: undefined
             },
@@ -24,7 +24,7 @@ function* fetchCategoryListSaga(action: ReturnType<typeof actions.fetchCategoryL
         }));
     } catch (error) {
         yield put(actions.setCategoriesState({
-            categoryListAsync: {
+            asyncCategoryList: {
                 result: undefined,
                 error: error
             },

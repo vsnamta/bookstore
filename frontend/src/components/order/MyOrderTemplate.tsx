@@ -5,16 +5,13 @@ import Layout from '../common/Layout';
 import MyPageLayout from '../common/MyPageLayout';
 import OrderDetailModal from './OrderDetailModal';
 import OrderList from './OrderList';
-import { ApiError } from '../../error/ApiError';
 import useModal from '../../hooks/useModal';
-import { FindPayload, Page } from '../../models/common';
-import { OrderDetailResult, OrderResult } from '../../models/order';
 import { OrderUpdateAsyncPayload } from '../../models/order/store';
-import { OrderAsync, OrderPageAsync } from '../../models/order/store';
+import { AsyncOrder, AsyncOrderPage } from '../../models/order/store';
 
 interface MyOrderTemplateProps {
-    orderPageAsync: OrderPageAsync;
-    orderAsync: OrderAsync;
+    asyncOrderPage: AsyncOrderPage;
+    asyncOrder: AsyncOrder;
     selectOrder: (id: number) => void;
     updateOrder: (payload: OrderUpdateAsyncPayload) => void;
     onPageChange: (selectedItem: {
@@ -22,7 +19,7 @@ interface MyOrderTemplateProps {
     }) => void;
 }
 
-function MyOrderTemplate({ orderPageAsync, orderAsync, selectOrder, updateOrder, onPageChange }: MyOrderTemplateProps) {
+function MyOrderTemplate({ asyncOrderPage, asyncOrder, selectOrder, updateOrder, onPageChange }: MyOrderTemplateProps) {
     const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
 
     const onSelectOrder = useCallback((id: number) => {
@@ -35,18 +32,18 @@ function MyOrderTemplate({ orderPageAsync, orderAsync, selectOrder, updateOrder,
             <MyPageLayout>
                 <h3>주문내역</h3>
                 <OrderList 
-                    orderList={orderPageAsync.result?.list}
+                    orderList={asyncOrderPage.result?.list}
                     onSelectOrder={onSelectOrder} 
                     onUpdateOrder={updateOrder} 
                 />
                 <Pagination
-                    page={orderPageAsync.payload?.pageCriteria.page}  
-                    totalCount={orderPageAsync.result?.totalCount}
+                    page={asyncOrderPage.payload?.pageCriteria.page}  
+                    totalCount={asyncOrderPage.result?.totalCount}
                     onPageChange={onPageChange}
                 />
-                {orderPageAsync.error && <ErrorDetail message={orderPageAsync.error.message} />}
+                {asyncOrderPage.error && <ErrorDetail message={asyncOrderPage.error.message} />}
                 <OrderDetailModal 
-                    order={orderAsync.result}
+                    order={asyncOrder.result}
                     isOpen={updateModalIsOpen}
                     onRequestClose={closeUpdateModal}
                 />

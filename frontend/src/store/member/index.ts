@@ -1,24 +1,24 @@
 import { ActionType, createAction, createReducer } from 'typesafe-actions';
 import { FindPayload, Page } from '../../models/common';
 import { MemberDetailResult, MemberResult } from '../../models/member';
-import { MemberAsync, MemberPageAsync, MemberSaveAsyncPayload, MembersState, MemberUpdateAsyncPayload } from '../../models/member/store';
+import { AsyncMember, AsyncMemberPage, MemberSaveAsyncPayload, MembersState, MemberUpdateAsyncPayload } from '../../models/member/store';
 
 export const types ={
-    SET_MEMBERS_STATE: 'member/SET_MEMBERS_STATE' as const,
     FETCH_MEMBER_PAGE: 'member/FETCH_MEMBER_PAGE' as const,
-    SET_MEMBER_PAGE_ASYNC: 'member/SET_MEMBER_PAGE_ASYNC' as const,
+    SET_ASYNC_MEMBER_PAGE: 'member/SET_ASYNC_MEMBER_PAGE' as const,
     FETCH_MEMBER: 'member/FETCH_MEMBER' as const,
-    SET_MEMBER_ASYNC: 'member/SET_MEMBER_ASYNC' as const,
+    SET_ASYNC_MEMBER: 'member/SET_ASYNC_MEMBER' as const,
     UPDATE_MEMBER_ASYNC: 'member/UPDATE_MEMBER_ASYNC' as const,
     UPDATE_MEMBER: 'member/UPDATE_MEMBER' as const,
-    SAVE_MEMBER_ASYNC: 'member/SAVE_MEMBER_ASYNC' as const
+    SAVE_MEMBER_ASYNC: 'member/SAVE_MEMBER_ASYNC' as const,
+    SET_MEMBERS_STATE: 'member/SET_MEMBERS_STATE' as const
 };
 
 export const actions = {
     fetchMemberPage: createAction(types.FETCH_MEMBER_PAGE)<FindPayload>(), 
-    setMemberPageAsync: createAction(types.SET_MEMBER_PAGE_ASYNC)<MemberPageAsync>(),
-    fetchMember: createAction(types.FETCH_MEMBER)<number>(), 
-    setMemberAsync: createAction(types.SET_MEMBER_ASYNC)<MemberAsync>(),
+    setAsyncMemberPage: createAction(types.SET_ASYNC_MEMBER_PAGE)<AsyncMemberPage>(),
+    fetchMember: createAction(types.FETCH_MEMBER)<string>(), 
+    setAsyncMember: createAction(types.SET_ASYNC_MEMBER)<AsyncMember>(),
     updateMemberAsync: createAction(types.UPDATE_MEMBER_ASYNC)<MemberUpdateAsyncPayload>(), 
     updateMember: createAction(types.UPDATE_MEMBER)<MemberDetailResult>(),
     saveMemberAsync: createAction(types.SAVE_MEMBER_ASYNC)<MemberSaveAsyncPayload>(),
@@ -26,12 +26,12 @@ export const actions = {
 };
 
 const initialState: MembersState = {
-    memberPageAsync: {
+    asyncMemberPage: {
         payload : undefined,
         result: undefined,
         error: undefined
     },
-    memberAsync: {
+    asyncMember: {
         payload: undefined,
         result: undefined,
         error: undefined
@@ -39,22 +39,22 @@ const initialState: MembersState = {
 };
 
 const reducer = createReducer<MembersState, ActionType<typeof actions>>(initialState, {
-    [types.SET_MEMBER_PAGE_ASYNC]: (state, { payload: memberPageAsync }: ReturnType<typeof actions.setMemberPageAsync>) => ({
+    [types.SET_ASYNC_MEMBER_PAGE]: (state, { payload: asyncMemberPage }: ReturnType<typeof actions.setAsyncMemberPage>) => ({
         ...state,
-        memberPageAsync: memberPageAsync, 
+        asyncMemberPage: asyncMemberPage, 
     }),
-    [types.SET_MEMBER_ASYNC]: (state, { payload: memberAsync }: ReturnType<typeof actions.setMemberAsync>) => ({
+    [types.SET_ASYNC_MEMBER]: (state, { payload: asyncMember }: ReturnType<typeof actions.setAsyncMember>) => ({
         ...state,
-        memberAsync: memberAsync, 
+        asyncMember: asyncMember, 
     }),
     [types.UPDATE_MEMBER]: (state, { payload: updatedMember }: ReturnType<typeof actions.updateMember>) => ({
-        memberPageAsync: JSON.stringify(state.memberPageAsync) === JSON.stringify(initialState.memberPageAsync)
-        ? initialState.memberPageAsync
+        asyncMemberPage: JSON.stringify(state.asyncMemberPage) === JSON.stringify(initialState.asyncMemberPage)
+        ? initialState.asyncMemberPage
         : {
-            ...state.memberPageAsync,
+            ...state.asyncMemberPage,
             result: {
-                ...state.memberPageAsync.result as Page<MemberResult>,
-                list: (state.memberPageAsync.result as Page<MemberResult>).list
+                ...state.asyncMemberPage.result as Page<MemberResult>,
+                list: (state.asyncMemberPage.result as Page<MemberResult>).list
                     .map(member => 
                         member.id === updatedMember.id
                             ? updatedMember
@@ -62,8 +62,8 @@ const reducer = createReducer<MembersState, ActionType<typeof actions>>(initialS
                     )
             }
         },
-        memberAsync: {
-            ...state.memberAsync,
+        asyncMember: {
+            ...state.asyncMember,
             result: updatedMember
         }
     }),

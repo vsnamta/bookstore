@@ -7,7 +7,7 @@ import { RootState, rootActions } from '../../store';
 
 function OrderManagementPage() {
     const dispatch = useDispatch();
-    const { orderPageAsync, orderAsync } = useSelector((state: RootState) => state.orders);
+    const { asyncOrderPage, asyncOrder } = useSelector((state: RootState) => state.orders);
 
     useEffect(() => {
         dispatch(rootActions.fetchOrderPage({
@@ -32,18 +32,18 @@ function OrderManagementPage() {
 
     const onPageChange = useCallback((selectedItem: { selected: number }) => {
         dispatch(rootActions.fetchOrderPage({
-            ...orderPageAsync.payload as FindPayload,
+            ...asyncOrderPage.payload as FindPayload,
             pageCriteria: {
-                ...(orderPageAsync.payload as FindPayload).pageCriteria, 
+                ...(asyncOrderPage.payload as FindPayload).pageCriteria, 
                 page:selectedItem.selected + 1
             }
         }));
-    }, [orderPageAsync.payload]);
+    }, [asyncOrderPage.payload]);
 
     return (
         <OrderManagementTemplate 
-            orderPageAsync={orderPageAsync}
-            orderAsync={orderAsync}
+            asyncOrderPage={asyncOrderPage}
+            asyncOrder={asyncOrder}
             selectOrder={selectOrder}
             updateOrder={updateOrder}
             onUpdateSearchCriteria={onUpdateSearchCriteria}

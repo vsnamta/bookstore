@@ -13,12 +13,12 @@ interface LayoutProps {
 function Layout({ children }: LayoutProps) {
     // const { myData, categoryList } = useSelector(({ members, categories }: RootState) => ({
     //     myData: auths.myData,
-    //     categoryList: categories.categoryListAsync.result
+    //     categoryList: categories.asyncCategoryList.result
     // }));
     const dispatch = useDispatch();
 
     const myData = useSelector((state: RootState) => state.auths.myData);
-    const categoryList = useSelector((state: RootState) => state.categories.categoryListAsync.result);
+    const categoryList = useSelector((state: RootState) => state.categories.asyncCategoryList.result);
 
     const logout = useCallback((payload: LogoutAsyncPayload) => {
         dispatch(rootActions.logoutAsync(payload));

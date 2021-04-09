@@ -2,11 +2,11 @@ import { DiscountPolicyResult, DiscountPolicySaveOrUpdatePayload } from ".";
 import { ApiError } from "../../error/ApiError";
 
 export interface DiscountPoliciesState {
-    discountPolicyListAsync: DiscountPolicyListAsync,
+    asyncDiscountPolicyList: AsyncDiscountPolicyList,
     discountPolicy?: DiscountPolicyResult;
 }
 
-export interface DiscountPolicyListAsync {
+export interface AsyncDiscountPolicyList {
     result?: DiscountPolicyResult[];
     error?: ApiError;
 }

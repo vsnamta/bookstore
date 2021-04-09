@@ -1,5 +1,5 @@
 export interface MyData {
-    id: number;
+    id: string;
     name: string;
     role: string;
 }

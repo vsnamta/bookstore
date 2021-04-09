@@ -9,21 +9,21 @@ import { MembersState } from '../../models/member/store';
 function* fetchMemberPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchMemberPage>) {
     const membersState: MembersState = yield select((state: RootState) => state.members);
     
-    if(JSON.stringify(membersState.memberPageAsync.payload) === JSON.stringify(findPayload) 
-        && membersState.memberPageAsync.result !== undefined) {
+    if(JSON.stringify(membersState.asyncMemberPage.payload) === JSON.stringify(findPayload) 
+        && membersState.asyncMemberPage.result !== undefined) {
         return;
     }
 
     try {
         const memberList: Page<MemberResult> = yield call(memberApi.findAll, findPayload);
 
-        yield put(actions.setMemberPageAsync({
+        yield put(actions.setAsyncMemberPage({
             payload: findPayload,
             result: memberList,
             error: undefined
         }));
     } catch (error) {
-        yield put(actions.setMemberPageAsync({
+        yield put(actions.setAsyncMemberPage({
             payload: findPayload,
             result: undefined,
             error: error
@@ -34,20 +34,20 @@ function* fetchMemberPageSaga({ payload: findPayload }: ReturnType<typeof action
 function* fetchMemberSaga({ payload: id }: ReturnType<typeof actions.fetchMember>) {
     const membersState: MembersState = yield select((state: RootState) => state.members);
     
-    if(membersState.memberAsync.payload === id && membersState.memberAsync.result !== undefined) {
+    if(membersState.asyncMember.payload === id && membersState.asyncMember.result !== undefined) {
         return;
     }
 
     try {
         const member: MemberDetailResult = yield call(memberApi.findOne, id);
 
-        yield put(actions.setMemberAsync({
+        yield put(actions.setAsyncMember({
             payload: id,
             result: member,
             error: undefined
         }));
     } catch (error) {
-        yield put(actions.setMemberAsync({
+        yield put(actions.setAsyncMember({
             payload: id,
             result: undefined,
             error: error
@@ -71,12 +71,12 @@ function* saveMemberAsyncSaga({ payload: memberSaveAsyncPayload }: ReturnType<ty
         const member: MemberDetailResult = yield call(memberApi.save, memberSaveAsyncPayload.payload);
 
         yield put(actions.setMembersState({
-            memberPageAsync: {
+            asyncMemberPage: {
                 payload : undefined,
                 result: undefined,
                 error: undefined
             },
-            memberAsync: {
+            asyncMember: {
                 payload: member.id,
                 result: member,
                 error: undefined

@@ -8,10 +8,10 @@ import ReviewUpdateModal from './ReviewUpdateModal';
 import useModal from '../../hooks/useModal';
 import { ReviewResult } from '../../models/review';
 import { ReviewRemoveAsyncPayload, ReviewUpdateAsyncPayload } from '../../models/review/store';
-import { ReviewPageAsync } from '../../models/review/store';
+import { AsyncReviewPage } from '../../models/review/store';
 
 interface MyReviewTemplateProps {
-    reviewPageAsync: ReviewPageAsync;
+    asyncReviewPage: AsyncReviewPage;
     review?: ReviewResult;
     selectReview: (id: number) => void;
     removeReview: (payload: ReviewRemoveAsyncPayload) => void;
@@ -22,7 +22,7 @@ interface MyReviewTemplateProps {
 }
 
 function MyReviewTemplate({
-    reviewPageAsync, review, selectReview, removeReview, updateReview, onPageChange
+    asyncReviewPage, review, selectReview, removeReview, updateReview, onPageChange
 }: MyReviewTemplateProps) {
     const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
 
@@ -36,16 +36,16 @@ function MyReviewTemplate({
             <MyPageLayout>
                 <h3>리뷰내역</h3>
                 <MyReviewList 
-                    reviewList={reviewPageAsync.result?.list} 
+                    reviewList={asyncReviewPage.result?.list} 
                     onSelectReview={onSelectReview}
                     onRemoveReview={removeReview} 
                 />
                 <Pagination
-                    page={reviewPageAsync.payload?.pageCriteria.page}  
-                    totalCount={reviewPageAsync.result?.totalCount}
+                    page={asyncReviewPage.payload?.pageCriteria.page}  
+                    totalCount={asyncReviewPage.result?.totalCount}
                     onPageChange={onPageChange}
                 />
-                {reviewPageAsync.error && <ErrorDetail message={reviewPageAsync.error.message} />}
+                {asyncReviewPage.error && <ErrorDetail message={asyncReviewPage.error.message} />}
                 <ReviewUpdateModal 
                     review={review}
                     isOpen={updateModalIsOpen}

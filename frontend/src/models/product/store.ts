@@ -3,17 +3,17 @@ import { ApiError } from "../../error/ApiError";
 import { Page } from "../common";
 
 export interface ProductsState {
-    productPageAsync: ProductPageAsync;
-    productAsync: ProductAsync;
+    asyncProductPage: AsyncProductPage;
+    asyncProduct: AsyncProduct;
 }
 
-export interface ProductPageAsync {
+export interface AsyncProductPage {
     payload?: ProductFindPayload;
     result?: Page<ProductResult>;
     error?: ApiError; 
 }
 
-export interface ProductAsync {
+export interface AsyncProduct {
     payload?: number;
     result?: ProductDetailResult;
     error?: ApiError;

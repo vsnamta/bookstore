@@ -9,10 +9,10 @@ import Title from '../general/Title';
 import useModal from '../../hooks/useModal';
 import { DiscountPolicyResult } from '../../models/discountPolicy';
 import { DiscountPolicySaveAsyncPayload, DiscountPolicyUpdateAsyncPayload } from '../../models/discountPolicy/store';
-import { DiscountPolicyListAsync } from '../../models/discountPolicy/store';
+import { AsyncDiscountPolicyList } from '../../models/discountPolicy/store';
 
 interface DiscountPolicyManagementTemplateProps {
-    discountPolicyListAsync: DiscountPolicyListAsync;
+    asyncDiscountPolicyList: AsyncDiscountPolicyList;
     discountPolicy?: DiscountPolicyResult;
     selectDiscountPolicy: (id: number) => void;
     updateDiscountPolicy: (payload: DiscountPolicyUpdateAsyncPayload) => void;
@@ -20,7 +20,7 @@ interface DiscountPolicyManagementTemplateProps {
 }
 
 function DiscountPolicyManagementTemplate({ 
-    discountPolicyListAsync, discountPolicy, selectDiscountPolicy, updateDiscountPolicy, saveDiscountPolicy 
+    asyncDiscountPolicyList, discountPolicy, selectDiscountPolicy, updateDiscountPolicy, saveDiscountPolicy 
 }: DiscountPolicyManagementTemplateProps) {
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
     const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
@@ -49,10 +49,10 @@ function DiscountPolicyManagementTemplate({
                 onOpenSaveModal={openSaveModal}
             /> 
             <DiscountPolicyList 
-                discountPolicyList={discountPolicyListAsync.result} 
+                discountPolicyList={asyncDiscountPolicyList.result} 
                 onSelectDiscountPolicy={onSelectDiscountPolicy}
             />
-            {discountPolicyListAsync.error && <ErrorDetail message={discountPolicyListAsync.error.message} />}
+            {asyncDiscountPolicyList.error && <ErrorDetail message={asyncDiscountPolicyList.error.message} />}
             <DiscountPolicySaveModal 
                 isOpen={saveModalIsOpen}
                 onSaveDiscountPolicy={onSaveDiscountPolicy}

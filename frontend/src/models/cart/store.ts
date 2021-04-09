@@ -2,10 +2,10 @@ import { CartFindPayload, CartResult, CartSavePayload, CartUpdatePayload } from 
 import { ApiError } from "../../error/ApiError";
 
 export interface CartsState {
-    cartListAsync: CartListAsync;
+    asyncCartList: AsyncCartList;
 }
 
-export interface CartListAsync {
+export interface AsyncCartList {
     payload?: CartFindPayload;
     result?: CartResult[];
     error?: ApiError;

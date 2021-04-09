@@ -1,21 +1,18 @@
 import React, { useCallback } from 'react';
+import useModal from '../../hooks/useModal';
+import { SearchCriteria } from '../../models/common';
+import { AsyncOrder, AsyncOrderPage, OrderUpdateAsyncPayload } from '../../models/order/store';
+import AdminLayout from '../common/AdminLayout';
 import ErrorDetail from '../general/ErrorDetail';
 import Pagination from '../general/Pagination';
 import Title from '../general/Title';
-import AdminLayout from '../common/AdminLayout';
 import OrderDetailModal from './OrderDetailModal';
 import OrderList from './OrderList';
 import OrderManagementBar from './OrderManagementBar';
-import { ApiError } from '../../error/ApiError';
-import useModal from '../../hooks/useModal';
-import { FindPayload, Page, SearchCriteria } from '../../models/common';
-import { OrderDetailResult, OrderResult } from '../../models/order';
-import { OrderUpdateAsyncPayload } from '../../models/order/store';
-import { OrderAsync, OrderPageAsync } from '../../models/order/store';
 
 interface OrderManagementTemplateProps {
-    orderPageAsync: OrderPageAsync;
-    orderAsync: OrderAsync;
+    asyncOrderPage: AsyncOrderPage;
+    asyncOrder: AsyncOrder;
     selectOrder: (id: number) => void;
     updateOrder: (payload: OrderUpdateAsyncPayload) => void;
     onUpdateSearchCriteria: (searchCriteria: SearchCriteria) => void;
@@ -25,7 +22,7 @@ interface OrderManagementTemplateProps {
 }
 
 function OrderManagementTemplate({ 
-    orderPageAsync, orderAsync, selectOrder, updateOrder, onUpdateSearchCriteria, onPageChange 
+    asyncOrderPage, asyncOrder, selectOrder, updateOrder, onUpdateSearchCriteria, onPageChange 
 }: OrderManagementTemplateProps) {
     const [updateModalIsOpen, openUpdateModal, closeUpdateModal] = useModal();
 
@@ -38,22 +35,22 @@ function OrderManagementTemplate({
         <AdminLayout>
             <Title content={"주문 관리"} />
             <OrderManagementBar
-                searchCriteria={orderPageAsync.payload?.searchCriteria} 
+                searchCriteria={asyncOrderPage.payload?.searchCriteria} 
                 onUpdateSearchCriteria={onUpdateSearchCriteria}
             />
             <OrderList 
-                orderList={orderPageAsync.result?.list}
+                orderList={asyncOrderPage.result?.list}
                 onSelectOrder={onSelectOrder}
                 onUpdateOrder={updateOrder} 
             />
             <Pagination
-                page={orderPageAsync.payload?.pageCriteria.page} 
-                totalCount={orderPageAsync.result?.totalCount}
+                page={asyncOrderPage.payload?.pageCriteria.page} 
+                totalCount={asyncOrderPage.result?.totalCount}
                 onPageChange={onPageChange}
             />
-            {orderPageAsync.error && <ErrorDetail message={orderPageAsync.error.message} />}
+            {asyncOrderPage.error && <ErrorDetail message={asyncOrderPage.error.message} />}
             <OrderDetailModal 
-                order={orderAsync.result}
+                order={asyncOrder.result}
                 isOpen={updateModalIsOpen}
                 onRequestClose={closeUpdateModal}
             />

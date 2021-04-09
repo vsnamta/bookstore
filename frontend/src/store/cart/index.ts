@@ -1,10 +1,10 @@
 import { ActionType, createAction, createReducer } from 'typesafe-actions';
 import { CartFindPayload, CartResult } from '../../models/cart';
-import { CartCheckPayload, CartListAsync, CartRemoveAsyncPayload, CartSaveAsyncPayload, CartsState, CartUpdateAsyncPayload } from '../../models/cart/store';
+import { CartCheckPayload, AsyncCartList, CartRemoveAsyncPayload, CartSaveAsyncPayload, CartsState, CartUpdateAsyncPayload } from '../../models/cart/store';
 
 export const types = {
     FETCH_CART_LIST: 'cart/FETCH_CART_LIST' as const,
-    SET_CART_LIST_ASYNC: 'cart/SET_CART_LIST_ASYNC' as const,
+    SET_ASYNC_CART_LIST: 'cart/SET_ASYNC_CART_LIST' as const,
     CHECK_ALL_CART: 'cart/CHECK_ALL_CART' as const,
     CHECK_CART: 'cart/CHECK_CART' as const,
     UPDATE_CART_ASYNC: 'cart/UPDATE_CART_ASYNC' as const,
@@ -17,7 +17,7 @@ export const types = {
 
 export const actions = { 
     fetchCartList: createAction(types.FETCH_CART_LIST)<CartFindPayload>(), 
-    setCartListAsync: createAction(types.SET_CART_LIST_ASYNC)<CartListAsync>(),
+    setAsyncCartList: createAction(types.SET_ASYNC_CART_LIST)<AsyncCartList>(),
     checkAllCart: createAction(types.CHECK_ALL_CART)<boolean>(), 
     checkCart: createAction(types.CHECK_CART)<CartCheckPayload>(),
     updateCartAsync: createAction(types.UPDATE_CART_ASYNC)<CartUpdateAsyncPayload>(), 
@@ -29,7 +29,7 @@ export const actions = {
 };
 
 const initialState: CartsState = {
-    cartListAsync: {
+    asyncCartList: {
         payload: undefined,
         result: undefined,
         error: undefined
@@ -37,19 +37,19 @@ const initialState: CartsState = {
 };
 
 const reducer = createReducer<CartsState, ActionType<typeof actions>>(initialState, {
-    [types.SET_CART_LIST_ASYNC]: (state, { payload: cartListAsync }: ReturnType<typeof actions.setCartListAsync>) => ({
-        cartListAsync: cartListAsync
+    [types.SET_ASYNC_CART_LIST]: (state, { payload: asyncCartList }: ReturnType<typeof actions.setAsyncCartList>) => ({
+        asyncCartList: asyncCartList
     }),
     [types.CHECK_ALL_CART]: (state, { payload: checked }: ReturnType<typeof actions.checkAllCart>) => ({
-        cartListAsync: {
-            // ...state.cartListAsync,
-            result: (state.cartListAsync.result as CartResult[]).map(cart => ({ ...cart, checked: checked })),
+        asyncCartList: {
+            // ...state.asyncCartList,
+            result: (state.asyncCartList.result as CartResult[]).map(cart => ({ ...cart, checked: checked })),
         }
     }),
     [types.CHECK_CART]: (state, { payload: checkedCart }: ReturnType<typeof actions.checkCart>) => ({
-        cartListAsync: {
-            // ...state.cartListAsync,
-            result: (state.cartListAsync.result as CartResult[]).map(cart => 
+        asyncCartList: {
+            // ...state.asyncCartList,
+            result: (state.asyncCartList.result as CartResult[]).map(cart => 
                 cart.id === checkedCart.id 
                     ? { ...cart, checked: checkedCart.checked } 
                     : cart
@@ -57,9 +57,9 @@ const reducer = createReducer<CartsState, ActionType<typeof actions>>(initialSta
         }
     }),
     [types.UPDATE_CART]: (state, { payload: updatedCart }: ReturnType<typeof actions.updateCart>) => ({
-        cartListAsync: {
-            // ...state.cartListAsync,
-            result: (state.cartListAsync.result as CartResult[]).map(cart => 
+        asyncCartList: {
+            // ...state.asyncCartList,
+            result: (state.asyncCartList.result as CartResult[]).map(cart => 
                 cart.id === updatedCart.id 
                     ? updatedCart
                     : cart
@@ -67,16 +67,16 @@ const reducer = createReducer<CartsState, ActionType<typeof actions>>(initialSta
         }
     }),
     [types.REMOVE_CART]: (state, { payload: removedIds }: ReturnType<typeof actions.removeCart>) => ({
-        cartListAsync: {
-            // ...state.cartListAsync,
-            result: (state.cartListAsync.result as CartResult[]).filter(cart => !removedIds.includes(cart.id))
+        asyncCartList: {
+            // ...state.asyncCartList,
+            result: (state.asyncCartList.result as CartResult[]).filter(cart => !removedIds.includes(cart.id))
         }
     }),
     [types.SAVE_CART]: (state, { payload: savedCart }: ReturnType<typeof actions.saveCart>) => ({
-        cartListAsync: {
-            // ...state.cartListAsync,
-            result: state.cartListAsync.result 
-                ? state.cartListAsync.result.concat(savedCart)
+        asyncCartList: {
+            // ...state.asyncCartList,
+            result: state.asyncCartList.result 
+                ? state.asyncCartList.result.concat(savedCart)
                 : undefined
         }  
     })

@@ -6,8 +6,8 @@ import { RootState, rootActions } from '../../store';
 
 function ProductSavePage() {
     const dispatch = useDispatch();
-    const discountPolicyListAsync = useSelector((state: RootState) => state.discountPolcies.discountPolicyListAsync);
-    const categoryListAsync = useSelector((state: RootState) => state.categories.categoryListAsync);
+    const asyncDiscountPolicyList = useSelector((state: RootState) => state.discountPolcies.asyncDiscountPolicyList);
+    const asyncCategoryList = useSelector((state: RootState) => state.categories.asyncCategoryList);
 
     useEffect(() => {
         dispatch(rootActions.fetchDiscountPolicyList());
@@ -20,8 +20,8 @@ function ProductSavePage() {
 
     return (
         <ProductSaveTemplate 
-            discountPolicyListAsync={discountPolicyListAsync}
-            categoryListAsync={categoryListAsync}
+            asyncDiscountPolicyList={asyncDiscountPolicyList}
+            asyncCategoryList={asyncCategoryList}
             saveProduct={saveProduct}
         />
     )

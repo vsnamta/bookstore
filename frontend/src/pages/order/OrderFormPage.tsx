@@ -18,7 +18,7 @@ function OrderFormPage() {
 
     const dispatch = useDispatch();
     const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
-    const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
+    const asyncMember = useSelector((state: RootState) => state.members.asyncMember);
 
     useEffect(() => {
         dispatch(rootActions.fetchMember(myData.id));
@@ -30,7 +30,7 @@ function OrderFormPage() {
     
     return (
         <OrderFormTemplate 
-            memberAsync={memberAsync}
+            asyncMember={asyncMember}
             orderingProductList={orderingProductList}
             saveOrder={saveOrder}
         />
