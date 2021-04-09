@@ -11,7 +11,7 @@ function ProductDetailPage() {
     const { id } = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.auths.myData);
+    const myData = useSelector((state: RootState) => state.auths.myData);
     const productAsync = useSelector((state: RootState) => state.products.productAsync);
     const reviewPageAsync = useSelector((state: RootState) => state.reviews.reviewPageAsync);
 
@@ -25,7 +25,7 @@ function ProductDetailPage() {
 
     const saveCart = useCallback((payload: CartSaveAsyncPayload) => {
         dispatch(rootActions.saveCartAsync(payload));
-    }, [loginMember]);
+    }, [myData]);
 
     const saveReview = useCallback((payload: ReviewSaveAsyncPayload) => {
         dispatch(rootActions.saveReviewAsync(payload));
@@ -45,7 +45,7 @@ function ProductDetailPage() {
         <ProductDetailTemplate 
             productAsync={productAsync}
             reviewPageAsync={reviewPageAsync}
-            loginMember={loginMember}
+            myData={myData}
             saveCart={saveCart}
             saveReview={saveReview}
             onPageChange={onPageChange}

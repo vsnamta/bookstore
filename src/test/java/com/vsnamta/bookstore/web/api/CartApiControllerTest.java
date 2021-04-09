@@ -18,10 +18,12 @@ import com.vsnamta.bookstore.domain.discount.DiscountPolicy;
 import com.vsnamta.bookstore.domain.discount.DiscountPolicyRepository;
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
+import com.vsnamta.bookstore.domain.member.MemberRole;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.service.cart.CartSavePayload;
 import com.vsnamta.bookstore.service.cart.CartUpdatePayload;
+import com.vsnamta.bookstore.web.WithCustomUser;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +31,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -68,7 +69,7 @@ public class CartApiControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 장바구니_저장() throws Exception {
         // given
@@ -85,8 +86,7 @@ public class CartApiControllerTest {
             mockMvc.perform(
                 post("/api/carts")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(objectMapper.writeValueAsString(cartSavePayload)));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
+                    .content(objectMapper.writeValueAsString(cartSavePayload)));               
 
         // then
         resultActions
@@ -94,7 +94,7 @@ public class CartApiControllerTest {
             .andDo(print());
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 장바구니_수량_변경() throws Exception {
         // given
@@ -112,8 +112,7 @@ public class CartApiControllerTest {
             mockMvc.perform(
                 put("/api/carts/" + cart.getId())
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(objectMapper.writeValueAsString(cartUpdatePayload)));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
+                    .content(objectMapper.writeValueAsString(cartUpdatePayload)));              
 
         // then
         resultActions
@@ -121,7 +120,7 @@ public class CartApiControllerTest {
             .andDo(print());
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 장바구니_삭제() throws Exception {
         // given
@@ -139,7 +138,6 @@ public class CartApiControllerTest {
                 delete("/api/carts")
                     .param("ids", String.valueOf(cart1.getId()))
                     .param("ids", String.valueOf(cart2.getId())));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions
@@ -147,7 +145,7 @@ public class CartApiControllerTest {
             .andDo(print());
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 회원번호로_장바구니_조회() throws Exception {
          // given
@@ -166,7 +164,6 @@ public class CartApiControllerTest {
             mockMvc.perform(
                 get("/api/carts")
                     .param("memberId", String.valueOf(member.getId())));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
 
         // then
         resultActions

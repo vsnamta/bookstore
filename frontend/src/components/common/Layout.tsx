@@ -11,13 +11,13 @@ interface LayoutProps {
 }
 
 function Layout({ children }: LayoutProps) {
-    // const { loginMember, categoryList } = useSelector(({ members, categories }: RootState) => ({
-    //     loginMember: auths.myData,
+    // const { myData, categoryList } = useSelector(({ members, categories }: RootState) => ({
+    //     myData: auths.myData,
     //     categoryList: categories.categoryListAsync.result
     // }));
     const dispatch = useDispatch();
 
-    const loginMember = useSelector((state: RootState) => state.auths.myData);
+    const myData = useSelector((state: RootState) => state.auths.myData);
     const categoryList = useSelector((state: RootState) => state.categories.categoryListAsync.result);
 
     const logout = useCallback((payload: LogoutAsyncPayload) => {
@@ -27,7 +27,7 @@ function Layout({ children }: LayoutProps) {
     return (
         <div className="site-wrapper" id="top">
             <Header 
-                loginMember={loginMember} 
+                myData={myData} 
                 categoryList={categoryList} 
                 onLogout={logout}
             />

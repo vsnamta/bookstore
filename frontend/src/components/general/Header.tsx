@@ -11,12 +11,12 @@ import { MyData } from '../../models/auth';
 import { LogoutAsyncPayload } from "../../models/auth/store";
 
 interface HeaderProps {
-    loginMember?: MyData;
+    myData?: MyData;
     categoryList?: CategoryResult[];
     onLogout: (payload: LogoutAsyncPayload) => void;
 }
 
-function Header({ loginMember, categoryList, onLogout }: HeaderProps) {
+function Header({ myData, categoryList, onLogout }: HeaderProps) {
     const history = useHistory();
 
     const [searchCriteria, useSearchFormMethods] = useSearchForm(
@@ -56,11 +56,11 @@ function Header({ loginMember, categoryList, onLogout }: HeaderProps) {
                         </div>
                         <div className="col-lg-8 flex-lg-right">
                             <ul className="header-top-list">
-                                {!loginMember 
+                                {!myData 
                                     ? <li><Link to="/login">로그인</Link></li>
                                     : <li><a href="javascript:void(0)" onClick={onClickLogoutBtn}>로그아웃</a></li>
                                 }
-                                {!loginMember && <li><Link to="/register">회원가입</Link></li>}
+                                {!myData && <li><Link to="/register">회원가입</Link></li>}
                                 <li className="dropdown-trigger language-dropdown">
                                     <a href="javascript:void(0)">마이 페이지</a> <FontAwesomeIcon icon={faChevronDown} />
                                     <ul className="dropdown-box">
@@ -71,7 +71,7 @@ function Header({ loginMember, categoryList, onLogout }: HeaderProps) {
                                     </ul>
                                 </li>
                                 <li><Link to="/cart">장바구니</Link></li>
-                                {(loginMember && loginMember.role === "ADMIN") &&
+                                {(myData && myData.role === "ADMIN") &&
                                     <li><Link to="/admin/member"> 관리자 페이지로 </Link></li>
                                 }
                             </ul>
@@ -222,13 +222,13 @@ function Header({ loginMember, categoryList, onLogout }: HeaderProps) {
                         {/* <!-- mobile menu end --> */}
                         <nav className="off-canvas-nav">
                             <ul className="mobile-menu menu-block-2">
-                                {!loginMember 
+                                {!myData 
                                     ? <li><Link to="/login">로그인</Link></li>
                                     : <li><a href="javascript:void(0)" onClick={onClickLogoutBtn}>로그아웃</a></li>
                                 }
                                 <li><Link to="/myData">마이페이지</Link></li>
                                 <li><Link to="/cart">장바구니</Link></li>
-                                {(loginMember && loginMember.role === "ADMIN") &&
+                                {(myData && myData.role === "ADMIN") &&
                                     <li><Link to="/admin/member"> 관리자 페이지로 </Link></li>
                                 }
                             </ul>

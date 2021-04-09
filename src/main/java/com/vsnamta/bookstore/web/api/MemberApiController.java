@@ -5,19 +5,17 @@ import javax.validation.Valid;
 import com.vsnamta.bookstore.service.common.exception.NotEnoughPermissionException;
 import com.vsnamta.bookstore.service.common.model.FindPayload;
 import com.vsnamta.bookstore.service.common.model.Page;
-import com.vsnamta.bookstore.service.member.LoginMember;
 import com.vsnamta.bookstore.service.member.MemberDetailResult;
 import com.vsnamta.bookstore.service.member.MemberResult;
 import com.vsnamta.bookstore.service.member.MemberSavePayload;
 import com.vsnamta.bookstore.service.member.MemberService;
 import com.vsnamta.bookstore.service.member.MemberUpdatePayload;
-import com.vsnamta.bookstore.web.securiry.AuthUser;
+import com.vsnamta.bookstore.service.member.MyData;
 import com.vsnamta.bookstore.web.securiry.CustomUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +43,7 @@ public class MemberApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/members/{id}")
-    public MemberDetailResult update(@PathVariable String id, @Valid @RequestBody MemberUpdatePayload memberUpdatePayload, @AuthUser CustomUser customUser) {
+    public MemberDetailResult update(@PathVariable String id, @Valid @RequestBody MemberUpdatePayload memberUpdatePayload, @AuthenticationPrincipal CustomUser customUser) {
         if(customUser.hasUserRole() && !id.equals(customUser.getId())) {
             throw new NotEnoughPermissionException("요청 권한이 없습니다.");
         }
@@ -54,14 +52,14 @@ public class MemberApiController {
     }
 
     @GetMapping("/api/members/me")
-    public LoginMember findMyData(@AuthenticationPrincipal Object principal) {
+    public MyData findMyData(@AuthenticationPrincipal Object principal) {
         if(principal instanceof CustomUser == false) {
             return null;
         }
         
         CustomUser customUser = (CustomUser)principal;
 
-        return new LoginMember(
+        return new MyData(
             customUser.getId(),
             customUser.getName(),
             customUser.getRole().name()
@@ -70,7 +68,7 @@ public class MemberApiController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/api/members/{id}")
-    public MemberDetailResult findOne(@PathVariable String id, @AuthUser CustomUser customUser) {
+    public MemberDetailResult findOne(@PathVariable String id, @AuthenticationPrincipal CustomUser customUser) {
         if(customUser.hasUserRole() && !id.equals(customUser.getId())) {
             throw new NotEnoughPermissionException("요청 권한이 없습니다.");
         }

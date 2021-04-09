@@ -8,11 +8,11 @@ import { CartSaveAsyncPayload } from '../../models/cart/store';
 
 interface ProductDetailProps {
     product?: ProductDetailResult;
-	loginMember?: MyData;
+	myData?: MyData;
     onSaveCart: (payload: CartSaveAsyncPayload) => void;
 }
 
-function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps) {
+function ProductDetail({ product, myData, onSaveCart }: ProductDetailProps) {
 	if(!product) {
         return null;
     }
@@ -40,7 +40,7 @@ function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps)
 	}, [quantity]);
 	
 	const onClickCartSaveBtn = useCallback(() => {
-        if(!loginMember) {
+        if(!myData) {
             alert("로그인이 필요합니다.");
             history.push("/login");
             return;
@@ -56,10 +56,10 @@ function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps)
             onFailure: error => alert(`오류발생 = ${error.message}`)
         });
 
-    }, [loginMember, product, quantity, onSaveCart]);
+    }, [myData, product, quantity, onSaveCart]);
 
     const onClickPurchaseBtn = useCallback(() => {
-        if(!loginMember) {
+        if(!myData) {
             alert("로그인이 필요합니다.");
             history.push("/login");
             return;
@@ -79,7 +79,7 @@ function ProductDetail({ product, loginMember, onSaveCart }: ProductDetailProps)
 				}]
 			}
 		);
-    }, [loginMember, product, quantity]);
+    }, [myData, product, quantity]);
     
     return (
 		<>

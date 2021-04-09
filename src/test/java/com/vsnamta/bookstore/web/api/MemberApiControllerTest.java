@@ -10,8 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
+import com.vsnamta.bookstore.domain.member.MemberRole;
 import com.vsnamta.bookstore.service.member.MemberSavePayload;
 import com.vsnamta.bookstore.service.member.MemberUpdatePayload;
+import com.vsnamta.bookstore.web.WithCustomUser;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -53,6 +56,7 @@ public class MemberApiControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
+    @WithAnonymousUser
     @Test
     public void 회원_등록() throws Exception {
         // given 
@@ -79,7 +83,7 @@ public class MemberApiControllerTest {
             .andDo(print());
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 회원_수정() throws Exception {
         // given 
@@ -102,14 +106,14 @@ public class MemberApiControllerTest {
                 put("/api/members/" + member.getId())
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(objectMapper.writeValueAsString(memberUpdatePayload)));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
-
+                    
         // then
         resultActions
             .andExpect(status().isOk())
             .andDo(print());
     }
 
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 내_정보_조회() throws Exception {
         // given
@@ -119,26 +123,24 @@ public class MemberApiControllerTest {
         ResultActions resultActions =
             mockMvc.perform(
                 get("/api/members/me"));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
-
+                    
         // then
         resultActions
             .andExpect(status().isOk())
             .andDo(print());       
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 아이디로_회원_조회() throws Exception {
         // given
         Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
-        
+
         // when
         ResultActions resultActions =
             mockMvc.perform(
                 get("/api/members/" + member.getId()));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
-
+                    
         // then
         resultActions
             .andExpect(status().isOk())
@@ -159,6 +161,7 @@ public class MemberApiControllerTest {
                     .param("searchCriteria.keyword", "홍길동")
                     .param("pageCriteria.page", String.valueOf(1))    
                     .param("pageCriteria.size", String.valueOf(10)));
+
         // then
         resultActions
             .andExpect(status().isOk())

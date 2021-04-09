@@ -7,12 +7,12 @@ import { RootState, rootActions } from '../../store';
 
 function MyPointHistoryPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.auths.myData) as MyData;
+    const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
     const pointHistoryPageAsync = useSelector((state: RootState) => state.pointHistories.pointHistoryPageAsync);
 
     useEffect(() => {
         dispatch(rootActions.fetchPointHistoryPage({
-            memberId: loginMember.id,
+            memberId: myData.id,
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);

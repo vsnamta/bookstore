@@ -8,15 +8,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
+import com.vsnamta.bookstore.domain.member.MemberRole;
 import com.vsnamta.bookstore.domain.point.PointHistoryRepository;
 import com.vsnamta.bookstore.domain.point.PointStatus;
+import com.vsnamta.bookstore.web.WithCustomUser;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -46,7 +47,7 @@ public class PointHistoryApiControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 회원번호로_포인트내역_조회() throws Exception {
         // given
@@ -62,8 +63,7 @@ public class PointHistoryApiControllerTest {
                     .param("memberId", String.valueOf(member.getId()))
                     .param("pageCriteria.page", String.valueOf(1))    
                     .param("pageCriteria.size", String.valueOf(10)));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
-
+                    
         // then
         resultActions
             .andExpect(status().isOk())

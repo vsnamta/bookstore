@@ -8,11 +8,11 @@ import com.vsnamta.bookstore.service.review.ReviewResult;
 import com.vsnamta.bookstore.service.review.ReviewSavePayload;
 import com.vsnamta.bookstore.service.review.ReviewService;
 import com.vsnamta.bookstore.service.review.ReviewUpdatePayload;
-import com.vsnamta.bookstore.web.securiry.AuthUser;
 import com.vsnamta.bookstore.web.securiry.CustomUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +36,7 @@ public class ReviewApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/reviews")
-    public ReviewResult save(@Valid @RequestBody ReviewSavePayload reviewSavePayload, @AuthUser CustomUser customUser) {
+    public ReviewResult save(@Valid @RequestBody ReviewSavePayload reviewSavePayload, @AuthenticationPrincipal CustomUser customUser) {
         reviewSavePayload.setMemberId(customUser.getId());
 
         return reviewService.save(reviewSavePayload);
@@ -44,13 +44,13 @@ public class ReviewApiController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/reviews/{id}")
-    public ReviewResult update(@PathVariable Long id, @Valid @RequestBody ReviewUpdatePayload reviewUpdatePayload, @AuthUser CustomUser customUser) {
+    public ReviewResult update(@PathVariable Long id, @Valid @RequestBody ReviewUpdatePayload reviewUpdatePayload, @AuthenticationPrincipal CustomUser customUser) {
         return reviewService.update(customUser.getId(), id, reviewUpdatePayload);
     }
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/api/reviews/{id}")
-    public void remove(@PathVariable Long id, @AuthUser CustomUser customUser) {
+    public void remove(@PathVariable Long id, @AuthenticationPrincipal CustomUser customUser) {
         reviewService.remove(customUser.getId(), id);
     }
 

@@ -19,6 +19,7 @@ import com.vsnamta.bookstore.domain.discount.DiscountPolicy;
 import com.vsnamta.bookstore.domain.discount.DiscountPolicyRepository;
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
+import com.vsnamta.bookstore.domain.member.MemberRole;
 import com.vsnamta.bookstore.domain.order.Order;
 import com.vsnamta.bookstore.domain.order.OrderLine;
 import com.vsnamta.bookstore.domain.order.OrderRepository;
@@ -28,6 +29,7 @@ import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.service.order.OrderSavePayload;
 import com.vsnamta.bookstore.service.order.OrderUpdatePayload;
+import com.vsnamta.bookstore.web.WithCustomUser;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +37,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -77,7 +78,7 @@ public class OrderApiControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 주문() throws Exception {
         // given
@@ -112,8 +113,7 @@ public class OrderApiControllerTest {
             mockMvc.perform(
                 post("/api/orders")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(objectMapper.writeValueAsString(orderSavePayload)));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
+                    .content(objectMapper.writeValueAsString(orderSavePayload))); 
 
         // then
         resultActions
@@ -121,7 +121,7 @@ public class OrderApiControllerTest {
             .andDo(print());   
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 주문취소() throws Exception {
         // given  
@@ -157,8 +157,7 @@ public class OrderApiControllerTest {
             mockMvc.perform(
                 put("/api/orders/" + order.getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(orderUpdatePayload)));
-                //.sessionAttr("loginMember", new LoginMember(member)));
+                .content(objectMapper.writeValueAsString(orderUpdatePayload)));     
 
         // then
         resultActions
@@ -166,7 +165,7 @@ public class OrderApiControllerTest {
             .andDo(print());   
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 주문번호로_주문_조회() throws Exception {
         // given
@@ -193,8 +192,7 @@ public class OrderApiControllerTest {
         // when
         ResultActions resultActions =
             mockMvc.perform(
-                get("/api/orders/" + order.getId()));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
+                get("/api/orders/" + order.getId()));     
 
         // then
         resultActions
@@ -202,7 +200,7 @@ public class OrderApiControllerTest {
             .andDo(print());  
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 회원번호로_주문_조회() throws Exception {
          // given
@@ -231,8 +229,7 @@ public class OrderApiControllerTest {
                     .param("searchCriteria.column", "memberId")
                     .param("searchCriteria.keyword", String.valueOf(member.getId()))
                     .param("pageCriteria.page", String.valueOf(1))    
-                    .param("pageCriteria.size", String.valueOf(10)));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
+                    .param("pageCriteria.size", String.valueOf(10)));           
 
         // then
         resultActions

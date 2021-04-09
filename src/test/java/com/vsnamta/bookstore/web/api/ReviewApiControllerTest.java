@@ -13,12 +13,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vsnamta.bookstore.domain.member.Member;
 import com.vsnamta.bookstore.domain.member.MemberRepository;
+import com.vsnamta.bookstore.domain.member.MemberRole;
 import com.vsnamta.bookstore.domain.product.Product;
 import com.vsnamta.bookstore.domain.product.ProductRepository;
 import com.vsnamta.bookstore.domain.review.Review;
 import com.vsnamta.bookstore.domain.review.ReviewRepository;
 import com.vsnamta.bookstore.service.review.ReviewSavePayload;
 import com.vsnamta.bookstore.service.review.ReviewUpdatePayload;
+import com.vsnamta.bookstore.web.WithCustomUser;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +28,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -62,7 +64,7 @@ public class ReviewApiControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 리뷰_저장() throws Exception {
         // given
@@ -80,15 +82,14 @@ public class ReviewApiControllerTest {
                 post("/api/reviews")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(objectMapper.writeValueAsString(reviewSavePayload)));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
-
+                    
         // then
         resultActions
             .andExpect(status().isOk())
             .andDo(print());  
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 리뷰_수정() throws Exception {
         // given
@@ -109,15 +110,14 @@ public class ReviewApiControllerTest {
                 put("/api/reviews/" + review.getId())
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(objectMapper.writeValueAsString(reviewUpdatePayload)));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
-
+                    
         // then
         resultActions
             .andExpect(status().isOk())
             .andDo(print());
     }
 
-    @WithMockUser(roles="USER")
+    @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
     public void 리뷰_삭제() throws Exception {
         // given
@@ -132,14 +132,14 @@ public class ReviewApiControllerTest {
         ResultActions resultActions =
             mockMvc.perform(
                 delete("/api/reviews/" + review.getId()));
-                    //.sessionAttr("loginMember", new LoginMember(member)));
-
+                    
         // then
         resultActions
             .andExpect(status().isOk())
             .andDo(print());   
     }
 
+    @WithAnonymousUser
     @Test
     public void 상품번호로_리뷰_조회() throws Exception {
          // given

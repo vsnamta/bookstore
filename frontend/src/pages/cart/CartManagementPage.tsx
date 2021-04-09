@@ -8,11 +8,11 @@ import { rootActions } from '../../store';
 
 function CartManagementPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.auths.myData) as MyData;
+    const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
     const cartListAsync = useSelector((state: RootState) => state.carts.cartListAsync);
 
     useEffect(() => {
-        dispatch(rootActions.fetchCartList({ memberId: loginMember.id }));
+        dispatch(rootActions.fetchCartList({ memberId: myData.id }));
     }, []);
 
     const updateCart = useCallback((payload: CartUpdateAsyncPayload) => {

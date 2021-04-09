@@ -17,11 +17,11 @@ function OrderFormPage() {
     }
 
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.auths.myData) as MyData;
+    const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
     const memberAsync = useSelector((state: RootState) => state.members.memberAsync);
 
     useEffect(() => {
-        dispatch(rootActions.fetchMember(loginMember.id));
+        dispatch(rootActions.fetchMember(myData.id));
     }, []);
 
     const saveOrder = useCallback((payload: OrderSaveAsyncPayload) => {

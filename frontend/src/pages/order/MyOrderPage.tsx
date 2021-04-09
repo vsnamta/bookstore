@@ -8,12 +8,12 @@ import { RootState, rootActions } from '../../store';
 
 function MyOrderPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.auths.myData) as MyData;
+    const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
     const { orderPageAsync, orderAsync } = useSelector((state: RootState) => state.orders);
 
     useEffect(() => {
         dispatch(rootActions.fetchOrderPage({
-            searchCriteria: { column: "memberId", keyword: loginMember.id + "" },
+            searchCriteria: { column: "memberId", keyword: myData.id + "" },
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);

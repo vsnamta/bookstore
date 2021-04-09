@@ -8,14 +8,14 @@ import { RootState, rootActions } from '../../store';
 
 function MyReviewPage() {
     const dispatch = useDispatch();
-    const loginMember = useSelector((state: RootState) => state.auths.myData) as MyData;
+    const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
     const { reviewPageAsync, review } = useSelector((state: RootState) => state.reviews);
 
     useEffect(() => {
         dispatch(rootActions.fetchReviewPage({
             searchCriteria: { 
                 column: "memberId", 
-                keyword: loginMember.id + "" 
+                keyword: myData.id + "" 
             },
             pageCriteria: { page: 1, size: 10 }
         }));

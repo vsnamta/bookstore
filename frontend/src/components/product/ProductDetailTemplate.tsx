@@ -18,7 +18,7 @@ import { ReviewPageAsync } from '../../models/review/store';
 interface ProductDetailTemplateProps {
     productAsync: ProductAsync;
     reviewPageAsync: ReviewPageAsync;
-    loginMember?: MyData;
+    myData?: MyData;
     saveCart: (payload: CartSaveAsyncPayload) => void;
     saveReview: (payload: ReviewSaveAsyncPayload) => void;
     onPageChange: (selectedItem: {
@@ -27,21 +27,21 @@ interface ProductDetailTemplateProps {
 }
 
 function ProductDetailTemplate({
-    productAsync, reviewPageAsync, loginMember, saveCart, saveReview, onPageChange
+    productAsync, reviewPageAsync, myData, saveCart, saveReview, onPageChange
 }: ProductDetailTemplateProps) {
     const history = useHistory();
     
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
 
     const onOpenSaveModal = useCallback(() => {
-        if(!loginMember) {
+        if(!myData) {
             alert("로그인이 필요합니다.");
             history.push("/login");
             return;
         }
 
         openSaveModal();
-    }, [loginMember]);
+    }, [myData]);
 
     const onSaveReview = useCallback((payload: ReviewSaveAsyncPayload) => {
         saveReview({
@@ -58,7 +58,7 @@ function ProductDetailTemplate({
         <Layout>
             <ProductDetail 
                 product={productAsync.result}
-                loginMember={loginMember} 
+                myData={myData} 
                 onSaveCart={saveCart} 
             />
             {productAsync.error && <ErrorDetail message={productAsync.error.message} />}
