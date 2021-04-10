@@ -48,19 +48,18 @@ const reducer = createReducer<MembersState, ActionType<typeof actions>>(initialS
         asyncMember: asyncMember, 
     }),
     [types.UPDATE_MEMBER]: (state, { payload: updatedMember }: ReturnType<typeof actions.updateMember>) => ({
-        asyncMemberPage: JSON.stringify(state.asyncMemberPage) === JSON.stringify(initialState.asyncMemberPage)
-        ? initialState.asyncMemberPage
-        : {
+        asyncMemberPage: {
             ...state.asyncMemberPage,
-            result: {
-                ...state.asyncMemberPage.result as Page<MemberResult>,
-                list: (state.asyncMemberPage.result as Page<MemberResult>).list
-                    .map(member => 
+            result: state.asyncMemberPage.result
+                ? {
+                    ...state.asyncMemberPage.result,
+                    list: state.asyncMemberPage.result.list.map(member =>
                         member.id === updatedMember.id
                             ? updatedMember
                             : member
                     )
-            }
+                }
+                : undefined
         },
         asyncMember: {
             ...state.asyncMember,

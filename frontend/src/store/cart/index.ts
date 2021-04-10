@@ -43,13 +43,13 @@ const reducer = createReducer<CartsState, ActionType<typeof actions>>(initialSta
     [types.CHECK_ALL_CART]: (state, { payload: checked }: ReturnType<typeof actions.checkAllCart>) => ({
         asyncCartList: {
             // ...state.asyncCartList,
-            result: (state.asyncCartList.result as CartResult[]).map(cart => ({ ...cart, checked: checked })),
+            result: state.asyncCartList.result?.map(cart => ({ ...cart, checked: checked })),
         }
     }),
     [types.CHECK_CART]: (state, { payload: checkedCart }: ReturnType<typeof actions.checkCart>) => ({
         asyncCartList: {
             // ...state.asyncCartList,
-            result: (state.asyncCartList.result as CartResult[]).map(cart => 
+            result: state.asyncCartList.result?.map(cart => 
                 cart.id === checkedCart.id 
                     ? { ...cart, checked: checkedCart.checked } 
                     : cart
@@ -59,7 +59,7 @@ const reducer = createReducer<CartsState, ActionType<typeof actions>>(initialSta
     [types.UPDATE_CART]: (state, { payload: updatedCart }: ReturnType<typeof actions.updateCart>) => ({
         asyncCartList: {
             // ...state.asyncCartList,
-            result: (state.asyncCartList.result as CartResult[]).map(cart => 
+            result: state.asyncCartList.result?.map(cart => 
                 cart.id === updatedCart.id 
                     ? updatedCart
                     : cart
@@ -69,16 +69,20 @@ const reducer = createReducer<CartsState, ActionType<typeof actions>>(initialSta
     [types.REMOVE_CART]: (state, { payload: removedIds }: ReturnType<typeof actions.removeCart>) => ({
         asyncCartList: {
             // ...state.asyncCartList,
-            result: (state.asyncCartList.result as CartResult[]).filter(cart => !removedIds.includes(cart.id))
+            result: state.asyncCartList.result?.filter(cart => !removedIds.includes(cart.id))
         }
     }),
     [types.SAVE_CART]: (state, { payload: savedCart }: ReturnType<typeof actions.saveCart>) => ({
         asyncCartList: {
             // ...state.asyncCartList,
-            result: state.asyncCartList.result 
-                ? state.asyncCartList.result.concat(savedCart)
-                : undefined
-        }  
+            result: state.asyncCartList.result?.some(cart => cart.id === savedCart.id)
+                ? state.asyncCartList.result.map(cart => 
+                    cart.id === savedCart.id
+                        ? { ...cart, quantity: cart.quantity + savedCart.quantity }
+                        : cart
+                )
+                : state.asyncCartList.result?.concat(savedCart)
+        }
     })
 });
 

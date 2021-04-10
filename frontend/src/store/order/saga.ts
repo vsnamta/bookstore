@@ -10,8 +10,8 @@ import { OrdersState } from '../../models/order/store';
 function* fetchOrderPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchOrderPage>) {
     const ordersState: OrdersState = yield select((state: RootState) => state.orders);
     
-    if(JSON.stringify(ordersState.asyncOrderPage.payload) === JSON.stringify(findPayload) 
-        && ordersState.asyncOrderPage.result !== undefined) {
+    if(ordersState.asyncOrderPage.result !== undefined 
+        && JSON.stringify(ordersState.asyncOrderPage.payload) === JSON.stringify(findPayload)) {
         return;
     }
 
@@ -35,7 +35,7 @@ function* fetchOrderPageSaga({ payload: findPayload }: ReturnType<typeof actions
 function* fetchOrderSaga({ payload: id }: ReturnType<typeof actions.fetchOrder>) {
     const ordersState: OrdersState = yield select((state: RootState) => state.orders);
     
-    if(ordersState.asyncOrder.payload === id && ordersState.asyncOrder.result !== undefined) {
+    if(ordersState.asyncOrder.result !== undefined && ordersState.asyncOrder.payload === id) {
         return;
     }
 

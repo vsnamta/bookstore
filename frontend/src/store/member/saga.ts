@@ -9,8 +9,8 @@ import { MembersState } from '../../models/member/store';
 function* fetchMemberPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchMemberPage>) {
     const membersState: MembersState = yield select((state: RootState) => state.members);
     
-    if(JSON.stringify(membersState.asyncMemberPage.payload) === JSON.stringify(findPayload) 
-        && membersState.asyncMemberPage.result !== undefined) {
+    if(membersState.asyncMemberPage.result !== undefined 
+        && JSON.stringify(membersState.asyncMemberPage.payload) === JSON.stringify(findPayload)) {
         return;
     }
 
@@ -34,7 +34,7 @@ function* fetchMemberPageSaga({ payload: findPayload }: ReturnType<typeof action
 function* fetchMemberSaga({ payload: id }: ReturnType<typeof actions.fetchMember>) {
     const membersState: MembersState = yield select((state: RootState) => state.members);
     
-    if(membersState.asyncMember.payload === id && membersState.asyncMember.result !== undefined) {
+    if(membersState.asyncMember.result !== undefined && membersState.asyncMember.payload === id) {
         return;
     }
 

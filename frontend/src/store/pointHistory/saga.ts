@@ -9,8 +9,8 @@ import { PointHistoriesState } from '../../models/pointHistory/store';
 function* fetchPointHistoryPageSaga({ payload: pointHistoryFindPayload }: ReturnType<typeof actions.fetchPointHistoryPage>) {
     const pointHistoriesState: PointHistoriesState = yield select((state: RootState) => state.pointHistories);
     
-    if(JSON.stringify(pointHistoriesState.asyncPointHistoryPage.payload) === JSON.stringify(pointHistoryFindPayload) 
-        && pointHistoriesState.asyncPointHistoryPage.result !== undefined) {
+    if(pointHistoriesState.asyncPointHistoryPage.result !== undefined 
+        && JSON.stringify(pointHistoriesState.asyncPointHistoryPage.payload) === JSON.stringify(pointHistoryFindPayload)) {
         return;
     }
 

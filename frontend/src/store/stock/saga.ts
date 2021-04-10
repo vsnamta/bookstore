@@ -9,8 +9,8 @@ import { StocksState } from '../../models/stock/store';
 function* fetchStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof actions.fetchStockPage>) {
     const stocksState: StocksState = yield select((state: RootState) => state.products);
     
-    if(JSON.stringify(stocksState.asyncStockPage.payload) === JSON.stringify(stockFindPayload) 
-        && stocksState.asyncStockPage.result !== undefined) {
+    if(stocksState.asyncStockPage.result !== undefined 
+        && JSON.stringify(stocksState.asyncStockPage.payload) === JSON.stringify(stockFindPayload)) {
         return;
     }
 

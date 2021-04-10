@@ -8,8 +8,8 @@ import { CartsState } from '../../models/cart/store';
 function* fetchCartListSaga({ payload: cartFindPayload }: ReturnType<typeof actions.fetchCartList>) {
     const cartsState: CartsState = yield select((state: RootState) => state.carts);
     
-    if(cartsState.asyncCartList.payload?.memberId === cartFindPayload.memberId
-        && cartsState.asyncCartList.result !== undefined) {
+    if(cartsState.asyncCartList.result !== undefined 
+        && cartsState.asyncCartList.payload?.memberId === cartFindPayload.memberId) {
         return;
     }
 
@@ -17,11 +17,13 @@ function* fetchCartListSaga({ payload: cartFindPayload }: ReturnType<typeof acti
         const cartList: CartResult[] = yield call(cartApi.findAll, cartFindPayload);
 
         yield put(actions.setAsyncCartList({
+            payload: cartFindPayload,
             result: cartList.map(cart => ({ ...cart, checked: true })),
             error: undefined
         }));
     } catch (error) {
         yield put(actions.setAsyncCartList({
+            payload: cartFindPayload,
             result: undefined,
             error: error
         }));

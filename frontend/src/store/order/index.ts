@@ -50,15 +50,16 @@ const reducer = createReducer<OrdersState, ActionType<typeof actions>>(initialSt
     [types.UPDATE_ORDER]: (state, { payload: updatedOrder }: ReturnType<typeof actions.updateOrder>) => ({
         asyncOrderPage: {
             ...state.asyncOrderPage,
-            result: {
-                ...state.asyncOrderPage.result as Page<OrderResult>,
-                list: (state.asyncOrderPage.result as Page<OrderResult>).list
-                    .map(order => 
+            result: state.asyncOrderPage.result
+                ? {
+                    ...state.asyncOrderPage.result,
+                    list: state.asyncOrderPage.result.list.map(order => 
                         order.id === updatedOrder.id
-                            ? { ...order, statusName: updatedOrder.statusName } 
+                            ? { ...order, statusName: updatedOrder.statusName }
                             : order
                     )
-            }
+                }
+                : undefined
         },
         asyncOrder: {
             ...state.asyncOrder,

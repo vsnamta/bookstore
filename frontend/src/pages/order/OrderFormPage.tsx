@@ -8,12 +8,12 @@ import { OrderSaveAsyncPayload } from '../../models/order/store';
 import { RootState, rootActions } from '../../store';
 
 function OrderFormPage() {
-    const location = useLocation<{orderingProductList: OrderingProduct[]}>();
+    const location = useLocation<{ orderingProductList: OrderingProduct[] }>();
 
     const orderingProductList = location.state ? location.state.orderingProductList : undefined;
 
     if(!orderingProductList) {
-        return <Redirect to={{ pathname: "/" }}/>
+        return <Redirect to={{ pathname: "/" }} />
     }
 
     const dispatch = useDispatch();

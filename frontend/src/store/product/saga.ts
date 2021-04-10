@@ -10,8 +10,8 @@ import { ProductsState } from '../../models/product/store';
 function* fetchProductPageSaga({ payload: productFindPayload }: ReturnType<typeof actions.fetchProductPage>) {
     const productsState: ProductsState = yield select((state: RootState) => state.products);
     
-    if(JSON.stringify(productsState.asyncProductPage.payload) === JSON.stringify(productFindPayload) 
-        && productsState.asyncProductPage.result !== undefined) {
+    if(productsState.asyncProductPage.result !== undefined 
+        && JSON.stringify(productsState.asyncProductPage.payload) === JSON.stringify(productFindPayload)) {
         return;
     }
 
@@ -35,7 +35,7 @@ function* fetchProductPageSaga({ payload: productFindPayload }: ReturnType<typeo
 function* findProductSaga({ payload: id }: ReturnType<typeof actions.fetchProduct>) {
     const productsState: ProductsState = yield select((state: RootState) => state.products);
 
-    if(productsState.asyncProduct.payload === id && productsState.asyncProduct.result !== undefined) {
+    if(productsState.asyncProduct.result !== undefined && productsState.asyncProduct.payload === id) {
         return;
     }
 

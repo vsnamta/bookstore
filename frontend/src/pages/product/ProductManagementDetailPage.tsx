@@ -39,7 +39,7 @@ function ProductManagementDetailPage() {
     return (
         <ProductManagementDetailTemplate 
             asyncProduct={asyncProduct}
-            productFindPayload={asyncProductPage.payload as ProductFindPayload}
+            productFindPayload={asyncProductPage.payload}
             asyncStockPage={asyncStockPage}
             saveStock={saveStock}
             onPageChange={onPageChange}

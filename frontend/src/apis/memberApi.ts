@@ -25,15 +25,6 @@ const memberApi = {
             });
         });
     },
-    findMyData(): Promise<MyData | string> {
-        return new Promise((resolve, reject) => {
-            apiClient.get<MyData | string>('/api/members/me').then(({ data }) => {
-                resolve(data);
-            }).catch((error: AxiosError<ErrorResult>) => {
-                reject(apiErrorParser.parse(error));
-            });
-        });
-    },
     findOne(id: string): Promise<MemberDetailResult> {
         return new Promise((resolve, reject) => {
             apiClient.get<MemberDetailResult>(`/api/members/${id}`).then(({ data }) => {

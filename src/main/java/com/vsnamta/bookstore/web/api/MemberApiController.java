@@ -10,7 +10,6 @@ import com.vsnamta.bookstore.service.member.MemberResult;
 import com.vsnamta.bookstore.service.member.MemberSavePayload;
 import com.vsnamta.bookstore.service.member.MemberService;
 import com.vsnamta.bookstore.service.member.MemberUpdatePayload;
-import com.vsnamta.bookstore.service.member.MyData;
 import com.vsnamta.bookstore.web.securiry.CustomUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,21 +48,6 @@ public class MemberApiController {
         }
 
         return memberService.update(id, memberUpdatePayload);
-    }
-
-    @GetMapping("/api/members/me")
-    public MyData findMyData(@AuthenticationPrincipal Object principal) {
-        if(principal instanceof CustomUser == false) {
-            return null;
-        }
-        
-        CustomUser customUser = (CustomUser)principal;
-
-        return new MyData(
-            customUser.getId(),
-            customUser.getName(),
-            customUser.getRole().name()
-        );
     }
 
     @PreAuthorize("isAuthenticated()")

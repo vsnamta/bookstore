@@ -17,7 +17,7 @@ import AdminProductDetail from './AdminProductDetail';
 
 interface ProductManagementDetailTemplateProps {
     asyncProduct: AsyncProduct;
-    productFindPayload: ProductFindPayload;
+    productFindPayload?: ProductFindPayload;
     asyncStockPage: AsyncStockPage;
     saveStock: (payload: StockSaveAsyncPayload) => void;
     onPageChange: (selectedItem: {

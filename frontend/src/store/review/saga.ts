@@ -9,8 +9,8 @@ import { ReviewsState } from '../../models/review/store';
 function* fetchReviewPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchReviewPage>) {
     const reviewsState: ReviewsState = yield select((state: RootState) => state.reviews);
     
-    if(JSON.stringify(reviewsState.asyncReviewPage.payload) === JSON.stringify(findPayload) 
-        && reviewsState.asyncReviewPage.result !== undefined) {
+    if(reviewsState.asyncReviewPage.result !== undefined 
+        && JSON.stringify(reviewsState.asyncReviewPage.payload) === JSON.stringify(findPayload)) {
         return;
     }
 

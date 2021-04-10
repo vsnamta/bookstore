@@ -23,11 +23,10 @@ function ProductUpdateForm({ product, discountPolicyList, categoryList, onUpdate
 	const { register, handleSubmit, errors } = useForm<ProductSaveOrUpdatePayload>();
 
 	const [subCategoryList, setSubCategoryList] = useState<CategoryResult[]>(
-		(categoryList
-			.find(category => 
-				category.id === product.superCategoryId
-			) as CategoryResult
-		).children
+		(categoryList.find(category => 
+			category.id === product.superCategoryId
+		) as CategoryResult)
+		.children
 	);  
 
 	const [imageFileInfo, setImageFileInfo] = useState<{imageFile?: File, imageURL?: string}>({

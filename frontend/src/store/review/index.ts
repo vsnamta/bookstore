@@ -38,21 +38,21 @@ const reducer = createReducer<ReviewsState, ActionType<typeof actions>>(initialS
     ),
     [types.SELECT_REVIEW]: (state, { payload: id }: ReturnType<typeof actions.selectReview>) => ({
         ...state,
-        review: (state.asyncReviewPage.result as Page<ReviewResult>).list
-            .find(review => review.id === id)
+        review: state.asyncReviewPage.result?.list.find(review => review.id === id)
     }),
     [types.UPDATE_REVIEW]: (state, { payload: updatedReview }: ReturnType<typeof actions.updateReview>) => ({
         asyncReviewPage: {
             ...state.asyncReviewPage,
-            result: {
-                ...state.asyncReviewPage.result as Page<ReviewResult>,
-                list: (state.asyncReviewPage.result as Page<ReviewResult>).list
-                    .map(review => 
+            result: state.asyncReviewPage.result
+                ? {
+                    ...state.asyncReviewPage.result,
+                    list: state.asyncReviewPage.result.list.map(review => 
                         review.id === updatedReview.id
                             ? updatedReview 
                             : review
                     )
-            }
+                }
+                : undefined
         },
         review: updatedReview
     })

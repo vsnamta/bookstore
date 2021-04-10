@@ -15,7 +15,7 @@ export const types = {
 };
 
 export const actions = { 
-    fetchCategoryList: createAction(types.FETCH_CATEGORY_LIST)<void>(), 
+    fetchCategoryList: createAction(types.FETCH_CATEGORY_LIST)<undefined>(), 
     setCategoriesState: createAction(types.SET_CATEGORIES_STATE)<CategoriesState>(),
     selectCategory: createAction(types.SELECT_CATEGORY)<number>(),
     updateCategoryAsync: createAction(types.UPDATE_CATEGORY_ASYNC)<CategoryUpdateAsyncPayload>(), 
@@ -40,20 +40,21 @@ const reducer = createReducer<CategoriesState, ActionType<typeof actions>>(initi
     ),
     [types.SELECT_CATEGORY]: (state, { payload: id }: ReturnType<typeof actions.selectCategory>) => ({
         ...state,
-        category: (state.asyncCategoryList.result as CategoryResult[])
-            .flatMap(category => [category, ...category.children])
+        category: state.asyncCategoryList.result?.flatMap(category => 
+                [category, ...category.children]
+            )
             .find(category => category.id === id)
     }),
     [types.UPDATE_CATEGORY]: (state, { payload: updatedCategory }: ReturnType<typeof actions.updateCategory>) => ({
         asyncCategoryList: {
             // ...state.asyncCategoryList,
             result: !updatedCategory.parentId 
-                ? (state.asyncCategoryList.result as CategoryResult[]).map(category => 
+                ? state.asyncCategoryList.result?.map(category => 
                     category.id === updatedCategory.id 
                         ? updatedCategory 
                         : category
                 )
-                : (state.asyncCategoryList.result as CategoryResult[]).map(category => 
+                : state.asyncCategoryList.result?.map(category => 
                     category.id === updatedCategory.parentId 
                         ? {
                             ...category,
@@ -69,7 +70,11 @@ const reducer = createReducer<CategoriesState, ActionType<typeof actions>>(initi
         category: updatedCategory
     }),
     [types.REMOVE_CATEGORY]: (state, { payload: removedId }: ReturnType<typeof actions.removeCategory>) => {
-        const categoryList = state.asyncCategoryList.result as CategoryResult[];
+        const categoryList = state.asyncCategoryList.result;
+
+        if(categoryList === undefined) {
+            return state;
+        }
 
         const removedCategory = categoryList
             .flatMap(category => [category, ...category.children])
@@ -96,8 +101,8 @@ const reducer = createReducer<CategoriesState, ActionType<typeof actions>>(initi
         asyncCategoryList: {
             // ...state.asyncCategoryList,
             result: !savedCategory.parentId 
-                ? (state.asyncCategoryList.result as CategoryResult[]).concat(savedCategory)
-                : (state.asyncCategoryList.result as CategoryResult[]).map(category => 
+                ? state.asyncCategoryList.result?.concat(savedCategory)
+                : state.asyncCategoryList.result?.map(category => 
                     category.id === savedCategory.parentId 
                         ? {
                             ...category,

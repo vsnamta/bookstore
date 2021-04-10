@@ -10,7 +10,7 @@ export const types = {
 };
 
 export const actions = {
-    fetchMyData: createAction(types.FETCH_MY_DATA)<void>(),
+    fetchMyData: createAction(types.FETCH_MY_DATA)<undefined>(),
     setMyData: createAction(types.SET_MY_DATA)<MyData | undefined>(), 
     loginAsync: createAction(types.LOGIN_ASYNC)<LoginAsyncPayload>(),
     logoutAsync: createAction(types.LOGOUT_ASYNC)<LogoutAsyncPayload>(),

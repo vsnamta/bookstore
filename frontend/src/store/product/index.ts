@@ -50,15 +50,16 @@ const reducer = createReducer<ProductsState, ActionType<typeof actions>>(initial
     [types.UPDATE_PRODUCT]: (state, { payload: updatedProduct }: ReturnType<typeof actions.updateProduct>) => ({
         asyncProductPage: {
             ...state.asyncProductPage,
-            result: {
-                ...state.asyncProductPage.result as Page<ProductResult>,
-                list: (state.asyncProductPage.result as Page<ProductResult>).list
-                    .map(product => 
+            result: state.asyncProductPage.result
+                ? {
+                    ...state.asyncProductPage.result,
+                    list: state.asyncProductPage.result.list.map(product => 
                         product.id === updatedProduct.id
                             ? updatedProduct
                             : product
                     )
-            }
+                }
+                : undefined
         },
         asyncProduct: {
             ...state.asyncProduct,

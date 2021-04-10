@@ -13,7 +13,7 @@ export const types = {
 };
 
 export const actions = { 
-    fetchDiscountPolicyList: createAction(types.FETCH_DISCOUNT_POLICY_LIST)<void>(), 
+    fetchDiscountPolicyList: createAction(types.FETCH_DISCOUNT_POLICY_LIST)<undefined>(), 
     setDiscountPoliciesState: createAction(types.SET_DISCOUNT_POLICIES_STATE)<DiscountPoliciesState>(),
     selectDiscountPolicy: createAction(types.SELECT_DISCOUNT_POLICY)<number>(),
     updateDiscountPolicyAsync: createAction(types.UPDATE_DISCOUNT_POLICY_ASYNC)<DiscountPolicyUpdateAsyncPayload>(), 
@@ -36,13 +36,12 @@ const reducer = createReducer<DiscountPoliciesState, ActionType<typeof actions>>
     ),
     [types.SELECT_DISCOUNT_POLICY]: (state, { payload: id }: ReturnType<typeof actions.selectDiscountPolicy>) => ({
         ...state,
-        discountPolicy: (state.asyncDiscountPolicyList.result as DiscountPolicyResult[])
-            .find(discountPolicy => discountPolicy.id === id)
+        discountPolicy: state.asyncDiscountPolicyList.result?.find(discountPolicy => discountPolicy.id === id)
     }),
     [types.UPDATE_DISCOUNT_POLICY]: (state, { payload: updatedDiscountPolicy }: ReturnType<typeof actions.updateDiscountPolicy>) => ({
         asyncDiscountPolicyList: {
             // ...state.asyncDiscountPolicyList,
-            result: (state.asyncDiscountPolicyList.result as DiscountPolicyResult[]).map(discountPolicy => 
+            result: state.asyncDiscountPolicyList.result?.map(discountPolicy => 
                 discountPolicy.id === updatedDiscountPolicy.id 
                     ? updatedDiscountPolicy 
                     : discountPolicy
@@ -53,7 +52,7 @@ const reducer = createReducer<DiscountPoliciesState, ActionType<typeof actions>>
     [types.SAVE_DISCOUNT_POLICY]: (state, { payload: savedDiscountPolicy }: ReturnType<typeof actions.saveDiscountPolicy>) => ({
         asyncDiscountPolicyList: {
             // ...state.asyncDiscountPolicyList,
-            result: (state.asyncDiscountPolicyList.result as DiscountPolicyResult[]).concat(savedDiscountPolicy)
+            result: state.asyncDiscountPolicyList.result?.concat(savedDiscountPolicy)
         },
         discountPolicy: savedDiscountPolicy
     })
