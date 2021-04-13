@@ -75,31 +75,6 @@ public class JpaProductRepositoryTest {
     }
 
     @Test
-    public void 상품번호로_상품_조회() {
-        // given
-        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
-
-        Category superCategory = categoryRepository.save(aCategory().build());
-        Category subCategory = categoryRepository.save(aCategory().parent(superCategory).build());
-
-        Product product = productRepository.save(
-            aProduct()
-                .discountPolicy(discountPolicy)
-                .category(subCategory)
-                .name("Clean Code")
-                .author("로버트 C. 마틴")
-                .build()
-        );
-
-        // when
-        product = productRepository.findOne(product.getId()).get();
-
-        // then
-        assertEquals("Clean Code", product.getName());
-        assertEquals("로버트 C. 마틴", product.getAuthor());
-    }
-
-    @Test
     public void 하위_카테고리번호로_상품_조회() {
         // given
         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
@@ -247,5 +222,30 @@ public class JpaProductRepositoryTest {
         assertEquals(2, products.size());
         assertEquals("Clean Code", products.get(0).getName());
         assertEquals("리팩토링", products.get(1).getName());
+    }
+
+    @Test
+    public void 상품번호로_상품_조회() {
+        // given
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+
+        Category superCategory = categoryRepository.save(aCategory().build());
+        Category subCategory = categoryRepository.save(aCategory().parent(superCategory).build());
+
+        Product product = productRepository.save(
+            aProduct()
+                .discountPolicy(discountPolicy)
+                .category(subCategory)
+                .name("Clean Code")
+                .author("로버트 C. 마틴")
+                .build()
+        );
+
+        // when
+        product = productRepository.findOne(product.getId()).get();
+
+        // then
+        assertEquals("Clean Code", product.getName());
+        assertEquals("로버트 C. 마틴", product.getAuthor());
     }
 }

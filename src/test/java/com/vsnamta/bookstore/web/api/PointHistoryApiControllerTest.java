@@ -49,7 +49,7 @@ public class PointHistoryApiControllerTest {
 
     @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
-    public void 회원번호로_포인트내역_조회() throws Exception {
+    public void 회원아이디로_포인트내역_조회() throws Exception {
         // given
         Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
@@ -67,6 +67,7 @@ public class PointHistoryApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            // .andExpect()
             .andDo(print());              
     }
 }

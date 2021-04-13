@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -86,6 +87,8 @@ public class ReviewApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.rating").value(4))
+            .andExpect(jsonPath("$.contents").value("좋아요."))
             .andDo(print());  
     }
 
@@ -114,6 +117,8 @@ public class ReviewApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.rating").value(5))
+            .andExpect(jsonPath("$.contents").value("아주 좋아요."))
             .andDo(print());
     }
 
@@ -160,6 +165,7 @@ public class ReviewApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            // .andExpect()
             .andDo(print());            
     }
 }

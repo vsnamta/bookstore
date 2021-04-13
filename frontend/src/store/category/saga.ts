@@ -3,32 +3,25 @@ import { actions, types } from '.';
 import { RootState } from '..';
 import categoryApi from '../../apis/categoryApi';
 import { CategoryResult } from '../../models/category';
-import { CategoriesState } from '../../models/category/store';
 
 function* fetchCategoryListSaga(action: ReturnType<typeof actions.fetchCategoryList>) {
-    const categoriesState: CategoriesState = yield select((state: RootState) => state.categories);
+    const categoryList: CategoryResult[] = yield select((state: RootState) => state.categories.asyncCategoryList.result);
     
-    if(categoriesState.asyncCategoryList.result !== undefined) {
+    if(categoryList !== undefined) {
         return;
     }
 
     try {
         const categoryList: CategoryResult[] = yield call(categoryApi.findAll);
 
-        yield put(actions.setCategoriesState({
-            asyncCategoryList: {
-                result: categoryList,
-                error: undefined
-            },
-            category: undefined
+        yield put(actions.setAsyncCategoryList({
+            result: categoryList,
+            error: undefined
         }));
     } catch (error) {
-        yield put(actions.setCategoriesState({
-            asyncCategoryList: {
-                result: undefined,
-                error: error
-            },
-            category: undefined
+        yield put(actions.setAsyncCategoryList({
+            result: undefined,
+            error: error
         }));
     }
 };
@@ -38,9 +31,9 @@ function* updateCategoryAsyncSaga({ payload: categoryUpdateAsyncPayload }: Retur
         const category: CategoryResult = yield call(categoryApi.update, categoryUpdateAsyncPayload.id, categoryUpdateAsyncPayload.payload);
 
         yield put(actions.updateCategory(category));
-        categoryUpdateAsyncPayload.onSuccess && categoryUpdateAsyncPayload.onSuccess(category);
+        categoryUpdateAsyncPayload.onSuccess?.(category);
     } catch (error) {
-        categoryUpdateAsyncPayload.onFailure && categoryUpdateAsyncPayload.onFailure(error);
+        categoryUpdateAsyncPayload.onFailure?.(error);
     }
 };
 
@@ -49,9 +42,9 @@ function* removeCategoryAsyncSaga({ payload: categoryRemoveAsyncPayload }: Retur
         yield call(categoryApi.remove, categoryRemoveAsyncPayload.id);
 
         yield put(actions.removeCategory(categoryRemoveAsyncPayload.id));
-        categoryRemoveAsyncPayload.onSuccess && categoryRemoveAsyncPayload.onSuccess();
+        categoryRemoveAsyncPayload.onSuccess?.();
     } catch (error) {
-        categoryRemoveAsyncPayload.onFailure && categoryRemoveAsyncPayload.onFailure(error);
+        categoryRemoveAsyncPayload.onFailure?.(error);
     }
 };
 
@@ -60,9 +53,9 @@ function* saveCategoryAsyncSaga({ payload: categorySaveAsyncPayload }: ReturnTyp
         const category: CategoryResult = yield call(categoryApi.save, categorySaveAsyncPayload.payload);
 
         yield put(actions.saveCategory(category));
-        categorySaveAsyncPayload.onSuccess && categorySaveAsyncPayload.onSuccess(category);
+        categorySaveAsyncPayload.onSuccess?.(category);
     } catch (error) {
-        categorySaveAsyncPayload.onFailure && categorySaveAsyncPayload.onFailure(error);
+        categorySaveAsyncPayload.onFailure?.(error);
     }
 };
 

@@ -5,13 +5,13 @@ import fileApi from '../../apis/fileApi';
 import productApi from '../../apis/productApi';
 import { Page } from '../../models/common';
 import { ProductDetailResult, ProductFindPayload, ProductResult } from '../../models/product';
-import { ProductsState } from '../../models/product/store';
+import { AsyncProduct, AsyncProductPage, ProductsState } from '../../models/product/store';
 
 function* fetchProductPageSaga({ payload: productFindPayload }: ReturnType<typeof actions.fetchProductPage>) {
-    const productsState: ProductsState = yield select((state: RootState) => state.products);
+    const asyncProductPage: AsyncProductPage = yield select((state: RootState) => state.products.asyncProductPage);
     
-    if(productsState.asyncProductPage.result !== undefined 
-        && JSON.stringify(productsState.asyncProductPage.payload) === JSON.stringify(productFindPayload)) {
+    if(asyncProductPage.result !== undefined 
+        && JSON.stringify(asyncProductPage.payload) === JSON.stringify(productFindPayload)) {
         return;
     }
 
@@ -33,9 +33,9 @@ function* fetchProductPageSaga({ payload: productFindPayload }: ReturnType<typeo
 };
 
 function* findProductSaga({ payload: id }: ReturnType<typeof actions.fetchProduct>) {
-    const productsState: ProductsState = yield select((state: RootState) => state.products);
+    const asyncProduct: AsyncProduct = yield select((state: RootState) => state.products.asyncProduct);
 
-    if(productsState.asyncProduct.result !== undefined && productsState.asyncProduct.payload === id) {
+    if(asyncProduct.result !== undefined && asyncProduct.payload === id) {
         return;
     }
 
@@ -74,9 +74,9 @@ function* updateProductAsyncSaga({ payload: productUpdateAsyncPayload }: ReturnT
         }
 
         yield put(actions.updateProduct(product));
-        productUpdateAsyncPayload.onSuccess && productUpdateAsyncPayload.onSuccess(product);
+        productUpdateAsyncPayload.onSuccess?.(product);
     } catch (error) {
-        productUpdateAsyncPayload.onFailure && productUpdateAsyncPayload.onFailure(error);
+        productUpdateAsyncPayload.onFailure?.(error);
     }
 };
 
@@ -86,25 +86,31 @@ function* saveProductAsyncSaga({ payload: productSaveAsyncPayload }: ReturnType<
         productSaveAsyncPayload.payload.imageFileName = fileName;
         const product: ProductDetailResult = yield call(productApi.save, productSaveAsyncPayload.payload);
 
-        const productFindPayload: ProductFindPayload = { pageCriteria: { page: 1, size: 10 } }
-        const productPage: Page<ProductResult> = yield call(productApi.findAll, productFindPayload);
+        const currentProductFindPayload: ProductFindPayload = yield select((state: RootState) => state.products.asyncProductPage.payload);
 
-        yield put(actions.setProductsState({
-            asyncProductPage: {
-                payload: productFindPayload,
-                result: productPage,
-                error: undefined
-            },
-            asyncProduct: {
+        const productFindPayload: ProductFindPayload = { pageCriteria: { page: 1, size: 10 } }
+
+        if(JSON.stringify(currentProductFindPayload) === JSON.stringify(productFindPayload)) {
+            yield put(actions.saveProduct(product));
+        } else {
+            yield put(actions.setAsyncProduct({
                 payload: product.id,
                 result: product,
                 error: undefined
-            }
-        }));
+            }));
+    
+            const productPage: Page<ProductResult> = yield call(productApi.findAll, productFindPayload);
+    
+            yield put(actions.setAsyncProductPage({
+                payload: productFindPayload,
+                result: productPage,
+                error: undefined
+            }));
+        }  
 
-        productSaveAsyncPayload.onSuccess && productSaveAsyncPayload.onSuccess(product);
+        productSaveAsyncPayload.onSuccess?.(product);
     } catch (error) {
-        productSaveAsyncPayload.onFailure && productSaveAsyncPayload.onFailure(error);
+        productSaveAsyncPayload.onFailure?.(error);
     }
 };
 

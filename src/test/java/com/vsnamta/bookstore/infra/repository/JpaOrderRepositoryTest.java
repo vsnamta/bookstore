@@ -85,38 +85,7 @@ public class JpaOrderRepositoryTest {
     }
 
     @Test
-    public void 주문번호로_주문_조회() {
-        // given
-        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
-
-        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
-
-        Product product1 = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
-        Product product2 = productRepository.save(aProduct().discountPolicy(discountPolicy).name("리팩토링").build());
-
-        Order order = orderRepository.save(
-            Order.createOrder(
-                member, 
-                Arrays.asList(
-                    OrderLine.createOrderLine(product1, 1),
-                    OrderLine.createOrderLine(product2, 1)
-                ), 
-                0, 
-                aDeliveryInfo().build()
-            )
-        );
-        order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
-
-        // when
-        order = orderRepository.findOne(order.getId()).get();
-        
-        // then
-        assertEquals("홍길동", order.getMember().getName()); 
-        assertEquals(2, order.getOrderLines().size());
-    }
-
-    @Test
-    public void 회원번호로_주문_조회() {
+    public void 회원아이디로_주문_조회() {
         // given
         Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
 
@@ -147,5 +116,36 @@ public class JpaOrderRepositoryTest {
         
         // then
         assertEquals(1, orders.size());
+    }
+
+    @Test
+    public void 주문번호로_주문_조회() {
+        // given
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
+
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+
+        Product product1 = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
+        Product product2 = productRepository.save(aProduct().discountPolicy(discountPolicy).name("리팩토링").build());
+
+        Order order = orderRepository.save(
+            Order.createOrder(
+                member, 
+                Arrays.asList(
+                    OrderLine.createOrderLine(product1, 1),
+                    OrderLine.createOrderLine(product2, 1)
+                ), 
+                0, 
+                aDeliveryInfo().build()
+            )
+        );
+        order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
+
+        // when
+        order = orderRepository.findOne(order.getId()).get();
+        
+        // then
+        assertEquals("홍길동", order.getMember().getName()); 
+        assertEquals(2, order.getOrderLines().size());
     }
 }

@@ -71,27 +71,6 @@ public class JpaProductRepository implements ProductRepository {
     }
 
     @Override
-    public Optional<Product> findOne(Long id) {
-        QProduct product = QProduct.product;
-        QCategory superCategory = new QCategory("superCategory");
-        QCategory subCategory = new QCategory("subCategory");
-
-        JPAQueryFactory query = new JPAQueryFactory(entityManager);
-
-        Product result = 
-            query.select(product)
-                .from(product)
-                .join(product.discountPolicy, discountPolicy).fetchJoin()
-                .join(product.category, subCategory).fetchJoin()
-                .join(subCategory.parent, superCategory).fetchJoin()
-                .where(product.id.eq(id))
-                .setHint("org.hibernate.readOnly", true)
-                .fetchOne();
-
-        return Optional.ofNullable(result);
-    }
-
-    @Override
     public List<Product> findAll(Long categoryId, SearchRequest searchRequest, PageRequest pageRequest) {
         JPAQueryFactory query = new JPAQueryFactory(entityManager);
 
@@ -174,5 +153,26 @@ public class JpaProductRepository implements ProductRepository {
         }
 
         return new OrderSpecifier(order, path);
+    }
+
+    @Override
+    public Optional<Product> findOne(Long id) {
+        QProduct product = QProduct.product;
+        QCategory superCategory = new QCategory("superCategory");
+        QCategory subCategory = new QCategory("subCategory");
+
+        JPAQueryFactory query = new JPAQueryFactory(entityManager);
+
+        Product result = 
+            query.select(product)
+                .from(product)
+                .join(product.discountPolicy, discountPolicy).fetchJoin()
+                .join(product.category, subCategory).fetchJoin()
+                .join(subCategory.parent, superCategory).fetchJoin()
+                .where(product.id.eq(id))
+                .setHint("org.hibernate.readOnly", true)
+                .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 }

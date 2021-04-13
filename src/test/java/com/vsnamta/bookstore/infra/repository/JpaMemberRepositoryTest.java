@@ -28,19 +28,6 @@ public class JpaMemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
-    public void 아이디로_회원_조회() {
-        //given
-        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
-
-        // when
-        member = memberRepository.findOne(member.getId()).get();
-
-        // then
-        assertEquals("test", member.getId());
-        assertEquals("홍길동", member.getName());
-    }
-
-    @Test
     public void 이름으로_회원_조회() {
         // given
         memberRepository.save(aMember().id("test").name("홍길동").build());
@@ -56,5 +43,18 @@ public class JpaMemberRepositoryTest {
         
         // then
         assertEquals(1, members.size());        
+    }
+
+    @Test
+    public void 아이디로_회원_조회() {
+        //given
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
+
+        // when
+        member = memberRepository.findOne(member.getId()).get();
+
+        // then
+        assertEquals("test", member.getId());
+        assertEquals("홍길동", member.getName());
     }
 }

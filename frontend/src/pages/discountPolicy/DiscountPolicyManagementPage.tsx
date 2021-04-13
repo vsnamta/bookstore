@@ -1,38 +1,14 @@
-import React, { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import DiscountPolicyManagementTemplate from '../../components/discountPolicy/DiscountPolicyManagementTemplate';
-import { DiscountPolicySaveAsyncPayload, DiscountPolicyUpdateAsyncPayload } from '../../models/discountPolicy/store';
-import { RootState } from '../../store';
-import { rootActions } from '../../store';
+import React from 'react';
+import AdminLayout from '../../components/common/AdminLayout';
+import Title from '../../components/general/Title';
+import DiscountPolicyManagementContainer from '../../container/discountPolicy/DiscountPolicyManagementContainer';
 
 function DiscountPolicyManagementPage() {
-    const dispatch = useDispatch();
-    const { asyncDiscountPolicyList, discountPolicy } = useSelector((state: RootState) => state.discountPolcies);
-
-    useEffect(() => {
-        dispatch(rootActions.fetchDiscountPolicyList());
-    }, []);
-
-    const selectDiscountPolicy = useCallback((id: number) => {
-        dispatch(rootActions.selectDiscountPolicy(id));
-    }, []);
-
-    const saveDiscountPolicy = useCallback((payload: DiscountPolicySaveAsyncPayload) => {
-        dispatch(rootActions.saveDiscountPolicyAsync(payload));
-    }, []);
-
-    const updateDiscountPolicy = useCallback((payload: DiscountPolicyUpdateAsyncPayload) => {
-        dispatch(rootActions.updateDiscountPolicyAsync(payload));
-    }, []);
-
     return (
-        <DiscountPolicyManagementTemplate 
-            asyncDiscountPolicyList={asyncDiscountPolicyList}
-            discountPolicy={discountPolicy}
-            selectDiscountPolicy={selectDiscountPolicy}
-            updateDiscountPolicy={updateDiscountPolicy}
-            saveDiscountPolicy={saveDiscountPolicy}
-        />
+        <AdminLayout>
+            <Title content={"할인정책 관리"} />
+            <DiscountPolicyManagementContainer />
+        </AdminLayout>
     )
 };
 

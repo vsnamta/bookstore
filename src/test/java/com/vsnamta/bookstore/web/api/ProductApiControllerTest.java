@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.FileNotFoundException;
@@ -99,6 +100,8 @@ public class ProductApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("Clean Code"))
+            .andExpect(jsonPath("$.author").value("로버트 C. 마틴"))
             .andDo(print());  
     }
 
@@ -138,7 +141,36 @@ public class ProductApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("Clean Code"))
+            .andExpect(jsonPath("$.author").value("로버트 C. 마틴"))
             .andDo(print());   
+    }
+
+    @WithAnonymousUser
+    @Test
+    public void 이름으로_상품_조회() throws Exception {
+        // given
+        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+
+        Category superCategory = categoryRepository.save(aCategory().build());
+        Category subCategory = categoryRepository.save(aCategory().parent(superCategory).build());
+
+        productRepository.save(aProduct().discountPolicy(discountPolicy).category(subCategory).name("Clean Code").build());
+
+        // when
+        ResultActions resultActions =
+            mockMvc.perform(
+                get("/api/products")
+                    .param("searchCriteria.column", "name")
+                    .param("searchCriteria.keyword", "Clean Code")
+                    .param("pageCriteria.page", String.valueOf(1))    
+                    .param("pageCriteria.size", String.valueOf(10)));
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            // .andExpect()
+            .andDo(print());    
     }
 
     @WithAnonymousUser
@@ -167,32 +199,8 @@ public class ProductApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
-            .andDo(print());    
-    }
-
-    @WithAnonymousUser
-    @Test
-    public void 이름으로_상품_조회() throws Exception {
-        // given
-        DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
-
-        Category superCategory = categoryRepository.save(aCategory().build());
-        Category subCategory = categoryRepository.save(aCategory().parent(superCategory).build());
-
-        productRepository.save(aProduct().discountPolicy(discountPolicy).category(subCategory).name("Clean Code").build());
-
-        // when
-        ResultActions resultActions =
-            mockMvc.perform(
-                get("/api/products")
-                    .param("searchCriteria.column", "name")
-                    .param("searchCriteria.keyword", "Clean Code")
-                    .param("pageCriteria.page", String.valueOf(1))    
-                    .param("pageCriteria.size", String.valueOf(10)));
-
-        // then
-        resultActions
-            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("Clean Code"))
+            .andExpect(jsonPath("$.author").value("로버트 C. 마틴"))
             .andDo(print());    
     }
 }

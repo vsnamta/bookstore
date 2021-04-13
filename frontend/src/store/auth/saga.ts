@@ -27,9 +27,9 @@ function* loginAsyncSaga({ payload: loginAsyncPayload }: ReturnType<typeof actio
         yield put(actions.setMyData(myData));
         localStorage.setItem("tempMyData", JSON.stringify(myData as MyData));
 
-        loginAsyncPayload.onSuccess && loginAsyncPayload.onSuccess();
+        loginAsyncPayload.onSuccess?.();
     } catch (error) {
-        loginAsyncPayload.onFailure && loginAsyncPayload.onFailure(error);
+        loginAsyncPayload.onFailure?.(error);
     }
 };
 
@@ -40,9 +40,9 @@ function* logoutAsyncSaga({ payload: logoutAsyncPayload }: ReturnType<typeof act
         yield put(actions.setMyData(undefined));
         localStorage.removeItem("tempMyData");
 
-        logoutAsyncPayload.onSuccess && logoutAsyncPayload.onSuccess();
+        logoutAsyncPayload.onSuccess?.();
     } catch (error) {
-        logoutAsyncPayload.onFailure && logoutAsyncPayload.onFailure(error);
+        logoutAsyncPayload.onFailure?.(error);
     }
 };
 

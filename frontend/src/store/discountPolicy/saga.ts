@@ -3,32 +3,25 @@ import { actions, types } from '.';
 import { RootState } from '..';
 import discountPolicyApi from '../../apis/discountPolicyApi';
 import { DiscountPolicyResult } from '../../models/discountPolicy';
-import { DiscountPoliciesState } from '../../models/discountPolicy/store';
 
 function* fetchDiscountPolicyListSaga(action: ReturnType<typeof actions.fetchDiscountPolicyList>) {
-    const discountPoliciesState: DiscountPoliciesState = yield select((state: RootState) => state.discountPolcies);
+    const discountPolicyList: DiscountPolicyResult[] = yield select((state: RootState) => state.discountPolcies.asyncDiscountPolicyList.result);
     
-    if(discountPoliciesState.asyncDiscountPolicyList.result !== undefined) {
+    if(discountPolicyList !== undefined) {
         return;
     }
 
     try {
         const discountPolicyList: DiscountPolicyResult[] = yield call(discountPolicyApi.findAll);
 
-        yield put(actions.setDiscountPoliciesState({
-            asyncDiscountPolicyList: {
-                result: discountPolicyList,
-                error: undefined
-            },
-            discountPolicy: undefined
+        yield put(actions.setAsyncDiscountPolicyList({
+            result: discountPolicyList,
+            error: undefined
         }));
     } catch (error) {
-        yield put(actions.setDiscountPoliciesState({
-            asyncDiscountPolicyList: {
-                result: undefined,
-                error: error
-            },
-            discountPolicy: undefined
+        yield put(actions.setAsyncDiscountPolicyList({
+            result: undefined,
+            error: error
         }));
     }
 };
@@ -38,9 +31,9 @@ function* update1DiscountPolicyAsyncSaga({ payload: discountPolicyUpdateAsyncPay
         const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.update, discountPolicyUpdateAsyncPayload.id, discountPolicyUpdateAsyncPayload.payload);
 
         yield put(actions.updateDiscountPolicy(discountPolicy));
-        discountPolicyUpdateAsyncPayload.onSuccess && discountPolicyUpdateAsyncPayload.onSuccess(discountPolicy);
+        discountPolicyUpdateAsyncPayload.onSuccess?.(discountPolicy);
     } catch (error) {
-        discountPolicyUpdateAsyncPayload.onFailure && discountPolicyUpdateAsyncPayload.onFailure(error);
+        discountPolicyUpdateAsyncPayload.onFailure?.(error);
     }
 };
 
@@ -49,9 +42,9 @@ function* save1DiscountPolicyAsyncSaga({ payload: discountPolicySaveAsyncPayload
         const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.save, discountPolicySaveAsyncPayload.payload);
 
         yield put(actions.saveDiscountPolicy(discountPolicy));
-        discountPolicySaveAsyncPayload.onSuccess && discountPolicySaveAsyncPayload.onSuccess(discountPolicy);
+        discountPolicySaveAsyncPayload.onSuccess?.(discountPolicy);
     } catch (error) {
-        discountPolicySaveAsyncPayload.onFailure && discountPolicySaveAsyncPayload.onFailure(error);
+        discountPolicySaveAsyncPayload.onFailure?.(error);
     }
 };
 

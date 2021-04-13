@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductDetailResult {
     private Long id;
-    private Long subCategoryId;
-    private String subCategoryName;
     private Long superCategoryId;
     private String superCategoryName;
+    private Long subCategoryId;
+    private String subCategoryName;
     private String name;
     private String author;
     private String publisher;
@@ -38,10 +38,10 @@ public class ProductDetailResult {
     
     public ProductDetailResult(Product product) {
         this.id = product.getId();
-        this.subCategoryId = product.getCategory().getId();
-        this.subCategoryName = product.getCategory().getName();
         this.superCategoryId = product.getCategory().getParent().getId();
         this.superCategoryName = product.getCategory().getParent().getName();
+        this.subCategoryId = product.getCategory().getId();
+        this.subCategoryName = product.getCategory().getName();
         this.name = product.getName();
         this.author = product.getAuthor();
         this.publisher = product.getPublisher();

@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,6 +68,9 @@ public class DiscountPolicyApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("기본"))
+            .andExpect(jsonPath("$.discountPercent").value(10))
+            .andExpect(jsonPath("$.depositPercent").value(5))
             .andDo(print());
     }
 
@@ -96,6 +100,9 @@ public class DiscountPolicyApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("기본"))
+            .andExpect(jsonPath("$.discountPercent").value(10))
+            .andExpect(jsonPath("$.depositPercent").value("IT 전문서"))
             .andDo(print());   
     }
 
@@ -113,6 +120,7 @@ public class DiscountPolicyApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            // .andExpect()
             .andDo(print());     
     }
 }

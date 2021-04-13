@@ -37,20 +37,6 @@ public class JpaMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findOne(String id) {
-        JPAQueryFactory query = new JPAQueryFactory(entityManager);
-
-        Member result = 
-            query.select(member)
-                .from(member)
-                .where(member.id.eq(id))
-                .setHint("org.hibernate.readOnly", true)
-                .fetchOne();
-
-        return Optional.ofNullable(result);
-    }
-
-    @Override
     public List<Member> findAll(SearchRequest searchRequest, PageRequest pageRequest) {
         JPAQueryFactory query = new JPAQueryFactory(entityManager);
 
@@ -93,5 +79,19 @@ public class JpaMemberRepository implements MemberRepository {
         }
 
         return null;
+    }
+
+    @Override
+    public Optional<Member> findOne(String id) {
+        JPAQueryFactory query = new JPAQueryFactory(entityManager);
+
+        Member result = 
+            query.select(member)
+                .from(member)
+                .where(member.id.eq(id))
+                .setHint("org.hibernate.readOnly", true)
+                .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 }

@@ -1,18 +1,14 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import RegisterTemplate from '../../components/member/RegisterTemplate';
-import { MemberSaveAsyncPayload } from '../../models/member/store';
-import { rootActions } from '../../store';
+import React from 'react';
+import Layout from '../../components/common/Layout';
+import RegisterFormContainer from '../../container/member/RegisterFormContainer';
 
 function RegisterPage() {
-    const dispatch = useDispatch();
-
-    const saveMember = useCallback((payload: MemberSaveAsyncPayload) => {
-        dispatch(rootActions.saveMemberAsync(payload));
-    }, []);
-
     return (
-        <RegisterTemplate saveMember={saveMember} />
+        <Layout>
+            <h3>회원가입 페이지</h3>
+            <br />
+            <RegisterFormContainer />
+        </Layout>
     )
 };
 

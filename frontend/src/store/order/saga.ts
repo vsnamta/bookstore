@@ -5,13 +5,13 @@ import orderApi from '../../apis/orderApi';
 import { MyData } from '../../models/auth';
 import { FindPayload, Page } from '../../models/common';
 import { OrderDetailResult, OrderResult } from '../../models/order';
-import { OrdersState } from '../../models/order/store';
+import { AsyncOrder, AsyncOrderPage, OrdersState } from '../../models/order/store';
 
 function* fetchOrderPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchOrderPage>) {
-    const ordersState: OrdersState = yield select((state: RootState) => state.orders);
+    const asyncOrderPage: AsyncOrderPage = yield select((state: RootState) => state.orders.asyncOrderPage);
     
-    if(ordersState.asyncOrderPage.result !== undefined 
-        && JSON.stringify(ordersState.asyncOrderPage.payload) === JSON.stringify(findPayload)) {
+    if(asyncOrderPage.result !== undefined 
+        && JSON.stringify(asyncOrderPage.payload) === JSON.stringify(findPayload)) {
         return;
     }
 
@@ -33,9 +33,9 @@ function* fetchOrderPageSaga({ payload: findPayload }: ReturnType<typeof actions
 };
 
 function* fetchOrderSaga({ payload: id }: ReturnType<typeof actions.fetchOrder>) {
-    const ordersState: OrdersState = yield select((state: RootState) => state.orders);
+    const asyncOrder: AsyncOrder = yield select((state: RootState) => state.orders.asyncOrder);
     
-    if(ordersState.asyncOrder.result !== undefined && ordersState.asyncOrder.payload === id) {
+    if(asyncOrder.result !== undefined && asyncOrder.payload === id) {
         return;
     }
 
@@ -61,9 +61,9 @@ function* updateOrderAsyncSaga({ payload: orderUpdateAsyncPayload }: ReturnType<
         const order: OrderDetailResult = yield call(orderApi.update, orderUpdateAsyncPayload.id, orderUpdateAsyncPayload.payload);
 
         yield put(actions.updateOrder(order));
-        orderUpdateAsyncPayload.onSuccess && orderUpdateAsyncPayload.onSuccess(order);
+        orderUpdateAsyncPayload.onSuccess?.(order);
     } catch (error) {
-        orderUpdateAsyncPayload.onFailure && orderUpdateAsyncPayload.onFailure(error);
+        orderUpdateAsyncPayload.onFailure?.(error);
     }
 };
 
@@ -71,36 +71,42 @@ function* saveOrderAsyncSaga({ payload: orderSaveAsyncPayload }: ReturnType<type
     try {
         const order: OrderDetailResult = yield call(orderApi.save, orderSaveAsyncPayload.payload);
 
-        const myData: MyData = yield select((state: RootState) => state.auths.myData);
+        const currentFindPayload: FindPayload = yield select((state: RootState) => state.orders.asyncOrderPage.payload);
 
+        const myData: MyData = yield select((state: RootState) => state.auths.myData);
+        
         const findPayload: FindPayload = {
             searchCriteria: { keyword: "memberId", column: myData.id + "" },
             pageCriteria: { page: 1, size: 10 }
         };
 
-        const orderPage: Page<OrderResult> = yield call(orderApi.findAll, findPayload);
-
-        yield put(actions.setOrdersState({
-            asyncOrderPage: {
-                payload: findPayload,
-                result: orderPage,
-                error: undefined
-            },
-            asyncOrder: {
+        if(JSON.stringify(currentFindPayload) === JSON.stringify(findPayload)) {
+            yield put(actions.saveOrder(order));
+        } else {
+            yield put(actions.setAsyncOrder({
                 payload: order.id,
                 result: order,
                 error: undefined
-            }
-        }));
-        orderSaveAsyncPayload.onSuccess && orderSaveAsyncPayload.onSuccess(order);
+            }));
+    
+            const orderPage: Page<OrderResult> = yield call(orderApi.findAll, findPayload);
+    
+            yield put(actions.setAsyncOrderPage({
+                payload: findPayload,
+                result: orderPage,
+                error: undefined
+            }));
+        }  
+
+        orderSaveAsyncPayload.onSuccess?.(order);
     } catch (error) {
-        orderSaveAsyncPayload.onFailure && orderSaveAsyncPayload.onFailure(error);
+        orderSaveAsyncPayload.onFailure?.(error);
     }
 };
 
 export default function* ordersSaga() {
     yield takeEvery(types.FETCH_ORDER_PAGE, fetchOrderPageSaga);
-    yield takeEvery(types.FIND_ORDER, fetchOrderSaga);
+    yield takeEvery(types.FETCH_ORDER, fetchOrderSaga);
     yield takeEvery(types.UPDATE_ORDER_ASYNC, updateOrderAsyncSaga);
     yield takeEvery(types.SAVE_ORDER_ASYNC, saveOrderAsyncSaga);
 }

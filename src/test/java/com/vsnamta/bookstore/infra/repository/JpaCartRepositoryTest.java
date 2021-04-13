@@ -45,7 +45,7 @@ public class JpaCartRepositoryTest {
     private ProductRepository productRepository;
 
     @Test
-    public void 회원번호와_상품번호로_장바구니_조회() {
+    public void 회원아이디와_상품번호로_장바구니_조회() {
         //given
         Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());
@@ -80,7 +80,7 @@ public class JpaCartRepositoryTest {
     }
 
     @Test
-    public void 회원번호로_장바구니_조회() {
+    public void 회원아이디로_장바구니_조회() {
         //given
         Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         

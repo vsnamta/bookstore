@@ -15,9 +15,9 @@ public interface OrderRepository {
 
     long findTotalCountWillBeCompleted();
 
-    Optional<Order> findOne(Long id);
-
     List<Order> findAll(SearchRequest searchRequest, PageRequest pageRequest);
 
     long findTotalCount(SearchRequest searchRequest);
+
+    Optional<Order> findOne(Long id);
 }

@@ -35,11 +35,6 @@ public class MemoryMemberRepository implements MemberRepository {
     public Optional<Member> findById(String id) {
         return Optional.ofNullable(map.get(id));
     }
-    
-    @Override
-    public Optional<Member> findOne(String id) {
-        return null;
-    }
 
     @Override
     public List<Member> findAll(SearchRequest searchRequest, PageRequest pageRequest) {
@@ -49,5 +44,10 @@ public class MemoryMemberRepository implements MemberRepository {
     @Override
     public long findTotalCount(SearchRequest searchRequest) {
         return 0;
+    }
+
+    @Override
+    public Optional<Member> findOne(String id) {
+        return null;
     }
 }

@@ -61,7 +61,7 @@ public class JpaReviewRepositoryTest {
     }
 
     @Test
-    public void 회원번호로_리뷰_조회() {
+    public void 회원아이디로_리뷰_조회() {
         // given
         Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         Product product = productRepository.save(aProduct().name("Clean Code").build());

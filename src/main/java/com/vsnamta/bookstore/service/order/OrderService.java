@@ -129,20 +129,6 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderDetailResult findOne(String memberId, Long id) {
-        Member member = memberRepository.findById(memberId).get();
-
-        Order order = orderRepository.findOne(id)
-            .orElseThrow(() -> new DataNotFoundException("요청하신 데이터를 찾을 수 없습니다."));
-
-        if (member.getRole().equals(MemberRole.USER) && !member.getId().equals(order.getMember().getId())) {
-            throw new NotEnoughPermissionException("요청 권한이 없습니다.");
-        }
-
-		return new OrderDetailResult(order);
-    }
-
-    @Transactional(readOnly = true)
     public Page<OrderResult> findAll(FindPayload findPayload) {
         SearchRequest searchRequest = findPayload.getSearchCriteria().toRequest();
         PageRequest pageRequest = findPayload.getPageCriteria().toRequest();
@@ -156,5 +142,19 @@ public class OrderService {
         long totalCount = orderRepository.findTotalCount(searchRequest);
     
         return new Page<OrderResult>(orderResults, totalCount);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderDetailResult findOne(String memberId, Long id) {
+        Member member = memberRepository.findById(memberId).get();
+
+        Order order = orderRepository.findOne(id)
+            .orElseThrow(() -> new DataNotFoundException("요청하신 데이터를 찾을 수 없습니다."));
+
+        if (member.getRole().equals(MemberRole.USER) && !member.getId().equals(order.getMember().getId())) {
+            throw new NotEnoughPermissionException("요청 권한이 없습니다.");
+        }
+
+		return new OrderDetailResult(order);
     }
 }

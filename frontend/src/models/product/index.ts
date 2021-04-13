@@ -18,10 +18,10 @@ export interface ProductResult {
 
 export interface ProductDetailResult {
     id: number;
-    subCategoryId: number;
-    subCategoryName: string;
     superCategoryId: number;
     superCategoryName: string;
+    subCategoryId: number;
+    subCategoryName: string;
     name: string;
     author: string;
     publisher: string;

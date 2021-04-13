@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -80,6 +81,7 @@ public class MemberApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value("test"))
             .andDo(print());
     }
 
@@ -110,41 +112,8 @@ public class MemberApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value("test"))
             .andDo(print());
-    }
-
-    @WithCustomUser(id = "test", role = MemberRole.USER)
-    @Test
-    public void 내_정보_조회() throws Exception {
-        // given
-        Member member = aMember().id("test").name("홍길동").build();
-
-        // when
-        ResultActions resultActions =
-            mockMvc.perform(
-                get("/api/members/me"));
-                    
-        // then
-        resultActions
-            .andExpect(status().isOk())
-            .andDo(print());       
-    }
-
-    @WithCustomUser(id = "test", role = MemberRole.USER)
-    @Test
-    public void 아이디로_회원_조회() throws Exception {
-        // given
-        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
-
-        // when
-        ResultActions resultActions =
-            mockMvc.perform(
-                get("/api/members/" + member.getId()));
-                    
-        // then
-        resultActions
-            .andExpect(status().isOk())
-            .andDo(print());           
     }
 
     @WithMockUser(roles="ADMIN")
@@ -165,6 +134,25 @@ public class MemberApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            // .andExpect(jsonPath("$.id").value("test"))
             .andDo(print());     
+    }
+
+    @WithCustomUser(id = "test", role = MemberRole.USER)
+    @Test
+    public void 아이디로_회원_조회() throws Exception {
+        // given
+        Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
+
+        // when
+        ResultActions resultActions =
+            mockMvc.perform(
+                get("/api/members/" + member.getId()));
+                    
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value("test"))
+            .andDo(print());           
     }
 }

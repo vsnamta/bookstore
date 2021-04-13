@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,6 +71,8 @@ public class CategoryApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("IT 전문서"))
+            .andExpect(jsonPath("$.parentName").value("컴퓨터/IT"))
             .andDo(print());
     }
 
@@ -96,6 +99,8 @@ public class CategoryApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("IT 전문서"))
+            .andExpect(jsonPath("$.parentName").value("컴퓨터/IT"))
             .andDo(print());  
     }
 
@@ -134,6 +139,9 @@ public class CategoryApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            // .andExpect(jsonPath("$[0].name").value("컴퓨터/IT"))
+            // .andExpect(jsonPath("$[0].children[0].name").value("IT 전문서"))
+            // .andExpect(jsonPath("$[0].children[1].name").value("컴퓨터수험서"))
             .andDo(print());
     }
 }

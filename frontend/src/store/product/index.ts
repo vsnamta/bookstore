@@ -1,5 +1,4 @@
 import { ActionType, createAction, createReducer } from 'typesafe-actions';
-import { Page } from '../../models/common';
 import { ProductDetailResult, ProductFindPayload, ProductResult } from '../../models/product';
 import { AsyncProduct, AsyncProductPage, ProductSaveAsyncPayload, ProductsState, ProductUpdateAsyncPayload } from '../../models/product/store';
 
@@ -11,7 +10,7 @@ export const types = {
     UPDATE_PRODUCT_ASYNC: 'product/UPDATE_PRODUCT_ASYNC' as const,
     UPDATE_PRODUCT: 'product/UPDATE_PRODUCT' as const,
     SAVE_PRODUCT_ASYNC: 'product/SAVE_PRODUCT_ASYNC' as const,
-    SET_PRODUCTS_STATE: 'product/SET_PRODUCTS_STATE' as const
+    SAVE_PRODUCT: 'product/SAVE_PRODUCT' as const
 };
 
 export const actions = {
@@ -22,7 +21,7 @@ export const actions = {
     updateProductAsync: createAction(types.UPDATE_PRODUCT_ASYNC)<ProductUpdateAsyncPayload>(), 
     updateProduct: createAction(types.UPDATE_PRODUCT)<ProductDetailResult>(), 
     saveProductAsync: createAction(types.SAVE_PRODUCT_ASYNC)<ProductSaveAsyncPayload>(),
-    setProductsState: createAction(types.SET_PRODUCTS_STATE)<ProductsState>(), 
+    saveProduct: createAction(types.SAVE_PRODUCT)<ProductDetailResult>()
 };
 
 const initialState: ProductsState = {
@@ -66,9 +65,21 @@ const reducer = createReducer<ProductsState, ActionType<typeof actions>>(initial
             result: updatedProduct
         }
     }),
-    [types.SET_PRODUCTS_STATE]: (state, { payload: productsState }: ReturnType<typeof actions.setProductsState>) => (
-        productsState
-    )
+    [types.SAVE_PRODUCT]: (state, { payload: savedProduct }: ReturnType<typeof actions.saveProduct>) => ({
+        ...state,
+        // asyncProductPage: {
+        //     ...state.asyncProductPage,
+        //     result: {
+        //         list: [savedProduct, ...(state.asyncProductPage.result?.list as ProductResult[]).slice(0, 9)],
+        //         totalCount: state.asyncProductPage.result?.totalCount + 1
+        //     }
+        // },
+        asyncProduct: {
+            payload: savedProduct.id,
+            result: savedProduct,
+            error: undefined
+        }
+    })
 });
 
 export default reducer;

@@ -4,13 +4,13 @@ import { RootState } from '..';
 import stockApi from '../../apis/stockApi';
 import { Page } from '../../models/common';
 import { StockFindPayload, StockResult } from '../../models/stock';
-import { StocksState } from '../../models/stock/store';
+import { AsyncStockPage } from '../../models/stock/store';
 
 function* fetchStockPageSaga({ payload: stockFindPayload }: ReturnType<typeof actions.fetchStockPage>) {
-    const stocksState: StocksState = yield select((state: RootState) => state.products);
+    const asyncStockPage: AsyncStockPage = yield select((state: RootState) => state.stocks.asyncStockPage);
     
-    if(stocksState.asyncStockPage.result !== undefined 
-        && JSON.stringify(stocksState.asyncStockPage.payload) === JSON.stringify(stockFindPayload)) {
+    if(asyncStockPage.result !== undefined 
+        && JSON.stringify(asyncStockPage.payload) === JSON.stringify(stockFindPayload)) {
         return;
     }
 
@@ -35,21 +35,28 @@ function* saveStockAsyncSaga({ payload: stockSaveAsyncPayload }: ReturnType<type
     try {
         const stock: StockResult = yield call(stockApi.save, stockSaveAsyncPayload.payload);
 
+        const currentStockFindPayload: StockFindPayload = yield select((state: RootState) => state.stocks.asyncStockPage.payload);
+
         const stockFindPayload: StockFindPayload = {
             productId: stockSaveAsyncPayload.payload.productId,
             pageCriteria: { page: 1, size: 10 }
         };
 
-        const stockPage: Page<StockResult> = yield call(stockApi.findAll, stockFindPayload);
+        if(JSON.stringify(currentStockFindPayload) === JSON.stringify(stockFindPayload)) {
+            yield put(actions.saveStock(stock));
+        } else {
+            const stockPage: Page<StockResult> = yield call(stockApi.findAll, stockFindPayload);
 
-        yield put(actions.setAsyncStockPage({
-            payload: stockFindPayload,
-            result: stockPage,
-            error: undefined
-        }));  
-        stockSaveAsyncPayload.onSuccess && stockSaveAsyncPayload.onSuccess(stock);
+            yield put(actions.setAsyncStockPage({
+                payload: stockFindPayload,
+                result: stockPage,
+                error: undefined
+            }));
+        }
+
+        stockSaveAsyncPayload.onSuccess?.(stock);
     } catch (error) {
-        stockSaveAsyncPayload.onFailure && stockSaveAsyncPayload.onFailure(error);
+        stockSaveAsyncPayload.onFailure?.(error);
     }
 };
 

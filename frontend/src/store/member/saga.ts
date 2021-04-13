@@ -4,13 +4,13 @@ import { RootState } from '..';
 import memberApi from '../../apis/memberApi';
 import { Page } from '../../models/common';
 import { MemberDetailResult, MemberResult } from '../../models/member';
-import { MembersState } from '../../models/member/store';
+import { AsyncMember, AsyncMemberPage, MembersState } from '../../models/member/store';
 
 function* fetchMemberPageSaga({ payload: findPayload }: ReturnType<typeof actions.fetchMemberPage>) {
-    const membersState: MembersState = yield select((state: RootState) => state.members);
+    const asyncMemberPage: AsyncMemberPage = yield select((state: RootState) => state.members.asyncMemberPage);
     
-    if(membersState.asyncMemberPage.result !== undefined 
-        && JSON.stringify(membersState.asyncMemberPage.payload) === JSON.stringify(findPayload)) {
+    if(asyncMemberPage.result !== undefined 
+        && JSON.stringify(asyncMemberPage.payload) === JSON.stringify(findPayload)) {
         return;
     }
 
@@ -32,9 +32,9 @@ function* fetchMemberPageSaga({ payload: findPayload }: ReturnType<typeof action
 };
 
 function* fetchMemberSaga({ payload: id }: ReturnType<typeof actions.fetchMember>) {
-    const membersState: MembersState = yield select((state: RootState) => state.members);
+    const asyncMember: AsyncMember = yield select((state: RootState) => state.members.asyncMember);
     
-    if(membersState.asyncMember.result !== undefined && membersState.asyncMember.payload === id) {
+    if(asyncMember.result !== undefined && asyncMember.payload === id) {
         return;
     }
 
@@ -60,32 +60,18 @@ function* updateMemberAsyncSaga({ payload: memberUpdateAsyncPayload }: ReturnTyp
         const member: MemberDetailResult = yield call(memberApi.update, memberUpdateAsyncPayload.id, memberUpdateAsyncPayload.payload);
 
         yield put(actions.updateMember(member));
-        memberUpdateAsyncPayload.onSuccess && memberUpdateAsyncPayload.onSuccess(member);
+        memberUpdateAsyncPayload.onSuccess?.(member);
     } catch (error) {
-        memberUpdateAsyncPayload.onFailure && memberUpdateAsyncPayload.onFailure(error);
+        memberUpdateAsyncPayload.onFailure?.(error);
     }
 };
 
 function* saveMemberAsyncSaga({ payload: memberSaveAsyncPayload }: ReturnType<typeof actions.saveMemberAsync>) {
     try {
         const member: MemberDetailResult = yield call(memberApi.save, memberSaveAsyncPayload.payload);
-
-        yield put(actions.setMembersState({
-            asyncMemberPage: {
-                payload : undefined,
-                result: undefined,
-                error: undefined
-            },
-            asyncMember: {
-                payload: member.id,
-                result: member,
-                error: undefined
-            }
-        }));
-
-        memberSaveAsyncPayload.onSuccess && memberSaveAsyncPayload.onSuccess(member);
+        memberSaveAsyncPayload.onSuccess?.(member);
     } catch (error) {
-        memberSaveAsyncPayload.onFailure && memberSaveAsyncPayload.onFailure(error);
+        memberSaveAsyncPayload.onFailure?.(error);
     }
 };
 

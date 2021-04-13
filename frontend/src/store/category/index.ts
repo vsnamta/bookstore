@@ -1,10 +1,10 @@
 import { ActionType, createAction, createReducer } from 'typesafe-actions';
 import { CategoryResult } from '../../models/category';
-import { CategoriesState, CategoryRemoveAsyncPayload, CategorySaveAsyncPayload, CategoryUpdateAsyncPayload } from '../../models/category/store';
+import { AsyncCategoryList, CategoriesState, CategoryRemoveAsyncPayload, CategorySaveAsyncPayload, CategoryUpdateAsyncPayload } from '../../models/category/store';
 
 export const types = {
     FETCH_CATEGORY_LIST: 'category/FETCH_CATEGORY_LIST' as const,
-    SET_CATEGORIES_STATE: 'category/SET_CATEGORIES_STATE' as const,
+    SET_ASYNC_CATEGORY_LIST: 'category/SET_ASYNC_CATEGORY_LIST' as const,
     SELECT_CATEGORY: 'category/SELECT_CATEGORY' as const,
     UPDATE_CATEGORY_ASYNC: 'category/UPDATE_CATEGORY_ASYNC' as const,
     UPDATE_CATEGORY: 'category/UPDATE_CATEGORY' as const,
@@ -16,7 +16,7 @@ export const types = {
 
 export const actions = { 
     fetchCategoryList: createAction(types.FETCH_CATEGORY_LIST)<undefined>(), 
-    setCategoriesState: createAction(types.SET_CATEGORIES_STATE)<CategoriesState>(),
+    setAsyncCategoryList: createAction(types.SET_ASYNC_CATEGORY_LIST)<AsyncCategoryList>(),
     selectCategory: createAction(types.SELECT_CATEGORY)<number>(),
     updateCategoryAsync: createAction(types.UPDATE_CATEGORY_ASYNC)<CategoryUpdateAsyncPayload>(), 
     updateCategory: createAction(types.UPDATE_CATEGORY)<CategoryResult>(), 
@@ -35,9 +35,10 @@ const initialState: CategoriesState = {
 };
 
 const reducer = createReducer<CategoriesState, ActionType<typeof actions>>(initialState, {
-    [types.SET_CATEGORIES_STATE]: (state, { payload: categoriesState }: ReturnType<typeof actions.setCategoriesState>) => (
-        categoriesState
-    ),
+    [types.SET_ASYNC_CATEGORY_LIST]: (state, { payload: asyncCategoryList }: ReturnType<typeof actions.setAsyncCategoryList>) => ({
+        asyncCategoryList: asyncCategoryList,
+        category: undefined
+    }),
     [types.SELECT_CATEGORY]: (state, { payload: id }: ReturnType<typeof actions.selectCategory>) => ({
         ...state,
         category: state.asyncCategoryList.result?.flatMap(category => 

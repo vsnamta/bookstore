@@ -3,13 +3,12 @@ import { actions, types } from '.';
 import { RootState } from '..';
 import cartApi from '../../apis/cartApi';
 import { CartResult } from '../../models/cart';
-import { CartsState } from '../../models/cart/store';
+import { AsyncCartList } from '../../models/cart/store';
 
 function* fetchCartListSaga({ payload: cartFindPayload }: ReturnType<typeof actions.fetchCartList>) {
-    const cartsState: CartsState = yield select((state: RootState) => state.carts);
+    const asyncCartList: AsyncCartList = yield select((state: RootState) => state.carts.asyncCartList);
     
-    if(cartsState.asyncCartList.result !== undefined 
-        && cartsState.asyncCartList.payload?.memberId === cartFindPayload.memberId) {
+    if(asyncCartList.result !== undefined && asyncCartList.payload?.memberId === cartFindPayload.memberId) {
         return;
     }
 
@@ -36,9 +35,9 @@ function* updateCartAsyncSaga({ payload: cartUpdateAsyncPayload }: ReturnType<ty
         cart.checked = true;
 
         yield put(actions.updateCart(cart));
-        cartUpdateAsyncPayload.onSuccess && cartUpdateAsyncPayload.onSuccess(cart);
+        cartUpdateAsyncPayload.onSuccess?.(cart);
     } catch (error) {
-        cartUpdateAsyncPayload.onFailure && cartUpdateAsyncPayload.onFailure(error);
+        cartUpdateAsyncPayload.onFailure?.(error);
     }
 };
 
@@ -47,9 +46,9 @@ function* removeCartAsyncSaga({ payload: cartRemoveAsyncPayload }: ReturnType<ty
         yield call(cartApi.remove, cartRemoveAsyncPayload.ids);
 
         yield put(actions.removeCart(cartRemoveAsyncPayload.ids));
-        cartRemoveAsyncPayload.onSuccess && cartRemoveAsyncPayload.onSuccess();
+        cartRemoveAsyncPayload.onSuccess?.();
     } catch (error) {
-        cartRemoveAsyncPayload.onFailure && cartRemoveAsyncPayload.onFailure(error);
+        cartRemoveAsyncPayload.onFailure?.(error);
     }
 };
 
@@ -59,9 +58,9 @@ function* saveCartAsyncSaga({ payload: cartSaveAsyncPayload }: ReturnType<typeof
         cart.checked = true;
 
         yield put(actions.saveCart(cart));
-        cartSaveAsyncPayload.onSuccess && cartSaveAsyncPayload.onSuccess(cart);
+        cartSaveAsyncPayload.onSuccess?.(cart);
     } catch (error) {
-        cartSaveAsyncPayload.onFailure && cartSaveAsyncPayload.onFailure(error);
+        cartSaveAsyncPayload.onFailure?.(error);
     }
 };
 

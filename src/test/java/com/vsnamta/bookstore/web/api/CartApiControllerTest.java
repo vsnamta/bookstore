@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -91,6 +92,8 @@ public class CartApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.productName").value("Clean Code"))
+            .andExpect(jsonPath("$.quantity").value(1))
             .andDo(print());
     }
 
@@ -117,6 +120,8 @@ public class CartApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.productName").value("Clean Code"))
+            .andExpect(jsonPath("$.quantity").value(1))
             .andDo(print());
     }
 
@@ -147,7 +152,7 @@ public class CartApiControllerTest {
 
     @WithCustomUser(id = "test", role = MemberRole.USER)
     @Test
-    public void 회원번호로_장바구니_조회() throws Exception {
+    public void 회원아이디로_장바구니_조회() throws Exception {
          // given
         Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
         
@@ -168,6 +173,8 @@ public class CartApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            // .andExpect(jsonPath("$[0].productName").value("Clean Code"))
+            // .andExpect(jsonPath("$[0].quantity").value(1))
             .andDo(print());     
     }
 }

@@ -50,6 +50,12 @@ public class MemberApiController {
         return memberService.update(id, memberUpdatePayload);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/api/members")
+    public Page<MemberResult> findAll(@Valid FindPayload findPayload) {
+        return memberService.findAll(findPayload);
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/api/members/{id}")
     public MemberDetailResult findOne(@PathVariable String id, @AuthenticationPrincipal CustomUser customUser) {
@@ -58,11 +64,5 @@ public class MemberApiController {
         }
 
         return memberService.findOne(id);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/api/members")
-    public Page<MemberResult> findAll(@Valid FindPayload findPayload) {
-        return memberService.findAll(findPayload);
     }
 }

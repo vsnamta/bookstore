@@ -3,15 +3,14 @@ import { FindPayload, Page } from '../../models/common';
 import { MemberDetailResult, MemberResult } from '../../models/member';
 import { AsyncMember, AsyncMemberPage, MemberSaveAsyncPayload, MembersState, MemberUpdateAsyncPayload } from '../../models/member/store';
 
-export const types ={
+export const types = {
     FETCH_MEMBER_PAGE: 'member/FETCH_MEMBER_PAGE' as const,
     SET_ASYNC_MEMBER_PAGE: 'member/SET_ASYNC_MEMBER_PAGE' as const,
     FETCH_MEMBER: 'member/FETCH_MEMBER' as const,
     SET_ASYNC_MEMBER: 'member/SET_ASYNC_MEMBER' as const,
     UPDATE_MEMBER_ASYNC: 'member/UPDATE_MEMBER_ASYNC' as const,
     UPDATE_MEMBER: 'member/UPDATE_MEMBER' as const,
-    SAVE_MEMBER_ASYNC: 'member/SAVE_MEMBER_ASYNC' as const,
-    SET_MEMBERS_STATE: 'member/SET_MEMBERS_STATE' as const
+    SAVE_MEMBER_ASYNC: 'member/SAVE_MEMBER_ASYNC' as const
 };
 
 export const actions = {
@@ -21,8 +20,7 @@ export const actions = {
     setAsyncMember: createAction(types.SET_ASYNC_MEMBER)<AsyncMember>(),
     updateMemberAsync: createAction(types.UPDATE_MEMBER_ASYNC)<MemberUpdateAsyncPayload>(), 
     updateMember: createAction(types.UPDATE_MEMBER)<MemberDetailResult>(),
-    saveMemberAsync: createAction(types.SAVE_MEMBER_ASYNC)<MemberSaveAsyncPayload>(),
-    setMembersState: createAction(types.SET_MEMBERS_STATE)<MembersState>()
+    saveMemberAsync: createAction(types.SAVE_MEMBER_ASYNC)<MemberSaveAsyncPayload>()
 };
 
 const initialState: MembersState = {
@@ -65,10 +63,7 @@ const reducer = createReducer<MembersState, ActionType<typeof actions>>(initialS
             ...state.asyncMember,
             result: updatedMember
         }
-    }),
-    [types.SET_MEMBERS_STATE]: (state, { payload: membersState }: ReturnType<typeof actions.setMembersState>) => (
-        membersState
-    )
+    })
 });
 
 export default reducer;

@@ -19,8 +19,11 @@ function RestrictRoute({ isAllow, render, component: Component, ...rest }: Restr
         <Route
             {...rest}
             render={(props) => {
+                console.log(props);
+                console.log(props.location);
+
                 if(!isAllow) {
-                    return <Redirect to={{ pathname: "/login" }} />
+                    return <Redirect to={{ pathname: "/login", state: { from: props.location } }} />
                 }
 
                 if(render) {

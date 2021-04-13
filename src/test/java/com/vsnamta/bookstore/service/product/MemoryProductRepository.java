@@ -28,11 +28,6 @@ public class MemoryProductRepository extends BaseMemoryRepository<Product> imple
     }
 
     @Override
-    public Optional<Product> findOne(Long id) {
-        return null;
-    }
-
-    @Override
     public List<Product> findAll(Long categoryId, SearchRequest searchRequest, PageRequest pageRequest) {
         return null;
     }
@@ -40,5 +35,10 @@ public class MemoryProductRepository extends BaseMemoryRepository<Product> imple
     @Override
     public long findTotalCount(Long categoryId, SearchRequest searchRequest) {
         return 0;
+    }
+
+    @Override
+    public Optional<Product> findOne(Long id) {
+        return null;
     }
 }

@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PointHistoryFindPayload {
-    @NotNull(message = "회원번호를 선택해주세요.")
+    @NotNull(message = "회원아이디를 선택해주세요.")
     private String memberId;
 
     @Valid

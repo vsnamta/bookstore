@@ -11,9 +11,9 @@ public interface MemberRepository {
 
     Optional<Member> findById(String id);
 
-    Optional<Member> findOne(String id);
-
     List<Member> findAll(SearchRequest searchRequest, PageRequest pageRequest);
 
     long findTotalCount(SearchRequest searchRequest);
+
+    Optional<Member> findOne(String id);
 }

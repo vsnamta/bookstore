@@ -1,28 +1,28 @@
 import { ActionType, createAction, createReducer } from 'typesafe-actions';
-import { FindPayload, Page } from '../../models/common';
+import { FindPayload } from '../../models/common';
 import { OrderDetailResult, OrderResult } from '../../models/order';
 import { AsyncOrder, AsyncOrderPage, OrderSaveAsyncPayload, OrdersState, OrderUpdateAsyncPayload } from '../../models/order/store';
 
-export const types ={
+export const types = {
     FETCH_ORDER_PAGE: 'order/FETCH_ORDER_PAGE' as const,
     SET_ASYNC_ORDER_PAGE: 'order/SET_ASYNC_ORDER_PAGE' as const,
-    FIND_ORDER: 'order/FIND_ORDER' as const,
+    FETCH_ORDER: 'order/FETCH_ORDER' as const,
     SET_ASYNC_ORDER: 'order/SET_ASYNC_ORDER' as const,
     UPDATE_ORDER_ASYNC: 'order/UPDATE_ORDER_ASYNC' as const,
     UPDATE_ORDER: 'order/UPDATE_ORDER' as const,
     SAVE_ORDER_ASYNC: 'order/SAVE_ORDER_ASYNC' as const,
-    SET_ORDERS_STATE: 'order/SET_ORDERS_STATE' as const
+    SAVE_ORDER: 'order/SAVE_ORDER' as const
 };
 
 export const actions = {
     fetchOrderPage: createAction(types.FETCH_ORDER_PAGE)<FindPayload>(), 
     setAsyncOrderPage: createAction(types.SET_ASYNC_ORDER_PAGE)<AsyncOrderPage>(),
-    fetchOrder: createAction(types.FIND_ORDER)<number>(), 
+    fetchOrder: createAction(types.FETCH_ORDER)<number>(), 
     setAsyncOrder: createAction(types.SET_ASYNC_ORDER)<AsyncOrder>(),
     updateOrderAsync: createAction(types.UPDATE_ORDER_ASYNC)<OrderUpdateAsyncPayload>(), 
     updateOrder: createAction(types.UPDATE_ORDER)<OrderDetailResult>(),
     saveOrderAsync: createAction(types.SAVE_ORDER_ASYNC)<OrderSaveAsyncPayload>(),
-    setOrdersState: createAction(types.SET_ORDERS_STATE)<OrdersState>(),
+    saveOrder: createAction(types.SAVE_ORDER)<OrderDetailResult>()
 };
 
 const initialState: OrdersState = {
@@ -66,9 +66,21 @@ const reducer = createReducer<OrdersState, ActionType<typeof actions>>(initialSt
             result: updatedOrder
         }
     }),
-    [types.SET_ORDERS_STATE]: (state, { payload: ordersState }: ReturnType<typeof actions.setOrdersState>) => (
-        ordersState
-    )
+    [types.SAVE_ORDER]: (state, { payload: savedOrder }: ReturnType<typeof actions.saveOrder>) => ({
+        ...state,
+        // asyncOrderPage: {
+        //     ...state.asyncOrderPage,
+        //     result: {
+        //         list: [savedOrder, ...(state.asyncOrderPage.result?.list as OrderResult[]).slice(0, 9)],
+        //         totalCount: state.asyncOrderPage.result?.totalCount + 1
+        //     }
+        // },
+        asyncProduct: {
+            payload: savedOrder.id,
+            result: savedOrder,
+            error: undefined
+        }
+    })
 });
 
 export default reducer;

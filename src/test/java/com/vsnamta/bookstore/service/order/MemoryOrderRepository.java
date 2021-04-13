@@ -35,11 +35,6 @@ public class MemoryOrderRepository extends BaseMemoryRepository<Order> implement
             )
             .count();
     }
-    
-    @Override
-    public Optional<Order> findOne(Long id) {
-        return null;
-    }
 
     @Override
     public List<Order> findAll(SearchRequest searchRequest, PageRequest pageRequest) {
@@ -49,5 +44,10 @@ public class MemoryOrderRepository extends BaseMemoryRepository<Order> implement
     @Override
     public long findTotalCount(SearchRequest searchRequest) {
         return 0;
+    }
+
+    @Override
+    public Optional<Order> findOne(Long id) {
+        return null;
     }
 }

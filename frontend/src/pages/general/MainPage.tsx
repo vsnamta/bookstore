@@ -1,25 +1,16 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, rootActions } from '../../store';
-import MainTemplate from '../../components/general/MainTemplate';
+import React from 'react';
+import Layout from '../../components/common/Layout';
+import Banner from '../../components/general/Banner';
+import Title from '../../components/general/Title';
+import BestProductListContainer from '../../container/product/BestProductListContainer';
 
 function MainPage() {
-    const dispatch = useDispatch();
-    const asyncProductPage = useSelector((state: RootState) => state.products.asyncProductPage);
-
-    useEffect(() => {
-        dispatch(rootActions.fetchProductPage({
-            pageCriteria: {
-                page: 1,
-                size: 8,
-                sortColumn: "salesQuantity",
-                sortDirection: "desc"
-            }
-        }));
-    }, []);
-    
     return (
-        <MainTemplate asyncProductPage={asyncProductPage} />
+        <Layout>
+            <Banner />
+            <Title content={"베스트 셀러"} />
+            <BestProductListContainer />
+        </Layout>
     )
 };
 

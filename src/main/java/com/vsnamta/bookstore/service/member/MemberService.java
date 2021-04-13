@@ -80,14 +80,6 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberDetailResult findOne(String id) {
-        Member member = memberRepository.findOne(id)
-            .orElseThrow(() -> new DataNotFoundException("요청하신 데이터를 찾을 수 없습니다."));
-
-        return new MemberDetailResult(member);
-    }
-
-    @Transactional(readOnly = true)
     public Page<MemberResult> findAll(FindPayload findPayload) {
         SearchRequest searchRequest = findPayload.getSearchCriteria().toRequest();
         PageRequest pageRequest = findPayload.getPageCriteria().toRequest();
@@ -101,5 +93,13 @@ public class MemberService {
         long totalCount = memberRepository.findTotalCount(searchRequest);
     
         return new Page<MemberResult>(memberResults, totalCount);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberDetailResult findOne(String id) {
+        Member member = memberRepository.findOne(id)
+            .orElseThrow(() -> new DataNotFoundException("요청하신 데이터를 찾을 수 없습니다."));
+
+        return new MemberDetailResult(member);
     }
 }

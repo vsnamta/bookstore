@@ -15,9 +15,9 @@ public interface ProductRepository {
 
     long findTotalCount(Long categoryId);
 
-    Optional<Product> findOne(Long id);
-
     List<Product> findAll(Long categoryId, SearchRequest searchRequest, PageRequest pageRequest);
 
     long findTotalCount(Long categoryId, SearchRequest searchRequest);
+
+    Optional<Product> findOne(Long id);
 }

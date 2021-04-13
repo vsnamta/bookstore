@@ -68,14 +68,6 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductDetailResult findOne(Long id) {
-        Product product = productRepository.findOne(id)
-            .orElseThrow(() -> new DataNotFoundException("요청하신 데이터를 찾을 수 없습니다."));
-
-        return new ProductDetailResult(product);
-    }
-
-    @Transactional(readOnly = true)
     public Page<ProductResult> findAll(ProductFindPayload productFindPayload) {
         Long categoryId = productFindPayload.getCategoryId();
         SearchRequest searchRequest = productFindPayload.getSearchCriteria().toRequest();
@@ -90,5 +82,13 @@ public class ProductService {
         long totalCount = productRepository.findTotalCount(categoryId, searchRequest);
     
         return new Page<ProductResult>(productResults, totalCount);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductDetailResult findOne(Long id) {
+        Product product = productRepository.findOne(id)
+            .orElseThrow(() -> new DataNotFoundException("요청하신 데이터를 찾을 수 없습니다."));
+
+        return new ProductDetailResult(product);
     }
 }

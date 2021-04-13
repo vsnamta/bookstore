@@ -51,12 +51,6 @@ public class OrderApiController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/api/orders/{id}")
-    public OrderDetailResult findOne(@PathVariable Long id, @AuthenticationPrincipal CustomUser customUser) {
-        return orderService.findOne(customUser.getId(), id);
-    }
-
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/api/orders")
     public Page<OrderResult> findAll(@Valid FindPayload findPayload, @AuthenticationPrincipal CustomUser customUser) {
         if(customUser.hasUserRole() && !validateUserSearchCriteria(customUser, findPayload.getSearchCriteria())) {
@@ -73,5 +67,11 @@ public class OrderApiController {
 
         return searchCriteria.getColumn().equals("memberId") 
             && searchCriteria.getKeyword().equals(String.valueOf(customUser.getId()));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/api/orders/{id}")
+    public OrderDetailResult findOne(@PathVariable Long id, @AuthenticationPrincipal CustomUser customUser) {
+        return orderService.findOne(customUser.getId(), id);
     }
 }

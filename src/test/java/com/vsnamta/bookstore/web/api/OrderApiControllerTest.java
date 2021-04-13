@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
@@ -118,6 +119,8 @@ public class OrderApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orderLineResults[0].productName").value("Clean Code"))
+            .andExpect(jsonPath("$.statusName").value("주문 완료"))
             .andDo(print());   
     }
 
@@ -162,7 +165,47 @@ public class OrderApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orderLineResults[0].productName").value("Clean Code"))
+            .andExpect(jsonPath("$.statusName").value("주문 취소"))
             .andDo(print());   
+    }
+
+    @WithCustomUser(id = "test", role = MemberRole.USER)
+    @Test
+    public void 회원아이디로_주문_조회() throws Exception {
+         // given
+         Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
+
+         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
+ 
+         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
+
+        Order order = orderRepository.save(
+            Order.createOrder(
+                member, 
+                Arrays.asList(
+                    OrderLine.createOrderLine(product, 1)
+                ), 
+                0, 
+                aDeliveryInfo().build()
+            )
+        );
+        order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
+
+        // when
+        ResultActions resultActions =
+            mockMvc.perform(
+                get("/api/orders")
+                    .param("searchCriteria.column", "memberId")
+                    .param("searchCriteria.keyword", String.valueOf(member.getId()))
+                    .param("pageCriteria.page", String.valueOf(1))    
+                    .param("pageCriteria.size", String.valueOf(10)));           
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            // .andExpect()
+            .andDo(print());           
     }
 
     @WithCustomUser(id = "test", role = MemberRole.USER)
@@ -197,43 +240,8 @@ public class OrderApiControllerTest {
         // then
         resultActions
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orderLineResults[0].productName").value("Clean Code"))
+            .andExpect(jsonPath("$.statusName").value("주문 완료"))
             .andDo(print());  
-    }
-
-    @WithCustomUser(id = "test", role = MemberRole.USER)
-    @Test
-    public void 회원번호로_주문_조회() throws Exception {
-         // given
-         Member member = memberRepository.save(aMember().id("test").name("홍길동").build());
-
-         DiscountPolicy discountPolicy = discountPolicyRepository.save(aDiscountPolicy().build());
- 
-         Product product = productRepository.save(aProduct().discountPolicy(discountPolicy).name("Clean Code").build());
-
-        Order order = orderRepository.save(
-            Order.createOrder(
-                member, 
-                Arrays.asList(
-                    OrderLine.createOrderLine(product, 1)
-                ), 
-                0, 
-                aDeliveryInfo().build()
-            )
-        );
-        order.updateStatusInfo(anOrderStatusInfo().status(OrderStatus.ORDERED).build());
-
-        // when
-        ResultActions resultActions =
-            mockMvc.perform(
-                get("/api/orders")
-                    .param("searchCriteria.column", "memberId")
-                    .param("searchCriteria.keyword", String.valueOf(member.getId()))
-                    .param("pageCriteria.page", String.valueOf(1))    
-                    .param("pageCriteria.size", String.valueOf(10)));           
-
-        // then
-        resultActions
-            .andExpect(status().isOk())
-            .andDo(print());           
     }
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 import { AsyncProductPage } from '../../models/product/store';
-import Layout from '../common/Layout';
 import ErrorDetail from '../general/ErrorDetail';
 import Pagination from '../general/Pagination';
 import ProductList from './ProductList';
@@ -19,7 +18,7 @@ interface ProductListTemplateProps {
 
 function ProductListTemplate({ asyncProductPage, onSortChange, onPageChange }: ProductListTemplateProps) {  
     return (
-        <Layout>      
+        <>      
             <ProductListFilterBar 
                 totalCount={asyncProductPage.result?.totalCount} 
                 onSortChange={onSortChange} 
@@ -31,8 +30,8 @@ function ProductListTemplate({ asyncProductPage, onSortChange, onPageChange }: P
                 onPageChange={onPageChange}
             />
             {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />}
-        </Layout>
+        </>
     )
 };
 
-export default ProductListTemplate;
+export default React.memo(ProductListTemplate);

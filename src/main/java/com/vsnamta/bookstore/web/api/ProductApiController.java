@@ -43,13 +43,13 @@ public class ProductApiController {
         return productService.update(id, productSaveOrUpdatePayload);
     }
 
-    @GetMapping("/api/products/{id}")
-    public ProductDetailResult findOne(@PathVariable Long id) {
-        return productService.findOne(id);
-    }
-
     @GetMapping("/api/products")
     public Page<ProductResult> findAll(@Valid ProductFindPayload productFindPayload) {
         return productService.findAll(productFindPayload);
+    }
+
+    @GetMapping("/api/products/{id}")
+    public ProductDetailResult findOne(@PathVariable Long id) {
+        return productService.findOne(id);
     }
 }

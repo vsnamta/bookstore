@@ -74,25 +74,6 @@ public class JpaOrderRepository implements OrderRepository {
     }
 
     @Override
-    public Optional<Order> findOne(Long id) {
-        JPAQueryFactory query = new JPAQueryFactory(entityManager);
-
-        Order result = 
-            query.select(order)
-                .distinct()
-                .from(order)
-                .join(order.member, member).fetchJoin()
-                .join(order.orderLines, orderLine).fetchJoin()
-                .join(orderLine.product, product).fetchJoin()
-                .join(product.discountPolicy, discountPolicy).fetchJoin()
-                .where(order.id.eq(id))
-                .setHint("org.hibernate.readOnly", true)
-                .fetchOne();
-
-        return Optional.ofNullable(result);
-    }
-
-    @Override
     public List<Order> findAll(SearchRequest searchRequest, PageRequest pageRequest) {
         JPAQueryFactory query = new JPAQueryFactory(entityManager);
 
@@ -142,5 +123,24 @@ public class JpaOrderRepository implements OrderRepository {
         }
 
         return null;
+    }
+    
+    @Override
+    public Optional<Order> findOne(Long id) {
+        JPAQueryFactory query = new JPAQueryFactory(entityManager);
+
+        Order result = 
+            query.select(order)
+                .distinct()
+                .from(order)
+                .join(order.member, member).fetchJoin()
+                .join(order.orderLines, orderLine).fetchJoin()
+                .join(orderLine.product, product).fetchJoin()
+                .join(product.discountPolicy, discountPolicy).fetchJoin()
+                .where(order.id.eq(id))
+                .setHint("org.hibernate.readOnly", true)
+                .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 }

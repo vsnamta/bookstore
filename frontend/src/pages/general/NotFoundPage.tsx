@@ -1,9 +1,12 @@
 import React from 'react';
-import NotFoundTemplate from '../../components/general/NotFoundTemplate';
+import Layout from '../../components/common/Layout';
+import NotFound from '../../components/general/NotFound';
 
 function NotFoundPage() {    
     return (
-        <NotFoundTemplate />
+        <Layout>
+            <NotFound />
+        </Layout>
     )
 };
 

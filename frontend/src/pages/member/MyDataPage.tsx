@@ -1,28 +1,16 @@
-import React, { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import MemberUpdateTemplate from '../../components/member/MemberUpdateTemplate';
-import { MyData } from '../../models/auth';
-import { MemberUpdateAsyncPayload } from '../../models/member/store';
-import { RootState, rootActions } from '../../store';
+import React from 'react';
+import Layout from '../../components/common/Layout';
+import MyPageLayout from '../../components/common/MyPageLayout';
+import MemberUpdateFormContainer from '../../container/member/MemberUpdateFormContainer';
 
-function MyDataPage() {
-    const dispatch = useDispatch();
-    const myData = useSelector((state: RootState) => state.auths.myData) as MyData;
-    const asyncMember = useSelector((state: RootState) => state.members.asyncMember);
-
-    useEffect(() => {
-        dispatch(rootActions.fetchMember(myData.id));
-    }, []);
-
-    const updateMember = useCallback((payload: MemberUpdateAsyncPayload) => {
-        dispatch(rootActions.updateMemberAsync(payload));
-    }, []);
-    
+function MyDataPage() {    
     return (
-        <MemberUpdateTemplate 
-            asyncMember={asyncMember}
-            updateMember={updateMember}
-        />
+        <Layout>
+            <MyPageLayout>
+                <h3>나의 정보</h3>
+                <MemberUpdateFormContainer />
+            </MyPageLayout>
+        </Layout>
     )
 };
 

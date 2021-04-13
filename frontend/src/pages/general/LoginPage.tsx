@@ -1,18 +1,14 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import LoginTemplate from '../../components/general/LoginTemplate';
-import { LoginAsyncPayload } from '../../models/auth/store';
-import { rootActions } from '../../store';
+import React from 'react';
+import Layout from '../../components/common/Layout';
+import LoginFormContainer from '../../container/general/LoginFormContainer';
 
 function LoginPage() {
-    const dispatch = useDispatch();
-
-    const login = useCallback((payload: LoginAsyncPayload) => {
-        dispatch(rootActions.loginAsync(payload));
-    }, []);
-
     return (
-        <LoginTemplate login={login} />
+        <Layout>
+            <h3>로그인 페이지</h3>
+            <br />
+            <LoginFormContainer />
+        </Layout>
     )
 };
 
