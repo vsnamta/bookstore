@@ -140,7 +140,7 @@ describe('category store test', () => {
 
         store.dispatch(rootActions.selectCategory(2));
 
-        mockAxios.onDelete("/api/categories").reply(200);
+        mockAxios.onDelete("/api/categories/2").reply(200);
 
         // when
         store.dispatch(rootActions.removeCategoryAsync({ id: 2 }));

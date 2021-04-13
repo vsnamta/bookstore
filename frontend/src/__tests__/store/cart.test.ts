@@ -170,7 +170,7 @@ describe('cart store test', () => {
             error: undefined
         }));
 
-        mockAxios.onDelete("/api/carts").reply(200);
+        mockAxios.onDelete("/api/carts/?ids=1").reply(200);
 
         // when
         store.dispatch(rootActions.removeCartAsync({ ids: [1] }));
