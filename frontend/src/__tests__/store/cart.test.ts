@@ -1,5 +1,5 @@
 import qs from 'qs';
-import { waitFor } from "@testing-library/dom";
+import { wait, waitFor } from "@testing-library/dom";
 import MockAdapter from "axios-mock-adapter";
 import { applyMiddleware, createStore } from "redux";
 import createSagaMiddleware from 'redux-saga';
@@ -27,7 +27,7 @@ describe('cart store test', () => {
         };
         const queryString = qs.stringify(cartFindPayload, { allowDots: true });
 
-        mockAxios.onGet(`/api/carts/${queryString}`).reply(200, [{
+        mockAxios.onGet(`/api/carts?${queryString}`).reply(200, [{
             id: 1,
             productId: 1,
             productName: "Clean Code",
@@ -45,7 +45,6 @@ describe('cart store test', () => {
         // then
         await waitFor(() => {
             const cartList = store.getState().carts.asyncCartList.result;
-
             expect(cartList?.length).toEqual(1);
         });
     });
@@ -103,7 +102,7 @@ describe('cart store test', () => {
         // then
         const cartList = store.getState().carts.asyncCartList.result;
 
-        expect(cartList?.[0].checked).toEqual(true);
+        expect(cartList?.[0].checked).toEqual(false);
     });
 
     it('updateCartAsync', async () => {
@@ -170,10 +169,13 @@ describe('cart store test', () => {
             error: undefined
         }));
 
-        mockAxios.onDelete("/api/carts/?ids=1").reply(200);
+        const ids = [1];
+        const queryString = qs.stringify({ ids: ids }, { indices: false });
+
+        mockAxios.onDelete(`/api/carts?${queryString}`).reply(200);
 
         // when
-        store.dispatch(rootActions.removeCartAsync({ ids: [1] }));
+        store.dispatch(rootActions.removeCartAsync({ ids: ids }));
 
         // then
         await waitFor(() => {

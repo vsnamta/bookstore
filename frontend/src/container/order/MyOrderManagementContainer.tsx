@@ -13,7 +13,7 @@ function MyOrderManagementContainer() {
 
     useEffect(() => {
         dispatch(rootActions.fetchOrderPage({
-            searchCriteria: { column: "memberId", keyword: myData.id + "" },
+            searchCriteria: { column: "memberId", keyword: myData.id },
             pageCriteria: { page: 1, size: 10 }
         }));
     }, []);

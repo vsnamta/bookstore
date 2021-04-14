@@ -1,11 +1,12 @@
-import { waitFor } from "@testing-library/dom";
+import { wait, waitFor } from "@testing-library/dom";
 import MockAdapter from "axios-mock-adapter";
 import { applyMiddleware, createStore } from "redux";
 import createSagaMiddleware from 'redux-saga';
 import apiClient from "../../apis/apiClient";
 import rootReducer, { rootActions, rootSaga } from "../../store";
 import qs from 'qs';
-import { FindPayload } from "../../models/common";
+import { FindPayload, Page } from "../../models/common";
+import { ReviewResult } from "../../models/review";
 
 describe('review store test', () => {
     const sagaMiddleware = createSagaMiddleware();
@@ -26,19 +27,25 @@ describe('review store test', () => {
             searchCriteria: { column: "productId", keyword: "1" },
             pageCriteria: { page: 1, size: 10 }
         };
+
+        const reviewPage: Page<ReviewResult> = {
+            list: [{
+                id: 1,
+                memberId: "test",
+                memberName: "홍길동",
+                productId: 1,
+                productName: "Clean Code",
+                imageFileName: "test.jpg",
+                rating: 4,
+                contents: "좋아요.",
+                createdDate: "2020-01-01 00:00:00"
+            }],
+            totalCount: 1
+        };
+
         const queryString = qs.stringify(findPayload, { allowDots: true });
 
-        mockAxios.onGet(`/api/reviews/${queryString}`).reply(200, [{
-            id: 1,
-            memberId: "test",
-            memberName: "홍길동",
-            productId: 1,
-            productName: "Clean Code",
-            imageFileName: "test.jpg",
-            rating: 4,
-            contents: "좋아요.",
-            createdDate: "2020-01-01 00:00:00"
-        }]);
+        mockAxios.onGet(`/api/reviews?${queryString}`).reply(200, reviewPage);
 
         // when
         store.dispatch(rootActions.fetchReviewPage(findPayload));
@@ -128,7 +135,7 @@ describe('review store test', () => {
         // when
         store.dispatch(rootActions.updateReviewAsync({
             id: 1,
-            payload: { rating: 5, contents: "아주 좋아요" }
+            payload: { rating: 5, contents: "아주 좋아요." }
         }));
 
         // then
@@ -136,8 +143,8 @@ describe('review store test', () => {
             const reviewPage = store.getState().reviews.asyncReviewPage.result;
             const review = store.getState().reviews.review;
     
-            expect(reviewPage?.list[0].contents).toEqual("아주 좋아요");
-            expect(review?.contents).toEqual("아주 좋아요");
+            expect(reviewPage?.list[0].contents).toEqual("아주 좋아요.");
+            expect(review?.contents).toEqual("아주 좋아요.");
         });
     });
 
@@ -160,7 +167,7 @@ describe('review store test', () => {
                     contents: "좋아요.",
                     createdDate: "2020-01-01 00:00:00"
                 }, {
-                    id: 1,
+                    id: 2,
                     memberId: "test2",
                     memberName: "임꺽정",
                     productId: 1,
@@ -213,18 +220,6 @@ describe('review store test', () => {
             createdDate: "2020-01-01 00:00:00"
         });
 
-        mockAxios.onGet("/api/reviews").reply(200, [{
-            id: 1,
-            memberId: "test",
-            memberName: "홍길동",
-            productId: 1,
-            productName: "Clean Code",
-            imageFileName: "test.jpg",
-            rating: 4,
-            contents: "좋아요.",
-            createdDate: "2020-01-01 00:00:00"
-        }]);
-
         // when
         store.dispatch(rootActions.saveReviewAsync({ 
             payload: { 
@@ -240,7 +235,7 @@ describe('review store test', () => {
             const review = store.getState().reviews.review;
     
             expect(reviewPage?.list.length).toEqual(1);
-            expect(review === undefined).toEqual(true);
+            expect(review !== undefined).toEqual(true);
         });
     });
 });

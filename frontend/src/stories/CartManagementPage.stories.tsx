@@ -1,10 +1,9 @@
 import { storiesOf } from "@storybook/react";
 import React from 'react';
-import Banner from "../components/general/Banner";
+import CartManagement from "../components/cart/CartManagement";
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
-import Title from "../components/general/Title";
-import BestProductList from "../components/product/BestProductList";
+import { CartResult } from "../models/cart";
 import { CategoryResult } from "../models/category";
 
 const myData = {
@@ -27,20 +26,17 @@ const categoryList: CategoryResult[] = [{
     }]
 }];
 
-const productList = [{
+const cartList: CartResult[] = [{
     id: 1,
-    name: "Clean Code",
-    author: "로버트 C. 마틴",
-    publisher: "인사이트",
-    publishedDate: "2013-12-24",
-    regularPrice: 33000,
+    productId: 1,
+    productName: "Clean Code",
     imageFileName: "test.jpg",
+    regularPrice: 33000,
     stockQuantity: 100,
-    salesQuantity: 0,
-    rating: 4,
-    reviewCount: 1,
     discountPercent: 10,
-    depositPercent: 5
+    depositPercent: 5,
+    quantity: 1,
+    checked: true
 }];
 
 storiesOf("MainPage", module)
@@ -53,9 +49,13 @@ storiesOf("MainPage", module)
             />
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
-                    <Banner />
-                    <Title content={"베스트 셀러"} />
-                    <BestProductList productList={productList} />
+                    <CartManagement 
+                        cartList={cartList} 
+                        onUpdateCart={() => {}} 
+                        onRemoveCart={() => {}}
+                        onCheckAllCart={() => {}}
+                        onCheckCart={() => {}}
+                    />
                     {/* {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />} */}
                 </div>
             </main>

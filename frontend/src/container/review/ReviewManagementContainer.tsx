@@ -37,7 +37,7 @@ function ReviewManagementContainer() {
 
     return (
         <ReviewManagement
-            asyncProduct={asyncProduct}
+            product={asyncProduct.result}
             asyncReviewPage={asyncReviewPage}
             myData={myData}
             saveReview={saveReview}

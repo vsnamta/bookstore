@@ -1,11 +1,12 @@
 import qs from 'qs';
-import { waitFor } from "@testing-library/dom";
+import { wait, waitFor } from "@testing-library/dom";
 import MockAdapter from "axios-mock-adapter";
 import { applyMiddleware, createStore } from "redux";
 import createSagaMiddleware from 'redux-saga';
 import apiClient from "../../apis/apiClient";
 import rootReducer, { rootActions, rootSaga } from "../../store";
-import { FindPayload } from '../../models/common';
+import { FindPayload, Page } from '../../models/common';
+import { MemberResult } from '../../models/member';
 
 describe('member store test', () => {
     const sagaMiddleware = createSagaMiddleware();
@@ -26,15 +27,20 @@ describe('member store test', () => {
             pageCriteria: { page: 1, size: 10 }
         };
 
+        const memberPage: Page<MemberResult> = {
+            list: [{
+                id: "test",
+                name: "홍길동",
+                phoneNumber: "010-1234-5678",
+                roleName: "USER",
+                createdDate: "2020-01-01 00:00:00"
+            }],
+            totalCount: 1
+        };
+
         const queryString = qs.stringify(findPayload, { allowDots: true });
 
-        mockAxios.onGet(`/api/members/${queryString}`).reply(200, [{
-            id: "test",
-            name: "홍길동",
-            phoneNumber: "010-1234-5678",
-            roleName: "USER",
-            createdDate: "2020-01-01 00:00:00"
-        }]);
+        mockAxios.onGet(`/api/members?${queryString}`).reply(200, memberPage);
 
         // when
         store.dispatch(rootActions.fetchMemberPage(findPayload));
@@ -55,7 +61,7 @@ describe('member store test', () => {
             error: undefined
         }));
 
-        mockAxios.onGet("/api/members/test").reply(200, [{
+        mockAxios.onGet("/api/members/test").reply(200, {
             id: "test",
             name: "홍길동",
             phoneNumber: "010-1234-5678",
@@ -65,7 +71,7 @@ describe('member store test', () => {
             point: 0,
             roleName: "USER",
             createdDate: "2020-01-01 00:00:00"
-        }]);
+        });
 
         // when
         store.dispatch(rootActions.fetchMember("test"));
@@ -81,21 +87,6 @@ describe('member store test', () => {
 
     it('updateMemberAsync', async () => {
         // given
-        store.dispatch(rootActions.setAsyncMemberPage({
-            payload: { pageCriteria: { page: 1, size: 10 } },
-            result: {
-                list: [{
-                    id: "test",
-                    name: "홍길동",
-                    phoneNumber: "010-1234-5678",
-                    roleName: "USER",
-                    createdDate: "2020-01-01 00:00:00"
-                }],
-                totalCount: 1
-            },
-            error: undefined
-        }));
-
         store.dispatch(rootActions.setAsyncMember({
             payload: "test",
             result: {
@@ -113,19 +104,15 @@ describe('member store test', () => {
         }));
 
         mockAxios.onPut("/api/members/test").reply(200, {
-            payload: "test",
-            result: {
-                id: "test",
-                name: "홍길동",
-                phoneNumber: "010-8765-4321",
-                zipCode: "123-456",
-                address1: "서울시 중구 명동 123번지",
-                address2: "456호",
-                point: 0,
-                roleName: "USER",
-                createdDate: "2020-01-01 00:00:00"
-            },
-            error: undefined
+            id: "test",
+            name: "홍길동",
+            phoneNumber: "010-8765-4321",
+            zipCode: "123-456",
+            address1: "서울시 중구 명동 123번지",
+            address2: "456호",
+            point: 0,
+            roleName: "USER",
+            createdDate: "2020-01-01 00:00:00"
         });
 
         // when
@@ -144,10 +131,7 @@ describe('member store test', () => {
 
         // then
         await waitFor(() => {
-            const memberPage = store.getState().members.asyncMemberPage.result;
             const member = store.getState().members.asyncMember.result;
-    
-            expect(memberPage?.list[0].phoneNumber).toEqual("010-8765-4321");
             expect(member?.phoneNumber).toEqual("010-8765-4321");
         });
     });

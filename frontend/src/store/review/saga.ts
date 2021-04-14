@@ -75,7 +75,7 @@ function* saveReviewAsyncSaga({ payload: reviewSaveAsyncPayload }: ReturnType<ty
         const currentFindPayload: FindPayload = yield select((state: RootState) => state.reviews.asyncReviewPage.payload);
 
         const findPayload: FindPayload = {
-            searchCriteria: { column: "productId", keyword: reviewSaveAsyncPayload.payload.productId + "" },
+            searchCriteria: { column: "productId", keyword: reviewSaveAsyncPayload.payload.productId.toString() },
             pageCriteria: { page: 1, size: 10 }
         };
 

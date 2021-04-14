@@ -1,15 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "es6",
-      "esnext"
-    ],
+    "target": "ES5",
+    "module": "CommonJs",
+    "lib": ["ES2020", "DOM"],
     "jsx": "react",
-    //"downlevelIteration": true, 
     "strict": true,		
     "esModuleInterop": true,
     "skipLibCheck": true,

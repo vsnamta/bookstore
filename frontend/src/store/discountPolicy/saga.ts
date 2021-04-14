@@ -26,7 +26,7 @@ function* fetchDiscountPolicyListSaga(action: ReturnType<typeof actions.fetchDis
     }
 };
 
-function* update1DiscountPolicyAsyncSaga({ payload: discountPolicyUpdateAsyncPayload }: ReturnType<typeof actions.updateDiscountPolicyAsync>) {
+function* updateDiscountPolicyAsyncSaga({ payload: discountPolicyUpdateAsyncPayload }: ReturnType<typeof actions.updateDiscountPolicyAsync>) {
     try {
         const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.update, discountPolicyUpdateAsyncPayload.id, discountPolicyUpdateAsyncPayload.payload);
 
@@ -37,7 +37,7 @@ function* update1DiscountPolicyAsyncSaga({ payload: discountPolicyUpdateAsyncPay
     }
 };
 
-function* save1DiscountPolicyAsyncSaga({ payload: discountPolicySaveAsyncPayload }: ReturnType<typeof actions.saveDiscountPolicyAsync>) {
+function* saveDiscountPolicyAsyncSaga({ payload: discountPolicySaveAsyncPayload }: ReturnType<typeof actions.saveDiscountPolicyAsync>) {
     try {
         const discountPolicy: DiscountPolicyResult = yield call(discountPolicyApi.save, discountPolicySaveAsyncPayload.payload);
 
@@ -50,6 +50,6 @@ function* save1DiscountPolicyAsyncSaga({ payload: discountPolicySaveAsyncPayload
 
 export default function* discountPoliciesSaga() {
     yield takeEvery(types.FETCH_DISCOUNT_POLICY_LIST, fetchDiscountPolicyListSaga);
-    yield takeEvery(types.UPDATE_DISCOUNT_POLICY_ASYNC, update1DiscountPolicyAsyncSaga);
-    yield takeEvery(types.SAVE_DISCOUNT_POLICY_ASYNC, save1DiscountPolicyAsyncSaga);
+    yield takeEvery(types.UPDATE_DISCOUNT_POLICY_ASYNC, updateDiscountPolicyAsyncSaga);
+    yield takeEvery(types.SAVE_DISCOUNT_POLICY_ASYNC, saveDiscountPolicyAsyncSaga);
 }

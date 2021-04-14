@@ -1,11 +1,11 @@
 import { storiesOf } from "@storybook/react";
 import React from 'react';
-import Banner from "../components/general/Banner";
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
-import Title from "../components/general/Title";
-import BestProductList from "../components/product/BestProductList";
+import ProductListTemplate from "../components/product/ProductListTemplate";
 import { CategoryResult } from "../models/category";
+import { Page } from "../models/common";
+import { ProductFindPayload, ProductResult } from "../models/product";
 
 const myData = {
     id: "test",
@@ -27,21 +27,28 @@ const categoryList: CategoryResult[] = [{
     }]
 }];
 
-const productList = [{
-    id: 1,
-    name: "Clean Code",
-    author: "로버트 C. 마틴",
-    publisher: "인사이트",
-    publishedDate: "2013-12-24",
-    regularPrice: 33000,
-    imageFileName: "test.jpg",
-    stockQuantity: 100,
-    salesQuantity: 0,
-    rating: 4,
-    reviewCount: 1,
-    discountPercent: 10,
-    depositPercent: 5
-}];
+const productFindPayload: ProductFindPayload = {
+    pageCriteria: { page: 1, size: 10 }
+};
+
+const productPage: Page<ProductResult> = {
+    list: [{
+        id: 1,
+        name: "Clean Code",
+        author: "로버트 C. 마틴",
+        publisher: "인사이트",
+        publishedDate: "2013-12-24",
+        regularPrice: 33000,
+        imageFileName: "test.jpg",
+        stockQuantity: 100,
+        salesQuantity: 0,
+        rating: 4,
+        reviewCount: 1,
+        discountPercent: 10,
+        depositPercent: 5
+    }],
+    totalCount: 1
+};
 
 storiesOf("MainPage", module)
     .add("기본", () => (
@@ -53,10 +60,11 @@ storiesOf("MainPage", module)
             />
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
-                    <Banner />
-                    <Title content={"베스트 셀러"} />
-                    <BestProductList productList={productList} />
-                    {/* {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />} */}
+                    <ProductListTemplate 
+                        asyncProductPage={{ payload: productFindPayload, result: productPage, error: undefined }}
+                        onPageChange={() => {}}
+                        onSortChange={() => {}}
+                    />
                 </div>
             </main>
             <Footer />

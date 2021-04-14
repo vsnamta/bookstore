@@ -30,13 +30,15 @@ const reducer = createReducer<StocksState, ActionType<typeof actions>>(initialSt
     }),
     [types.SAVE_STOCK]: (state, { payload: savedStock }: ReturnType<typeof actions.saveStock>) => ({
         ...state,
-        // asyncStockPage: {
-        //     ...state.asyncStockPage,
-        //     result: {
-        //         list: [savedStock, ...(state.asyncStockPage.result?.list as StockResult[]).slice(0, 9)],
-        //         totalCount: state.asyncStockPage.result?.totalCount + 1
-        //     }
-        // },
+        asyncStockPage: {
+            ...state.asyncStockPage,
+            result: state.asyncStockPage.result 
+                ? {
+                    list: [savedStock, ...state.asyncStockPage.result.list.slice(0, 9)],
+                    totalCount: state.asyncStockPage.result.totalCount + 1
+                }
+                : undefined
+        },
     })
 });
 

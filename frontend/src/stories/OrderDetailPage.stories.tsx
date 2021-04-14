@@ -1,10 +1,8 @@
 import { storiesOf } from "@storybook/react";
 import React from 'react';
-import Banner from "../components/general/Banner";
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
-import Title from "../components/general/Title";
-import BestProductList from "../components/product/BestProductList";
+import OrderDetail from "../components/order/OrderDetail";
 import { CategoryResult } from "../models/category";
 
 const myData = {
@@ -27,21 +25,34 @@ const categoryList: CategoryResult[] = [{
     }]
 }];
 
-const productList = [{
+const order = {
     id: 1,
-    name: "Clean Code",
-    author: "로버트 C. 마틴",
-    publisher: "인사이트",
-    publishedDate: "2013-12-24",
-    regularPrice: 33000,
-    imageFileName: "test.jpg",
-    stockQuantity: 100,
-    salesQuantity: 0,
-    rating: 4,
-    reviewCount: 1,
-    discountPercent: 10,
-    depositPercent: 5
-}];
+    memberName: "홍길동",
+    orderLineResults: [{
+        productId: 1,
+        productName: "Clean Code",
+        imageFileName: "test.jpg",
+        regularPrice: 33000,
+        discountPercent: 100,
+        depositPercent: 5,
+        quantity: 1
+    }],
+    totalAmounts: 29700,
+    usedPoint: 0,
+    depositPoint: 1650,
+    receiverName: "홍길동",
+    receiverPhoneNumber: "010-1234-5678",
+    deliveryZipCode: "123-456",
+    deliveryAddress1: "서울시 중구 명동 123번지",
+    deliveryAddress2: "456호",
+    deliveryMessage: "문 앞에 놓아주세요.",
+    statusName: "주문 완료",
+    statusUpdatedDate: "2020-01-01 00:00:00",
+    statusHistoryResults: [{
+        statusName: "주문 완료",
+        createdDate: "2020-01-01 00:00:00"
+    }]
+};
 
 storiesOf("MainPage", module)
     .add("기본", () => (
@@ -53,10 +64,8 @@ storiesOf("MainPage", module)
             />
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
-                    <Banner />
-                    <Title content={"베스트 셀러"} />
-                    <BestProductList productList={productList} />
-                    {/* {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />} */}
+                    <OrderDetail order={order} />
+                    {/* {asyncOrder.error && <ErrorDetail message={asyncOrder.error.message} />} */}
                 </div>
             </main>
             <Footer />

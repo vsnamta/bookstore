@@ -26,8 +26,6 @@ describe('discountPolicy store test', () => {
             depositPercent: 5
         }]);
 
-        mockAxios.history.get
-
         // when
         store.dispatch(rootActions.fetchDiscountPolicyList());
 

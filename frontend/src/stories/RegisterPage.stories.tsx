@@ -1,10 +1,9 @@
+
 import { storiesOf } from "@storybook/react";
 import React from 'react';
-import Banner from "../components/general/Banner";
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
-import Title from "../components/general/Title";
-import BestProductList from "../components/product/BestProductList";
+import RegisterForm from "../components/member/RegisterForm";
 import { CategoryResult } from "../models/category";
 
 const myData = {
@@ -53,10 +52,9 @@ storiesOf("MainPage", module)
             />
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
-                    <Banner />
-                    <Title content={"베스트 셀러"} />
-                    <BestProductList productList={productList} />
-                    {/* {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />} */}
+                    <h3>회원가입 페이지</h3>
+                    <br />
+                    <RegisterForm onSaveMember={() => {}} />
                 </div>
             </main>
             <Footer />

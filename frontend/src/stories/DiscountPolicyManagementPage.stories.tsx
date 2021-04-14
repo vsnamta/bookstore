@@ -1,10 +1,9 @@
 import { storiesOf } from "@storybook/react";
 import React from 'react';
-import Banner from "../components/general/Banner";
+import DiscountPolicyManagement from "../components/discountPolicy/DiscountPolicyManagement";
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
 import Title from "../components/general/Title";
-import BestProductList from "../components/product/BestProductList";
 import { CategoryResult } from "../models/category";
 
 const myData = {
@@ -27,18 +26,9 @@ const categoryList: CategoryResult[] = [{
     }]
 }];
 
-const productList = [{
+const discountPolicyList = [{
     id: 1,
-    name: "Clean Code",
-    author: "로버트 C. 마틴",
-    publisher: "인사이트",
-    publishedDate: "2013-12-24",
-    regularPrice: 33000,
-    imageFileName: "test.jpg",
-    stockQuantity: 100,
-    salesQuantity: 0,
-    rating: 4,
-    reviewCount: 1,
+    name: "기본",
     discountPercent: 10,
     depositPercent: 5
 }];
@@ -53,10 +43,14 @@ storiesOf("MainPage", module)
             />
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
-                    <Banner />
-                    <Title content={"베스트 셀러"} />
-                    <BestProductList productList={productList} />
-                    {/* {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />} */}
+                    <Title content={"할인정책 관리"} />
+                    <DiscountPolicyManagement 
+                        asyncDiscountPolicyList={{ result: discountPolicyList, error: undefined }}
+                        discountPolicy={undefined}
+                        selectDiscountPolicy={() => {}}
+                        updateDiscountPolicy={() => {}}
+                        saveDiscountPolicy={() => {}}
+                    />
                 </div>
             </main>
             <Footer />

@@ -38,19 +38,19 @@ function OrderForm({ member, orderingProductList, onSaveOrder }: OrderFormProps)
 
             if(isNaN(usePoint)) {
                 alert("숫자만 입력해주세요.");
-                (pointInputRef.current as HTMLInputElement).value = 0 + ""; 
+                (pointInputRef.current as HTMLInputElement).value = "0"; 
                 return;  
             }
             
             if (usePoint < 0) {
                 alert("포인트를 0 이상 입력해주세요.");
-                (pointInputRef.current as HTMLInputElement).value = 0 + ""; 
+                (pointInputRef.current as HTMLInputElement).value = "0"; 
                 return;
             }
             
             if (usePoint > member.point) {
                 alert(`사용할 수 있는 최대 포인트는 ${member.point}입니다`);
-                (pointInputRef.current as HTMLInputElement).value = member.point + "";
+                (pointInputRef.current as HTMLInputElement).value = member.point.toString();
                 return;
             }
             

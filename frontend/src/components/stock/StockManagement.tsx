@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import useModal from '../../hooks/useModal';
+import { ProductDetailResult } from '../../models/product';
 import { AsyncProduct } from '../../models/product/store';
 import { AsyncStockPage, StockSaveAsyncPayload } from '../../models/stock/store';
 import Pagination from '../general/Pagination';
@@ -9,7 +10,7 @@ import StockManagementBar from '../stock/StockManagementBar';
 import StockSaveModal from '../stock/StockSaveModal';
 
 interface StockManagementProps {
-    asyncProduct: AsyncProduct;
+    product?: ProductDetailResult;
     asyncStockPage: AsyncStockPage;
     saveStock: (payload: StockSaveAsyncPayload) => void;
     onPageChange: (selectedItem: {
@@ -17,7 +18,7 @@ interface StockManagementProps {
     }) => void;
 }
 
-function StockManagement({ asyncProduct, asyncStockPage, saveStock, onPageChange }: StockManagementProps) {    
+function StockManagement({ product, asyncStockPage, saveStock, onPageChange }: StockManagementProps) {    
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
 
     const onSaveStock = useCallback((payload: StockSaveAsyncPayload) => {
@@ -44,7 +45,7 @@ function StockManagement({ asyncProduct, asyncStockPage, saveStock, onPageChange
                 onPageChange={onPageChange}
             />
             <StockSaveModal 
-                product={asyncProduct.result} 
+                product={product} 
                 isOpen={saveModalIsOpen}
                 onSaveStock={onSaveStock}
                 onRequestClose={closeSaveModal}

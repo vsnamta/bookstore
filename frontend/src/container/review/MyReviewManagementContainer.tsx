@@ -15,7 +15,7 @@ function MyReviewManagementContainer() {
         dispatch(rootActions.fetchReviewPage({
             searchCriteria: { 
                 column: "memberId", 
-                keyword: myData.id + "" 
+                keyword: myData.id
             },
             pageCriteria: { page: 1, size: 10 }
         }));

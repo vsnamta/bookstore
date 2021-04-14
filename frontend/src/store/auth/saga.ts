@@ -25,7 +25,7 @@ function* loginAsyncSaga({ payload: loginAsyncPayload }: ReturnType<typeof actio
 
         const myData: MyData = yield call(authApi.findMyData);
         yield put(actions.setMyData(myData));
-        localStorage.setItem("tempMyData", JSON.stringify(myData as MyData));
+        localStorage.setItem("tempMyData", JSON.stringify(myData));
 
         loginAsyncPayload.onSuccess?.();
     } catch (error) {

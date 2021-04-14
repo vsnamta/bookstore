@@ -64,22 +64,26 @@ const reducer = createReducer<ReviewsState, ActionType<typeof actions>>(initialS
     [types.REMOVE_REVIEW]: (state, { payload: removedId }: ReturnType<typeof actions.removeReview>) => ({
         asyncReviewPage: {
             ...state.asyncReviewPage,
-            // result: {
-            //     list: state.asyncReviewPage.result?.list.filter(review => review.id !== removedId),
-            //     totalCount: state.asyncReviewPage.result?.totalCount - 1
-            // }
+            result: state.asyncReviewPage.result
+                ? {
+                    list: state.asyncReviewPage.result.list.filter(review => review.id !== removedId),
+                    totalCount: state.asyncReviewPage.result.totalCount - 1
+                }
+                : undefined
         },
         review: undefined
     }),
     [types.SAVE_REVIEW]: (state, { payload: savedReview }: ReturnType<typeof actions.saveReview>) => ({
         ...state,
-        // asyncReviewPage: {
-        //     ...state.asyncReviewPage,
-        //     result: {
-        //         list: [savedReview, ...(state.asyncReviewPage.result?.list as ReviewResult[]).slice(0, 9)],
-        //         totalCount: state.asyncReviewPage.result?.totalCount + 1
-        //     }
-        // },
+        asyncReviewPage: {
+            ...state.asyncReviewPage,
+            result: state.asyncReviewPage.result 
+                ? {
+                    list: [savedReview, ...state.asyncReviewPage.result.list.slice(0, 9)],
+                    totalCount: state.asyncReviewPage.result.totalCount + 1
+                }
+                : undefined
+        },
         review: savedReview
     })
 });

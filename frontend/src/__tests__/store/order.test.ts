@@ -1,11 +1,14 @@
-import { waitFor } from "@testing-library/dom";
+import { wait, waitFor } from "@testing-library/dom";
 import MockAdapter from "axios-mock-adapter";
 import { applyMiddleware, createStore } from "redux";
 import createSagaMiddleware from 'redux-saga';
 import apiClient from "../../apis/apiClient";
 import rootReducer, { rootActions, rootSaga } from "../../store";
 import qs from 'qs';
-import { FindPayload } from "../../models/common";
+import { FindPayload, Page } from "../../models/common";
+import { MemberResult } from "../../models/member";
+import { OrderResult } from "../../models/order";
+import { ProductFindPayload } from "../../models/product";
 
 describe('order store test', () => {
     const sagaMiddleware = createSagaMiddleware();
@@ -26,16 +29,21 @@ describe('order store test', () => {
             searchCriteria: { column: "memberId", keyword: "test" },
             pageCriteria: { page: 1, size: 10 }
         };
-        const queryString = qs.stringify(findPayload, { allowDots: true });
 
-        mockAxios.onGet(`/api/orders/${queryString}`).reply(200, [{
-            id: 1,
-            memberName: "홍길동",
-            orderLineName: "Clean Code",
-            totalAmounts: 29700,
-            statusName: "주문 완료",
-            orderDate: "2020-01-01 00:00:00"
-        }]);
+        const orderPage: Page<OrderResult> = {
+            list: [{
+                id: 1,
+                memberName: "홍길동",
+                orderLineName: "Clean Code",
+                totalAmounts: 29700,
+                statusName: "주문 완료",
+                orderDate: "2020-01-01 00:00:00"
+            }],
+            totalCount: 1
+        };
+
+        const queryString = qs.stringify(findPayload, { allowDots: true });
+        mockAxios.onGet(`/api/orders?${queryString}`).reply(200, orderPage);
 
         // when
         store.dispatch(rootActions.fetchOrderPage(findPayload));
@@ -151,39 +159,35 @@ describe('order store test', () => {
         }));
 
         mockAxios.onPut("/api/orders/1").reply(200, {
-            payload: 1,
-            result: {
-                id: 1,
-                memberName: "홍길동",
-                orderLineResults: [{
-                    productId: 1,
-                    productName: "Clean Code",
-                    imageFileName: "test.jpg",
-                    regularPrice: 33000,
-                    discountPercent: 100,
-                    depositPercent: 5,
-                    quantity: 1
-                }],
-                totalAmounts: 29700,
-                usedPoint: 0,
-                depositPoint: 1650,
-                receiverName: "홍길동",
-                receiverPhoneNumber: "010-1234-5678",
-                deliveryZipCode: "123-456",
-                deliveryAddress1: "서울시 중구 명동 123번지",
-                deliveryAddress2: "456호",
-                deliveryMessage: "문 앞에 놓아주세요.",
+            id: 1,
+            memberName: "홍길동",
+            orderLineResults: [{
+                productId: 1,
+                productName: "Clean Code",
+                imageFileName: "test.jpg",
+                regularPrice: 33000,
+                discountPercent: 100,
+                depositPercent: 5,
+                quantity: 1
+            }],
+            totalAmounts: 29700,
+            usedPoint: 0,
+            depositPoint: 1650,
+            receiverName: "홍길동",
+            receiverPhoneNumber: "010-1234-5678",
+            deliveryZipCode: "123-456",
+            deliveryAddress1: "서울시 중구 명동 123번지",
+            deliveryAddress2: "456호",
+            deliveryMessage: "문 앞에 놓아주세요.",
+            statusName: "구매 확정",
+            statusUpdatedDate: "2020-01-02 00:00:00",
+            statusHistoryResults: [{
+                statusName: "주문 완료",
+                createdDate: "2020-01-01 00:00:00"
+            }, {
                 statusName: "구매 확정",
-                statusUpdatedDate: "2020-01-02 00:00:00",
-                statusHistoryResults: [{
-                    statusName: "주문 완료",
-                    createdDate: "2020-01-01 00:00:00"
-                }, {
-                    statusName: "구매 확정",
-                    createdDate: "2020-01-02 00:00:00"
-                }]
-            },
-            error: undefined
+                createdDate: "2020-01-02 00:00:00"
+            }]
         });
 
         // when
@@ -199,8 +203,14 @@ describe('order store test', () => {
         });
     });
 
-    it('saveMemberAsync', async () => {
+    it('saveOrderAsync', async () => {
         // given
+        store.dispatch(rootActions.setMyData({
+            id: "test",
+            name: "홍길동",
+            role: "USER"
+        }));
+
         store.dispatch(rootActions.setAsyncOrderPage({
             payload: {
                 searchCriteria: { column: "memberId", keyword: "test" },
@@ -247,15 +257,6 @@ describe('order store test', () => {
                 createdDate: "2020-01-01 00:00:00"
             }]
         });
-
-        mockAxios.onGet("/api/orders").reply(200, [{
-            id: 1,
-            memberName: "홍길동",
-            orderLineName: "Clean Code",
-            totalAmounts: 29700,
-            statusName: "주문 완료",
-            orderDate: "2020-01-01 00:00:00"
-        }]);
 
         // when
         store.dispatch(rootActions.saveOrderAsync({ payload: { 

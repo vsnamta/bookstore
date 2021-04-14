@@ -73,7 +73,7 @@ configurations {
 
 node {
     download = true
-    version = '10.14.1'
+    version = '14.16.1'
     npmVersion = ''
     distBaseUrl = 'https://nodejs.org/dist'
     workDir = file("${project.projectDir}/frontend/nodejs")

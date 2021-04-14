@@ -1,10 +1,9 @@
 import { storiesOf } from "@storybook/react";
 import React from 'react';
-import Banner from "../components/general/Banner";
+import MyPageLayout from "../components/common/MyPageLayout";
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
-import Title from "../components/general/Title";
-import BestProductList from "../components/product/BestProductList";
+import MemberUpdateForm from "../components/member/MemberUpdateForm";
 import { CategoryResult } from "../models/category";
 
 const myData = {
@@ -27,21 +26,17 @@ const categoryList: CategoryResult[] = [{
     }]
 }];
 
-const productList = [{
-    id: 1,
-    name: "Clean Code",
-    author: "로버트 C. 마틴",
-    publisher: "인사이트",
-    publishedDate: "2013-12-24",
-    regularPrice: 33000,
-    imageFileName: "test.jpg",
-    stockQuantity: 100,
-    salesQuantity: 0,
-    rating: 4,
-    reviewCount: 1,
-    discountPercent: 10,
-    depositPercent: 5
-}];
+const member = {
+    id: "test",
+    name: "홍길동",
+    phoneNumber: "010-1234-5678",
+    zipCode: "123-456",
+    address1: "서울시 중구 명동 123번지",
+    address2: "456호",
+    point: 0,
+    roleName: "USER",
+    createdDate: "2020-01-01 00:00:00"
+};
 
 storiesOf("MainPage", module)
     .add("기본", () => (
@@ -53,10 +48,14 @@ storiesOf("MainPage", module)
             />
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
-                    <Banner />
-                    <Title content={"베스트 셀러"} />
-                    <BestProductList productList={productList} />
-                    {/* {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />} */}
+                    <MyPageLayout>
+                        <h3>나의 정보</h3>
+                        <MemberUpdateForm 
+                            member={member} 
+                            onUpdateMember={() => {}} 
+                        />
+                        {/* {asyncMember.error && <ErrorDetail message={asyncMember.error.message} />} */}
+                    </MyPageLayout>
                 </div>
             </main>
             <Footer />

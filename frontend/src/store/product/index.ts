@@ -67,13 +67,15 @@ const reducer = createReducer<ProductsState, ActionType<typeof actions>>(initial
     }),
     [types.SAVE_PRODUCT]: (state, { payload: savedProduct }: ReturnType<typeof actions.saveProduct>) => ({
         ...state,
-        // asyncProductPage: {
-        //     ...state.asyncProductPage,
-        //     result: {
-        //         list: [savedProduct, ...(state.asyncProductPage.result?.list as ProductResult[]).slice(0, 9)],
-        //         totalCount: state.asyncProductPage.result?.totalCount + 1
-        //     }
-        // },
+        asyncProductPage: {
+            ...state.asyncProductPage,
+            result: state.asyncProductPage.result 
+                ? {
+                    list: [savedProduct, ...state.asyncProductPage.result.list.slice(0, 9)],
+                    totalCount: state.asyncProductPage.result.totalCount + 1
+                }
+                : undefined
+        },
         asyncProduct: {
             payload: savedProduct.id,
             result: savedProduct,

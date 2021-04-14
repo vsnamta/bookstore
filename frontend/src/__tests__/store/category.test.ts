@@ -1,4 +1,4 @@
-import { waitFor } from "@testing-library/dom";
+import { wait, waitFor } from "@testing-library/dom";
 import MockAdapter from "axios-mock-adapter";
 import { applyMiddleware, createStore } from "redux";
 import createSagaMiddleware from 'redux-saga';
@@ -19,11 +19,11 @@ describe('category store test', () => {
             error: undefined
         }));
 
-        mockAxios.onGet("/api/categories").reply(200, [{
+        const categoryList = [{
             id: 1,
             name: "컴퓨터/IT",
-            parentId: null,
-            parentName: null,
+            parentId: NaN,
+            parentName: "",
             children: [{
                 id: 2,
                 name: "IT 전문서",
@@ -31,7 +31,9 @@ describe('category store test', () => {
                 parentName: "컴퓨터/IT",
                 children: []
             }]
-        }]);
+        }];
+
+        mockAxios.onGet("/api/categories").reply(200, categoryList);
 
         // when
         store.dispatch(rootActions.fetchCategoryList());
@@ -114,7 +116,7 @@ describe('category store test', () => {
             const categoryList = store.getState().categories.asyncCategoryList.result;
             const category = store.getState().categories.category;
     
-            expect(categoryList?.[0].children[0].id).toEqual("IT 전문서");
+            expect(categoryList?.[0].children[0].name).toEqual("IT 전문서");
             expect(category?.name).toEqual("IT 전문서");
         });
     });

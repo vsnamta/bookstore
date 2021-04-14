@@ -37,7 +37,7 @@ function StockManagementContainer() {
     
     return (
         <StockManagement 
-            asyncProduct={asyncProduct}
+            product={asyncProduct.result}
             asyncStockPage={asyncStockPage}
             saveStock={saveStock}
             onPageChange={onPageChange}

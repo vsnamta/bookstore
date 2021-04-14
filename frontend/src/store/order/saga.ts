@@ -76,7 +76,7 @@ function* saveOrderAsyncSaga({ payload: orderSaveAsyncPayload }: ReturnType<type
         const myData: MyData = yield select((state: RootState) => state.auths.myData);
         
         const findPayload: FindPayload = {
-            searchCriteria: { keyword: "memberId", column: myData.id + "" },
+            searchCriteria: { column: "memberId", keyword: myData.id },
             pageCriteria: { page: 1, size: 10 }
         };
 

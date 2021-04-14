@@ -18,7 +18,7 @@ function BestProductListContainer() {
             }
         }));
     }, []);
-    
+
     return (
         <>
             <BestProductList productList={asyncProductPage.result?.list} />

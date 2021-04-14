@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router';
 import useModal from '../../hooks/useModal';
 import { MyData } from '../../models/auth';
+import { ProductDetailResult } from '../../models/product';
 import { AsyncProduct } from '../../models/product/store';
 import { AsyncReviewPage, ReviewSaveAsyncPayload } from '../../models/review/store';
 import Pagination from '../general/Pagination';
@@ -11,14 +12,14 @@ import ReviewManagementBar from '../reivew/ReviewManagementBar';
 import ReviewSaveModal from '../reivew/ReviewSaveModal';
 
 interface ReviewManagementProps {
-    asyncProduct: AsyncProduct;
+    product?: ProductDetailResult;
     asyncReviewPage: AsyncReviewPage;
     myData?: MyData;
     saveReview: (payload: ReviewSaveAsyncPayload) => void;
     onPageChange: (selectedItem: { selected: number; }) => void;
 }
 
-function ReviewManagement({ asyncProduct, asyncReviewPage, myData, saveReview, onPageChange }: ReviewManagementProps) {
+function ReviewManagement({ product, asyncReviewPage, myData, saveReview, onPageChange }: ReviewManagementProps) {
     const history = useHistory();
     
     const [saveModalIsOpen, openSaveModal, closeSaveModal] = useModal();
@@ -59,7 +60,7 @@ function ReviewManagement({ asyncProduct, asyncReviewPage, myData, saveReview, o
                 onPageChange={onPageChange}
             />
             <ReviewSaveModal
-                product={asyncProduct.result} 
+                product={product} 
                 isOpen={saveModalIsOpen}
                 onRequestClose={closeSaveModal}
                 onSaveReview={onSaveReview}

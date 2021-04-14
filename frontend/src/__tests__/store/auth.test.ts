@@ -1,4 +1,4 @@
-import { waitFor } from "@testing-library/dom";
+import { wait, waitFor } from "@testing-library/dom";
 import MockAdapter from "axios-mock-adapter";
 import { applyMiddleware, createStore } from "redux";
 import createSagaMiddleware from 'redux-saga';
@@ -17,7 +17,7 @@ describe('auth store test', () => {
         store.dispatch(rootActions.setMyData(undefined));
 
         mockAxios.onGet("/api/members/me").reply(200, {
-            id: 1,
+            id: "test",
             name: "홍길동",
             role: "USER"
         });
@@ -28,7 +28,6 @@ describe('auth store test', () => {
         // then
         await waitFor(() => {
             const myData = store.getState().auths.myData;
-
             expect(myData?.id).toEqual(1);
             expect(myData?.name).toEqual("홍길동");
         });
@@ -36,10 +35,12 @@ describe('auth store test', () => {
 
     it('loginAsync', async () => {
         // given
+        store.dispatch(rootActions.setMyData(undefined));
+
         mockAxios.onPost("/api/login").reply(200);
 
         mockAxios.onGet("/api/members/me").reply(200, {
-            id: 1,
+            id: "test",
             name: "홍길동",
             role: "USER"
         });
@@ -54,13 +55,24 @@ describe('auth store test', () => {
 
             expect(myData?.id).toEqual(1);
             expect(myData?.name).toEqual("홍길동");
-            
             expect(tempMyData !== undefined).toEqual(true);
         });
     });
 
     it('logoutAsync', async () => {
         // given
+        store.dispatch(rootActions.setMyData({
+            id: "test",
+            name: "홍길동",
+            role: "USER"
+        }));
+
+        localStorage.setItem("tempMyData", JSON.stringify({
+            id: "test",
+            name: "홍길동",
+            role: "USER"
+        }));
+
         mockAxios.onPost("/api/logout").reply(200);
 
         // when
@@ -70,9 +82,9 @@ describe('auth store test', () => {
         await waitFor(() => {
             const myData = store.getState().auths.myData;
             const tempMyData = localStorage.getItem("tempMyData");
-    
+
             expect(myData === undefined).toEqual(true);
-            expect(tempMyData === undefined).toEqual(true);
+            expect(tempMyData === null).toEqual(true);
         });
     });
 });

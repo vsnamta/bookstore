@@ -1,8 +1,4 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { RootState, rootActions } from '../../store';
-import OrderDetailTemplate from '../../container/order/OrderDetailContainer';
+import React from 'react';
 import Layout from '../../components/common/Layout';
 import OrderDetailContainer from '../../container/order/OrderDetailContainer';
 

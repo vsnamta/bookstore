@@ -1,10 +1,8 @@
 import { storiesOf } from "@storybook/react";
 import React from 'react';
-import Banner from "../components/general/Banner";
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
-import Title from "../components/general/Title";
-import BestProductList from "../components/product/BestProductList";
+import ProductUpdateForm from "../components/product/ProductUpdateForm";
 import { CategoryResult } from "../models/category";
 
 const myData = {
@@ -27,21 +25,39 @@ const categoryList: CategoryResult[] = [{
     }]
 }];
 
-const productList = [{
+const discountPolicyList = [{
     id: 1,
+    name: "기본",
+    discountPercent: 10,
+    depositPercent: 5
+}];
+
+const product = {
+    id: 1,
+    superCategoryId: 1,
+    superCategoryName: "컴퓨터/IT",
+    subCategoryId: 2,
+    subCategoryName: "IT 전문서",
     name: "Clean Code",
     author: "로버트 C. 마틴",
     publisher: "인사이트",
     publishedDate: "2013-12-24",
+    totalPage: "584",
+    isbn: "9788966260959",
     regularPrice: 33000,
     imageFileName: "test.jpg",
+    authorIntroduction: "저자 소개...",
+    bookIntroduction: "책 소개...",
+    tableOfContents: "목차...",
     stockQuantity: 100,
     salesQuantity: 0,
     rating: 4,
     reviewCount: 1,
+    discountPolicyId: 1,
+    discountPolicyName: "기본",
     discountPercent: 10,
     depositPercent: 5
-}];
+};
 
 storiesOf("MainPage", module)
     .add("기본", () => (
@@ -53,10 +69,14 @@ storiesOf("MainPage", module)
             />
             <main className="inner-page-sec-padding-bottom">
                 <div className="container">
-                    <Banner />
-                    <Title content={"베스트 셀러"} />
-                    <BestProductList productList={productList} />
-                    {/* {asyncProductPage.error && <ErrorDetail message={asyncProductPage.error.message} />} */}
+                    <ProductUpdateForm
+                        product={product}
+                        discountPolicyList={discountPolicyList}
+                        categoryList={categoryList}
+                        onUpdateProduct={() => {}} 
+                    />
+                    {/* {(asyncProduct.error || asyncDiscountPolicyList.error || asyncCategoryList.error) && 
+                    <ErrorDetail message={"오류 발생"} />} */}
                 </div>
             </main>
             <Footer />

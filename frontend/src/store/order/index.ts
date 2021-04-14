@@ -53,7 +53,7 @@ const reducer = createReducer<OrdersState, ActionType<typeof actions>>(initialSt
             result: state.asyncOrderPage.result
                 ? {
                     ...state.asyncOrderPage.result,
-                    list: state.asyncOrderPage.result.list.map(order => 
+                    list: state.asyncOrderPage.result.list.map(order =>
                         order.id === updatedOrder.id
                             ? { ...order, statusName: updatedOrder.statusName }
                             : order
@@ -68,13 +68,27 @@ const reducer = createReducer<OrdersState, ActionType<typeof actions>>(initialSt
     }),
     [types.SAVE_ORDER]: (state, { payload: savedOrder }: ReturnType<typeof actions.saveOrder>) => ({
         ...state,
-        // asyncOrderPage: {
-        //     ...state.asyncOrderPage,
-        //     result: {
-        //         list: [savedOrder, ...(state.asyncOrderPage.result?.list as OrderResult[]).slice(0, 9)],
-        //         totalCount: state.asyncOrderPage.result?.totalCount + 1
-        //     }
-        // },
+        asyncOrderPage: {
+            ...state.asyncOrderPage,
+            result: state.asyncOrderPage.result
+                ? {
+                    list: [
+                        {
+                            id: savedOrder.id,
+                            memberName: savedOrder.memberName,
+                            orderLineName: savedOrder.orderLineResults.length === 1 
+                                ? savedOrder.orderLineResults[0].productName
+                                : savedOrder.orderLineResults[0].productName + ` 외 + ${savedOrder.orderLineResults.length - 1} 건`,
+                            totalAmounts: savedOrder.totalAmounts,
+                            statusName: savedOrder.statusName,
+                            orderDate: savedOrder.statusUpdatedDate,
+                        }, 
+                        ...state.asyncOrderPage.result.list.slice(0, 9)
+                    ],
+                    totalCount: state.asyncOrderPage.result.totalCount + 1
+                }
+                : undefined
+        },
         asyncProduct: {
             payload: savedOrder.id,
             result: savedOrder,

@@ -1,6 +1,6 @@
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { CartResult } from '../../models/cart';
 import { CartCheckPayload, CartRemoveAsyncPayload, CartUpdateAsyncPayload } from "../../models/cart/store";
@@ -33,7 +33,8 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
         return null;
     }
 
-    const history = useHistory();
+    //const history = useHistory();
+    const [testMessage, setTestMsaage] = useState("");
     
     const [totalPrice, allChecked] = useMemo(
         () => calcTotalPriceAndAllChecked(cartList), 
@@ -98,7 +99,9 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
         onRemoveCart({
             ids: checkedIds,
             onSuccess: () => {
-                alert("삭제되었습니다.");
+                console.log("==================삭제 완료==========================");
+                setTestMsaage("삭제되었습니다.");
+                //alert("삭제되었습니다.");
             },
             onFailure: error => alert(`오류발생 = ${error.message}`)
         });
@@ -119,20 +122,20 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
         //     return;
         // }
 
-        history.push(
-            "/order/form", {
-                "orderingProductList": checkedCartList.map(cart => ({
-                    cartId: cart.id,
-                    productId: cart.productId,
-                    productName: cart.productName,
-                    imageFileName: cart.imageFileName,
-                    regularPrice: cart.regularPrice,
-                    discountPercent: cart.discountPercent,
-                    depositPercent: cart.depositPercent,
-                    quantity: cart.quantity
-                })) 
-            }
-        );
+        // history.push(
+        //     "/order/form", {
+        //         "orderingProductList": checkedCartList.map(cart => ({
+        //             cartId: cart.id,
+        //             productId: cart.productId,
+        //             productName: cart.productName,
+        //             imageFileName: cart.imageFileName,
+        //             regularPrice: cart.regularPrice,
+        //             discountPercent: cart.discountPercent,
+        //             depositPercent: cart.depositPercent,
+        //             quantity: cart.quantity
+        //         })) 
+        //     }
+        // );
     }, [cartList]);
 
     return (
@@ -160,17 +163,19 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {testMessage}
                                             {/* <!-- Product Row --> */}
                                             {cartList.map(cart => (
                                                 <tr key={cart.id}>
                                                     <td><input type="checkbox" value={cart.id} checked={cart.checked} onChange={onChangeCheck}/></td>
                                                     <td className="pro-thumbnail">
-                                                        <Link to={`/product/${cart.productId}`}>
+                                                        {/* <Link to={`/product/${cart.productId}`}>
                                                             <img src={`/api/files/${cart.imageFileName}`} alt="" />
-                                                        </Link>
+                                                        </Link> */}
                                                     </td>
                                                     <td className="pro-title">
-                                                        <Link to={`/product/${cart.productId}`}>{cart.productName}</Link>
+                                                        {/* <Link to={`/product/${cart.productId}`}>{cart.productName}</Link> */}
+                                                        {cart.productName}
                                                     </td>
                                                     <td className="pro-price"><span>{cart.regularPrice * (1 -(cart.discountPercent / 100))}</span></td>
                                                     <td className="pro-quantity">
@@ -190,7 +195,7 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
                                                     </td>
                                                     <td className="pro-subtotal"><span>{(cart.regularPrice * (1 -(cart.discountPercent / 100))) * cart.quantity}</span></td>
                                                 </tr>
-                                            ))}                                                                           
+                                            ))}                                                                         
                                         </tbody>
                                     </table>
                                 </div>
