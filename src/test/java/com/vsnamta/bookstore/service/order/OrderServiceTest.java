@@ -1,11 +1,11 @@
 package com.vsnamta.bookstore.service.order;
 
-import static com.vsnamta.bookstore.DomainBuilder.aCart;
-import static com.vsnamta.bookstore.DomainBuilder.aDeliveryInfo;
-import static com.vsnamta.bookstore.DomainBuilder.aDiscountPolicy;
-import static com.vsnamta.bookstore.DomainBuilder.aMember;
-import static com.vsnamta.bookstore.DomainBuilder.aProduct;
-import static com.vsnamta.bookstore.DomainBuilder.aStockInfo;
+import static com.vsnamta.bookstore.Fixtures.aCart;
+import static com.vsnamta.bookstore.Fixtures.aDeliveryInfo;
+import static com.vsnamta.bookstore.Fixtures.aDiscountPolicy;
+import static com.vsnamta.bookstore.Fixtures.aMember;
+import static com.vsnamta.bookstore.Fixtures.aProduct;
+import static com.vsnamta.bookstore.Fixtures.aStockInfo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

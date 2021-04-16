@@ -1,11 +1,11 @@
 package com.vsnamta.bookstore.infra.repository;
 
-import static com.vsnamta.bookstore.DomainBuilder.aCategory;
-import static com.vsnamta.bookstore.DomainBuilder.aPageRequest;
-import static com.vsnamta.bookstore.DomainBuilder.aProduct;
-import static com.vsnamta.bookstore.DomainBuilder.aDiscountPolicy;
-import static com.vsnamta.bookstore.DomainBuilder.aSearchRequest;
-import static com.vsnamta.bookstore.DomainBuilder.aStockInfo;
+import static com.vsnamta.bookstore.Fixtures.aCategory;
+import static com.vsnamta.bookstore.Fixtures.aPageRequest;
+import static com.vsnamta.bookstore.Fixtures.aProduct;
+import static com.vsnamta.bookstore.Fixtures.aDiscountPolicy;
+import static com.vsnamta.bookstore.Fixtures.aSearchRequest;
+import static com.vsnamta.bookstore.Fixtures.aStockInfo;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;

@@ -5,10 +5,6 @@ import { LogoutAsyncPayload } from "../../models/auth/store";
 import { rootActions, RootState } from "../../store";
 
 function HeaderContainer() {
-    // const { myData, categoryList } = useSelector(({ members, categories }: RootState) => ({
-    //     myData: auths.myData,
-    //     categoryList: categories.asyncCategoryList.result
-    // }));
     const dispatch = useDispatch();
 
     const myData = useSelector((state: RootState) => state.auths.myData);

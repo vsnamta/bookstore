@@ -1,9 +1,9 @@
 package com.vsnamta.bookstore.infra.repository;
 
-import static com.vsnamta.bookstore.DomainBuilder.aCart;
-import static com.vsnamta.bookstore.DomainBuilder.aDiscountPolicy;
-import static com.vsnamta.bookstore.DomainBuilder.aMember;
-import static com.vsnamta.bookstore.DomainBuilder.aProduct;
+import static com.vsnamta.bookstore.Fixtures.aCart;
+import static com.vsnamta.bookstore.Fixtures.aDiscountPolicy;
+import static com.vsnamta.bookstore.Fixtures.aMember;
+import static com.vsnamta.bookstore.Fixtures.aProduct;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;

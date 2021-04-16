@@ -1,8 +1,8 @@
 package com.vsnamta.bookstore.service.product;
 
-import static com.vsnamta.bookstore.DomainBuilder.aCategory;
-import static com.vsnamta.bookstore.DomainBuilder.aDiscountPolicy;
-import static com.vsnamta.bookstore.DomainBuilder.aProduct;
+import static com.vsnamta.bookstore.Fixtures.aCategory;
+import static com.vsnamta.bookstore.Fixtures.aDiscountPolicy;
+import static com.vsnamta.bookstore.Fixtures.aProduct;
 import static org.junit.Assert.assertEquals;
 
 import com.vsnamta.bookstore.domain.category.Category;

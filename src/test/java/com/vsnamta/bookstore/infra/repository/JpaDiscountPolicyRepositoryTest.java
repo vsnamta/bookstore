@@ -1,6 +1,6 @@
 package com.vsnamta.bookstore.infra.repository;
 
-import static com.vsnamta.bookstore.DomainBuilder.aDiscountPolicy;
+import static com.vsnamta.bookstore.Fixtures.aDiscountPolicy;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;

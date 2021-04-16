@@ -34,7 +34,6 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
     }
 
     //const history = useHistory();
-    const [testMessage, setTestMsaage] = useState("");
     
     const [totalPrice, allChecked] = useMemo(
         () => calcTotalPriceAndAllChecked(cartList), 
@@ -99,9 +98,7 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
         onRemoveCart({
             ids: checkedIds,
             onSuccess: () => {
-                console.log("==================삭제 완료==========================");
-                setTestMsaage("삭제되었습니다.");
-                //alert("삭제되었습니다.");
+                alert("삭제되었습니다.");
             },
             onFailure: error => alert(`오류발생 = ${error.message}`)
         });
@@ -163,7 +160,6 @@ function CartManagement({ cartList, onUpdateCart, onRemoveCart, onCheckAllCart, 
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {testMessage}
                                             {/* <!-- Product Row --> */}
                                             {cartList.map(cart => (
                                                 <tr key={cart.id}>

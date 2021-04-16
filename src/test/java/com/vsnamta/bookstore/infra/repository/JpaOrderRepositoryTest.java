@@ -1,12 +1,12 @@
 package com.vsnamta.bookstore.infra.repository;
 
-import static com.vsnamta.bookstore.DomainBuilder.aDeliveryInfo;
-import static com.vsnamta.bookstore.DomainBuilder.aDiscountPolicy;
-import static com.vsnamta.bookstore.DomainBuilder.aMember;
-import static com.vsnamta.bookstore.DomainBuilder.aPageRequest;
-import static com.vsnamta.bookstore.DomainBuilder.aProduct;
-import static com.vsnamta.bookstore.DomainBuilder.aSearchRequest;
-import static com.vsnamta.bookstore.DomainBuilder.anOrderStatusInfo;
+import static com.vsnamta.bookstore.Fixtures.aDeliveryInfo;
+import static com.vsnamta.bookstore.Fixtures.aDiscountPolicy;
+import static com.vsnamta.bookstore.Fixtures.aMember;
+import static com.vsnamta.bookstore.Fixtures.aPageRequest;
+import static com.vsnamta.bookstore.Fixtures.aProduct;
+import static com.vsnamta.bookstore.Fixtures.aSearchRequest;
+import static com.vsnamta.bookstore.Fixtures.anOrderStatusInfo;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;

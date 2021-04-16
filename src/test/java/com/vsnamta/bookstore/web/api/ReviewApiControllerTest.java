@@ -1,8 +1,8 @@
 package com.vsnamta.bookstore.web.api;
 
-import static com.vsnamta.bookstore.DomainBuilder.aMember;
-import static com.vsnamta.bookstore.DomainBuilder.aProduct;
-import static com.vsnamta.bookstore.DomainBuilder.aReview;
+import static com.vsnamta.bookstore.Fixtures.aMember;
+import static com.vsnamta.bookstore.Fixtures.aProduct;
+import static com.vsnamta.bookstore.Fixtures.aReview;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

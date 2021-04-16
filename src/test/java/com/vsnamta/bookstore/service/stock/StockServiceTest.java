@@ -1,6 +1,6 @@
 package com.vsnamta.bookstore.service.stock;
 
-import static com.vsnamta.bookstore.DomainBuilder.aProduct;
+import static com.vsnamta.bookstore.Fixtures.aProduct;
 import static org.junit.Assert.assertEquals;
 
 import com.vsnamta.bookstore.domain.product.Product;

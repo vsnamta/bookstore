@@ -1,6 +1,6 @@
 package com.vsnamta.bookstore.service.member;
 
-import static com.vsnamta.bookstore.DomainBuilder.aMember;
+import static com.vsnamta.bookstore.Fixtures.aMember;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

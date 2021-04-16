@@ -1,6 +1,6 @@
 package com.vsnamta.bookstore.web.api;
 
-import static com.vsnamta.bookstore.DomainBuilder.aMember;
+import static com.vsnamta.bookstore.Fixtures.aMember;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;

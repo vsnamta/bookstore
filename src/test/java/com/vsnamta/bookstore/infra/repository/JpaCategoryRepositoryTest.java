@@ -1,6 +1,6 @@
 package com.vsnamta.bookstore.infra.repository;
 
-import static com.vsnamta.bookstore.DomainBuilder.aCategory;
+import static com.vsnamta.bookstore.Fixtures.aCategory;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;

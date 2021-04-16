@@ -45,7 +45,7 @@ import com.vsnamta.bookstore.domain.review.Review.ReviewBuilder;
 import com.vsnamta.bookstore.domain.stock.Stock;
 import com.vsnamta.bookstore.domain.stock.Stock.StockBuilder;
 
-public class DomainBuilder {
+public class Fixtures {
     public static MemberBuilder aMember() {
         return Member.builder()
             .name("홍길동")

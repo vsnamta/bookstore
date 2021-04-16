@@ -1,7 +1,7 @@
 package com.vsnamta.bookstore.service.review;
 
-import static com.vsnamta.bookstore.DomainBuilder.aMember;
-import static com.vsnamta.bookstore.DomainBuilder.aProduct;
+import static com.vsnamta.bookstore.Fixtures.aMember;
+import static com.vsnamta.bookstore.Fixtures.aProduct;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

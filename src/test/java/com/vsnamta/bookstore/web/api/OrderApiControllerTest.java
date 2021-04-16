@@ -1,11 +1,11 @@
 package com.vsnamta.bookstore.web.api;
 
-import static com.vsnamta.bookstore.DomainBuilder.aDeliveryInfo;
-import static com.vsnamta.bookstore.DomainBuilder.aDiscountPolicy;
-import static com.vsnamta.bookstore.DomainBuilder.aMember;
-import static com.vsnamta.bookstore.DomainBuilder.aProduct;
-import static com.vsnamta.bookstore.DomainBuilder.aStockInfo;
-import static com.vsnamta.bookstore.DomainBuilder.anOrderStatusInfo;
+import static com.vsnamta.bookstore.Fixtures.aDeliveryInfo;
+import static com.vsnamta.bookstore.Fixtures.aDiscountPolicy;
+import static com.vsnamta.bookstore.Fixtures.aMember;
+import static com.vsnamta.bookstore.Fixtures.aProduct;
+import static com.vsnamta.bookstore.Fixtures.aStockInfo;
+import static com.vsnamta.bookstore.Fixtures.anOrderStatusInfo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;

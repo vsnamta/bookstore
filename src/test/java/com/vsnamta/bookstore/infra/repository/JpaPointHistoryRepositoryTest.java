@@ -1,8 +1,8 @@
 package com.vsnamta.bookstore.infra.repository;
 
-import static com.vsnamta.bookstore.DomainBuilder.aMember;
-import static com.vsnamta.bookstore.DomainBuilder.aPageRequest;
-import static com.vsnamta.bookstore.DomainBuilder.aPointHistory;
+import static com.vsnamta.bookstore.Fixtures.aMember;
+import static com.vsnamta.bookstore.Fixtures.aPageRequest;
+import static com.vsnamta.bookstore.Fixtures.aPointHistory;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
